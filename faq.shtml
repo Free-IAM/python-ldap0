@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.17 2003/01/23 11:50:57 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.18 2003/06/23 10:53:33 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -51,7 +51,11 @@ Nope.
 
 <li>
 <p>Q: During build there are warning messages displayed
-telling Lib/ldap.py and Lib/ldap/schema.py are not found.
+telling Lib/ldap.py and Lib/ldap/schema.py are not found:
+<pre>
+warning: build_py: file Lib/ldap.py (for module ldap) not found
+warning: build_py: file Lib/ldap/schema.py (for module ldap.schema) not found
+</pre>
 </p>
 <p>A: 
 ldap and ldap.schema are both module packages
