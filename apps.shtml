@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.3 2001/05/16 01:15:36 leonard Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.4 2002/07/18 08:19:28 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -10,15 +10,20 @@ There are some applications implemented with the help of python-ldap
 
 <dl>
 
-  <dt>
-    <a href="http://www.dataflake.org/software/cmfldap">CMFLDAP</a>
-  </dt>
+  <dt><a href="http://www.dataflake.org/software/cmfldap">CMFLDAP</a></dt>
   <dd>
     <p>
       CMFLDAP is a Zope CMF product that replaces the standard
       membership management tools (Registration Tool, Membership Tool,
       Member Data Tool) with a set that speaks LDAP. It requires
       a working LDAPLoginAdapter and a working LDAPUserManager.
+    </p>
+  </dd>
+
+  <dt><a href="http://www.twoevils.org/html/files.php">Kantan</a></dt>
+  <dd>
+    <p>
+      A web-based searching and browsing tool.
     </p>
   </dd>
 
@@ -42,13 +47,6 @@ There are some applications implemented with the help of python-ldap
   </dd>
 
   <dt>
-  </dt>
-  <dd>
-    <p>
-    </p>
-  </dd>
-
-  <dt>
     <a href="http://stroeder.com/python/proxy_auth_ldap/">proxy_auth_ldap</a>
   </dt>
   <dd>
@@ -68,9 +66,7 @@ There are some applications implemented with the help of python-ldap
     </p>
   </dd>
 
-  <dt>
-    <a href="http://www.web2ldap.de">web2ldap</a>
-  </dt>
+  <dt><a href="http://www.web2ldap.de">web2ldap</a></dt>
   <dd>
     <p>
       A web gateway to LDAP servers.
