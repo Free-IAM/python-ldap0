@@ -6,7 +6,7 @@
 
 <h2>_ldap</h2>
 <p>
-There's documentation available for the C extension module <em>_ldap</em>.
+Here is documentation for the C extension module <em>_ldap</em>.
 </p>
 <ul>
   <li>
@@ -15,7 +15,7 @@ There's documentation available for the C extension module <em>_ldap</em>.
     Acrobat Reader</a>)
   </li>
   <li>
-    <a href="_ldap.ps">Postscript document</a>
+    <a href="_ldap.ps">PostScript document</a>
   </li>
 </ul>
 

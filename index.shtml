@@ -4,16 +4,20 @@
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
-<em>python-ldap</em> provides a module for accessing LDAP servers
+<p>
+<em>Python-LDAP</em> provides a module for accessing LDAP servers
 with the programming language
 <a href="http://www.python.org/">Python</a> in the spirit of 
 the LDAP API defined in
 <a href="http://www.ietf.org/rfc/rfc1823.txt">RFC 1823</a>.
+</p>
 
-<h2>Mailing List</h2>
+<h2>Mailing list</h2>
+<p>
 <a href="http://lists.sourceforge.net/lists/listinfo/python-ldap-dev">
 Subscribe/unsubscribe</a> to the python-ldap-dev list or read
 the <a href="http://www.geocrawler.com/redir-sf.php3?list=python-ldap-dev">
 list archive</a>.
+</p>
 
 <!--#include file="ssi/footer.shtml" -->

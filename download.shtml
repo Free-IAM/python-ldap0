@@ -34,13 +34,17 @@
 </ul>
 
 <h3>S.u.S.E. Linux</h3>
+<p>
 S.u.S.E. Linux ships with python-ldap. They use a rather
 old version though.
+</p>
 
 <h3>Debian Linux</h3>
+<p>
 Also rather outdated version in a Debian package of
 <a href="http://packages.debian.org/stable/net/python-ldap.html">
 python-ldap 1.8</a>.
+</p>
 
 <h3>FreeBSD</h3>
 

@@ -4,39 +4,29 @@
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
-<p>
-Q: Is python-ldap yet another abandon-ware project on SourceForge?
-</p>
-<p>
-A1: Jump on in.<br />
-A2: Jump into C programming. ;-)<br />
-A3: <a href="http://sourceforge.net/project/stats/?group_id=2072">
+<dl>
+<dt>1. Is python-ldap yet another abandon-ware project on SourceForge?</dt>
+<dd>
+1: "Jump on in."<br />
+2: "Jump into the C ;-)"<br />
+3: <a href="http://sourceforge.net/project/stats/?group_id=2072">
 Not quite sure...</a><br />
-</p>
+</dd>
 
-<p>
-Q: Can I do a LDAPv3 bind via python-ldap?
-</p>
-<p>
-A: In general: No. In detail: Depends on the underlying LDAP lib.
-</p>
+<dt>2. Can I do a LDAPv3 bind via python-ldap?</dt>
+<dd>In general: No. In detail: Depends on the underlying LDAP lib.</dd>
 
-<p>
-Q: Can python-ldap can be built against OpenLDAP 2.0.x libs?
-</p>
-<p>
-A: No, since OpenLDAP 2.0.x implements a slightly different API
+<dt>3. Can python-ldap can be built against OpenLDAP 2.0.x libs?</dt>
+<dd>
+No, since OpenLDAP 2.0.x implements a slightly different API
 (<a href="http://www.OpenLDAP.org/lists/openldap-software/200009/msg00408.html">read more</a>)
 python-ldap cannot be linked against this version.
 There are two patches available which work with CVS snapshot as
 of May 2001. See also <a href="download.html">download page</a>.
-</p>
+</dd>
 
-<p>
-Q: Does it work with Python (1.5|2.0|2.1)?
-</p>
-<p>
-A: Yes.
-</p>
+<dt>4. Does it work with Python (1.5|2.0|2.1)?</dt>
+<dd>Yes.</dd>
 
+</dl>
 <!--#include file="ssi/footer.shtml" -->
