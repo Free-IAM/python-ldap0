@@ -2,7 +2,7 @@
 // Default Web Page for groups that haven't setup their page yet
 // Please replace this file with your own website
 //
-// $Id: index.php,v 1.1 2000/02/01 10:14:44 leonard Exp $
+// $Id: index.php,v 1.1.1.1 2000/02/01 10:14:44 leonard Exp $
 //
 $headers = getallheaders();
 ?>
