@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.18 2003/04/12 11:50:30 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.19 2003/05/26 07:55:52 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -17,11 +17,15 @@ The <a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
 project release area</a> has the latest 'official' releases.
 </p>
 
-<h2>Source</h2>
+<h2>CVS access</h2>
 <ul>
   <li>
     <a href="http://sourceforge.net/cvs/?group_id=2072">
-    Anonymous CVS instructions</a> (go here to be really up-to-date!)
+    Anonymous CVS instructions</a> (go here to be really up-to-date!)    
+  </li>
+  <li>
+    <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/python-ldap/python-ldap/">
+    Browse CVS repository</a>
   </li>
   <li>
     <a href="http://cvs.sourceforge.net/cvstarballs/python-ldap-cvsroot.tar.gz">
