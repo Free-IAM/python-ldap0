@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.12 2002/02/01 18:16:25 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.13 2002/03/04 21:45:16 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -50,6 +50,7 @@ It' possible to run recent python-ldap with OpenLDAP 2 libs under cygwin.
 
 <li>
 <p>Q: While importing module ldap there are undefined references reported.
+Error message looks similar to this:
 <pre>
 Traceback (most recent call last):
   File "./ldap_connect", line 7, in ?
@@ -63,6 +64,27 @@ Tweak <em>setup.cfg</em> to contain this line:
 <pre>
 libs = lber ldap resolv
 </pre>
+</p>
+</li>
+
+<li>
+<p>Q: While importing module ldap some shared lib files are not found.
+Error message looks similar to this:
+<pre>
+    import ldap
+  File "/usr/local/lib/python2.1/site-packages/ldap/__init__.py", line
+5, in ?
+    from _ldap import *
+ImportError: ld.so.1: /usr/local/bin/python: fatal: liblber.so.2: open
+failed: No such file or directory
+</pre>
+</p>
+<p>A1:
+You need to make sure that the path to liblber.so.2 and and libldap.so.2
+is in your <em>LD_LIBRARY_PATH</em> environment variable.
+</p>
+<p>A2: Alternatively you can add the path to <em>liblber.so.2</em>
+and <em>libldap.so.2</em> to /etc/ld.so.conf and invoke ldconfig afterwards.
 </p>
 </li>
 
