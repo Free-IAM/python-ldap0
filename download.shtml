@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.16 2002/07/21 12:24:40 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.17 2003/04/03 23:25:16 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -42,22 +42,20 @@ project release area</a> has the latest 'official' releases.
 
 <h3>S.u.S.E. Linux</h3>
 <p>
-<a href="http://www.suse.de/">S.u.S.E. Linux</a>
-ships with python-ldap. They use a rather old version in 7.x though.
-Version 8.0 ships with python-ldap 2.0.0pre04.
+<a href="http://www.suse.de/">S.u.S.E. Linux</a> ships with python-ldap.
 </p>
 
 <h3>Debian Linux</h3>
 <ul>
+  They use different version numbers. 1.9.999.pre06
+  translates to 2.0.0pre06.
   <li>
     <a href="http://packages.debian.org/stable/net/python-ldap.html">
-    Debian package python-ldap 1.8-1</a><br>
-    (based on outdated python-ldap 1.8, needs OpenLDAP 1 libs)
+    stable</a><br>
   </li>
   <li>
     <a href="http://packages.debian.org/unstable/net/python-ldap.html">
-    Debian package 1.9.999.pre04-1</a><br>
-    (based on python-ldap pre-release 2.0.0pre4, needs OpenLDAP 2.0.21+ libs)
+    unstable</a><br>
   </li>
 </ul>
 
@@ -65,7 +63,7 @@ Version 8.0 ships with python-ldap 2.0.0pre04.
 <p>
   You can find some pre-compiled
   <a href="http://www.zope.org/Members/barryp/win32_ldap">packages for Windows 32 platform</a>
-  (1.10alpha3 based on UMich LDAP libs).
+  (1.10alpha3 based on really ancient UMich LDAP libs).
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
