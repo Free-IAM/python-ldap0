@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.24 2003/12/21 12:50:17 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.25 2003/12/22 09:23:08 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -71,7 +71,7 @@ project file release area</a></p>
 <ul>
   <li>
     <a href="http://darwinports.opendarwin.org/ports?by=name&substr=py-ldap">
-    Darwin port</a>maintained by Markus W. Weissmann
+    Darwin port</a> maintained by Markus W. Weissmann
   </li>
 </ul>
 
