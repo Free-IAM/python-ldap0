@@ -1,4 +1,4 @@
-<!-- $Id: index.php,v 1.2 2000/02/03 08:37:47 leonard Exp $ -->
+<!-- $Id: index.php,v 1.3 2000/08/11 08:24:59 leonard Exp $ -->
 <?
 	$thishref = "index";
 	include("header.php");
@@ -16,11 +16,16 @@
 This project provide an LDAP client API for 
 <a href="http://www.python.org/">Python</a> in the spirit of 
 <a href="http://mirror.aarnet.edu.au/rfc/rfc1823.txt">RFC1823</a>.
-This includes
+It includes
 <ul>
-<li> a C wrapper 
-    <a href="http://www.openssl.org/">SSL</a> module around 
-    <a href="http://www.openldap.org/">OpenLDAP</a> or U
+<li> a Python module called <em>_ldapmodule</em> that wraps an LDAP C library,
+	such as you can get from:
+	<ul><li><a href="http://www.openldap.org/">OpenLDAP</a>
+	    <li><a href="ftp://terminator.rs.itd.umich.edu/ldap/">UMich</a>
+	    <li><a href="http://developer.netscape.com/tech/directory/"
+								>Netscape</a>
+	    <li><a href="http://www.mozilla.org/directory/">Mozilla</a>
+	</ul>
 <li> an object-oriented API for X.500 directories
 </ul>
 </p>
@@ -29,10 +34,11 @@ This includes
 <img align=right alt="[SourceForge]" src="http://sourceforge.net/images/sflogo2-steel.png" width="43" height="21">
 This project is hosted by 
 <a href="http://sourceforge.net/">SourceForge</a> (thanks!)
-You can look at the Python-LDAP
+<br>
+You might also want to look at the SourceForge Python-LDAP
 <a href="http://sourceforge.net/project/?group_id=2072">project information</a>.
 
 <hr>
-<i>$Id: index.php,v 1.2 2000/02/03 08:37:47 leonard Exp $</i>
+<i>$Id: index.php,v 1.3 2000/08/11 08:24:59 leonard Exp $</i>
 </BODY>
 </HTML>
