@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.12 2000/08/16 13:28:30 leonard Exp $ -->
+<!-- $Id: release.php,v 1.13 2000/08/16 13:35:19 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -34,8 +34,8 @@
 	</tr>
 	<!--	   filename, version, OS, Python, LDAP -->
 
-	<? binrelease("python-ldap-1.10alpha-OpenBSD-i386.tgz", 
-		      "1.10alpha",
+	<? binrelease("python-ldap-1.10alpha3-OpenBSD-i386.tgz", 
+		      "1.10alpha3",
 		      "OpenBSD/i386 2.7",
 		      "1.6a2",
 		      "OpenLDAP 1.2.11",
@@ -63,6 +63,6 @@
 </dl>
 
 <hr>
-<i>$Id: release.php,v 1.12 2000/08/16 13:28:30 leonard Exp $</i>
+<i>$Id: release.php,v 1.13 2000/08/16 13:35:19 leonard Exp $</i>
 </BODY>
 </HTML>
