@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.8 2003/08/13 21:31:09 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.9 2003/11/10 11:33:15 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -33,6 +33,17 @@ There are some applications implemented with the help of python-ldap
       The LDAP User Folder is a user folder replacement
       for Zope that authenticates Zope users against LDAP.
       It is written for Zope versions 2.4.0 and higher.
+    </p>
+  </dd>
+
+  <dt><a href="http://luma.sourceforge.net/">Luma</a></dt>
+  <dd>
+    <p>
+      Luma is a graphical utility for accessing and managing
+      data stored on LDAP servers. It is written in Python,
+      using PyQt and python-ldap. Plugin-support is included
+      and useful widgets with LDAP-functionality for easy
+      creation of plugins are delivered.
     </p>
   </dd>
 
