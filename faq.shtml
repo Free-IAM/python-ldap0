@@ -1,36 +1,65 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.7 2001/05/29 12:40:08 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.8 2001/06/28 11:33:07 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
-<dl>
-<dt>1. Is python-ldap yet another abandon-ware project on SourceForge?</dt>
-<dd>
+<ol>
+
+<li>
+<p>Q: Is python-ldap yet another abandon-ware project on SourceForge?</p>
+<p>A: 
 Answer 1: "Jump on in."<br />
 Answer 2: "Jump into the C ;-)"<br />
 Answer 3: <a href="http://sourceforge.net/project/stats/?group_id=2072">
 Not quite sure...</a><br />
-</dd>
+</p>
+</li>
 
-<dt>2. Can I do a LDAPv3 bind via python-ldap?</dt>
-<dd>
-In general: No.<br />
-In detail: Depends on the underlying LDAP lib.
-</dd>
+<li>
+<p>Q: Can I do a LDAPv3 bind via python-ldap?</p>
+<p>A: 
+In general: No. In detail: Depends on the underlying LDAP lib.
+</p>
+</li>
 
-<dt>3. Can python-ldap can be built against OpenLDAP 2.0.x libs?</dt>
-<dd>
+<li>
+<p>Q: Can python-ldap can be built against OpenLDAP 2.0.x libs?</p>
+<p>A: 
 No, since OpenLDAP 2.0.x implements a slightly different API
 (<a href="http://www.OpenLDAP.org/lists/openldap-software/200009/msg00408.html">read more</a>)
 python-ldap cannot be linked against this version.
 There are two patches available which work with CVS snapshot as
 of May 2001. See also <a href="download.shtml">download page</a>.
-</dd>
+</p>
+</li>
 
-<dt>4. Does it work with Python (1.5|2.0|2.1)?</dt>
-<dd>Yes.</dd>
+<li>
+<p>Q: Does it work with Python (1.5|2.0|2.1)?</p>
+<p>A: Yes.</p>
+</li>
 
-</dl>
+<li>
+<p>Q: ./configure complains about not finding the OpenLDAP libs although
+they are in place. The following message is found in config.log:
+<pre>
+/usr/local/openldap1/lib/libldap.so: undefined reference to
+`__dn_expand'
+/usr/local/openldap1/lib/libldap.so: undefined reference to
+`__res_search'
+/usr/local/openldap1/lib/libldap.so: undefined reference to
+`_getshort'
+</pre>
+</p>
+<p>A: You have to explicitly link against libresolv:
+<pre>
+export "LDFLAGS=-lresolv"
+./configure
+</pre>
+</p>
+</li>
+
+</ol>
+
 <!--#include file="ssi/footer.shtml" -->
