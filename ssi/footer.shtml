@@ -1,7 +1,8 @@
-<p>
-  <font size="-2">
-    Page last modified: <!--#echo var="LAST_MODIFIED"-->
-  </font>
+<!-- $Id: footer.shtml,v 1.2 2001/05/16 00:10:18 leonard Exp $ -->
+<p class="footer">
+    Page last modified: <!--#echo var="LAST_MODIFIED" -->
+    <br />
+    <!--#echo var="rcsid" -->
 </p>
 
 </body>

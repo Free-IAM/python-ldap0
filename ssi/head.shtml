@@ -1,11 +1,13 @@
 <html>
 <head>
+  <!-- $Id: head.shtml,v 1.2 2001/05/16 00:10:18 leonard Exp $ -->
   <title>python-ldap: <!--#echo var="head_title" --></title>
   <meta name="AUTHOR" content="michael@stroeder.com">
   <meta name="DESCRIPTION" content="python-ldap: <!--#echo var="head_pagedescription" -->">
   <meta name="KEYWORDS" content="Directory,X.500,LDAP,Python">
   <meta name="ROBOTS" content="INDEX,FOLLOW">
   <link rev="MADE" HREF="mailto:www@stroeder.com">
+  <link rel="STYLESHEET" HREF="style.css" TYPE="text/css">
   <script language="JavaScript">
     <!--
      if(top.frames.length > 0)
@@ -14,10 +16,4 @@
   </script>
 </head>
 
-<body
-  bgcolor="#ffffff"
-  text="#484848"
-  link="#f4a460"
-  vlink="#909090"
-  alink="#ff9933"
->
+<body>
