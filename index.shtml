@@ -1,22 +1,27 @@
 <!--#set var="head_title" value="LDAP client API for Python" -->
 <!--#set var="head_pagedescription" value="LDAP client API for Python" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="$Id: index.shtml,v 1.3 2001/05/16 00:10:18 leonard Exp $" -->
+<!--#set var="rcsid" value="$Id: index.shtml,v 1.4 2001/05/16 00:22:52 leonard Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
+<H2>What is Python-LDAP?</h2>
 <p>
-<em>Python-LDAP</em> provides a module for accessing LDAP servers
-with the programming language
-<a href="http://www.python.org/">Python</a> in the spirit of 
-the LDAP API defined in
-<a href="http://www.ietf.org/rfc/rfc1823.txt">RFC 1823</a>.
+Python-LDAP provides a module for accessing LDAP servers from 
+<a href="http://www.python.org/">Python</a>.
+It wraps an underlying LDAP C library 
+that provides an
+<a href="http://www.ietf.org/rfc/rfc1823.txt">RFC 1823</a> API,
+such as <a href="http://www.openldap.org/">OpenLDAP</a>.
 </p>
 
 <h2>Mailing list</h2>
 <p>
+Discussion about the use and future of Python-LDAP occurs in
+the <em>python-ldap-dev</em> mailing list.
+You can
 <a href="http://lists.sourceforge.net/lists/listinfo/python-ldap-dev">
-Subscribe/unsubscribe</a> to the python-ldap-dev list or read
+subscribe or unsubscribe</a> to this list or browse
 the <a href="http://www.geocrawler.com/redir-sf.php3?list=python-ldap-dev">
 list archive</a>.
 </p>
