@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.6 2001/05/16 01:15:36 leonard Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.7 2001/05/16 01:20:15 leonard Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -11,15 +11,15 @@ Here is documentation for the C extension module <em>_ldap</em>.
 </p>
 <ul>
   <li>
+    <a href="doc/lib/index.html">HTML</a>
+  </li>
+  <li>
     <a href="doc/lib.pdf">PDF</a> (you may need Adobe's
     <a href="http://www.adobe.com/products/acrobat/readstep2.html">
     Acrobat Reader</a>)
   </li>
   <li>
     <a href="doc/lib.ps">PostScript</a>
-  </li>
-  <li>
-    <a href="doc/lib/index.html">HTML</a>
   </li>
 </ul>
 
