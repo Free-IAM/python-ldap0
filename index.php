@@ -1,4 +1,4 @@
-<!-- $Id: index.php,v 1.4 2000/08/14 08:17:34 leonard Exp $ -->
+<!-- $Id: index.php,v 1.5 2000/08/14 22:59:54 leonard Exp $ -->
 <?
 	$thishref = "index";
 	include("header.php");
@@ -31,10 +31,12 @@ It includes
 </p>
 
 <p>
+You can:
 <ul>
-<li><a href="release.php">Download a release</a>
-<li><a href="docs.php">Read documentation</a>
-<li><a href="lists.php">Join a mailing list</a>
+<li><a href="release.php">download a release</a>
+<li><a href="docs.php">read documentation</a>
+<li><a href="lists.php">join a mailing list</a>
+</ul>
 </p>
 
 <p>
@@ -46,6 +48,6 @@ You might also want to look at the SourceForge Python-LDAP
 <a href="http://sourceforge.net/project/?group_id=2072">project information</a>.
 
 <hr>
-<i>$Id: index.php,v 1.4 2000/08/14 08:17:34 leonard Exp $</i>
+<i>$Id: index.php,v 1.5 2000/08/14 22:59:54 leonard Exp $</i>
 </BODY>
 </HTML>
