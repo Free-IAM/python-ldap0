@@ -1,0 +1,497 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module ldap.schema.models</title>
+<style type="text/css"><!--
+TT { font-family: lucidatypewriter, lucida console, courier }
+--></style></head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="ldap.html"><font color="#ffffff">ldap</font></a>.<a href="ldap.schema.html"><font color="#ffffff">schema</font></a>.models</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/ldap/schema/models.py">/usr/lib/python2.2/site-packages/ldap/schema/models.py</a></font></td></tr></table>
+    <p><tt>schema.py&nbsp;-&nbsp;support&nbsp;for&nbsp;subSchemaSubEntry&nbsp;information<br>
+written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
+&nbsp;<br>
+See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
+&nbsp;<br>
+\$Id: ldap.schema.models.html,v 1.1 2002/10/29 15:31:37 stroeder Exp $</tt></p>
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="UserDict.html">UserDict</a><br>
+</td><td width="25%" valign=top><a href="ldap.html">ldap</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="ldap.schema.models.html#AttributeType">AttributeType</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.schema.models.html#DITContentRule">DITContentRule</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.schema.models.html#DITStructureRule">DITStructureRule</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.schema.models.html#LDAPSyntax">LDAPSyntax</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.schema.models.html#MatchingRule">MatchingRule</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.schema.models.html#MatchingRuleUse">MatchingRuleUse</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.schema.models.html#NameForm">NameForm</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.schema.models.html#ObjectClass">ObjectClass</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="UserDict.html#UserDict">UserDict.UserDict</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="ldap.schema.models.html#Entry">Entry</a>
+</font></dt></dl>
+</dd>
+</dl>
+ 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AttributeType">class <strong>AttributeType</strong></a>(<a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>AttributeTypeDescription&nbsp;=&nbsp;"("&nbsp;whsp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numericoid&nbsp;whsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<a href="#AttributeType">AttributeType</a>&nbsp;identifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"NAME"&nbsp;qdescrs&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;name&nbsp;used&nbsp;in&nbsp;<a href="#AttributeType">AttributeType</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"DESC"&nbsp;qdstring&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;description<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"OBSOLETE"&nbsp;whsp&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"SUP"&nbsp;woid&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;derived&nbsp;from&nbsp;this&nbsp;other<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<a href="#AttributeType">AttributeType</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"EQUALITY"&nbsp;woid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;Matching&nbsp;Rule&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"ORDERING"&nbsp;woid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;Matching&nbsp;Rule&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"SUBSTR"&nbsp;woid&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;Matching&nbsp;Rule&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"SYNTAX"&nbsp;whsp&nbsp;noidlen&nbsp;whsp&nbsp;]&nbsp;;&nbsp;see&nbsp;section&nbsp;4.3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"SINGLE-VALUE"&nbsp;whsp&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;default&nbsp;multi-valued<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"COLLECTIVE"&nbsp;whsp&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;default&nbsp;not&nbsp;collective<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"NO-USER-MODIFICATION"&nbsp;whsp&nbsp;];&nbsp;default&nbsp;user&nbsp;modifiable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"USAGE"&nbsp;whsp&nbsp;AttributeUsage&nbsp;];&nbsp;default&nbsp;userApplications<br>
+&nbsp;&nbsp;&nbsp;&nbsp;whsp&nbsp;")"<br>
+&nbsp;<br>
+AttributeUsage&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"userApplications"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"directoryOperation"&nbsp;&nbsp;&nbsp;/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"distributedOperation"&nbsp;/&nbsp;;&nbsp;DSA-shared<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"dSAOperation"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;DSA-specific,&nbsp;value&nbsp;depends&nbsp;on&nbsp;server<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AttributeType-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="AttributeType-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>      AttributeTypeDescription = "(" whsp<font color="#c040c0">\n</font>     ...       ; DSA-specific, value depends on server<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<dl><dt><strong>schema_attribute</strong> = 'attributeTypes'</dl>
+
+<dl><dt><strong>token_defaults</strong> = {'COLLECTIVE': None, 'DESC': [None], 'EQUALITY': [None], 'NAME': [], 'NO-USER-MODIFICATION': None, 'OBSOLETE': None, 'ORDERING': [None], 'SINGLE-VALUE': None, 'SUBSTR': [None], 'SUP': [], ...}</dl>
+
+<hr>
+Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><a name="AttributeType-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="AttributeType-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="AttributeType-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DITContentRule">class <strong>DITContentRule</strong></a>(<a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>DITContentRuleDescription&nbsp;=&nbsp;LPAREN&nbsp;WSP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;numericoid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;object&nbsp;identifer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"NAME"&nbsp;SP&nbsp;qdescrs&nbsp;]&nbsp;&nbsp;&nbsp;;&nbsp;short&nbsp;names<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"DESC"&nbsp;SP&nbsp;qdstring&nbsp;]&nbsp;&nbsp;;&nbsp;description<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"OBSOLETE"&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;not&nbsp;active<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"AUX"&nbsp;SP&nbsp;oids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;auxiliary&nbsp;object&nbsp;classes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"MUST"&nbsp;SP&nbsp;oids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;attribute&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"MAY"&nbsp;SP&nbsp;oids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;attribute&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"NOT"&nbsp;SP&nbsp;oids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;attribute&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;extensions&nbsp;WSP&nbsp;RPAREN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;extensions<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  DITContentRuleDescription = LPAREN WSP<font color="#c040c0">\n</font>      ...<font color="#c040c0">\n</font>      extensions WSP RPAREN      ; extensions<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<hr>
+Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><a name="DITContentRule-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="DITContentRule-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="DITContentRule-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<dl><dt><a name="DITContentRule-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="DITContentRule-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<hr>
+Data and non-method functions inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><strong>token_defaults</strong> = {'DESC': [None]}</dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DITStructureRule">class <strong>DITStructureRule</strong></a>(<a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>DITStructureRuleDescription&nbsp;=&nbsp;LPAREN&nbsp;WSP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ruleid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;rule&nbsp;identifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"NAME"&nbsp;SP&nbsp;qdescrs&nbsp;]&nbsp;&nbsp;&nbsp;;&nbsp;short&nbsp;names<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"DESC"&nbsp;SP&nbsp;qdstring&nbsp;]&nbsp;&nbsp;;&nbsp;description<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"OBSOLETE"&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;not&nbsp;active<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SP&nbsp;"FORM"&nbsp;SP&nbsp;oid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<a href="#NameForm">NameForm</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"SUP"&nbsp;ruleids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;superior&nbsp;rules<br>
+&nbsp;&nbsp;&nbsp;&nbsp;extensions&nbsp;WSP&nbsp;RPAREN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;extensions<br>
+&nbsp;<br>
+ruleids&nbsp;=&nbsp;ruleid&nbsp;/&nbsp;LPAREN&nbsp;WSP&nbsp;ruleidlist&nbsp;WSP&nbsp;RPAREN<br>
+&nbsp;<br>
+ruleidlist&nbsp;=&nbsp;[&nbsp;ruleid&nbsp;*(&nbsp;SP&nbsp;ruleid&nbsp;)&nbsp;]<br>
+&nbsp;<br>
+ruleid&nbsp;=&nbsp;number<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  DITStructureRuleDescription = LPAREN WSP<font color="#c040c0">\n</font>    ...= [ ruleid *( SP ruleid ) ]<font color="#c040c0">\n\n</font>  ruleid = number<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<dl><dt><strong>schema_attribute</strong> = 'dITStructureRules'</dl>
+
+<hr>
+Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><a name="DITStructureRule-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="DITStructureRule-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="DITStructureRule-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<dl><dt><a name="DITStructureRule-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="DITStructureRule-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<hr>
+Data and non-method functions inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><strong>token_defaults</strong> = {'DESC': [None]}</dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Entry">class <strong>Entry</strong></a>(<a href="UserDict.html#UserDict">UserDict.UserDict</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Schema-aware&nbsp;implementation&nbsp;of&nbsp;an&nbsp;LDAP&nbsp;entry&nbsp;class.<br>
+&nbsp;<br>
+Mainly&nbsp;it&nbsp;holds&nbsp;the&nbsp;attributes&nbsp;in&nbsp;a&nbsp;string-keyed&nbsp;dictionary&nbsp;with<br>
+the&nbsp;OID&nbsp;as&nbsp;key.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Entry-__delitem__"><strong>__delitem__</strong></a>(self, nameoroid)</dt></dl>
+
+<dl><dt><a name="Entry-__getitem__"><strong>__getitem__</strong></a>(self, nameoroid)</dt></dl>
+
+<dl><dt><a name="Entry-__init__"><strong>__init__</strong></a>(self, schema, dn, entry)</dt></dl>
+
+<dl><dt><a name="Entry-__setitem__"><strong>__setitem__</strong></a>(self, nameoroid, attr_values)</dt></dl>
+
+<dl><dt><a name="Entry-_at2key"><strong>_at2key</strong></a>(self, nameoroid)</dt><dd><tt>Return&nbsp;tuple&nbsp;of&nbsp;OID&nbsp;and&nbsp;all&nbsp;sub-types&nbsp;of&nbsp;attribute&nbsp;type&nbsp;specified<br>
+in&nbsp;nameoroid.</tt></dd></dl>
+
+<dl><dt><a name="Entry-attribute_types"><strong>attribute_types</strong></a>(self, attr_type_filter<font color="#909090">=None</font>, strict<font color="#909090">=1</font>, raise_keyerror<font color="#909090">=1</font>)</dt><dd><tt>Convenience&nbsp;wrapper&nbsp;around&nbsp;SubSchema.<a href="#Entry-attribute_types">attribute_types</a>()&nbsp;which<br>
+passes&nbsp;object&nbsp;classes&nbsp;of&nbsp;this&nbsp;particular&nbsp;entry&nbsp;as&nbsp;argument&nbsp;to<br>
+SubSchema.<a href="#Entry-attribute_types">attribute_types</a>()</tt></dd></dl>
+
+<dl><dt><a name="Entry-get"><strong>get</strong></a>(self, nameoroid, failobj)</dt></dl>
+
+<dl><dt><a name="Entry-has_key"><strong>has_key</strong></a>(self, nameoroid)</dt></dl>
+
+<dl><dt><a name="Entry-items"><strong>items</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-keys"><strong>keys</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-update"><strong>update</strong></a>(self, dict)</dt></dl>
+
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  Schema-aware implementation of an LDAP entry ...string-keyed dictionary with<font color="#c040c0">\n</font>  the OID as key.<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<hr>
+Methods inherited from <a href="UserDict.html#UserDict">UserDict.UserDict</a>:<br>
+<dl><dt><a name="Entry-__cmp__"><strong>__cmp__</strong></a>(self, dict)</dt></dl>
+
+<dl><dt><a name="Entry-__contains__"><strong>__contains__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="Entry-__len__"><strong>__len__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-clear"><strong>clear</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-iteritems"><strong>iteritems</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-iterkeys"><strong>iterkeys</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-itervalues"><strong>itervalues</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-popitem"><strong>popitem</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Entry-setdefault"><strong>setdefault</strong></a>(self, key, failobj<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Entry-values"><strong>values</strong></a>(self)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LDAPSyntax">class <strong>LDAPSyntax</strong></a>(<a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>SyntaxDescription&nbsp;=&nbsp;"("&nbsp;whsp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;numericoid&nbsp;whsp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"DESC"&nbsp;qdstring&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;whsp&nbsp;")"<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="LDAPSyntax-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LDAPSyntax-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  SyntaxDescription = "(" whsp<font color="#c040c0">\n</font>      numericoid whsp<font color="#c040c0">\n</font>      [ "DESC" qdstring ]<font color="#c040c0">\n</font>      whsp ")"<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<dl><dt><strong>schema_attribute</strong> = 'ldapSyntaxes'</dl>
+
+<dl><dt><strong>token_defaults</strong> = {'DESC': [None], 'X-NOT-HUMAN-READABLE': [None]}</dl>
+
+<hr>
+Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><a name="LDAPSyntax-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="LDAPSyntax-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="LDAPSyntax-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MatchingRule">class <strong>MatchingRule</strong></a>(<a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>MatchingRuleDescription&nbsp;=&nbsp;"("&nbsp;whsp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;numericoid&nbsp;whsp&nbsp;&nbsp;;&nbsp;<a href="#MatchingRule">MatchingRule</a>&nbsp;identifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"NAME"&nbsp;qdescrs&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"DESC"&nbsp;qdstring&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"OBSOLETE"&nbsp;whsp&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"SYNTAX"&nbsp;numericoid<br>
+whsp&nbsp;")"<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="MatchingRule-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MatchingRule-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  MatchingRuleDescription = "(" whsp<font color="#c040c0">\n</font>      nume...E" whsp ]<font color="#c040c0">\n</font>      "SYNTAX" numericoid<font color="#c040c0">\n</font>  whsp ")"<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<dl><dt><strong>schema_attribute</strong> = 'matchingRules'</dl>
+
+<dl><dt><strong>token_defaults</strong> = {'APPLIES': [None], 'DESC': [None], 'NAME': [], 'OBSOLETE': None, 'SYNTAX': [None]}</dl>
+
+<hr>
+Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><a name="MatchingRule-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="MatchingRule-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="MatchingRule-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MatchingRuleUse">class <strong>MatchingRuleUse</strong></a>(<a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>MatchingRuleUseDescription&nbsp;=&nbsp;"("&nbsp;whsp<br>
+&nbsp;&nbsp;&nbsp;numericoid&nbsp;<br>
+&nbsp;&nbsp;&nbsp;[&nbsp;space&nbsp;"NAME"&nbsp;space&nbsp;qdescrs&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;[&nbsp;space&nbsp;"DESC"&nbsp;space&nbsp;qdstring&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;[&nbsp;space&nbsp;"OBSOLETE"&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;space&nbsp;"APPLIES"&nbsp;space&nbsp;oids&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;<a href="#AttributeType">AttributeType</a>&nbsp;identifiers<br>
+&nbsp;&nbsp;&nbsp;extensions<br>
+&nbsp;&nbsp;&nbsp;whsp&nbsp;")"<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="MatchingRuleUse-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MatchingRuleUse-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  MatchingRuleUseDescription = "(" whsp<font color="#c040c0">\n</font>     nu...ype identifiers<font color="#c040c0">\n</font>     extensions<font color="#c040c0">\n</font>     whsp ")" <font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<dl><dt><strong>schema_attribute</strong> = 'matchingRuleUses'</dl>
+
+<dl><dt><strong>token_defaults</strong> = {'APPLIES': [], 'DESC': [None], 'NAME': [], 'OBSOLETE': None}</dl>
+
+<hr>
+Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><a name="MatchingRuleUse-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="MatchingRuleUse-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="MatchingRuleUse-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NameForm">class <strong>NameForm</strong></a>(<a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>NameFormDescription&nbsp;=&nbsp;LPAREN&nbsp;WSP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;numericoid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;object&nbsp;identifer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"NAME"&nbsp;SP&nbsp;qdescrs&nbsp;]&nbsp;&nbsp;&nbsp;;&nbsp;short&nbsp;names<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"DESC"&nbsp;SP&nbsp;qdstring&nbsp;]&nbsp;&nbsp;;&nbsp;description<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"OBSOLETE"&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;not&nbsp;active<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SP&nbsp;"OC"&nbsp;SP&nbsp;oid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;structural&nbsp;object&nbsp;class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SP&nbsp;"MUST"&nbsp;SP&nbsp;oids&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;attribute&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;SP&nbsp;"MAY"&nbsp;SP&nbsp;oids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;attribute&nbsp;types<br>
+&nbsp;&nbsp;&nbsp;&nbsp;extensions&nbsp;WSP&nbsp;RPAREN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;extensions<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  NameFormDescription = LPAREN WSP<font color="#c040c0">\n</font>      numeri...<font color="#c040c0">\n</font>      extensions WSP RPAREN      ; extensions<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<dl><dt><strong>schema_attribute</strong> = 'nameForms'</dl>
+
+<hr>
+Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><a name="NameForm-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="NameForm-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="NameForm-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<dl><dt><a name="NameForm-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="NameForm-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<hr>
+Data and non-method functions inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><strong>token_defaults</strong> = {'DESC': [None]}</dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ObjectClass">class <strong>ObjectClass</strong></a>(<a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>ObjectClassDescription&nbsp;=&nbsp;"("&nbsp;whsp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;numericoid&nbsp;whsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;<a href="#ObjectClass">ObjectClass</a>&nbsp;identifier<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"NAME"&nbsp;qdescrs&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"DESC"&nbsp;qdstring&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"OBSOLETE"&nbsp;whsp&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"SUP"&nbsp;oids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;Superior&nbsp;ObjectClasses<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;(&nbsp;"ABSTRACT"&nbsp;/&nbsp;"STRUCTURAL"&nbsp;/&nbsp;"AUXILIARY"&nbsp;)&nbsp;whsp&nbsp;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;default&nbsp;structural<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"MUST"&nbsp;oids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;AttributeTypes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;"MAY"&nbsp;oids&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;AttributeTypes<br>
+whsp&nbsp;")"<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ObjectClass-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ObjectClass-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  ObjectClassDescription = "(" whsp<font color="#c040c0">\n</font>      numer..."MAY" oids ]       ; AttributeTypes<font color="#c040c0">\n</font>  whsp ")"<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<dl><dt><strong>schema_attribute</strong> = 'objectClasses'</dl>
+
+<dl><dt><strong>token_defaults</strong> = {'ABSTRACT': None, 'AUXILIARY': None, 'DESC': [None], 'MAY': [], 'MUST': [], 'NAME': [], 'OBSOLETE': None, 'STRUCTURAL': None, 'SUP': []}</dl>
+
+<hr>
+Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
+<dl><dt><a name="ObjectClass-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="ObjectClass-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="ObjectClass-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SchemaElement">class <strong>SchemaElement</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;class&nbsp;for&nbsp;all&nbsp;schema&nbsp;element&nbsp;classes.&nbsp;Not&nbsp;used&nbsp;directly!<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SchemaElement-__init__"><strong>__init__</strong></a>(self, schema_element_str<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="SchemaElement-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SchemaElement-_set_attrs"><strong>_set_attrs</strong></a>(self, l, d)</dt></dl>
+
+<dl><dt><a name="SchemaElement-key_attr"><strong>key_attr</strong></a>(self, key, value, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="SchemaElement-key_list"><strong>key_list</strong></a>(self, key, values, sep<font color="#909090">=' '</font>, quoted<font color="#909090">=0</font>)</dt></dl>
+
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  Base class for all schema element classes. Not used directly!<font color="#c040c0">\n</font>  '</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
+
+<dl><dt><strong>token_defaults</strong> = {'DESC': [None]}</dl>
+
+</td></tr></table></td></tr></table>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><strong>AttributeUsage</strong> = {'userapplications': 0, 'directoryoperation': 1,... 'userapplication': 0, 'distributedoperation': 2}<br>
+<strong>NOT_HUMAN_READABLE_LDAP_SYNTAXES</strong> = {'1.3.6.1.4.1.1466.115.121.1.10': None, '1.3.6.1.4.1.1466.115.121.1.23': None, '1.3.6.1.4.1.1466.115.121.1.28': None, '1.3.6.1.4.1.1466.115.121.1.4': None, '1.3.6.1.4.1.1466.115.121.1.40': None, '1.3.6.1.4.1.1466.115.121.1.49': None, '1.3.6.1.4.1.1466.115.121.1.5': None, '1.3.6.1.4.1.1466.115.121.1.6': None, '1.3.6.1.4.1.1466.115.121.1.8': None, '1.3.6.1.4.1.1466.115.121.1.9': None}<br>
+<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/schema/models.pyc'<br>
+<strong>__name__</strong> = 'ldap.schema.models'</td></tr></table>
+</body></html>

@@ -8,10 +8,15 @@ TT { font-family: lucidatypewriter, lucida console, courier }
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>ldap</strong></big></big> (version 2.0.0pre04)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>ldap</strong></big></big> (version 2.0.0pre06)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/ldap/__init__.py">/usr/lib/python2.2/site-packages/ldap/__init__.py</a></font></td></tr></table>
-    <p><tt>#&nbsp;$Id: ldap.html,v 1.1 2002/03/04 22:28:19 stroeder Exp $</tt></p>
+    <p><tt>ldap&nbsp;-&nbsp;base&nbsp;module<br>
+written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
+&nbsp;<br>
+See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
+&nbsp;<br>
+$Id: ldap.html,v 1.2 2002/10/29 15:31:36 stroeder Exp $</tt></p>
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -21,10 +26,13 @@ TT { font-family: lucidatypewriter, lucida console, courier }
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="ldap.__init__.html">__init__</a><br>
 <a href="ldap.async.html">async</a><br>
-</td><td width="25%" valign=top><a href="ldap.functions.html">functions</a><br>
-<a href="ldap.ldapobject.html">ldapobject</a><br>
-</td><td width="25%" valign=top><a href="ldap.modlist.html">modlist</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table>
+</td><td width="25%" valign=top><a href="ldap.cidict.html">cidict</a><br>
+<a href="ldap.functions.html">functions</a><br>
+</td><td width="25%" valign=top><a href="ldap.ldapobject.html">ldapobject</a><br>
+<a href="ldap.modlist.html">modlist</a><br>
+</td><td width="25%" valign=top><a href="ldap.sasl.html">sasl</a><br>
+<a href="ldap.schema.html"><strong>schema</strong>&nbsp;(package)</a><br>
+</td></tr></table></td></tr></table>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -32,7 +40,8 @@ TT { font-family: lucidatypewriter, lucida console, courier }
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
 <td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
+<dt><font face="helvetica, arial"><a href="ldap.html#DummyLock">DummyLock</a>
+</font></dt><dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
 </font></dt><dd>
 <dl>
 <dt><font face="helvetica, arial"><a href="ldap.html#LDAPError">LDAPError</a>
@@ -585,6 +594,28 @@ Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception<
 <dl><dt><a name="DECODING_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
 
 <dl><dt><a name="DECODING_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DummyLock">class <strong>DummyLock</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Define&nbsp;dummy&nbsp;class&nbsp;with&nbsp;methods&nbsp;compatible&nbsp;to&nbsp;threading.Lock<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="DummyLock-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="DummyLock-acquire"><strong>acquire</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="DummyLock-release"><strong>release</strong></a>(self)</dt></dl>
+
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = 'Define dummy class with methods compatible to threading.Lock'</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
 
 </td></tr></table> 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1869,7 +1900,12 @@ Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception<
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
-<td width="100%"><dl><dt><a name="-_ldap_call"><strong>_ldap_call</strong></a>(func, *args, **kwargs)</dt><dd><tt>Wrapper&nbsp;function&nbsp;which&nbsp;locks&nbsp;calls&nbsp;to&nbsp;func&nbsp;with&nbsp;via&nbsp;_ldap_lock</tt></dd></dl>
+<td width="100%"><dl><dt><a name="-LDAPLock"><strong>LDAPLock</strong></a> = allocate_lock(...)</dt><dd><tt>allocate_lock()&nbsp;-&gt;&nbsp;lock&nbsp;object<br>
+(allocate()&nbsp;is&nbsp;an&nbsp;obsolete&nbsp;synonym)<br>
+&nbsp;<br>
+Create&nbsp;a&nbsp;new&nbsp;lock&nbsp;object.&nbsp;&nbsp;See&nbsp;LockType.__doc__&nbsp;for&nbsp;information&nbsp;about&nbsp;locks.</tt></dd></dl>
+ <dl><dt><a name="-_ldap_function_call"><strong>_ldap_function_call</strong></a>(func, *args, **kwargs)</dt><dd><tt>Wrapper&nbsp;function&nbsp;which&nbsp;locks&nbsp;calls&nbsp;to&nbsp;func&nbsp;with&nbsp;via<br>
+module-wide&nbsp;ldap_lock</tt></dd></dl>
  <dl><dt><a name="-dn2ufn"><strong>dn2ufn</strong></a>(...)</dt><dd><tt><a href="#-dn2ufn">dn2ufn</a>(dn)&nbsp;-&gt;&nbsp;string<br>
 &nbsp;<br>
 Turns&nbsp;the&nbsp;DN&nbsp;into&nbsp;a&nbsp;more&nbsp;user-friendly&nbsp;form,&nbsp;stripping&nbsp;off&nbsp;type&nbsp;names.<br>
@@ -1879,6 +1915,10 @@ for&nbsp;more&nbsp;details&nbsp;on&nbsp;the&nbsp;UFN&nbsp;format.</tt></dd></dl>
 &nbsp;<br>
 This&nbsp;function&nbsp;returns&nbsp;true&nbsp;if&nbsp;url&nbsp;`looks&nbsp;like'&nbsp;an&nbsp;LDAP&nbsp;URL<br>
 (as&nbsp;opposed&nbsp;to&nbsp;some&nbsp;other&nbsp;kind&nbsp;of&nbsp;URL).</tt></dd></dl>
+ <dl><dt><a name="-str2attributetype"><strong>str2attributetype</strong></a>(...)</dt></dl>
+ <dl><dt><a name="-str2matchingrule"><strong>str2matchingrule</strong></a>(...)</dt></dl>
+ <dl><dt><a name="-str2objectclass"><strong>str2objectclass</strong></a>(...)</dt></dl>
+ <dl><dt><a name="-str2syntax"><strong>str2syntax</strong></a>(...)</dt></dl>
 </td></tr></table>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -1886,7 +1926,8 @@ This&nbsp;function&nbsp;returns&nbsp;true&nbsp;if&nbsp;url&nbsp;`looks&nbsp;like
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
-<td width="100%"><strong>AUTH_KRBV4</strong> = 255<br>
+<td width="100%"><strong>API_VERSION</strong> = 2004<br>
+<strong>AUTH_KRBV4</strong> = 255<br>
 <strong>AUTH_KRBV41</strong> = 129<br>
 <strong>AUTH_KRBV42</strong> = 130<br>
 <strong>AUTH_NONE</strong> = 0<br>
@@ -1909,9 +1950,9 @@ This&nbsp;function&nbsp;returns&nbsp;true&nbsp;if&nbsp;url&nbsp;`looks&nbsp;like
 <strong>FILTER_OR</strong> = 161<br>
 <strong>FILTER_PRESENT</strong> = 135<br>
 <strong>FILTER_SUBSTRINGS</strong> = 164<br>
-<strong>FILT_MAXSIZ</strong> = 1024<br>
 <strong>LDAP_OPT_OFF</strong> = 0<br>
 <strong>LDAP_OPT_ON</strong> = 1<br>
+<strong>LIBLDAP_R</strong> = 1<br>
 <strong>MOD_ADD</strong> = 0<br>
 <strong>MOD_BVALUES</strong> = 128<br>
 <strong>MOD_DELETE</strong> = 1<br>
@@ -2008,15 +2049,19 @@ This&nbsp;function&nbsp;returns&nbsp;true&nbsp;if&nbsp;url&nbsp;`looks&nbsp;like
 <strong>TAG_SASL_RES_CREDS</strong> = 135<br>
 <strong>URL_ERR_BADSCOPE</strong> = 8<br>
 <strong>URL_ERR_MEM</strong> = 1<br>
+<strong>VENDOR_VERSION</strong> = 20106<br>
 <strong>VERSION</strong> = 2<br>
 <strong>VERSION1</strong> = 1<br>
 <strong>VERSION2</strong> = 2<br>
 <strong>VERSION3</strong> = 3<br>
 <strong>VERSION_MAX</strong> = 3<br>
 <strong>VERSION_MIN</strong> = 2<br>
-<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/__init__.pyc'<br>
+<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/__init__.py'<br>
 <strong>__name__</strong> = 'ldap'<br>
 <strong>__path__</strong> = ['/usr/lib/python2.2/site-packages/ldap']<br>
-<strong>__version__</strong> = '2.0.0pre04'<br>
-<strong>_ldap_lock</strong> = &lt;thread.lock object&gt;</td></tr></table>
+<strong>__version__</strong> = '2.0.0pre06'<br>
+<strong>_ldap_module_lock</strong> = &lt;thread.lock object&gt;<br>
+<strong>_trace_file</strong> = &lt;open file '&lt;stderr&gt;', mode 'w'&gt;<br>
+<strong>_trace_level</strong> = 0<br>
+<strong>_trace_stack_limit</strong> = None</td></tr></table>
 </body></html>
