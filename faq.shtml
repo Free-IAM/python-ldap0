@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.18 2003/06/23 10:53:33 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.19 2003/07/31 07:46:54 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -100,12 +100,8 @@ Any other version since 2.0 should not be a problem at all.
 <li>
 <p>Q: Does it work with Windows 32?</p>
 <p>
-A1:
-Older versions (1.x) work with UMich LDAP libs under Windows 32.
-The current version 2.0.0pre03 needs OpenLDAP 2 libs which are currently
-not available on Windows. Jump on in...
-A2:
-It' possible to run recent python-ldap with OpenLDAP 2 libs under cygwin.
+A: You can find some pre-compiled packages for 
+<a href="http://www.zope.org/Members/volkerw/LdapWin32">Windows 32 platform</a>.
 </p>
 </li>
 

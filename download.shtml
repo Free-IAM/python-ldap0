@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.19 2003/05/26 07:55:52 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.20 2003/07/31 07:45:19 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -65,9 +65,8 @@ project release area</a> has the latest 'official' releases.
 
 <h3>Win32</h3>
 <p>
-  You can find some pre-compiled
-  <a href="http://www.zope.org/Members/barryp/win32_ldap">packages for Windows 32 platform</a>
-  (1.10alpha3 based on really ancient UMich LDAP libs).
+  You can find some pre-compiled packages for 
+  <a href="http://www.zope.org/Members/volkerw/LdapWin32">Windows 32 platform</a>.
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
