@@ -1,0 +1,2022 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: package ldap</title>
+<style type="text/css"><!--
+TT { font-family: lucidatypewriter, lucida console, courier }
+--></style></head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>ldap</strong></big></big> (version 2.0.0pre04)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/ldap/__init__.py">/usr/lib/python2.2/site-packages/ldap/__init__.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;$Id: ldap.html,v 1.1 2002/03/04 22:28:19 stroeder Exp $</tt></p>
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Package Contents</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="ldap.__init__.html">__init__</a><br>
+<a href="ldap.async.html">async</a><br>
+</td><td width="25%" valign=top><a href="ldap.functions.html">functions</a><br>
+<a href="ldap.ldapobject.html">ldapobject</a><br>
+</td><td width="25%" valign=top><a href="ldap.modlist.html">modlist</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="ldap.html#LDAPError">LDAPError</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="ldap.html#ADMINLIMIT_EXCEEDED">ADMINLIMIT_EXCEEDED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#AFFECTS_MULTIPLE_DSAS">AFFECTS_MULTIPLE_DSAS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#ALIAS_DEREF_PROBLEM">ALIAS_DEREF_PROBLEM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#ALIAS_PROBLEM">ALIAS_PROBLEM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#ALREADY_EXISTS">ALREADY_EXISTS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#AUTH_UNKNOWN">AUTH_UNKNOWN</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#BUSY">BUSY</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CLIENT_LOOP">CLIENT_LOOP</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#COMPARE_FALSE">COMPARE_FALSE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#COMPARE_TRUE">COMPARE_TRUE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CONFIDENTIALITY_REQUIRED">CONFIDENTIALITY_REQUIRED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CONNECT_ERROR">CONNECT_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CONSTRAINT_VIOLATION">CONSTRAINT_VIOLATION</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CONTROL_NOT_FOUND">CONTROL_NOT_FOUND</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#DECODING_ERROR">DECODING_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#ENCODING_ERROR">ENCODING_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#FILTER_ERROR">FILTER_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INAPPROPRIATE_AUTH">INAPPROPRIATE_AUTH</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INAPPROPRIATE_MATCHING">INAPPROPRIATE_MATCHING</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INSUFFICIENT_ACCESS">INSUFFICIENT_ACCESS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INVALID_CREDENTIALS">INVALID_CREDENTIALS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INVALID_DN_SYNTAX">INVALID_DN_SYNTAX</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INVALID_SYNTAX">INVALID_SYNTAX</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#IS_LEAF">IS_LEAF</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#LOCAL_ERROR">LOCAL_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#LOOP_DETECT">LOOP_DETECT</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#MORE_RESULTS_TO_RETURN">MORE_RESULTS_TO_RETURN</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NAMING_VIOLATION">NAMING_VIOLATION</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NOT_ALLOWED_ON_NONLEAF">NOT_ALLOWED_ON_NONLEAF</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NOT_ALLOWED_ON_RDN">NOT_ALLOWED_ON_RDN</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NOT_SUPPORTED">NOT_SUPPORTED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_MEMORY">NO_MEMORY</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_OBJECT_CLASS_MODS">NO_OBJECT_CLASS_MODS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_RESULTS_RETURNED">NO_RESULTS_RETURNED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_SUCH_ATTRIBUTE">NO_SUCH_ATTRIBUTE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_SUCH_OBJECT">NO_SUCH_OBJECT</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#OBJECT_CLASS_VIOLATION">OBJECT_CLASS_VIOLATION</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#OPERATIONS_ERROR">OPERATIONS_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#OTHER">OTHER</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#PARAM_ERROR">PARAM_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#PARTIAL_RESULTS">PARTIAL_RESULTS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#PROTOCOL_ERROR">PROTOCOL_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#REFERRAL">REFERRAL</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#REFERRAL_LIMIT_EXCEEDED">REFERRAL_LIMIT_EXCEEDED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#RESULTS_TOO_LARGE">RESULTS_TOO_LARGE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#SASL_BIND_IN_PROGRESS">SASL_BIND_IN_PROGRESS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#SERVER_DOWN">SERVER_DOWN</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#SIZELIMIT_EXCEEDED">SIZELIMIT_EXCEEDED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#STRONG_AUTH_NOT_SUPPORTED">STRONG_AUTH_NOT_SUPPORTED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#STRONG_AUTH_REQUIRED">STRONG_AUTH_REQUIRED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#SUCCESS">SUCCESS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#TIMELIMIT_EXCEEDED">TIMELIMIT_EXCEEDED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#TIMEOUT">TIMEOUT</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#TYPE_OR_VALUE_EXISTS">TYPE_OR_VALUE_EXISTS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#UNAVAILABLE">UNAVAILABLE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#UNAVAILABLE_CRITICAL_EXTENSION">UNAVAILABLE_CRITICAL_EXTENSION</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#UNDEFINED_TYPE">UNDEFINED_TYPE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#UNWILLING_TO_PERFORM">UNWILLING_TO_PERFORM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#USER_CANCELLED">USER_CANCELLED</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="ldap.html#LDAPError">LDAPError</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="ldap.html#ADMINLIMIT_EXCEEDED">ADMINLIMIT_EXCEEDED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#AFFECTS_MULTIPLE_DSAS">AFFECTS_MULTIPLE_DSAS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#ALIAS_DEREF_PROBLEM">ALIAS_DEREF_PROBLEM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#ALIAS_PROBLEM">ALIAS_PROBLEM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#ALREADY_EXISTS">ALREADY_EXISTS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#AUTH_UNKNOWN">AUTH_UNKNOWN</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#BUSY">BUSY</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CLIENT_LOOP">CLIENT_LOOP</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#COMPARE_FALSE">COMPARE_FALSE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#COMPARE_TRUE">COMPARE_TRUE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CONFIDENTIALITY_REQUIRED">CONFIDENTIALITY_REQUIRED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CONNECT_ERROR">CONNECT_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CONSTRAINT_VIOLATION">CONSTRAINT_VIOLATION</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#CONTROL_NOT_FOUND">CONTROL_NOT_FOUND</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#DECODING_ERROR">DECODING_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#ENCODING_ERROR">ENCODING_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#FILTER_ERROR">FILTER_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INAPPROPRIATE_AUTH">INAPPROPRIATE_AUTH</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INAPPROPRIATE_MATCHING">INAPPROPRIATE_MATCHING</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INSUFFICIENT_ACCESS">INSUFFICIENT_ACCESS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INVALID_CREDENTIALS">INVALID_CREDENTIALS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INVALID_DN_SYNTAX">INVALID_DN_SYNTAX</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#INVALID_SYNTAX">INVALID_SYNTAX</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#IS_LEAF">IS_LEAF</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#LOCAL_ERROR">LOCAL_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#LOOP_DETECT">LOOP_DETECT</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#MORE_RESULTS_TO_RETURN">MORE_RESULTS_TO_RETURN</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NAMING_VIOLATION">NAMING_VIOLATION</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NOT_ALLOWED_ON_NONLEAF">NOT_ALLOWED_ON_NONLEAF</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NOT_ALLOWED_ON_RDN">NOT_ALLOWED_ON_RDN</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NOT_SUPPORTED">NOT_SUPPORTED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_MEMORY">NO_MEMORY</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_OBJECT_CLASS_MODS">NO_OBJECT_CLASS_MODS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_RESULTS_RETURNED">NO_RESULTS_RETURNED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_SUCH_ATTRIBUTE">NO_SUCH_ATTRIBUTE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#NO_SUCH_OBJECT">NO_SUCH_OBJECT</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#OBJECT_CLASS_VIOLATION">OBJECT_CLASS_VIOLATION</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#OPERATIONS_ERROR">OPERATIONS_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#OTHER">OTHER</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#PARAM_ERROR">PARAM_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#PARTIAL_RESULTS">PARTIAL_RESULTS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#PROTOCOL_ERROR">PROTOCOL_ERROR</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#REFERRAL">REFERRAL</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#REFERRAL_LIMIT_EXCEEDED">REFERRAL_LIMIT_EXCEEDED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#RESULTS_TOO_LARGE">RESULTS_TOO_LARGE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#SASL_BIND_IN_PROGRESS">SASL_BIND_IN_PROGRESS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#SERVER_DOWN">SERVER_DOWN</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#SIZELIMIT_EXCEEDED">SIZELIMIT_EXCEEDED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#STRONG_AUTH_NOT_SUPPORTED">STRONG_AUTH_NOT_SUPPORTED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#STRONG_AUTH_REQUIRED">STRONG_AUTH_REQUIRED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#SUCCESS">SUCCESS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#TIMELIMIT_EXCEEDED">TIMELIMIT_EXCEEDED</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#TIMEOUT">TIMEOUT</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#TYPE_OR_VALUE_EXISTS">TYPE_OR_VALUE_EXISTS</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#UNAVAILABLE">UNAVAILABLE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#UNAVAILABLE_CRITICAL_EXTENSION">UNAVAILABLE_CRITICAL_EXTENSION</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#UNDEFINED_TYPE">UNDEFINED_TYPE</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#UNWILLING_TO_PERFORM">UNWILLING_TO_PERFORM</a>
+</font></dt><dt><font face="helvetica, arial"><a href="ldap.html#USER_CANCELLED">USER_CANCELLED</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ADMINLIMIT_EXCEEDED">class <strong>ADMINLIMIT_EXCEEDED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#ADMINLIMIT_EXCEEDED">ADMINLIMIT_EXCEEDED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ADMINLIMIT_EXCEEDED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ADMINLIMIT_EXCEEDED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ADMINLIMIT_EXCEEDED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AFFECTS_MULTIPLE_DSAS">class <strong>AFFECTS_MULTIPLE_DSAS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#AFFECTS_MULTIPLE_DSAS">AFFECTS_MULTIPLE_DSAS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="AFFECTS_MULTIPLE_DSAS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="AFFECTS_MULTIPLE_DSAS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="AFFECTS_MULTIPLE_DSAS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ALIAS_DEREF_PROBLEM">class <strong>ALIAS_DEREF_PROBLEM</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#ALIAS_DEREF_PROBLEM">ALIAS_DEREF_PROBLEM</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ALIAS_DEREF_PROBLEM-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ALIAS_DEREF_PROBLEM-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ALIAS_DEREF_PROBLEM-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ALIAS_PROBLEM">class <strong>ALIAS_PROBLEM</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#ALIAS_PROBLEM">ALIAS_PROBLEM</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ALIAS_PROBLEM-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ALIAS_PROBLEM-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ALIAS_PROBLEM-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ALREADY_EXISTS">class <strong>ALREADY_EXISTS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#ALREADY_EXISTS">ALREADY_EXISTS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ALREADY_EXISTS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ALREADY_EXISTS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ALREADY_EXISTS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AUTH_UNKNOWN">class <strong>AUTH_UNKNOWN</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#AUTH_UNKNOWN">AUTH_UNKNOWN</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="AUTH_UNKNOWN-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="AUTH_UNKNOWN-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="AUTH_UNKNOWN-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BUSY">class <strong>BUSY</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#BUSY">BUSY</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="BUSY-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="BUSY-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="BUSY-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CLIENT_LOOP">class <strong>CLIENT_LOOP</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#CLIENT_LOOP">CLIENT_LOOP</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="CLIENT_LOOP-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CLIENT_LOOP-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CLIENT_LOOP-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="COMPARE_FALSE">class <strong>COMPARE_FALSE</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#COMPARE_FALSE">COMPARE_FALSE</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="COMPARE_FALSE-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="COMPARE_FALSE-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="COMPARE_FALSE-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="COMPARE_TRUE">class <strong>COMPARE_TRUE</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#COMPARE_TRUE">COMPARE_TRUE</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="COMPARE_TRUE-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="COMPARE_TRUE-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="COMPARE_TRUE-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CONFIDENTIALITY_REQUIRED">class <strong>CONFIDENTIALITY_REQUIRED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#CONFIDENTIALITY_REQUIRED">CONFIDENTIALITY_REQUIRED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="CONFIDENTIALITY_REQUIRED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CONFIDENTIALITY_REQUIRED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CONFIDENTIALITY_REQUIRED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CONNECT_ERROR">class <strong>CONNECT_ERROR</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#CONNECT_ERROR">CONNECT_ERROR</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="CONNECT_ERROR-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CONNECT_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CONNECT_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CONSTRAINT_VIOLATION">class <strong>CONSTRAINT_VIOLATION</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#CONSTRAINT_VIOLATION">CONSTRAINT_VIOLATION</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="CONSTRAINT_VIOLATION-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CONSTRAINT_VIOLATION-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CONSTRAINT_VIOLATION-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CONTROL_NOT_FOUND">class <strong>CONTROL_NOT_FOUND</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#CONTROL_NOT_FOUND">CONTROL_NOT_FOUND</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="CONTROL_NOT_FOUND-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CONTROL_NOT_FOUND-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="CONTROL_NOT_FOUND-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DECODING_ERROR">class <strong>DECODING_ERROR</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#DECODING_ERROR">DECODING_ERROR</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="DECODING_ERROR-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="DECODING_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="DECODING_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ENCODING_ERROR">class <strong>ENCODING_ERROR</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#ENCODING_ERROR">ENCODING_ERROR</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="ENCODING_ERROR-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ENCODING_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ENCODING_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="FILTER_ERROR">class <strong>FILTER_ERROR</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#FILTER_ERROR">FILTER_ERROR</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="FILTER_ERROR-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="FILTER_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="FILTER_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="INAPPROPRIATE_AUTH">class <strong>INAPPROPRIATE_AUTH</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#INAPPROPRIATE_AUTH">INAPPROPRIATE_AUTH</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="INAPPROPRIATE_AUTH-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INAPPROPRIATE_AUTH-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INAPPROPRIATE_AUTH-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="INAPPROPRIATE_MATCHING">class <strong>INAPPROPRIATE_MATCHING</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#INAPPROPRIATE_MATCHING">INAPPROPRIATE_MATCHING</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="INAPPROPRIATE_MATCHING-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INAPPROPRIATE_MATCHING-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INAPPROPRIATE_MATCHING-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="INSUFFICIENT_ACCESS">class <strong>INSUFFICIENT_ACCESS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#INSUFFICIENT_ACCESS">INSUFFICIENT_ACCESS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="INSUFFICIENT_ACCESS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INSUFFICIENT_ACCESS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INSUFFICIENT_ACCESS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="INVALID_CREDENTIALS">class <strong>INVALID_CREDENTIALS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#INVALID_CREDENTIALS">INVALID_CREDENTIALS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="INVALID_CREDENTIALS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INVALID_CREDENTIALS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INVALID_CREDENTIALS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="INVALID_DN_SYNTAX">class <strong>INVALID_DN_SYNTAX</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#INVALID_DN_SYNTAX">INVALID_DN_SYNTAX</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="INVALID_DN_SYNTAX-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INVALID_DN_SYNTAX-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INVALID_DN_SYNTAX-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="INVALID_SYNTAX">class <strong>INVALID_SYNTAX</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#INVALID_SYNTAX">INVALID_SYNTAX</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="INVALID_SYNTAX-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INVALID_SYNTAX-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="INVALID_SYNTAX-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="IS_LEAF">class <strong>IS_LEAF</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#IS_LEAF">IS_LEAF</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="IS_LEAF-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="IS_LEAF-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="IS_LEAF-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LDAPError">class <strong>LDAPError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="LDAPError-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LDAPError-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LDAPError-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LOCAL_ERROR">class <strong>LOCAL_ERROR</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#LOCAL_ERROR">LOCAL_ERROR</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="LOCAL_ERROR-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LOCAL_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LOCAL_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LOOP_DETECT">class <strong>LOOP_DETECT</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#LOOP_DETECT">LOOP_DETECT</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="LOOP_DETECT-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LOOP_DETECT-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LOOP_DETECT-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MORE_RESULTS_TO_RETURN">class <strong>MORE_RESULTS_TO_RETURN</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#MORE_RESULTS_TO_RETURN">MORE_RESULTS_TO_RETURN</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="MORE_RESULTS_TO_RETURN-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="MORE_RESULTS_TO_RETURN-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="MORE_RESULTS_TO_RETURN-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NAMING_VIOLATION">class <strong>NAMING_VIOLATION</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NAMING_VIOLATION">NAMING_VIOLATION</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NAMING_VIOLATION-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NAMING_VIOLATION-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NAMING_VIOLATION-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NOT_ALLOWED_ON_NONLEAF">class <strong>NOT_ALLOWED_ON_NONLEAF</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NOT_ALLOWED_ON_NONLEAF">NOT_ALLOWED_ON_NONLEAF</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NOT_ALLOWED_ON_NONLEAF-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NOT_ALLOWED_ON_NONLEAF-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NOT_ALLOWED_ON_NONLEAF-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NOT_ALLOWED_ON_RDN">class <strong>NOT_ALLOWED_ON_RDN</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NOT_ALLOWED_ON_RDN">NOT_ALLOWED_ON_RDN</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NOT_ALLOWED_ON_RDN-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NOT_ALLOWED_ON_RDN-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NOT_ALLOWED_ON_RDN-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NOT_SUPPORTED">class <strong>NOT_SUPPORTED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NOT_SUPPORTED">NOT_SUPPORTED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NOT_SUPPORTED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NOT_SUPPORTED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NOT_SUPPORTED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NO_MEMORY">class <strong>NO_MEMORY</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NO_MEMORY">NO_MEMORY</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NO_MEMORY-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_MEMORY-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_MEMORY-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NO_OBJECT_CLASS_MODS">class <strong>NO_OBJECT_CLASS_MODS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NO_OBJECT_CLASS_MODS">NO_OBJECT_CLASS_MODS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NO_OBJECT_CLASS_MODS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_OBJECT_CLASS_MODS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_OBJECT_CLASS_MODS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NO_RESULTS_RETURNED">class <strong>NO_RESULTS_RETURNED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NO_RESULTS_RETURNED">NO_RESULTS_RETURNED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NO_RESULTS_RETURNED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_RESULTS_RETURNED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_RESULTS_RETURNED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NO_SUCH_ATTRIBUTE">class <strong>NO_SUCH_ATTRIBUTE</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NO_SUCH_ATTRIBUTE">NO_SUCH_ATTRIBUTE</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NO_SUCH_ATTRIBUTE-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_SUCH_ATTRIBUTE-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_SUCH_ATTRIBUTE-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NO_SUCH_OBJECT">class <strong>NO_SUCH_OBJECT</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#NO_SUCH_OBJECT">NO_SUCH_OBJECT</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="NO_SUCH_OBJECT-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_SUCH_OBJECT-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="NO_SUCH_OBJECT-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="OBJECT_CLASS_VIOLATION">class <strong>OBJECT_CLASS_VIOLATION</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#OBJECT_CLASS_VIOLATION">OBJECT_CLASS_VIOLATION</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="OBJECT_CLASS_VIOLATION-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="OBJECT_CLASS_VIOLATION-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="OBJECT_CLASS_VIOLATION-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="OPERATIONS_ERROR">class <strong>OPERATIONS_ERROR</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#OPERATIONS_ERROR">OPERATIONS_ERROR</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="OPERATIONS_ERROR-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="OPERATIONS_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="OPERATIONS_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="OTHER">class <strong>OTHER</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#OTHER">OTHER</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="OTHER-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="OTHER-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="OTHER-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PARAM_ERROR">class <strong>PARAM_ERROR</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#PARAM_ERROR">PARAM_ERROR</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="PARAM_ERROR-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="PARAM_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="PARAM_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PARTIAL_RESULTS">class <strong>PARTIAL_RESULTS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#PARTIAL_RESULTS">PARTIAL_RESULTS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="PARTIAL_RESULTS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="PARTIAL_RESULTS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="PARTIAL_RESULTS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PROTOCOL_ERROR">class <strong>PROTOCOL_ERROR</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#PROTOCOL_ERROR">PROTOCOL_ERROR</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="PROTOCOL_ERROR-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="PROTOCOL_ERROR-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="PROTOCOL_ERROR-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="REFERRAL">class <strong>REFERRAL</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#REFERRAL">REFERRAL</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="REFERRAL-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="REFERRAL-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="REFERRAL-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="REFERRAL_LIMIT_EXCEEDED">class <strong>REFERRAL_LIMIT_EXCEEDED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#REFERRAL_LIMIT_EXCEEDED">REFERRAL_LIMIT_EXCEEDED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="REFERRAL_LIMIT_EXCEEDED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="REFERRAL_LIMIT_EXCEEDED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="REFERRAL_LIMIT_EXCEEDED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="RESULTS_TOO_LARGE">class <strong>RESULTS_TOO_LARGE</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#RESULTS_TOO_LARGE">RESULTS_TOO_LARGE</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="RESULTS_TOO_LARGE-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="RESULTS_TOO_LARGE-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="RESULTS_TOO_LARGE-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SASL_BIND_IN_PROGRESS">class <strong>SASL_BIND_IN_PROGRESS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#SASL_BIND_IN_PROGRESS">SASL_BIND_IN_PROGRESS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="SASL_BIND_IN_PROGRESS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SASL_BIND_IN_PROGRESS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SASL_BIND_IN_PROGRESS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SERVER_DOWN">class <strong>SERVER_DOWN</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#SERVER_DOWN">SERVER_DOWN</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="SERVER_DOWN-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SERVER_DOWN-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SERVER_DOWN-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SIZELIMIT_EXCEEDED">class <strong>SIZELIMIT_EXCEEDED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#SIZELIMIT_EXCEEDED">SIZELIMIT_EXCEEDED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="SIZELIMIT_EXCEEDED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SIZELIMIT_EXCEEDED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SIZELIMIT_EXCEEDED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="STRONG_AUTH_NOT_SUPPORTED">class <strong>STRONG_AUTH_NOT_SUPPORTED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#STRONG_AUTH_NOT_SUPPORTED">STRONG_AUTH_NOT_SUPPORTED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="STRONG_AUTH_NOT_SUPPORTED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="STRONG_AUTH_NOT_SUPPORTED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="STRONG_AUTH_NOT_SUPPORTED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="STRONG_AUTH_REQUIRED">class <strong>STRONG_AUTH_REQUIRED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#STRONG_AUTH_REQUIRED">STRONG_AUTH_REQUIRED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="STRONG_AUTH_REQUIRED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="STRONG_AUTH_REQUIRED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="STRONG_AUTH_REQUIRED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SUCCESS">class <strong>SUCCESS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#SUCCESS">SUCCESS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="SUCCESS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SUCCESS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="SUCCESS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TIMELIMIT_EXCEEDED">class <strong>TIMELIMIT_EXCEEDED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#TIMELIMIT_EXCEEDED">TIMELIMIT_EXCEEDED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="TIMELIMIT_EXCEEDED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TIMELIMIT_EXCEEDED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TIMELIMIT_EXCEEDED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TIMEOUT">class <strong>TIMEOUT</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#TIMEOUT">TIMEOUT</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="TIMEOUT-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TIMEOUT-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TIMEOUT-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TYPE_OR_VALUE_EXISTS">class <strong>TYPE_OR_VALUE_EXISTS</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#TYPE_OR_VALUE_EXISTS">TYPE_OR_VALUE_EXISTS</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="TYPE_OR_VALUE_EXISTS-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TYPE_OR_VALUE_EXISTS-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="TYPE_OR_VALUE_EXISTS-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UNAVAILABLE">class <strong>UNAVAILABLE</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#UNAVAILABLE">UNAVAILABLE</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="UNAVAILABLE-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UNAVAILABLE-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UNAVAILABLE-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UNAVAILABLE_CRITICAL_EXTENSION">class <strong>UNAVAILABLE_CRITICAL_EXTENSION</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#UNAVAILABLE_CRITICAL_EXTENSION">UNAVAILABLE_CRITICAL_EXTENSION</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="UNAVAILABLE_CRITICAL_EXTENSION-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UNAVAILABLE_CRITICAL_EXTENSION-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UNAVAILABLE_CRITICAL_EXTENSION-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UNDEFINED_TYPE">class <strong>UNDEFINED_TYPE</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#UNDEFINED_TYPE">UNDEFINED_TYPE</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="UNDEFINED_TYPE-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UNDEFINED_TYPE-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UNDEFINED_TYPE-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UNWILLING_TO_PERFORM">class <strong>UNWILLING_TO_PERFORM</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#UNWILLING_TO_PERFORM">UNWILLING_TO_PERFORM</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="UNWILLING_TO_PERFORM-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UNWILLING_TO_PERFORM-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="UNWILLING_TO_PERFORM-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="USER_CANCELLED">class <strong>USER_CANCELLED</strong></a>(<a href="ldap.html#LDAPError">LDAPError</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="ldap.html#USER_CANCELLED">USER_CANCELLED</a></dd>
+<dd><a href="ldap.html#LDAPError">LDAPError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+</dl>
+<hr>
+Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="USER_CANCELLED-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="USER_CANCELLED-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="USER_CANCELLED-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table> 
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><strong>error</strong> = <a name="error">class LDAPError</a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2>&nbsp;</td></tr>
+<tr><td>&nbsp;&nbsp;</td>
+<td width="100%">Data and non-method functions defined here:<br>
+<dl><dt><strong>__doc__</strong> = None</dl>
+
+<dl><dt><strong>__module__</strong> = 'ldap'</dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><a name="LDAPError-__getitem__"><strong>__getitem__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LDAPError-__init__"><strong>__init__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="LDAPError-__str__"><strong>__str__</strong></a>(...)</dt></dl>
+
+</td></tr></table></td></tr></table>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><dl><dt><a name="-_ldap_call"><strong>_ldap_call</strong></a>(func, *args, **kwargs)</dt><dd><tt>Wrapper&nbsp;function&nbsp;which&nbsp;locks&nbsp;calls&nbsp;to&nbsp;func&nbsp;with&nbsp;via&nbsp;_ldap_lock</tt></dd></dl>
+ <dl><dt><a name="-dn2ufn"><strong>dn2ufn</strong></a>(...)</dt><dd><tt><a href="#-dn2ufn">dn2ufn</a>(dn)&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Turns&nbsp;the&nbsp;DN&nbsp;into&nbsp;a&nbsp;more&nbsp;user-friendly&nbsp;form,&nbsp;stripping&nbsp;off&nbsp;type&nbsp;names.<br>
+See&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc1781.txt">RFC&nbsp;1781</a>&nbsp;``Using&nbsp;the&nbsp;Directory&nbsp;to&nbsp;Achieve&nbsp;User&nbsp;Friendly&nbsp;Naming''<br>
+for&nbsp;more&nbsp;details&nbsp;on&nbsp;the&nbsp;UFN&nbsp;format.</tt></dd></dl>
+ <dl><dt><a name="-is_ldap_url"><strong>is_ldap_url</strong></a>(...)</dt><dd><tt><a href="#-is_ldap_url">is_ldap_url</a>(url)&nbsp;-&gt;&nbsp;int<br>
+&nbsp;<br>
+This&nbsp;function&nbsp;returns&nbsp;true&nbsp;if&nbsp;url&nbsp;`looks&nbsp;like'&nbsp;an&nbsp;LDAP&nbsp;URL<br>
+(as&nbsp;opposed&nbsp;to&nbsp;some&nbsp;other&nbsp;kind&nbsp;of&nbsp;URL).</tt></dd></dl>
+</td></tr></table>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<td width="100%"><strong>AUTH_KRBV4</strong> = 255<br>
+<strong>AUTH_KRBV41</strong> = 129<br>
+<strong>AUTH_KRBV42</strong> = 130<br>
+<strong>AUTH_NONE</strong> = 0<br>
+<strong>AUTH_SIMPLE</strong> = 128<br>
+<strong>DEREF_ALWAYS</strong> = 3<br>
+<strong>DEREF_FINDING</strong> = 2<br>
+<strong>DEREF_NEVER</strong> = 0<br>
+<strong>DEREF_SEARCHING</strong> = 1<br>
+<strong>FILTER_AND</strong> = 160<br>
+<strong>FILTER_APPROX</strong> = 168<br>
+<strong>FILTER_EQUALITY</strong> = 163<br>
+<strong>FILTER_EXT</strong> = 169<br>
+<strong>FILTER_EXT_DNATTRS</strong> = 132<br>
+<strong>FILTER_EXT_OID</strong> = 129<br>
+<strong>FILTER_EXT_TYPE</strong> = 130<br>
+<strong>FILTER_EXT_VALUE</strong> = 131<br>
+<strong>FILTER_GE</strong> = 165<br>
+<strong>FILTER_LE</strong> = 166<br>
+<strong>FILTER_NOT</strong> = 162<br>
+<strong>FILTER_OR</strong> = 161<br>
+<strong>FILTER_PRESENT</strong> = 135<br>
+<strong>FILTER_SUBSTRINGS</strong> = 164<br>
+<strong>FILT_MAXSIZ</strong> = 1024<br>
+<strong>LDAP_OPT_OFF</strong> = 0<br>
+<strong>LDAP_OPT_ON</strong> = 1<br>
+<strong>MOD_ADD</strong> = 0<br>
+<strong>MOD_BVALUES</strong> = 128<br>
+<strong>MOD_DELETE</strong> = 1<br>
+<strong>MOD_REPLACE</strong> = 2<br>
+<strong>MSG_ALL</strong> = 1<br>
+<strong>MSG_ONE</strong> = 0<br>
+<strong>MSG_RECEIVED</strong> = 2<br>
+<strong>NO_LIMIT</strong> = 0<br>
+<strong>OPT_API_FEATURE_INFO</strong> = 21<br>
+<strong>OPT_API_INFO</strong> = 0<br>
+<strong>OPT_CLIENT_CONTROLS</strong> = 19<br>
+<strong>OPT_DEBUG_LEVEL</strong> = 20481<br>
+<strong>OPT_DEREF</strong> = 2<br>
+<strong>OPT_ERROR_STRING</strong> = 50<br>
+<strong>OPT_HOST_NAME</strong> = 48<br>
+<strong>OPT_MATCHED_DN</strong> = 51<br>
+<strong>OPT_NETWORK_TIMEOUT</strong> = 20485<br>
+<strong>OPT_PRIVATE_EXTENSION_BASE</strong> = 16384<br>
+<strong>OPT_PROTOCOL_VERSION</strong> = 17<br>
+<strong>OPT_REFERRALS</strong> = 8<br>
+<strong>OPT_REFHOPLIMIT</strong> = 20483<br>
+<strong>OPT_RESTART</strong> = 9<br>
+<strong>OPT_SERVER_CONTROLS</strong> = 18<br>
+<strong>OPT_SIZELIMIT</strong> = 3<br>
+<strong>OPT_SUCCESS</strong> = 0<br>
+<strong>OPT_TIMELIMIT</strong> = 4<br>
+<strong>OPT_TIMEOUT</strong> = 20482<br>
+<strong>OPT_URI</strong> = 20486<br>
+<strong>OPT_X_SASL_AUTHCID</strong> = 24834<br>
+<strong>OPT_X_SASL_AUTHZID</strong> = 24835<br>
+<strong>OPT_X_SASL_MECH</strong> = 24832<br>
+<strong>OPT_X_SASL_REALM</strong> = 24833<br>
+<strong>OPT_X_SASL_SECPROPS</strong> = 24838<br>
+<strong>OPT_X_SASL_SSF</strong> = 24836<br>
+<strong>OPT_X_SASL_SSF_EXTERNAL</strong> = 24837<br>
+<strong>OPT_X_SASL_SSF_MAX</strong> = 24840<br>
+<strong>OPT_X_SASL_SSF_MIN</strong> = 24839<br>
+<strong>OPT_X_TLS</strong> = 24576<br>
+<strong>OPT_X_TLS_ALLOW</strong> = 3<br>
+<strong>OPT_X_TLS_CACERTDIR</strong> = 24579<br>
+<strong>OPT_X_TLS_CACERTFILE</strong> = 24578<br>
+<strong>OPT_X_TLS_CERTFILE</strong> = 24580<br>
+<strong>OPT_X_TLS_CIPHER_SUITE</strong> = 24584<br>
+<strong>OPT_X_TLS_CTX</strong> = 24577<br>
+<strong>OPT_X_TLS_DEMAND</strong> = 2<br>
+<strong>OPT_X_TLS_HARD</strong> = 1<br>
+<strong>OPT_X_TLS_KEYFILE</strong> = 24581<br>
+<strong>OPT_X_TLS_NEVER</strong> = 0<br>
+<strong>OPT_X_TLS_RANDOM_FILE</strong> = 24585<br>
+<strong>OPT_X_TLS_REQUIRE_CERT</strong> = 24582<br>
+<strong>OPT_X_TLS_TRY</strong> = 4<br>
+<strong>PORT</strong> = 389<br>
+<strong>REQ_ABANDON</strong> = 80<br>
+<strong>REQ_ADD</strong> = 104<br>
+<strong>REQ_BIND</strong> = 96<br>
+<strong>REQ_COMPARE</strong> = 110<br>
+<strong>REQ_DELETE</strong> = 74<br>
+<strong>REQ_EXTENDED</strong> = 119<br>
+<strong>REQ_MODIFY</strong> = 102<br>
+<strong>REQ_MODRDN</strong> = 108<br>
+<strong>REQ_SEARCH</strong> = 99<br>
+<strong>REQ_UNBIND</strong> = 66<br>
+<strong>RES_ADD</strong> = 'RES_ADD'<br>
+<strong>RES_ANY</strong> = -1<br>
+<strong>RES_BIND</strong> = 'RES_BIND'<br>
+<strong>RES_COMPARE</strong> = 'RES_COMPARE'<br>
+<strong>RES_DELETE</strong> = 'RES_DELETE'<br>
+<strong>RES_EXTENDED</strong> = 'RES_EXTENDED'<br>
+<strong>RES_EXTENDED_PARTIAL</strong> = 'RES_EXTENDED_PARTIAL'<br>
+<strong>RES_MODIFY</strong> = 'RES_MODIFY'<br>
+<strong>RES_MODRDN</strong> = 'RES_MODRDN'<br>
+<strong>RES_SEARCH_ENTRY</strong> = 'RES_SEARCH_ENTRY'<br>
+<strong>RES_SEARCH_REFERENCE</strong> = 'RES_SEARCH_REFERENCE'<br>
+<strong>RES_SEARCH_RESULT</strong> = 'RES_SEARCH_RESULT'<br>
+<strong>RES_UNSOLICITED</strong> = 'RES_UNSOLICITED'<br>
+<strong>SCOPE_BASE</strong> = 0<br>
+<strong>SCOPE_DEFAULT</strong> = -1<br>
+<strong>SCOPE_ONELEVEL</strong> = 1<br>
+<strong>SCOPE_SUBTREE</strong> = 2<br>
+<strong>SUBSTRING_ANY</strong> = 129<br>
+<strong>SUBSTRING_FINAL</strong> = 130<br>
+<strong>SUBSTRING_INITIAL</strong> = 128<br>
+<strong>TAG_CONTROLS</strong> = 160<br>
+<strong>TAG_EXOP_REQ_OID</strong> = 128<br>
+<strong>TAG_EXOP_REQ_VALUE</strong> = 129<br>
+<strong>TAG_EXOP_RES_OID</strong> = 138<br>
+<strong>TAG_EXOP_RES_VALUE</strong> = 139<br>
+<strong>TAG_LDAPCRED</strong> = 4<br>
+<strong>TAG_LDAPDN</strong> = 4<br>
+<strong>TAG_MESSAGE</strong> = 48<br>
+<strong>TAG_MSGID</strong> = 2<br>
+<strong>TAG_NEWSUPERIOR</strong> = 128<br>
+<strong>TAG_REFERRAL</strong> = 163<br>
+<strong>TAG_SASL_RES_CREDS</strong> = 135<br>
+<strong>URL_ERR_BADSCOPE</strong> = 8<br>
+<strong>URL_ERR_MEM</strong> = 1<br>
+<strong>VERSION</strong> = 2<br>
+<strong>VERSION1</strong> = 1<br>
+<strong>VERSION2</strong> = 2<br>
+<strong>VERSION3</strong> = 3<br>
+<strong>VERSION_MAX</strong> = 3<br>
+<strong>VERSION_MIN</strong> = 2<br>
+<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/__init__.pyc'<br>
+<strong>__name__</strong> = 'ldap'<br>
+<strong>__path__</strong> = ['/usr/lib/python2.2/site-packages/ldap']<br>
+<strong>__version__</strong> = '2.0.0pre04'<br>
+<strong>_ldap_lock</strong> = &lt;thread.lock object&gt;</td></tr></table>
+</body></html>
