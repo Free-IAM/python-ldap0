@@ -1,37 +1,20 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.27 2004/01/05 22:49:56 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.28 2004/10/07 18:15:07 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
-<h2>ldap</h2>
+<h2>python-ldap Docs</h2>
 <p>
-Here is documentation for the module <em>ldap</em>.
+The <a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
+project file release area</a> has the latest 'official' released
+documentation packages as HTML (tar.gz or zip) and PDF for off-line reading.
 </p>
-<ul>
-  <li>
-    <a href="doc/python-ldap/index.html">HTML for on-line viewing</a>
-    (<a href="doc/python-ldap-docs-html.tar.gz">tar.gz for download</a>
-    - extract it to your Python HTML docs directory)
-  </li>
-  <li>
-    <a href="doc/python-ldap.pdf">PDF</a> (you may need Adobe's
-    <a href="http://www.adobe.com/products/acrobat/readstep2.html">
-    Acrobat Reader</a>)
-  </li>
-</ul>
+<p>
+You can also browse the docs <a href="doc/python-ldap/index.html">browse the docs  on-line</a>.
+</p>
 
-<h2>pydoc stuff</h2>
-<p>
-Some pydoc-generated docs:
-</p>
-<ul>
-  <li><a href="pydoc/ldap.html">ldap</a></li>
-  <li><a href="pydoc/ldap.schema.html">ldap.schema</a></li>
-  <li><a href="pydoc/ldapurl.html">ldapurl</a></li>
-  <li><a href="pydoc/ldif.html">ldif</a></li>
-</ul>
 
 <h2>Related information</h2>
 
