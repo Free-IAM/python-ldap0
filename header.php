@@ -2,8 +2,8 @@
 	$pages = array(
 		"index" =>	"Home",
 		"lists" =>	"Lists",
-		"release" =>	"Download"
-		"docs" =>	"Docs"
+		"release" =>	"Download",
+		"docs" =>	"Docs",
 	);
 
 	function menubar() {
