@@ -15,6 +15,13 @@ Not quite sure...</a><br />
 </p>
 
 <p>
+Q: Can I do a LDAPv3 bind via python-ldap?
+</p>
+<p>
+A: In general: No. In detail: Depends on the underlying LDAP lib.
+</p>
+
+<p>
 Q: Can python-ldap can be built against OpenLDAP 2.0.x libs?
 </p>
 <p>
