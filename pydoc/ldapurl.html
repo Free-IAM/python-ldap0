@@ -16,7 +16,7 @@ written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
 &nbsp;<br>
 See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
 &nbsp;<br>
-\$Id: ldapurl.html,v 1.2 2002/10/29 15:31:37 stroeder Exp $<br>
+\$Id: ldapurl.html,v 1.3 2003/04/04 00:07:41 stroeder Exp $<br>
 &nbsp;<br>
 Python&nbsp;compability&nbsp;note:<br>
 This&nbsp;module&nbsp;only&nbsp;works&nbsp;with&nbsp;Python&nbsp;2.0+&nbsp;since<br>
@@ -108,8 +108,6 @@ Usable&nbsp;class&nbsp;attributes:<br>
 
 <dl><dt><a name="LDAPUrl-_parse"><strong>_parse</strong></a>(self, ldap_url)</dt><dd><tt>parse&nbsp;a&nbsp;LDAP&nbsp;URL&nbsp;and&nbsp;set&nbsp;the&nbsp;class&nbsp;attributes<br>
 urlscheme,host,dn,attrs,scope,filterstr,extensions</tt></dd></dl>
-
-<dl><dt><a name="LDAPUrl-_urlEncoding"><strong>_urlEncoding</strong></a>(self, s)</dt><dd><tt>Returns&nbsp;URL&nbsp;encoding&nbsp;of&nbsp;string&nbsp;s</tt></dd></dl>
 
 <dl><dt><a name="LDAPUrl-applyDefaults"><strong>applyDefaults</strong></a>(self, defaults)</dt><dd><tt>Apply&nbsp;defaults&nbsp;to&nbsp;all&nbsp;class&nbsp;attributes&nbsp;which&nbsp;are&nbsp;None.<br>
 &nbsp;<br>
@@ -258,6 +256,7 @@ Methods inherited from <a href="UserDict.html#UserDict">UserDict.UserDict</a>:<b
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
 <td width="100%"><dl><dt><a name="-isLDAPUrl"><strong>isLDAPUrl</strong></a>(s)</dt><dd><tt>Returns&nbsp;1&nbsp;if&nbsp;s&nbsp;is&nbsp;a&nbsp;LDAP&nbsp;URL,&nbsp;0&nbsp;else</tt></dd></dl>
+ <dl><dt><a name="-ldapUrlEscape"><strong>ldapUrlEscape</strong></a>(s)</dt><dd><tt>Returns&nbsp;URL&nbsp;encoding&nbsp;of&nbsp;string&nbsp;s</tt></dd></dl>
 </td></tr></table>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">

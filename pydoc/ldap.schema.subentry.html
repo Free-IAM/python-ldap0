@@ -16,7 +16,7 @@ written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
 &nbsp;<br>
 See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
 &nbsp;<br>
-\$Id: ldap.schema.subentry.html,v 1.1 2002/10/29 15:31:37 stroeder Exp $</tt></p>
+\$Id: ldap.schema.subentry.html,v 1.2 2003/04/04 00:07:41 stroeder Exp $</tt></p>
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -33,18 +33,13 @@ See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourcef
     
 <tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
 <td width="100%"><dl>
-<dt><font face="helvetica, arial"><a href="UserDict.html#UserDict">UserDict.UserDict</a>
-</font></dt><dd>
-<dl>
 <dt><font face="helvetica, arial"><a href="ldap.schema.subentry.html#SubSchema">SubSchema</a>
 </font></dt></dl>
-</dd>
-</dl>
  
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
-<font color="#000000" face="helvetica, arial"><a name="SubSchema">class <strong>SubSchema</strong></a>(<a href="UserDict.html#UserDict">UserDict.UserDict</a>)</font></td></tr>
+<font color="#000000" face="helvetica, arial"><a name="SubSchema">class <strong>SubSchema</strong></a></font></td></tr>
     
 <tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2>&nbsp;</td></tr>
@@ -52,8 +47,6 @@ See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourcef
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="SubSchema-__init__"><strong>__init__</strong></a>(self, sub_schema_sub_entry)</dt><dd><tt>sub_schema_sub_entry<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Dictionary&nbsp;containing&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry</tt></dd></dl>
-
-<dl><dt><a name="SubSchema-__setitem__"><strong>__setitem__</strong></a>(self, oid, element_instance)</dt></dl>
 
 <dl><dt><a name="SubSchema-attribute_types"><strong>attribute_types</strong></a>(self, object_class_list, attr_type_filter<font color="#909090">=None</font>, strict<font color="#909090">=1</font>, raise_keyerror<font color="#909090">=1</font>)</dt><dd><tt>Returns&nbsp;a&nbsp;2-tuple&nbsp;of&nbsp;all&nbsp;must&nbsp;and&nbsp;may&nbsp;attributes&nbsp;including<br>
 all&nbsp;inherited&nbsp;attributes&nbsp;of&nbsp;superior&nbsp;object&nbsp;classes<br>
@@ -87,46 +80,6 @@ Data and non-method functions defined here:<br>
 
 <dl><dt><strong>__module__</strong> = 'ldap.schema.subentry'</dl>
 
-<hr>
-Methods inherited from <a href="UserDict.html#UserDict">UserDict.UserDict</a>:<br>
-<dl><dt><a name="SubSchema-__cmp__"><strong>__cmp__</strong></a>(self, dict)</dt></dl>
-
-<dl><dt><a name="SubSchema-__contains__"><strong>__contains__</strong></a>(self, key)</dt></dl>
-
-<dl><dt><a name="SubSchema-__delitem__"><strong>__delitem__</strong></a>(self, key)</dt></dl>
-
-<dl><dt><a name="SubSchema-__getitem__"><strong>__getitem__</strong></a>(self, key)</dt></dl>
-
-<dl><dt><a name="SubSchema-__len__"><strong>__len__</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-clear"><strong>clear</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-copy"><strong>copy</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-get"><strong>get</strong></a>(self, key, failobj<font color="#909090">=None</font>)</dt></dl>
-
-<dl><dt><a name="SubSchema-has_key"><strong>has_key</strong></a>(self, key)</dt></dl>
-
-<dl><dt><a name="SubSchema-items"><strong>items</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-iteritems"><strong>iteritems</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-iterkeys"><strong>iterkeys</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-itervalues"><strong>itervalues</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-keys"><strong>keys</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-popitem"><strong>popitem</strong></a>(self)</dt></dl>
-
-<dl><dt><a name="SubSchema-setdefault"><strong>setdefault</strong></a>(self, key, failobj<font color="#909090">=None</font>)</dt></dl>
-
-<dl><dt><a name="SubSchema-update"><strong>update</strong></a>(self, dict)</dt></dl>
-
-<dl><dt><a name="SubSchema-values"><strong>values</strong></a>(self)</dt></dl>
-
 </td></tr></table></td></tr></table>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
@@ -148,11 +101,11 @@ is&nbsp;loaded&nbsp;with&nbsp;urllib.</tt></dd></dl>
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
 <td width="100%"><strong>AttributeUsage</strong> = {'userapplications': 0, 'directoryoperation': 1,... 'userapplication': 0, 'distributedoperation': 2}<br>
 <strong>NOT_HUMAN_READABLE_LDAP_SYNTAXES</strong> = {'1.3.6.1.4.1.1466.115.121.1.10': None, '1.3.6.1.4.1.1466.115.121.1.23': None, '1.3.6.1.4.1.1466.115.121.1.28': None, '1.3.6.1.4.1.1466.115.121.1.4': None, '1.3.6.1.4.1.1466.115.121.1.40': None, '1.3.6.1.4.1.1466.115.121.1.49': None, '1.3.6.1.4.1.1466.115.121.1.5': None, '1.3.6.1.4.1.1466.115.121.1.6': None, '1.3.6.1.4.1.1466.115.121.1.8': None, '1.3.6.1.4.1.1466.115.121.1.9': None}<br>
-<strong>SCHEMA_ATTRS</strong> = ['matchingRuleUses', 'attributeTypes', 'dITStructureRules', 'ldapSyntaxes', 'objectClasses', 'nameForms', 'matchingRules']<br>
-<strong>SCHEMA_ATTR_MAPPING</strong> = {&lt;class ldap.schema.models.ObjectClass&gt;: 'objectClasses', &lt;class ldap.schema.models.AttributeType&gt;: 'attributeTypes', &lt;class ldap.schema.models.LDAPSyntax&gt;: 'ldapSyntaxes', &lt;class ldap.schema.models.MatchingRule&gt;: 'matchingRules', &lt;class ldap.schema.models.MatchingRuleUse&gt;: 'matchingRuleUses', &lt;class ldap.schema.models.DITStructureRule&gt;: 'dITStructureRules', &lt;class ldap.schema.models.NameForm&gt;: 'nameForms'}<br>
-<strong>SCHEMA_CLASS_MAPPING</strong> = {'matchingruleuses': &lt;class ldap.schema.models.M...ss ldap.schema.models.MatchingRule at 0x8231284&gt;}<br>
+<strong>SCHEMA_ATTRS</strong> = ['attributeTypes', 'dITStructureRules', 'matchingRuleUse', 'objectClasses', 'nameForms', 'ldapSyntaxes', 'matchingRules']<br>
+<strong>SCHEMA_ATTR_MAPPING</strong> = {&lt;class ldap.schema.models.ObjectClass&gt;: 'objectClasses', &lt;class ldap.schema.models.AttributeType&gt;: 'attributeTypes', &lt;class ldap.schema.models.LDAPSyntax&gt;: 'ldapSyntaxes', &lt;class ldap.schema.models.MatchingRule&gt;: 'matchingRules', &lt;class ldap.schema.models.MatchingRuleUse&gt;: 'matchingRuleUse', &lt;class ldap.schema.models.DITStructureRule&gt;: 'dITStructureRules', &lt;class ldap.schema.models.NameForm&gt;: 'nameForms'}<br>
+<strong>SCHEMA_CLASS_MAPPING</strong> = {'attributetypes': &lt;class ldap.schema.models.Att...ss ldap.schema.models.MatchingRule at 0x822a5b4&gt;}<br>
 <strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/schema/subentry.pyc'<br>
 <strong>__name__</strong> = 'ldap.schema.subentry'<br>
 <strong>_name</strong> = 'split_tokens'<br>
-<strong>k</strong> = 'matchingRules'</td></tr></table>
+<strong>schema_attribute</strong> = 'dITContentRules'</td></tr></table>
 </body></html>

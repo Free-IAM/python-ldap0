@@ -8,7 +8,7 @@ TT { font-family: lucidatypewriter, lucida console, courier }
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="ldap.html"><font color="#ffffff">ldap</font></a>.ldapobject</strong></big></big> (version 0.3.0)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="ldap.html"><font color="#ffffff">ldap</font></a>.ldapobject</strong></big></big> (version 0.4.1)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/ldap/ldapobject.py">/usr/lib/python2.2/site-packages/ldap/ldapobject.py</a></font></td></tr></table>
     <p><tt>ldapobject.py&nbsp;-&nbsp;wraps&nbsp;class&nbsp;_ldap.<a href="#LDAPObject">LDAPObject</a><br>
@@ -16,7 +16,7 @@ written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
 &nbsp;<br>
 See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
 &nbsp;<br>
-\$Id: ldap.ldapobject.html,v 1.1 2002/10/29 15:31:37 stroeder Exp $<br>
+\$Id: ldap.ldapobject.html,v 1.2 2003/04/04 00:07:41 stroeder Exp $<br>
 &nbsp;<br>
 Compability:<br>
 -&nbsp;Tested&nbsp;with&nbsp;Python&nbsp;2.0+&nbsp;but&nbsp;should&nbsp;work&nbsp;with&nbsp;Python&nbsp;1.5.x<br>
@@ -28,12 +28,7 @@ overridden.<br>
 &nbsp;<br>
 Thread-lock:<br>
 Basically&nbsp;calls&nbsp;into&nbsp;the&nbsp;LDAP&nbsp;lib&nbsp;are&nbsp;serialized&nbsp;by&nbsp;the&nbsp;module-wide<br>
-lock&nbsp;self.<strong>_ldap_object_lock</strong>.&nbsp;To&nbsp;avoid&nbsp;long-time&nbsp;blocking&nbsp;of&nbsp;other&nbsp;threads<br>
-synchronous&nbsp;methods&nbsp;like&nbsp;search_s()&nbsp;etc.&nbsp;and&nbsp;the&nbsp;result()&nbsp;method<br>
-were&nbsp;rewritten&nbsp;to&nbsp;do&nbsp;solely&nbsp;asynchronous&nbsp;LDAP&nbsp;lib&nbsp;calls&nbsp;with&nbsp;zero<br>
-timeout.<br>
-The&nbsp;timeout&nbsp;handling&nbsp;is&nbsp;done&nbsp;within&nbsp;the&nbsp;method&nbsp;result()&nbsp;which&nbsp;probably&nbsp;leads<br>
-to&nbsp;less&nbsp;exact&nbsp;timing.</tt></p>
+lock&nbsp;self.<strong>_ldap_object_lock</strong>.</tt></p>
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -130,32 +125,6 @@ and&nbsp;trace&nbsp;logs</tt></dd></dl>
 
 <dl><dt><a name="SimpleLDAPObject-delete_s"><strong>delete_s</strong></a>(self, dn)</dt></dl>
 
-<dl><dt><a name="SimpleLDAPObject-destroy_cache"><strong>destroy_cache</strong></a>(self)</dt><dd><tt><a href="#LDAPObject-destroy_cache">destroy_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Turns&nbsp;off&nbsp;caching&nbsp;and&nbsp;removed&nbsp;it&nbsp;from&nbsp;memory.</tt></dd></dl>
-
-<dl><dt><a name="SimpleLDAPObject-disable_cache"><strong>disable_cache</strong></a>(self)</dt><dd><tt><a href="#LDAPObject-disable_cache">disable_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Temporarily&nbsp;disables&nbsp;use&nbsp;of&nbsp;the&nbsp;cache.&nbsp;New&nbsp;requests&nbsp;are<br>
-&nbsp;&nbsp;&nbsp;&nbsp;not&nbsp;cached,&nbsp;and&nbsp;the&nbsp;cache&nbsp;is&nbsp;not&nbsp;checked&nbsp;when&nbsp;returning<br>
-&nbsp;&nbsp;&nbsp;&nbsp;results.&nbsp;Cache&nbsp;contents&nbsp;are&nbsp;not&nbsp;deleted.</tt></dd></dl>
-
-<dl><dt><a name="SimpleLDAPObject-enable_cache"><strong>enable_cache</strong></a>(self, timeout<font color="#909090">=0</font>, maxmem<font color="#909090">=0</font>)</dt><dd><tt><a href="#LDAPObject-enable_cache">enable_cache</a>([timeout=NO_LIMIT,&nbsp;[maxmem=NO_LIMIT]])&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Using&nbsp;a&nbsp;cache&nbsp;often&nbsp;greatly&nbsp;improves&nbsp;performance.&nbsp;By&nbsp;default<br>
-&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;cache&nbsp;is&nbsp;disabled.&nbsp;Specifying&nbsp;timeout&nbsp;in&nbsp;seconds&nbsp;is&nbsp;used<br>
-&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;decide&nbsp;how&nbsp;long&nbsp;to&nbsp;keep&nbsp;cached&nbsp;requests.&nbsp;The&nbsp;maxmem&nbsp;value<br>
-&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;in&nbsp;bytes,&nbsp;and&nbsp;is&nbsp;used&nbsp;to&nbsp;set&nbsp;an&nbsp;upper&nbsp;bound&nbsp;on&nbsp;how&nbsp;much<br>
-&nbsp;&nbsp;&nbsp;&nbsp;memory&nbsp;the&nbsp;cache&nbsp;will&nbsp;use.&nbsp;A&nbsp;value&nbsp;of&nbsp;NO_LIMIT&nbsp;for&nbsp;either<br>
-&nbsp;&nbsp;&nbsp;&nbsp;indicates&nbsp;unlimited.&nbsp;&nbsp;Subsequent&nbsp;calls&nbsp;to&nbsp;<a href="#LDAPObject-enable_cache">enable_cache</a>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;adjust&nbsp;these&nbsp;parameters.<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;and&nbsp;other&nbsp;caching&nbsp;methods&nbsp;are&nbsp;not&nbsp;available&nbsp;if&nbsp;the&nbsp;library<br>
-&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;ldap&nbsp;module&nbsp;were&nbsp;compiled&nbsp;with&nbsp;support&nbsp;for&nbsp;it.</tt></dd></dl>
-
-<dl><dt><a name="SimpleLDAPObject-fileno"><strong>fileno</strong></a>(self)</dt><dd><tt><a href="#LDAPObject-fileno">fileno</a>()&nbsp;-&gt;&nbsp;int<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;the&nbsp;file&nbsp;descriptor&nbsp;associated&nbsp;with&nbsp;this&nbsp;connection.</tt></dd></dl>
-
-<dl><dt><a name="SimpleLDAPObject-flush_cache"><strong>flush_cache</strong></a>(self)</dt><dd><tt><a href="#LDAPObject-flush_cache">flush_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Deletes&nbsp;the&nbsp;cache's&nbsp;contents,&nbsp;but&nbsp;does&nbsp;not&nbsp;affect&nbsp;it&nbsp;in&nbsp;any&nbsp;other&nbsp;way.</tt></dd></dl>
-
 <dl><dt><a name="SimpleLDAPObject-get_option"><strong>get_option</strong></a>(self, option)</dt></dl>
 
 <dl><dt><a name="SimpleLDAPObject-manage_dsa_it"><strong>manage_dsa_it</strong></a>(self, enable, critical<font color="#909090">=0</font>)</dt><dd><tt><a href="#LDAPObject-manage_dsa_it">manage_dsa_it</a>()&nbsp;-&gt;&nbsp;None<br>
@@ -194,7 +163,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 
 <dl><dt><a name="SimpleLDAPObject-modrdn_s"><strong>modrdn_s</strong></a>(self, dn, newrdn, delold<font color="#909090">=1</font>)</dt></dl>
 
-<dl><dt><a name="SimpleLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['matchingRuleUses', 'attributeTypes', 'dITStructureRules', 'ldapSyntaxes', 'objectClasses', 'nameForms', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
+<dl><dt><a name="SimpleLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['attributeTypes', 'dITStructureRules', 'matchingRuleUse', 'objectClasses', 'nameForms', 'ldapSyntaxes', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
 
 <dl><dt><a name="SimpleLDAPObject-rename"><strong>rename</strong></a>(self, dn, newrdn, newsuperior<font color="#909090">=None</font>, delold<font color="#909090">=1</font>)</dt><dd><tt><a href="#LDAPObject-rename">rename</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;int<br>
 <a href="#LDAPObject-rename_s">rename_s</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;None<br>
@@ -211,7 +180,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 
 <dl><dt><a name="SimpleLDAPObject-rename_s"><strong>rename_s</strong></a>(self, dn, newrdn, newsuperior<font color="#909090">=None</font>, delold<font color="#909090">=1</font>)</dt></dl>
 
-<dl><dt><a name="SimpleLDAPObject-result"><strong>result</strong></a>(self, msgid<font color="#909090">=-1</font>, all<font color="#909090">=1</font>, timeout<font color="#909090">=-1</font>)</dt><dd><tt><a href="#LDAPObject-result">result</a>([msgid=RES_ANY&nbsp;[,all=1&nbsp;[,timeout=-1]]])&nbsp;-&gt;&nbsp;(result_type,&nbsp;result_data)<br>
+<dl><dt><a name="SimpleLDAPObject-result"><strong>result</strong></a>(self, msgid<font color="#909090">=-1</font>, all<font color="#909090">=1</font>, timeout<font color="#909090">=None</font>)</dt><dd><tt><a href="#LDAPObject-result">result</a>([msgid=RES_ANY&nbsp;[,all=1&nbsp;[,timeout=None]]])&nbsp;-&gt;&nbsp;(result_type,&nbsp;result_data)<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;wait&nbsp;for&nbsp;and&nbsp;return&nbsp;the&nbsp;result&nbsp;of&nbsp;an<br>
 &nbsp;&nbsp;&nbsp;&nbsp;operation&nbsp;previously&nbsp;initiated&nbsp;by&nbsp;one&nbsp;of&nbsp;the&nbsp;LDAP&nbsp;asynchronous<br>
@@ -238,11 +207,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;its&nbsp;entirety,&nbsp;i.e.&nbsp;after&nbsp;all&nbsp;entries&nbsp;and&nbsp;the&nbsp;final&nbsp;search<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;have&nbsp;been&nbsp;received.<br>
 &nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
+&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;method&nbsp;returns&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;form&nbsp;(result_type,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result_data).&nbsp;&nbsp;The&nbsp;result_type&nbsp;is&nbsp;a&nbsp;string,&nbsp;being&nbsp;one&nbsp;of:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;'RES_BIND',&nbsp;'RES_SEARCH_ENTRY',&nbsp;'RES_SEARCH_RESULT',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'RES_MODIFY',&nbsp;'RES_ADD',&nbsp;'RES_DELETE',&nbsp;'RES_MODRDN',&nbsp;or<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'RES_COMPARE'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'RES_SEARCH_REFERENCE','RES_MODIFY',&nbsp;'RES_ADD',&nbsp;'RES_DELETE',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'RES_MODRDN',&nbsp;or&nbsp;'RES_COMPARE'.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;constants&nbsp;RES_*&nbsp;are&nbsp;set&nbsp;to&nbsp;these&nbsp;strings,&nbsp;for&nbsp;convenience.<br>
 &nbsp;<br>
@@ -251,16 +228,21 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#LDAPObject-result">result</a>()&nbsp;method&nbsp;will&nbsp;block&nbsp;for&nbsp;timeout&nbsp;seconds,&nbsp;or<br>
 &nbsp;&nbsp;&nbsp;&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is&nbsp;negative.&nbsp;&nbsp;A&nbsp;timeout&nbsp;of&nbsp;0&nbsp;will&nbsp;effect<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;poll.&nbsp;&nbsp;The&nbsp;timeout&nbsp;can&nbsp;be&nbsp;expressed&nbsp;as&nbsp;a&nbsp;floating-point&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;poll.&nbsp;The&nbsp;timeout&nbsp;can&nbsp;be&nbsp;expressed&nbsp;as&nbsp;a&nbsp;floating-point&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;timeout&nbsp;is&nbsp;None&nbsp;the&nbsp;default&nbsp;in&nbsp;self.<strong>timeout</strong>&nbsp;is&nbsp;used.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;a&nbsp;timeout&nbsp;occurs,&nbsp;a&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised,&nbsp;unless<br>
 &nbsp;&nbsp;&nbsp;&nbsp;polling&nbsp;(timeout&nbsp;=&nbsp;0),&nbsp;in&nbsp;which&nbsp;case&nbsp;(None,&nbsp;None)&nbsp;is&nbsp;returned.</tt></dd></dl>
 
 <dl><dt><a name="SimpleLDAPObject-sasl_bind_s"><strong>sasl_bind_s</strong></a>(self, who, auth)</dt><dd><tt><a href="#LDAPObject-sasl_bind_s">sasl_bind_s</a>(who,&nbsp;auth)&nbsp;-&gt;&nbsp;None</tt></dd></dl>
 
-<dl><dt><a name="SimpleLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt><dd><tt><a href="#LDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="SimpleLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="SimpleLDAPObject-search_ext"><strong>search_ext</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, serverctrls<font color="#909090">=None</font>, clientctrls<font color="#909090">=None</font>, timeout<font color="#909090">=-1</font>, sizelimit<font color="#909090">=0</font>)</dt><dd><tt><a href="#LDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
 <a href="#LDAPObject-search_s">search_s</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])<br>
 <a href="#LDAPObject-search_st">search_st</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,timeout=-1]]])<br>
+<a href="#LDAPObject-search_ext">search_ext</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
+<a href="#LDAPObject-search_ext_s">search_ext_s</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Perform&nbsp;an&nbsp;LDAP&nbsp;search&nbsp;operation,&nbsp;with&nbsp;base&nbsp;as&nbsp;the&nbsp;DN&nbsp;of<br>
 &nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;entry&nbsp;at&nbsp;which&nbsp;to&nbsp;start&nbsp;the&nbsp;search,&nbsp;scope&nbsp;being&nbsp;one&nbsp;of<br>
@@ -270,15 +252,6 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;filter&nbsp;is&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;filter&nbsp;to<br>
 &nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;in&nbsp;the&nbsp;search&nbsp;(see&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc2254.txt">RFC&nbsp;2254</a>).<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;using&nbsp;the&nbsp;asynchronous&nbsp;form&nbsp;and&nbsp;<a href="#LDAPObject-result">result</a>(),&nbsp;the&nbsp;all&nbsp;parameter<br>
-&nbsp;&nbsp;&nbsp;&nbsp;affects&nbsp;how&nbsp;results&nbsp;come&nbsp;in.&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
-&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
-&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
-&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Each&nbsp;result&nbsp;tuple&nbsp;is&nbsp;of&nbsp;the&nbsp;form&nbsp;(dn,entry),&nbsp;where&nbsp;dn&nbsp;is&nbsp;a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;containing&nbsp;the&nbsp;DN&nbsp;(distinguished&nbsp;name)&nbsp;of&nbsp;the&nbsp;entry,&nbsp;and<br>
@@ -296,10 +269,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;parameter.&nbsp;&nbsp;If&nbsp;attrlist&nbsp;is&nbsp;None,&nbsp;all&nbsp;the&nbsp;attributes&nbsp;of&nbsp;each<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entry&nbsp;are&nbsp;returned.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#LDAPObject-search_st">search_st</a>(),&nbsp;will&nbsp;block<br>
-&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;serverctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clientctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#LDAPObject-search_st">search_st</a>()&nbsp;or&nbsp;<a href="#LDAPObject-search_ext_s">search_ext_s</a>(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;block&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;timeout&nbsp;is&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;amount&nbsp;of&nbsp;search&nbsp;results&nbsp;retrieved&nbsp;can&nbsp;be&nbsp;limited&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sizelimit&nbsp;parameter&nbsp;if&nbsp;non-zero.</tt></dd></dl>
+
+<dl><dt><a name="SimpleLDAPObject-search_ext_s"><strong>search_ext_s</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, serverctrls<font color="#909090">=None</font>, clientctrls<font color="#909090">=None</font>, timeout<font color="#909090">=-1</font>, sizelimit<font color="#909090">=0</font>)</dt></dl>
 
 <dl><dt><a name="SimpleLDAPObject-search_s"><strong>search_s</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
 
@@ -375,7 +357,7 @@ If&nbsp;TLS&nbsp;could&nbsp;not&nbsp;be&nbsp;started&nbsp;an&nbsp;exception&nbsp
 
 <hr>
 Data and non-method functions defined here:<br>
-<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'matched_dn': 51, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
+<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
 
 <dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  Drop-in wrapper class around _ldap.LDAPObject<font color="#c040c0">\n</font>  '</dl>
 
@@ -455,32 +437,6 @@ and&nbsp;trace&nbsp;logs</tt></dd></dl>
 
 <dl><dt><a name="NonblockingLDAPObject-delete_s"><strong>delete_s</strong></a>(self, dn)</dt></dl>
 
-<dl><dt><a name="NonblockingLDAPObject-destroy_cache"><strong>destroy_cache</strong></a>(self)</dt><dd><tt><a href="#NonblockingLDAPObject-destroy_cache">destroy_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Turns&nbsp;off&nbsp;caching&nbsp;and&nbsp;removed&nbsp;it&nbsp;from&nbsp;memory.</tt></dd></dl>
-
-<dl><dt><a name="NonblockingLDAPObject-disable_cache"><strong>disable_cache</strong></a>(self)</dt><dd><tt><a href="#NonblockingLDAPObject-disable_cache">disable_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Temporarily&nbsp;disables&nbsp;use&nbsp;of&nbsp;the&nbsp;cache.&nbsp;New&nbsp;requests&nbsp;are<br>
-&nbsp;&nbsp;&nbsp;&nbsp;not&nbsp;cached,&nbsp;and&nbsp;the&nbsp;cache&nbsp;is&nbsp;not&nbsp;checked&nbsp;when&nbsp;returning<br>
-&nbsp;&nbsp;&nbsp;&nbsp;results.&nbsp;Cache&nbsp;contents&nbsp;are&nbsp;not&nbsp;deleted.</tt></dd></dl>
-
-<dl><dt><a name="NonblockingLDAPObject-enable_cache"><strong>enable_cache</strong></a>(self, timeout<font color="#909090">=0</font>, maxmem<font color="#909090">=0</font>)</dt><dd><tt><a href="#NonblockingLDAPObject-enable_cache">enable_cache</a>([timeout=NO_LIMIT,&nbsp;[maxmem=NO_LIMIT]])&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Using&nbsp;a&nbsp;cache&nbsp;often&nbsp;greatly&nbsp;improves&nbsp;performance.&nbsp;By&nbsp;default<br>
-&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;cache&nbsp;is&nbsp;disabled.&nbsp;Specifying&nbsp;timeout&nbsp;in&nbsp;seconds&nbsp;is&nbsp;used<br>
-&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;decide&nbsp;how&nbsp;long&nbsp;to&nbsp;keep&nbsp;cached&nbsp;requests.&nbsp;The&nbsp;maxmem&nbsp;value<br>
-&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;in&nbsp;bytes,&nbsp;and&nbsp;is&nbsp;used&nbsp;to&nbsp;set&nbsp;an&nbsp;upper&nbsp;bound&nbsp;on&nbsp;how&nbsp;much<br>
-&nbsp;&nbsp;&nbsp;&nbsp;memory&nbsp;the&nbsp;cache&nbsp;will&nbsp;use.&nbsp;A&nbsp;value&nbsp;of&nbsp;NO_LIMIT&nbsp;for&nbsp;either<br>
-&nbsp;&nbsp;&nbsp;&nbsp;indicates&nbsp;unlimited.&nbsp;&nbsp;Subsequent&nbsp;calls&nbsp;to&nbsp;<a href="#NonblockingLDAPObject-enable_cache">enable_cache</a>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;adjust&nbsp;these&nbsp;parameters.<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;and&nbsp;other&nbsp;caching&nbsp;methods&nbsp;are&nbsp;not&nbsp;available&nbsp;if&nbsp;the&nbsp;library<br>
-&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;ldap&nbsp;module&nbsp;were&nbsp;compiled&nbsp;with&nbsp;support&nbsp;for&nbsp;it.</tt></dd></dl>
-
-<dl><dt><a name="NonblockingLDAPObject-fileno"><strong>fileno</strong></a>(self)</dt><dd><tt><a href="#NonblockingLDAPObject-fileno">fileno</a>()&nbsp;-&gt;&nbsp;int<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;the&nbsp;file&nbsp;descriptor&nbsp;associated&nbsp;with&nbsp;this&nbsp;connection.</tt></dd></dl>
-
-<dl><dt><a name="NonblockingLDAPObject-flush_cache"><strong>flush_cache</strong></a>(self)</dt><dd><tt><a href="#NonblockingLDAPObject-flush_cache">flush_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Deletes&nbsp;the&nbsp;cache's&nbsp;contents,&nbsp;but&nbsp;does&nbsp;not&nbsp;affect&nbsp;it&nbsp;in&nbsp;any&nbsp;other&nbsp;way.</tt></dd></dl>
-
 <dl><dt><a name="NonblockingLDAPObject-get_option"><strong>get_option</strong></a>(self, option)</dt></dl>
 
 <dl><dt><a name="NonblockingLDAPObject-manage_dsa_it"><strong>manage_dsa_it</strong></a>(self, enable, critical<font color="#909090">=0</font>)</dt><dd><tt><a href="#NonblockingLDAPObject-manage_dsa_it">manage_dsa_it</a>()&nbsp;-&gt;&nbsp;None<br>
@@ -519,7 +475,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 
 <dl><dt><a name="NonblockingLDAPObject-modrdn_s"><strong>modrdn_s</strong></a>(self, dn, newrdn, delold<font color="#909090">=1</font>)</dt></dl>
 
-<dl><dt><a name="NonblockingLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['matchingRuleUses', 'attributeTypes', 'dITStructureRules', 'ldapSyntaxes', 'objectClasses', 'nameForms', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
+<dl><dt><a name="NonblockingLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['attributeTypes', 'dITStructureRules', 'matchingRuleUse', 'objectClasses', 'nameForms', 'ldapSyntaxes', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
 
 <dl><dt><a name="NonblockingLDAPObject-rename"><strong>rename</strong></a>(self, dn, newrdn, newsuperior<font color="#909090">=None</font>, delold<font color="#909090">=1</font>)</dt><dd><tt><a href="#NonblockingLDAPObject-rename">rename</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;int<br>
 <a href="#NonblockingLDAPObject-rename_s">rename_s</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;None<br>
@@ -538,9 +494,13 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 
 <dl><dt><a name="NonblockingLDAPObject-sasl_bind_s"><strong>sasl_bind_s</strong></a>(self, who, auth)</dt><dd><tt><a href="#NonblockingLDAPObject-sasl_bind_s">sasl_bind_s</a>(who,&nbsp;auth)&nbsp;-&gt;&nbsp;None</tt></dd></dl>
 
-<dl><dt><a name="NonblockingLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt><dd><tt><a href="#NonblockingLDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="NonblockingLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="NonblockingLDAPObject-search_ext"><strong>search_ext</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, serverctrls<font color="#909090">=None</font>, clientctrls<font color="#909090">=None</font>, timeout<font color="#909090">=-1</font>, sizelimit<font color="#909090">=0</font>)</dt><dd><tt><a href="#NonblockingLDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
 <a href="#NonblockingLDAPObject-search_s">search_s</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])<br>
 <a href="#NonblockingLDAPObject-search_st">search_st</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,timeout=-1]]])<br>
+<a href="#NonblockingLDAPObject-search_ext">search_ext</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
+<a href="#NonblockingLDAPObject-search_ext_s">search_ext_s</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Perform&nbsp;an&nbsp;LDAP&nbsp;search&nbsp;operation,&nbsp;with&nbsp;base&nbsp;as&nbsp;the&nbsp;DN&nbsp;of<br>
 &nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;entry&nbsp;at&nbsp;which&nbsp;to&nbsp;start&nbsp;the&nbsp;search,&nbsp;scope&nbsp;being&nbsp;one&nbsp;of<br>
@@ -550,15 +510,6 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;filter&nbsp;is&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;filter&nbsp;to<br>
 &nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;in&nbsp;the&nbsp;search&nbsp;(see&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc2254.txt">RFC&nbsp;2254</a>).<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;using&nbsp;the&nbsp;asynchronous&nbsp;form&nbsp;and&nbsp;<a href="#NonblockingLDAPObject-result">result</a>(),&nbsp;the&nbsp;all&nbsp;parameter<br>
-&nbsp;&nbsp;&nbsp;&nbsp;affects&nbsp;how&nbsp;results&nbsp;come&nbsp;in.&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
-&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
-&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
-&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Each&nbsp;result&nbsp;tuple&nbsp;is&nbsp;of&nbsp;the&nbsp;form&nbsp;(dn,entry),&nbsp;where&nbsp;dn&nbsp;is&nbsp;a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;containing&nbsp;the&nbsp;DN&nbsp;(distinguished&nbsp;name)&nbsp;of&nbsp;the&nbsp;entry,&nbsp;and<br>
@@ -576,10 +527,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;parameter.&nbsp;&nbsp;If&nbsp;attrlist&nbsp;is&nbsp;None,&nbsp;all&nbsp;the&nbsp;attributes&nbsp;of&nbsp;each<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entry&nbsp;are&nbsp;returned.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#NonblockingLDAPObject-search_st">search_st</a>(),&nbsp;will&nbsp;block<br>
-&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;serverctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clientctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#NonblockingLDAPObject-search_st">search_st</a>()&nbsp;or&nbsp;<a href="#NonblockingLDAPObject-search_ext_s">search_ext_s</a>(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;block&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;timeout&nbsp;is&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;amount&nbsp;of&nbsp;search&nbsp;results&nbsp;retrieved&nbsp;can&nbsp;be&nbsp;limited&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sizelimit&nbsp;parameter&nbsp;if&nbsp;non-zero.</tt></dd></dl>
+
+<dl><dt><a name="NonblockingLDAPObject-search_ext_s"><strong>search_ext_s</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, serverctrls<font color="#909090">=None</font>, clientctrls<font color="#909090">=None</font>, timeout<font color="#909090">=-1</font>, sizelimit<font color="#909090">=0</font>)</dt></dl>
 
 <dl><dt><a name="NonblockingLDAPObject-search_s"><strong>search_s</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
 
@@ -653,7 +613,7 @@ If&nbsp;TLS&nbsp;could&nbsp;not&nbsp;be&nbsp;started&nbsp;an&nbsp;exception&nbsp
 
 <hr>
 Data and non-method functions inherited from <a href="ldap.ldapobject.html#SimpleLDAPObject">SimpleLDAPObject</a>:<br>
-<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'matched_dn': 51, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
+<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
 
 </td></tr></table> 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -701,7 +661,7 @@ application.<br>&nbsp;</tt></td></tr>
 
 <dl><dt><a name="ReconnectLDAPObject-sasl_bind_s"><strong>sasl_bind_s</strong></a>(self, who, auth)</dt><dd><tt><a href="#ReconnectLDAPObject-sasl_bind_s">sasl_bind_s</a>(who,&nbsp;auth)&nbsp;-&gt;&nbsp;None</tt></dd></dl>
 
-<dl><dt><a name="ReconnectLDAPObject-search_st"><strong>search_st</strong></a>(self, *args, **kwargs)</dt></dl>
+<dl><dt><a name="ReconnectLDAPObject-search_ext_s"><strong>search_ext_s</strong></a>(self, *args, **kwargs)</dt></dl>
 
 <dl><dt><a name="ReconnectLDAPObject-set_option"><strong>set_option</strong></a>(self, option, invalue)</dt></dl>
 
@@ -757,32 +717,6 @@ and&nbsp;trace&nbsp;logs</tt></dd></dl>
 &nbsp;&nbsp;&nbsp;&nbsp;form&nbsp;returns&nbsp;the&nbsp;message&nbsp;id&nbsp;of&nbsp;the&nbsp;initiated&nbsp;request,&nbsp;and&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;can&nbsp;be&nbsp;obtained&nbsp;from&nbsp;a&nbsp;subsequent&nbsp;call&nbsp;to&nbsp;<a href="#ReconnectLDAPObject-result">result</a>().</tt></dd></dl>
 
-<dl><dt><a name="ReconnectLDAPObject-destroy_cache"><strong>destroy_cache</strong></a>(self)</dt><dd><tt><a href="#ReconnectLDAPObject-destroy_cache">destroy_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Turns&nbsp;off&nbsp;caching&nbsp;and&nbsp;removed&nbsp;it&nbsp;from&nbsp;memory.</tt></dd></dl>
-
-<dl><dt><a name="ReconnectLDAPObject-disable_cache"><strong>disable_cache</strong></a>(self)</dt><dd><tt><a href="#ReconnectLDAPObject-disable_cache">disable_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Temporarily&nbsp;disables&nbsp;use&nbsp;of&nbsp;the&nbsp;cache.&nbsp;New&nbsp;requests&nbsp;are<br>
-&nbsp;&nbsp;&nbsp;&nbsp;not&nbsp;cached,&nbsp;and&nbsp;the&nbsp;cache&nbsp;is&nbsp;not&nbsp;checked&nbsp;when&nbsp;returning<br>
-&nbsp;&nbsp;&nbsp;&nbsp;results.&nbsp;Cache&nbsp;contents&nbsp;are&nbsp;not&nbsp;deleted.</tt></dd></dl>
-
-<dl><dt><a name="ReconnectLDAPObject-enable_cache"><strong>enable_cache</strong></a>(self, timeout<font color="#909090">=0</font>, maxmem<font color="#909090">=0</font>)</dt><dd><tt><a href="#ReconnectLDAPObject-enable_cache">enable_cache</a>([timeout=NO_LIMIT,&nbsp;[maxmem=NO_LIMIT]])&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Using&nbsp;a&nbsp;cache&nbsp;often&nbsp;greatly&nbsp;improves&nbsp;performance.&nbsp;By&nbsp;default<br>
-&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;cache&nbsp;is&nbsp;disabled.&nbsp;Specifying&nbsp;timeout&nbsp;in&nbsp;seconds&nbsp;is&nbsp;used<br>
-&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;decide&nbsp;how&nbsp;long&nbsp;to&nbsp;keep&nbsp;cached&nbsp;requests.&nbsp;The&nbsp;maxmem&nbsp;value<br>
-&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;in&nbsp;bytes,&nbsp;and&nbsp;is&nbsp;used&nbsp;to&nbsp;set&nbsp;an&nbsp;upper&nbsp;bound&nbsp;on&nbsp;how&nbsp;much<br>
-&nbsp;&nbsp;&nbsp;&nbsp;memory&nbsp;the&nbsp;cache&nbsp;will&nbsp;use.&nbsp;A&nbsp;value&nbsp;of&nbsp;NO_LIMIT&nbsp;for&nbsp;either<br>
-&nbsp;&nbsp;&nbsp;&nbsp;indicates&nbsp;unlimited.&nbsp;&nbsp;Subsequent&nbsp;calls&nbsp;to&nbsp;<a href="#ReconnectLDAPObject-enable_cache">enable_cache</a>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;adjust&nbsp;these&nbsp;parameters.<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;and&nbsp;other&nbsp;caching&nbsp;methods&nbsp;are&nbsp;not&nbsp;available&nbsp;if&nbsp;the&nbsp;library<br>
-&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;ldap&nbsp;module&nbsp;were&nbsp;compiled&nbsp;with&nbsp;support&nbsp;for&nbsp;it.</tt></dd></dl>
-
-<dl><dt><a name="ReconnectLDAPObject-fileno"><strong>fileno</strong></a>(self)</dt><dd><tt><a href="#ReconnectLDAPObject-fileno">fileno</a>()&nbsp;-&gt;&nbsp;int<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;the&nbsp;file&nbsp;descriptor&nbsp;associated&nbsp;with&nbsp;this&nbsp;connection.</tt></dd></dl>
-
-<dl><dt><a name="ReconnectLDAPObject-flush_cache"><strong>flush_cache</strong></a>(self)</dt><dd><tt><a href="#ReconnectLDAPObject-flush_cache">flush_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Deletes&nbsp;the&nbsp;cache's&nbsp;contents,&nbsp;but&nbsp;does&nbsp;not&nbsp;affect&nbsp;it&nbsp;in&nbsp;any&nbsp;other&nbsp;way.</tt></dd></dl>
-
 <dl><dt><a name="ReconnectLDAPObject-get_option"><strong>get_option</strong></a>(self, option)</dt></dl>
 
 <dl><dt><a name="ReconnectLDAPObject-manage_dsa_it"><strong>manage_dsa_it</strong></a>(self, enable, critical<font color="#909090">=0</font>)</dt><dd><tt><a href="#ReconnectLDAPObject-manage_dsa_it">manage_dsa_it</a>()&nbsp;-&gt;&nbsp;None<br>
@@ -819,7 +753,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 
 <dl><dt><a name="ReconnectLDAPObject-modrdn_s"><strong>modrdn_s</strong></a>(self, dn, newrdn, delold<font color="#909090">=1</font>)</dt></dl>
 
-<dl><dt><a name="ReconnectLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['matchingRuleUses', 'attributeTypes', 'dITStructureRules', 'ldapSyntaxes', 'objectClasses', 'nameForms', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
+<dl><dt><a name="ReconnectLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['attributeTypes', 'dITStructureRules', 'matchingRuleUse', 'objectClasses', 'nameForms', 'ldapSyntaxes', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
 
 <dl><dt><a name="ReconnectLDAPObject-rename"><strong>rename</strong></a>(self, dn, newrdn, newsuperior<font color="#909090">=None</font>, delold<font color="#909090">=1</font>)</dt><dd><tt><a href="#ReconnectLDAPObject-rename">rename</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;int<br>
 <a href="#ReconnectLDAPObject-rename_s">rename_s</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;None<br>
@@ -834,7 +768,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;actually&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;rename*&nbsp;routines&nbsp;in&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;&nbsp;LDAP-EXT&nbsp;C&nbsp;API&nbsp;library.</tt></dd></dl>
 
-<dl><dt><a name="ReconnectLDAPObject-result"><strong>result</strong></a>(self, msgid<font color="#909090">=-1</font>, all<font color="#909090">=1</font>, timeout<font color="#909090">=-1</font>)</dt><dd><tt><a href="#ReconnectLDAPObject-result">result</a>([msgid=RES_ANY&nbsp;[,all=1&nbsp;[,timeout=-1]]])&nbsp;-&gt;&nbsp;(result_type,&nbsp;result_data)<br>
+<dl><dt><a name="ReconnectLDAPObject-result"><strong>result</strong></a>(self, msgid<font color="#909090">=-1</font>, all<font color="#909090">=1</font>, timeout<font color="#909090">=None</font>)</dt><dd><tt><a href="#ReconnectLDAPObject-result">result</a>([msgid=RES_ANY&nbsp;[,all=1&nbsp;[,timeout=None]]])&nbsp;-&gt;&nbsp;(result_type,&nbsp;result_data)<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;wait&nbsp;for&nbsp;and&nbsp;return&nbsp;the&nbsp;result&nbsp;of&nbsp;an<br>
 &nbsp;&nbsp;&nbsp;&nbsp;operation&nbsp;previously&nbsp;initiated&nbsp;by&nbsp;one&nbsp;of&nbsp;the&nbsp;LDAP&nbsp;asynchronous<br>
@@ -861,11 +795,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;its&nbsp;entirety,&nbsp;i.e.&nbsp;after&nbsp;all&nbsp;entries&nbsp;and&nbsp;the&nbsp;final&nbsp;search<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;have&nbsp;been&nbsp;received.<br>
 &nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
+&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;method&nbsp;returns&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;form&nbsp;(result_type,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result_data).&nbsp;&nbsp;The&nbsp;result_type&nbsp;is&nbsp;a&nbsp;string,&nbsp;being&nbsp;one&nbsp;of:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;'RES_BIND',&nbsp;'RES_SEARCH_ENTRY',&nbsp;'RES_SEARCH_RESULT',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'RES_MODIFY',&nbsp;'RES_ADD',&nbsp;'RES_DELETE',&nbsp;'RES_MODRDN',&nbsp;or<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'RES_COMPARE'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'RES_SEARCH_REFERENCE','RES_MODIFY',&nbsp;'RES_ADD',&nbsp;'RES_DELETE',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'RES_MODRDN',&nbsp;or&nbsp;'RES_COMPARE'.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;constants&nbsp;RES_*&nbsp;are&nbsp;set&nbsp;to&nbsp;these&nbsp;strings,&nbsp;for&nbsp;convenience.<br>
 &nbsp;<br>
@@ -874,14 +816,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#ReconnectLDAPObject-result">result</a>()&nbsp;method&nbsp;will&nbsp;block&nbsp;for&nbsp;timeout&nbsp;seconds,&nbsp;or<br>
 &nbsp;&nbsp;&nbsp;&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is&nbsp;negative.&nbsp;&nbsp;A&nbsp;timeout&nbsp;of&nbsp;0&nbsp;will&nbsp;effect<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;poll.&nbsp;&nbsp;The&nbsp;timeout&nbsp;can&nbsp;be&nbsp;expressed&nbsp;as&nbsp;a&nbsp;floating-point&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;poll.&nbsp;The&nbsp;timeout&nbsp;can&nbsp;be&nbsp;expressed&nbsp;as&nbsp;a&nbsp;floating-point&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;timeout&nbsp;is&nbsp;None&nbsp;the&nbsp;default&nbsp;in&nbsp;self.<strong>timeout</strong>&nbsp;is&nbsp;used.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;a&nbsp;timeout&nbsp;occurs,&nbsp;a&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised,&nbsp;unless<br>
 &nbsp;&nbsp;&nbsp;&nbsp;polling&nbsp;(timeout&nbsp;=&nbsp;0),&nbsp;in&nbsp;which&nbsp;case&nbsp;(None,&nbsp;None)&nbsp;is&nbsp;returned.</tt></dd></dl>
 
-<dl><dt><a name="ReconnectLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt><dd><tt><a href="#ReconnectLDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="ReconnectLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="ReconnectLDAPObject-search_ext"><strong>search_ext</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, serverctrls<font color="#909090">=None</font>, clientctrls<font color="#909090">=None</font>, timeout<font color="#909090">=-1</font>, sizelimit<font color="#909090">=0</font>)</dt><dd><tt><a href="#ReconnectLDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
 <a href="#ReconnectLDAPObject-search_s">search_s</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])<br>
 <a href="#ReconnectLDAPObject-search_st">search_st</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,timeout=-1]]])<br>
+<a href="#ReconnectLDAPObject-search_ext">search_ext</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
+<a href="#ReconnectLDAPObject-search_ext_s">search_ext_s</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Perform&nbsp;an&nbsp;LDAP&nbsp;search&nbsp;operation,&nbsp;with&nbsp;base&nbsp;as&nbsp;the&nbsp;DN&nbsp;of<br>
 &nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;entry&nbsp;at&nbsp;which&nbsp;to&nbsp;start&nbsp;the&nbsp;search,&nbsp;scope&nbsp;being&nbsp;one&nbsp;of<br>
@@ -891,15 +838,6 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;filter&nbsp;is&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;filter&nbsp;to<br>
 &nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;in&nbsp;the&nbsp;search&nbsp;(see&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc2254.txt">RFC&nbsp;2254</a>).<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;using&nbsp;the&nbsp;asynchronous&nbsp;form&nbsp;and&nbsp;<a href="#ReconnectLDAPObject-result">result</a>(),&nbsp;the&nbsp;all&nbsp;parameter<br>
-&nbsp;&nbsp;&nbsp;&nbsp;affects&nbsp;how&nbsp;results&nbsp;come&nbsp;in.&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
-&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
-&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
-&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Each&nbsp;result&nbsp;tuple&nbsp;is&nbsp;of&nbsp;the&nbsp;form&nbsp;(dn,entry),&nbsp;where&nbsp;dn&nbsp;is&nbsp;a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;containing&nbsp;the&nbsp;DN&nbsp;(distinguished&nbsp;name)&nbsp;of&nbsp;the&nbsp;entry,&nbsp;and<br>
@@ -917,12 +855,21 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;parameter.&nbsp;&nbsp;If&nbsp;attrlist&nbsp;is&nbsp;None,&nbsp;all&nbsp;the&nbsp;attributes&nbsp;of&nbsp;each<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entry&nbsp;are&nbsp;returned.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#ReconnectLDAPObject-search_st">search_st</a>(),&nbsp;will&nbsp;block<br>
-&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;serverctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clientctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#ReconnectLDAPObject-search_st">search_st</a>()&nbsp;or&nbsp;<a href="#ReconnectLDAPObject-search_ext_s">search_ext_s</a>(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;block&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;timeout&nbsp;is&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;amount&nbsp;of&nbsp;search&nbsp;results&nbsp;retrieved&nbsp;can&nbsp;be&nbsp;limited&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sizelimit&nbsp;parameter&nbsp;if&nbsp;non-zero.</tt></dd></dl>
 
 <dl><dt><a name="ReconnectLDAPObject-search_s"><strong>search_s</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="ReconnectLDAPObject-search_st"><strong>search_st</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, timeout<font color="#909090">=-1</font>)</dt></dl>
 
 <dl><dt><a name="ReconnectLDAPObject-search_subschemasubentry_s"><strong>search_subschemasubentry_s</strong></a>(self, dn<font color="#909090">=''</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;distinguished&nbsp;name&nbsp;of&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry<br>
 for&nbsp;a&nbsp;part&nbsp;of&nbsp;a&nbsp;DIT&nbsp;specified&nbsp;by&nbsp;dn.<br>
@@ -987,7 +934,7 @@ not&nbsp;be&nbsp;determined.</tt></dd></dl>
 
 <hr>
 Data and non-method functions inherited from <a href="ldap.ldapobject.html#SimpleLDAPObject">SimpleLDAPObject</a>:<br>
-<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'matched_dn': 51, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
+<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
 
 </td></tr></table> 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1051,32 +998,6 @@ and&nbsp;trace&nbsp;logs</tt></dd></dl>
 
 <dl><dt><a name="SimpleLDAPObject-delete_s"><strong>delete_s</strong></a>(self, dn)</dt></dl>
 
-<dl><dt><a name="SimpleLDAPObject-destroy_cache"><strong>destroy_cache</strong></a>(self)</dt><dd><tt><a href="#SimpleLDAPObject-destroy_cache">destroy_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Turns&nbsp;off&nbsp;caching&nbsp;and&nbsp;removed&nbsp;it&nbsp;from&nbsp;memory.</tt></dd></dl>
-
-<dl><dt><a name="SimpleLDAPObject-disable_cache"><strong>disable_cache</strong></a>(self)</dt><dd><tt><a href="#SimpleLDAPObject-disable_cache">disable_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Temporarily&nbsp;disables&nbsp;use&nbsp;of&nbsp;the&nbsp;cache.&nbsp;New&nbsp;requests&nbsp;are<br>
-&nbsp;&nbsp;&nbsp;&nbsp;not&nbsp;cached,&nbsp;and&nbsp;the&nbsp;cache&nbsp;is&nbsp;not&nbsp;checked&nbsp;when&nbsp;returning<br>
-&nbsp;&nbsp;&nbsp;&nbsp;results.&nbsp;Cache&nbsp;contents&nbsp;are&nbsp;not&nbsp;deleted.</tt></dd></dl>
-
-<dl><dt><a name="SimpleLDAPObject-enable_cache"><strong>enable_cache</strong></a>(self, timeout<font color="#909090">=0</font>, maxmem<font color="#909090">=0</font>)</dt><dd><tt><a href="#SimpleLDAPObject-enable_cache">enable_cache</a>([timeout=NO_LIMIT,&nbsp;[maxmem=NO_LIMIT]])&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Using&nbsp;a&nbsp;cache&nbsp;often&nbsp;greatly&nbsp;improves&nbsp;performance.&nbsp;By&nbsp;default<br>
-&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;cache&nbsp;is&nbsp;disabled.&nbsp;Specifying&nbsp;timeout&nbsp;in&nbsp;seconds&nbsp;is&nbsp;used<br>
-&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;decide&nbsp;how&nbsp;long&nbsp;to&nbsp;keep&nbsp;cached&nbsp;requests.&nbsp;The&nbsp;maxmem&nbsp;value<br>
-&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;in&nbsp;bytes,&nbsp;and&nbsp;is&nbsp;used&nbsp;to&nbsp;set&nbsp;an&nbsp;upper&nbsp;bound&nbsp;on&nbsp;how&nbsp;much<br>
-&nbsp;&nbsp;&nbsp;&nbsp;memory&nbsp;the&nbsp;cache&nbsp;will&nbsp;use.&nbsp;A&nbsp;value&nbsp;of&nbsp;NO_LIMIT&nbsp;for&nbsp;either<br>
-&nbsp;&nbsp;&nbsp;&nbsp;indicates&nbsp;unlimited.&nbsp;&nbsp;Subsequent&nbsp;calls&nbsp;to&nbsp;<a href="#SimpleLDAPObject-enable_cache">enable_cache</a>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;adjust&nbsp;these&nbsp;parameters.<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;and&nbsp;other&nbsp;caching&nbsp;methods&nbsp;are&nbsp;not&nbsp;available&nbsp;if&nbsp;the&nbsp;library<br>
-&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;ldap&nbsp;module&nbsp;were&nbsp;compiled&nbsp;with&nbsp;support&nbsp;for&nbsp;it.</tt></dd></dl>
-
-<dl><dt><a name="SimpleLDAPObject-fileno"><strong>fileno</strong></a>(self)</dt><dd><tt><a href="#SimpleLDAPObject-fileno">fileno</a>()&nbsp;-&gt;&nbsp;int<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;the&nbsp;file&nbsp;descriptor&nbsp;associated&nbsp;with&nbsp;this&nbsp;connection.</tt></dd></dl>
-
-<dl><dt><a name="SimpleLDAPObject-flush_cache"><strong>flush_cache</strong></a>(self)</dt><dd><tt><a href="#SimpleLDAPObject-flush_cache">flush_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Deletes&nbsp;the&nbsp;cache's&nbsp;contents,&nbsp;but&nbsp;does&nbsp;not&nbsp;affect&nbsp;it&nbsp;in&nbsp;any&nbsp;other&nbsp;way.</tt></dd></dl>
-
 <dl><dt><a name="SimpleLDAPObject-get_option"><strong>get_option</strong></a>(self, option)</dt></dl>
 
 <dl><dt><a name="SimpleLDAPObject-manage_dsa_it"><strong>manage_dsa_it</strong></a>(self, enable, critical<font color="#909090">=0</font>)</dt><dd><tt><a href="#SimpleLDAPObject-manage_dsa_it">manage_dsa_it</a>()&nbsp;-&gt;&nbsp;None<br>
@@ -1115,7 +1036,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 
 <dl><dt><a name="SimpleLDAPObject-modrdn_s"><strong>modrdn_s</strong></a>(self, dn, newrdn, delold<font color="#909090">=1</font>)</dt></dl>
 
-<dl><dt><a name="SimpleLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['matchingRuleUses', 'attributeTypes', 'dITStructureRules', 'ldapSyntaxes', 'objectClasses', 'nameForms', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
+<dl><dt><a name="SimpleLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['attributeTypes', 'dITStructureRules', 'matchingRuleUse', 'objectClasses', 'nameForms', 'ldapSyntaxes', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
 
 <dl><dt><a name="SimpleLDAPObject-rename"><strong>rename</strong></a>(self, dn, newrdn, newsuperior<font color="#909090">=None</font>, delold<font color="#909090">=1</font>)</dt><dd><tt><a href="#SimpleLDAPObject-rename">rename</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;int<br>
 <a href="#SimpleLDAPObject-rename_s">rename_s</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;None<br>
@@ -1132,7 +1053,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 
 <dl><dt><a name="SimpleLDAPObject-rename_s"><strong>rename_s</strong></a>(self, dn, newrdn, newsuperior<font color="#909090">=None</font>, delold<font color="#909090">=1</font>)</dt></dl>
 
-<dl><dt><a name="SimpleLDAPObject-result"><strong>result</strong></a>(self, msgid<font color="#909090">=-1</font>, all<font color="#909090">=1</font>, timeout<font color="#909090">=-1</font>)</dt><dd><tt><a href="#SimpleLDAPObject-result">result</a>([msgid=RES_ANY&nbsp;[,all=1&nbsp;[,timeout=-1]]])&nbsp;-&gt;&nbsp;(result_type,&nbsp;result_data)<br>
+<dl><dt><a name="SimpleLDAPObject-result"><strong>result</strong></a>(self, msgid<font color="#909090">=-1</font>, all<font color="#909090">=1</font>, timeout<font color="#909090">=None</font>)</dt><dd><tt><a href="#SimpleLDAPObject-result">result</a>([msgid=RES_ANY&nbsp;[,all=1&nbsp;[,timeout=None]]])&nbsp;-&gt;&nbsp;(result_type,&nbsp;result_data)<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;wait&nbsp;for&nbsp;and&nbsp;return&nbsp;the&nbsp;result&nbsp;of&nbsp;an<br>
 &nbsp;&nbsp;&nbsp;&nbsp;operation&nbsp;previously&nbsp;initiated&nbsp;by&nbsp;one&nbsp;of&nbsp;the&nbsp;LDAP&nbsp;asynchronous<br>
@@ -1159,11 +1080,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;its&nbsp;entirety,&nbsp;i.e.&nbsp;after&nbsp;all&nbsp;entries&nbsp;and&nbsp;the&nbsp;final&nbsp;search<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;have&nbsp;been&nbsp;received.<br>
 &nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
+&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;method&nbsp;returns&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;form&nbsp;(result_type,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result_data).&nbsp;&nbsp;The&nbsp;result_type&nbsp;is&nbsp;a&nbsp;string,&nbsp;being&nbsp;one&nbsp;of:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;'RES_BIND',&nbsp;'RES_SEARCH_ENTRY',&nbsp;'RES_SEARCH_RESULT',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'RES_MODIFY',&nbsp;'RES_ADD',&nbsp;'RES_DELETE',&nbsp;'RES_MODRDN',&nbsp;or<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'RES_COMPARE'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'RES_SEARCH_REFERENCE','RES_MODIFY',&nbsp;'RES_ADD',&nbsp;'RES_DELETE',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'RES_MODRDN',&nbsp;or&nbsp;'RES_COMPARE'.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;constants&nbsp;RES_*&nbsp;are&nbsp;set&nbsp;to&nbsp;these&nbsp;strings,&nbsp;for&nbsp;convenience.<br>
 &nbsp;<br>
@@ -1172,16 +1101,21 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#SimpleLDAPObject-result">result</a>()&nbsp;method&nbsp;will&nbsp;block&nbsp;for&nbsp;timeout&nbsp;seconds,&nbsp;or<br>
 &nbsp;&nbsp;&nbsp;&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is&nbsp;negative.&nbsp;&nbsp;A&nbsp;timeout&nbsp;of&nbsp;0&nbsp;will&nbsp;effect<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;poll.&nbsp;&nbsp;The&nbsp;timeout&nbsp;can&nbsp;be&nbsp;expressed&nbsp;as&nbsp;a&nbsp;floating-point&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;poll.&nbsp;The&nbsp;timeout&nbsp;can&nbsp;be&nbsp;expressed&nbsp;as&nbsp;a&nbsp;floating-point&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;timeout&nbsp;is&nbsp;None&nbsp;the&nbsp;default&nbsp;in&nbsp;self.<strong>timeout</strong>&nbsp;is&nbsp;used.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;a&nbsp;timeout&nbsp;occurs,&nbsp;a&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised,&nbsp;unless<br>
 &nbsp;&nbsp;&nbsp;&nbsp;polling&nbsp;(timeout&nbsp;=&nbsp;0),&nbsp;in&nbsp;which&nbsp;case&nbsp;(None,&nbsp;None)&nbsp;is&nbsp;returned.</tt></dd></dl>
 
 <dl><dt><a name="SimpleLDAPObject-sasl_bind_s"><strong>sasl_bind_s</strong></a>(self, who, auth)</dt><dd><tt><a href="#SimpleLDAPObject-sasl_bind_s">sasl_bind_s</a>(who,&nbsp;auth)&nbsp;-&gt;&nbsp;None</tt></dd></dl>
 
-<dl><dt><a name="SimpleLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt><dd><tt><a href="#SimpleLDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="SimpleLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="SimpleLDAPObject-search_ext"><strong>search_ext</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, serverctrls<font color="#909090">=None</font>, clientctrls<font color="#909090">=None</font>, timeout<font color="#909090">=-1</font>, sizelimit<font color="#909090">=0</font>)</dt><dd><tt><a href="#SimpleLDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
 <a href="#SimpleLDAPObject-search_s">search_s</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])<br>
 <a href="#SimpleLDAPObject-search_st">search_st</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,timeout=-1]]])<br>
+<a href="#SimpleLDAPObject-search_ext">search_ext</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
+<a href="#SimpleLDAPObject-search_ext_s">search_ext_s</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Perform&nbsp;an&nbsp;LDAP&nbsp;search&nbsp;operation,&nbsp;with&nbsp;base&nbsp;as&nbsp;the&nbsp;DN&nbsp;of<br>
 &nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;entry&nbsp;at&nbsp;which&nbsp;to&nbsp;start&nbsp;the&nbsp;search,&nbsp;scope&nbsp;being&nbsp;one&nbsp;of<br>
@@ -1191,15 +1125,6 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;filter&nbsp;is&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;filter&nbsp;to<br>
 &nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;in&nbsp;the&nbsp;search&nbsp;(see&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc2254.txt">RFC&nbsp;2254</a>).<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;using&nbsp;the&nbsp;asynchronous&nbsp;form&nbsp;and&nbsp;<a href="#SimpleLDAPObject-result">result</a>(),&nbsp;the&nbsp;all&nbsp;parameter<br>
-&nbsp;&nbsp;&nbsp;&nbsp;affects&nbsp;how&nbsp;results&nbsp;come&nbsp;in.&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
-&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
-&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
-&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Each&nbsp;result&nbsp;tuple&nbsp;is&nbsp;of&nbsp;the&nbsp;form&nbsp;(dn,entry),&nbsp;where&nbsp;dn&nbsp;is&nbsp;a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;containing&nbsp;the&nbsp;DN&nbsp;(distinguished&nbsp;name)&nbsp;of&nbsp;the&nbsp;entry,&nbsp;and<br>
@@ -1217,10 +1142,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;parameter.&nbsp;&nbsp;If&nbsp;attrlist&nbsp;is&nbsp;None,&nbsp;all&nbsp;the&nbsp;attributes&nbsp;of&nbsp;each<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entry&nbsp;are&nbsp;returned.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#SimpleLDAPObject-search_st">search_st</a>(),&nbsp;will&nbsp;block<br>
-&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;serverctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clientctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#SimpleLDAPObject-search_st">search_st</a>()&nbsp;or&nbsp;<a href="#SimpleLDAPObject-search_ext_s">search_ext_s</a>(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;block&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;timeout&nbsp;is&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;amount&nbsp;of&nbsp;search&nbsp;results&nbsp;retrieved&nbsp;can&nbsp;be&nbsp;limited&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sizelimit&nbsp;parameter&nbsp;if&nbsp;non-zero.</tt></dd></dl>
+
+<dl><dt><a name="SimpleLDAPObject-search_ext_s"><strong>search_ext_s</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, serverctrls<font color="#909090">=None</font>, clientctrls<font color="#909090">=None</font>, timeout<font color="#909090">=-1</font>, sizelimit<font color="#909090">=0</font>)</dt></dl>
 
 <dl><dt><a name="SimpleLDAPObject-search_s"><strong>search_s</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
 
@@ -1296,7 +1230,7 @@ If&nbsp;TLS&nbsp;could&nbsp;not&nbsp;be&nbsp;started&nbsp;an&nbsp;exception&nbsp
 
 <hr>
 Data and non-method functions defined here:<br>
-<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'matched_dn': 51, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
+<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
 
 <dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  Drop-in wrapper class around _ldap.LDAPObject<font color="#c040c0">\n</font>  '</dl>
 
@@ -1392,7 +1326,7 @@ Methods inherited from <a href="ldap.ldapobject.html#ReconnectLDAPObject">Reconn
 
 <dl><dt><a name="SmartLDAPObject-sasl_bind_s"><strong>sasl_bind_s</strong></a>(self, who, auth)</dt><dd><tt><a href="#SmartLDAPObject-sasl_bind_s">sasl_bind_s</a>(who,&nbsp;auth)&nbsp;-&gt;&nbsp;None</tt></dd></dl>
 
-<dl><dt><a name="SmartLDAPObject-search_st"><strong>search_st</strong></a>(self, *args, **kwargs)</dt></dl>
+<dl><dt><a name="SmartLDAPObject-search_ext_s"><strong>search_ext_s</strong></a>(self, *args, **kwargs)</dt></dl>
 
 <dl><dt><a name="SmartLDAPObject-set_option"><strong>set_option</strong></a>(self, option, invalue)</dt></dl>
 
@@ -1442,32 +1376,6 @@ and&nbsp;trace&nbsp;logs</tt></dd></dl>
 &nbsp;&nbsp;&nbsp;&nbsp;form&nbsp;returns&nbsp;the&nbsp;message&nbsp;id&nbsp;of&nbsp;the&nbsp;initiated&nbsp;request,&nbsp;and&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;can&nbsp;be&nbsp;obtained&nbsp;from&nbsp;a&nbsp;subsequent&nbsp;call&nbsp;to&nbsp;<a href="#SmartLDAPObject-result">result</a>().</tt></dd></dl>
 
-<dl><dt><a name="SmartLDAPObject-destroy_cache"><strong>destroy_cache</strong></a>(self)</dt><dd><tt><a href="#SmartLDAPObject-destroy_cache">destroy_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Turns&nbsp;off&nbsp;caching&nbsp;and&nbsp;removed&nbsp;it&nbsp;from&nbsp;memory.</tt></dd></dl>
-
-<dl><dt><a name="SmartLDAPObject-disable_cache"><strong>disable_cache</strong></a>(self)</dt><dd><tt><a href="#SmartLDAPObject-disable_cache">disable_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Temporarily&nbsp;disables&nbsp;use&nbsp;of&nbsp;the&nbsp;cache.&nbsp;New&nbsp;requests&nbsp;are<br>
-&nbsp;&nbsp;&nbsp;&nbsp;not&nbsp;cached,&nbsp;and&nbsp;the&nbsp;cache&nbsp;is&nbsp;not&nbsp;checked&nbsp;when&nbsp;returning<br>
-&nbsp;&nbsp;&nbsp;&nbsp;results.&nbsp;Cache&nbsp;contents&nbsp;are&nbsp;not&nbsp;deleted.</tt></dd></dl>
-
-<dl><dt><a name="SmartLDAPObject-enable_cache"><strong>enable_cache</strong></a>(self, timeout<font color="#909090">=0</font>, maxmem<font color="#909090">=0</font>)</dt><dd><tt><a href="#SmartLDAPObject-enable_cache">enable_cache</a>([timeout=NO_LIMIT,&nbsp;[maxmem=NO_LIMIT]])&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Using&nbsp;a&nbsp;cache&nbsp;often&nbsp;greatly&nbsp;improves&nbsp;performance.&nbsp;By&nbsp;default<br>
-&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;cache&nbsp;is&nbsp;disabled.&nbsp;Specifying&nbsp;timeout&nbsp;in&nbsp;seconds&nbsp;is&nbsp;used<br>
-&nbsp;&nbsp;&nbsp;&nbsp;to&nbsp;decide&nbsp;how&nbsp;long&nbsp;to&nbsp;keep&nbsp;cached&nbsp;requests.&nbsp;The&nbsp;maxmem&nbsp;value<br>
-&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;in&nbsp;bytes,&nbsp;and&nbsp;is&nbsp;used&nbsp;to&nbsp;set&nbsp;an&nbsp;upper&nbsp;bound&nbsp;on&nbsp;how&nbsp;much<br>
-&nbsp;&nbsp;&nbsp;&nbsp;memory&nbsp;the&nbsp;cache&nbsp;will&nbsp;use.&nbsp;A&nbsp;value&nbsp;of&nbsp;NO_LIMIT&nbsp;for&nbsp;either<br>
-&nbsp;&nbsp;&nbsp;&nbsp;indicates&nbsp;unlimited.&nbsp;&nbsp;Subsequent&nbsp;calls&nbsp;to&nbsp;<a href="#SmartLDAPObject-enable_cache">enable_cache</a>()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;adjust&nbsp;these&nbsp;parameters.<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;and&nbsp;other&nbsp;caching&nbsp;methods&nbsp;are&nbsp;not&nbsp;available&nbsp;if&nbsp;the&nbsp;library<br>
-&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;the&nbsp;ldap&nbsp;module&nbsp;were&nbsp;compiled&nbsp;with&nbsp;support&nbsp;for&nbsp;it.</tt></dd></dl>
-
-<dl><dt><a name="SmartLDAPObject-fileno"><strong>fileno</strong></a>(self)</dt><dd><tt><a href="#SmartLDAPObject-fileno">fileno</a>()&nbsp;-&gt;&nbsp;int<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Return&nbsp;the&nbsp;file&nbsp;descriptor&nbsp;associated&nbsp;with&nbsp;this&nbsp;connection.</tt></dd></dl>
-
-<dl><dt><a name="SmartLDAPObject-flush_cache"><strong>flush_cache</strong></a>(self)</dt><dd><tt><a href="#SmartLDAPObject-flush_cache">flush_cache</a>()&nbsp;-&gt;&nbsp;None&nbsp;&nbsp;&nbsp;&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Deletes&nbsp;the&nbsp;cache's&nbsp;contents,&nbsp;but&nbsp;does&nbsp;not&nbsp;affect&nbsp;it&nbsp;in&nbsp;any&nbsp;other&nbsp;way.</tt></dd></dl>
-
 <dl><dt><a name="SmartLDAPObject-get_option"><strong>get_option</strong></a>(self, option)</dt></dl>
 
 <dl><dt><a name="SmartLDAPObject-manage_dsa_it"><strong>manage_dsa_it</strong></a>(self, enable, critical<font color="#909090">=0</font>)</dt><dd><tt><a href="#SmartLDAPObject-manage_dsa_it">manage_dsa_it</a>()&nbsp;-&gt;&nbsp;None<br>
@@ -1504,7 +1412,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 
 <dl><dt><a name="SmartLDAPObject-modrdn_s"><strong>modrdn_s</strong></a>(self, dn, newrdn, delold<font color="#909090">=1</font>)</dt></dl>
 
-<dl><dt><a name="SmartLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['matchingRuleUses', 'attributeTypes', 'dITStructureRules', 'ldapSyntaxes', 'objectClasses', 'nameForms', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
+<dl><dt><a name="SmartLDAPObject-read_subschemasubentry_s"><strong>read_subschemasubentry_s</strong></a>(self, subschemasubentry_dn, attrs<font color="#909090">=['attributeTypes', 'dITStructureRules', 'matchingRuleUse', 'objectClasses', 'nameForms', 'ldapSyntaxes', 'matchingRules']</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry's&nbsp;data</tt></dd></dl>
 
 <dl><dt><a name="SmartLDAPObject-rename"><strong>rename</strong></a>(self, dn, newrdn, newsuperior<font color="#909090">=None</font>, delold<font color="#909090">=1</font>)</dt><dd><tt><a href="#SmartLDAPObject-rename">rename</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;int<br>
 <a href="#SmartLDAPObject-rename_s">rename_s</a>(dn,&nbsp;newrdn&nbsp;[,&nbsp;newsuperior=None]&nbsp;[,delold=1])&nbsp;-&gt;&nbsp;None<br>
@@ -1519,7 +1427,7 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;actually&nbsp;corresponds&nbsp;to&nbsp;the&nbsp;rename*&nbsp;routines&nbsp;in&nbsp;the<br>
 &nbsp;&nbsp;&nbsp;&nbsp;LDAP-EXT&nbsp;C&nbsp;API&nbsp;library.</tt></dd></dl>
 
-<dl><dt><a name="SmartLDAPObject-result"><strong>result</strong></a>(self, msgid<font color="#909090">=-1</font>, all<font color="#909090">=1</font>, timeout<font color="#909090">=-1</font>)</dt><dd><tt><a href="#SmartLDAPObject-result">result</a>([msgid=RES_ANY&nbsp;[,all=1&nbsp;[,timeout=-1]]])&nbsp;-&gt;&nbsp;(result_type,&nbsp;result_data)<br>
+<dl><dt><a name="SmartLDAPObject-result"><strong>result</strong></a>(self, msgid<font color="#909090">=-1</font>, all<font color="#909090">=1</font>, timeout<font color="#909090">=None</font>)</dt><dd><tt><a href="#SmartLDAPObject-result">result</a>([msgid=RES_ANY&nbsp;[,all=1&nbsp;[,timeout=None]]])&nbsp;-&gt;&nbsp;(result_type,&nbsp;result_data)<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;wait&nbsp;for&nbsp;and&nbsp;return&nbsp;the&nbsp;result&nbsp;of&nbsp;an<br>
 &nbsp;&nbsp;&nbsp;&nbsp;operation&nbsp;previously&nbsp;initiated&nbsp;by&nbsp;one&nbsp;of&nbsp;the&nbsp;LDAP&nbsp;asynchronous<br>
@@ -1546,11 +1454,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;its&nbsp;entirety,&nbsp;i.e.&nbsp;after&nbsp;all&nbsp;entries&nbsp;and&nbsp;the&nbsp;final&nbsp;search<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;have&nbsp;been&nbsp;received.<br>
 &nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
+&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
+&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;method&nbsp;returns&nbsp;a&nbsp;tuple&nbsp;of&nbsp;the&nbsp;form&nbsp;(result_type,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result_data).&nbsp;&nbsp;The&nbsp;result_type&nbsp;is&nbsp;a&nbsp;string,&nbsp;being&nbsp;one&nbsp;of:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;'RES_BIND',&nbsp;'RES_SEARCH_ENTRY',&nbsp;'RES_SEARCH_RESULT',<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'RES_MODIFY',&nbsp;'RES_ADD',&nbsp;'RES_DELETE',&nbsp;'RES_MODRDN',&nbsp;or<br>
-&nbsp;&nbsp;&nbsp;&nbsp;'RES_COMPARE'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'RES_SEARCH_REFERENCE','RES_MODIFY',&nbsp;'RES_ADD',&nbsp;'RES_DELETE',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'RES_MODRDN',&nbsp;or&nbsp;'RES_COMPARE'.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;constants&nbsp;RES_*&nbsp;are&nbsp;set&nbsp;to&nbsp;these&nbsp;strings,&nbsp;for&nbsp;convenience.<br>
 &nbsp;<br>
@@ -1559,14 +1475,19 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<a href="#SmartLDAPObject-result">result</a>()&nbsp;method&nbsp;will&nbsp;block&nbsp;for&nbsp;timeout&nbsp;seconds,&nbsp;or<br>
 &nbsp;&nbsp;&nbsp;&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is&nbsp;negative.&nbsp;&nbsp;A&nbsp;timeout&nbsp;of&nbsp;0&nbsp;will&nbsp;effect<br>
-&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;poll.&nbsp;&nbsp;The&nbsp;timeout&nbsp;can&nbsp;be&nbsp;expressed&nbsp;as&nbsp;a&nbsp;floating-point&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;poll.&nbsp;The&nbsp;timeout&nbsp;can&nbsp;be&nbsp;expressed&nbsp;as&nbsp;a&nbsp;floating-point&nbsp;value.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;timeout&nbsp;is&nbsp;None&nbsp;the&nbsp;default&nbsp;in&nbsp;self.<strong>timeout</strong>&nbsp;is&nbsp;used.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;a&nbsp;timeout&nbsp;occurs,&nbsp;a&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised,&nbsp;unless<br>
 &nbsp;&nbsp;&nbsp;&nbsp;polling&nbsp;(timeout&nbsp;=&nbsp;0),&nbsp;in&nbsp;which&nbsp;case&nbsp;(None,&nbsp;None)&nbsp;is&nbsp;returned.</tt></dd></dl>
 
-<dl><dt><a name="SmartLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt><dd><tt><a href="#SmartLDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
+<dl><dt><a name="SmartLDAPObject-search"><strong>search</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="SmartLDAPObject-search_ext"><strong>search_ext</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, serverctrls<font color="#909090">=None</font>, clientctrls<font color="#909090">=None</font>, timeout<font color="#909090">=-1</font>, sizelimit<font color="#909090">=0</font>)</dt><dd><tt><a href="#SmartLDAPObject-search">search</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])&nbsp;-&gt;&nbsp;int<br>
 <a href="#SmartLDAPObject-search_s">search_s</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0]])<br>
 <a href="#SmartLDAPObject-search_st">search_st</a>(base,&nbsp;scope&nbsp;[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,timeout=-1]]])<br>
+<a href="#SmartLDAPObject-search_ext">search_ext</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
+<a href="#SmartLDAPObject-search_ext_s">search_ext_s</a>(base,scope,[,filterstr='(objectClass=*)'&nbsp;[,attrlist=None&nbsp;[,attrsonly=0&nbsp;[,serverctrls=None&nbsp;[,clientctrls=None&nbsp;[,timeout=-1&nbsp;[,sizelimit=0]]]]]]]<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Perform&nbsp;an&nbsp;LDAP&nbsp;search&nbsp;operation,&nbsp;with&nbsp;base&nbsp;as&nbsp;the&nbsp;DN&nbsp;of<br>
 &nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;entry&nbsp;at&nbsp;which&nbsp;to&nbsp;start&nbsp;the&nbsp;search,&nbsp;scope&nbsp;being&nbsp;one&nbsp;of<br>
@@ -1576,15 +1497,6 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;filter&nbsp;is&nbsp;a&nbsp;string&nbsp;representation&nbsp;of&nbsp;the&nbsp;filter&nbsp;to<br>
 &nbsp;&nbsp;&nbsp;&nbsp;apply&nbsp;in&nbsp;the&nbsp;search&nbsp;(see&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc2254.txt">RFC&nbsp;2254</a>).<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;using&nbsp;the&nbsp;asynchronous&nbsp;form&nbsp;and&nbsp;<a href="#SmartLDAPObject-result">result</a>(),&nbsp;the&nbsp;all&nbsp;parameter<br>
-&nbsp;&nbsp;&nbsp;&nbsp;affects&nbsp;how&nbsp;results&nbsp;come&nbsp;in.&nbsp;&nbsp;For&nbsp;all&nbsp;set&nbsp;to&nbsp;0,&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;trickle&nbsp;in&nbsp;(with&nbsp;the&nbsp;same&nbsp;message&nbsp;id),&nbsp;and&nbsp;with&nbsp;the&nbsp;result&nbsp;type<br>
-&nbsp;&nbsp;&nbsp;&nbsp;RES_SEARCH_ENTRY,&nbsp;until&nbsp;the&nbsp;final&nbsp;result&nbsp;which&nbsp;has&nbsp;a&nbsp;result<br>
-&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT&nbsp;and&nbsp;a&nbsp;(usually)&nbsp;empty&nbsp;data&nbsp;field.<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When&nbsp;all&nbsp;is&nbsp;set&nbsp;to&nbsp;1,&nbsp;only&nbsp;one&nbsp;result&nbsp;is&nbsp;returned,&nbsp;with&nbsp;a<br>
-&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;type&nbsp;of&nbsp;RES_SEARCH_RESULT,&nbsp;and&nbsp;all&nbsp;the&nbsp;result&nbsp;tuples<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listed&nbsp;in&nbsp;the&nbsp;data&nbsp;field.<br>
 &nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Each&nbsp;result&nbsp;tuple&nbsp;is&nbsp;of&nbsp;the&nbsp;form&nbsp;(dn,entry),&nbsp;where&nbsp;dn&nbsp;is&nbsp;a<br>
 &nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;containing&nbsp;the&nbsp;DN&nbsp;(distinguished&nbsp;name)&nbsp;of&nbsp;the&nbsp;entry,&nbsp;and<br>
@@ -1602,12 +1514,21 @@ Enable&nbsp;or&nbsp;disable&nbsp;manageDSAit&nbsp;mode&nbsp;(see&nbsp;draft-zeil
 &nbsp;&nbsp;&nbsp;&nbsp;parameter.&nbsp;&nbsp;If&nbsp;attrlist&nbsp;is&nbsp;None,&nbsp;all&nbsp;the&nbsp;attributes&nbsp;of&nbsp;each<br>
 &nbsp;&nbsp;&nbsp;&nbsp;entry&nbsp;are&nbsp;returned.<br>
 &nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#SmartLDAPObject-search_st">search_st</a>(),&nbsp;will&nbsp;block<br>
-&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if&nbsp;timeout&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
-&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.</tt></dd></dl>
+&nbsp;&nbsp;&nbsp;&nbsp;serverctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clientctrls=None<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;synchronous&nbsp;form&nbsp;with&nbsp;timeout,&nbsp;<a href="#SmartLDAPObject-search_st">search_st</a>()&nbsp;or&nbsp;<a href="#SmartLDAPObject-search_ext_s">search_ext_s</a>(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;will&nbsp;block&nbsp;for&nbsp;at&nbsp;most&nbsp;timeout&nbsp;seconds&nbsp;(or&nbsp;indefinitely&nbsp;if<br>
+&nbsp;&nbsp;&nbsp;&nbsp;timeout&nbsp;is&nbsp;negative).&nbsp;A&nbsp;TIMEOUT&nbsp;exception&nbsp;is&nbsp;raised&nbsp;if&nbsp;no&nbsp;result&nbsp;is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;received&nbsp;within&nbsp;the&nbsp;time.<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;amount&nbsp;of&nbsp;search&nbsp;results&nbsp;retrieved&nbsp;can&nbsp;be&nbsp;limited&nbsp;with&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sizelimit&nbsp;parameter&nbsp;if&nbsp;non-zero.</tt></dd></dl>
 
 <dl><dt><a name="SmartLDAPObject-search_s"><strong>search_s</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>)</dt></dl>
+
+<dl><dt><a name="SmartLDAPObject-search_st"><strong>search_st</strong></a>(self, base, scope, filterstr<font color="#909090">='(objectClass=*)'</font>, attrlist<font color="#909090">=None</font>, attrsonly<font color="#909090">=0</font>, timeout<font color="#909090">=-1</font>)</dt></dl>
 
 <dl><dt><a name="SmartLDAPObject-search_subschemasubentry_s"><strong>search_subschemasubentry_s</strong></a>(self, dn<font color="#909090">=''</font>)</dt><dd><tt>Returns&nbsp;the&nbsp;distinguished&nbsp;name&nbsp;of&nbsp;the&nbsp;sub&nbsp;schema&nbsp;sub&nbsp;entry<br>
 for&nbsp;a&nbsp;part&nbsp;of&nbsp;a&nbsp;DIT&nbsp;specified&nbsp;by&nbsp;dn.<br>
@@ -1672,7 +1593,7 @@ not&nbsp;be&nbsp;determined.</tt></dd></dl>
 
 <hr>
 Data and non-method functions inherited from <a href="ldap.ldapobject.html#SimpleLDAPObject">SimpleLDAPObject</a>:<br>
-<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'matched_dn': 51, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
+<dl><dt><strong>CLASSATTR_OPTION_MAPPING</strong> = {'deref': 2, 'protocol_version': 17, 'referrals': 8, 'sizelimit': 3, 'timelimit': 4}</dl>
 
 </td></tr></table></td></tr></table>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -1684,5 +1605,5 @@ Data and non-method functions inherited from <a href="ldap.ldapobject.html#Simpl
 <td width="100%"><strong>__all__</strong> = ['LDAPObject', 'SimpleLDAPObject', 'NonblockingLDAPObject', 'ReconnectLDAPObject', 'SmartLDAPObject']<br>
 <strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/ldapobject.pyc'<br>
 <strong>__name__</strong> = 'ldap.ldapobject'<br>
-<strong>__version__</strong> = '0.3.0'</td></tr></table>
+<strong>__version__</strong> = '0.4.1'</td></tr></table>
 </body></html>

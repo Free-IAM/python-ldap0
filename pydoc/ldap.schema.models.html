@@ -16,7 +16,7 @@ written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
 &nbsp;<br>
 See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
 &nbsp;<br>
-\$Id: ldap.schema.models.html,v 1.1 2002/10/29 15:31:37 stroeder Exp $</tt></p>
+\$Id: ldap.schema.models.html,v 1.2 2003/04/04 00:07:41 stroeder Exp $</tt></p>
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -97,7 +97,7 @@ Data and non-method functions defined here:<br>
 
 <dl><dt><strong>schema_attribute</strong> = 'attributeTypes'</dl>
 
-<dl><dt><strong>token_defaults</strong> = {'COLLECTIVE': None, 'DESC': [None], 'EQUALITY': [None], 'NAME': [], 'NO-USER-MODIFICATION': None, 'OBSOLETE': None, 'ORDERING': [None], 'SINGLE-VALUE': None, 'SUBSTR': [None], 'SUP': [], ...}</dl>
+<dl><dt><strong>token_defaults</strong> = {'COLLECTIVE': None, 'DESC': (None,), 'EQUALITY': (None,), 'NAME': (), 'NO-USER-MODIFICATION': None, 'OBSOLETE': None, 'ORDERING': (None,), 'SINGLE-VALUE': None, 'SUBSTR': (None,), 'SUP': (), ...}</dl>
 
 <hr>
 Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
@@ -144,7 +144,7 @@ Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaEle
 
 <hr>
 Data and non-method functions inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
-<dl><dt><strong>token_defaults</strong> = {'DESC': [None]}</dl>
+<dl><dt><strong>token_defaults</strong> = {'DESC': (None,)}</dl>
 
 </td></tr></table> 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -189,7 +189,7 @@ Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaEle
 
 <hr>
 Data and non-method functions inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
-<dl><dt><strong>token_defaults</strong> = {'DESC': [None]}</dl>
+<dl><dt><strong>token_defaults</strong> = {'DESC': (None,)}</dl>
 
 </td></tr></table> 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -286,7 +286,7 @@ Data and non-method functions defined here:<br>
 
 <dl><dt><strong>schema_attribute</strong> = 'ldapSyntaxes'</dl>
 
-<dl><dt><strong>token_defaults</strong> = {'DESC': [None], 'X-NOT-HUMAN-READABLE': [None]}</dl>
+<dl><dt><strong>token_defaults</strong> = {'DESC': (None,), 'X-NOT-HUMAN-READABLE': (None,)}</dl>
 
 <hr>
 Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
@@ -324,7 +324,7 @@ Data and non-method functions defined here:<br>
 
 <dl><dt><strong>schema_attribute</strong> = 'matchingRules'</dl>
 
-<dl><dt><strong>token_defaults</strong> = {'APPLIES': [None], 'DESC': [None], 'NAME': [], 'OBSOLETE': None, 'SYNTAX': [None]}</dl>
+<dl><dt><strong>token_defaults</strong> = {'DESC': (None,), 'NAME': (), 'OBSOLETE': None, 'SYNTAX': (None,)}</dl>
 
 <hr>
 Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
@@ -361,9 +361,9 @@ Data and non-method functions defined here:<br>
 
 <dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
 
-<dl><dt><strong>schema_attribute</strong> = 'matchingRuleUses'</dl>
+<dl><dt><strong>schema_attribute</strong> = 'matchingRuleUse'</dl>
 
-<dl><dt><strong>token_defaults</strong> = {'APPLIES': [], 'DESC': [None], 'NAME': [], 'OBSOLETE': None}</dl>
+<dl><dt><strong>token_defaults</strong> = {'APPLIES': (), 'DESC': (None,), 'NAME': (), 'OBSOLETE': None}</dl>
 
 <hr>
 Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
@@ -411,7 +411,7 @@ Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaEle
 
 <hr>
 Data and non-method functions inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
-<dl><dt><strong>token_defaults</strong> = {'DESC': [None]}</dl>
+<dl><dt><strong>token_defaults</strong> = {'DESC': (None,)}</dl>
 
 </td></tr></table> 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -445,7 +445,7 @@ Data and non-method functions defined here:<br>
 
 <dl><dt><strong>schema_attribute</strong> = 'objectClasses'</dl>
 
-<dl><dt><strong>token_defaults</strong> = {'ABSTRACT': None, 'AUXILIARY': None, 'DESC': [None], 'MAY': [], 'MUST': [], 'NAME': [], 'OBSOLETE': None, 'STRUCTURAL': None, 'SUP': []}</dl>
+<dl><dt><strong>token_defaults</strong> = {'ABSTRACT': None, 'AUXILIARY': None, 'DESC': (None,), 'MAY': (), 'MUST': (), 'NAME': (), 'OBSOLETE': None, 'STRUCTURAL': None, 'SUP': ()}</dl>
 
 <hr>
 Methods inherited from <a href="ldap.schema.models.html#SchemaElement">SchemaElement</a>:<br>
@@ -481,7 +481,7 @@ Data and non-method functions defined here:<br>
 
 <dl><dt><strong>__module__</strong> = 'ldap.schema.models'</dl>
 
-<dl><dt><strong>token_defaults</strong> = {'DESC': [None]}</dl>
+<dl><dt><strong>token_defaults</strong> = {'DESC': (None,)}</dl>
 
 </td></tr></table></td></tr></table>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -493,5 +493,6 @@ Data and non-method functions defined here:<br>
 <td width="100%"><strong>AttributeUsage</strong> = {'userapplications': 0, 'directoryoperation': 1,... 'userapplication': 0, 'distributedoperation': 2}<br>
 <strong>NOT_HUMAN_READABLE_LDAP_SYNTAXES</strong> = {'1.3.6.1.4.1.1466.115.121.1.10': None, '1.3.6.1.4.1.1466.115.121.1.23': None, '1.3.6.1.4.1.1466.115.121.1.28': None, '1.3.6.1.4.1.1466.115.121.1.4': None, '1.3.6.1.4.1.1466.115.121.1.40': None, '1.3.6.1.4.1.1466.115.121.1.49': None, '1.3.6.1.4.1.1466.115.121.1.5': None, '1.3.6.1.4.1.1466.115.121.1.6': None, '1.3.6.1.4.1.1466.115.121.1.8': None, '1.3.6.1.4.1.1466.115.121.1.9': None}<br>
 <strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/schema/models.pyc'<br>
-<strong>__name__</strong> = 'ldap.schema.models'</td></tr></table>
+<strong>__name__</strong> = 'ldap.schema.models'<br>
+<strong>schema_attribute</strong> = 'dITContentRules'</td></tr></table>
 </body></html>
