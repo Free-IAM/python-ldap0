@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.15 2002/07/30 14:54:41 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.16 2002/11/03 21:17:48 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -18,22 +18,68 @@ Not quite sure...</a><br>
 </li>
 
 <li>
-<p>Q: Can I do a LDAPv3 bind via python-ldap?</p>
+<p>Q: Can I use LDAPv3 via python-ldap?</p>
 <p>A:
+Yes, with recent version 2.0.0pre03+ and OpenLDAP 2.x libs.
+</p>
+</li>
+
+<li>
+<p>
+Q: Can I use LDAPv3 with the binary builds for my platform?
+</p>
+<p>A:
+That depends very much on which version of python-ldap was
+used and which underlying LDAP lib was used. Check with the
+provider of the binary package.
+</p>
+</li>
+
+<li>
+<p>Q: Can python-ldap be built against OpenLDAP 2.x libs?</p>
+<p>A: 
 Yes, with recent version 2.0.0pre03+.
 </p>
 </li>
 
 <li>
-<p>Q: Can python-ldap can be built against OpenLDAP 2.0.x libs?</p>
+<p>Q: Can python-ldap be built against Netscape, Mozilla or Novell libs?</p>
 <p>A: 
-Yes, with recent version 2.0.0pre03.
+Nope.
+</p>
+</li>
+
+<li>
+<p>
+Q: My binary version of python-ldap was build with LDAP libs 3.3.
+But the python-ldap docs say LDAP libs 2.x are needed. I'm confused!
+</p>
+<p>A:
+This is a rather long story:<br>
+E.g. some Win32 DLLs floating around for download are based on
+the old Umich LDAP code which is not maintained anymore for a
+couple of years. Last Umich 3.3 release was 1997 if I remember correctly.<br>
+The OpenLDAP project took over the Umich code and started releasing
+OpenLDAP 1.x series mainly fixing bugs and doing some improvements
+to the database backend. Still only LDAPv2 was supported at server
+and client side. (Many commercial vendors also derived their products
+from the Umich code.)<br>
+OpenLDAP 2.x is a full-fledged LDAPv3 implementation. Still it has
+its roots in Umich code but has many more features/improvements.<br>
+
+You cannot compile recent python-ldap 2.x against old Umich 3.3 or
+OpenLDAP 1.x libs. You have to use the OpenLDAP 2.x.x libs.
+
 </p>
 </li>
 
 <li>
 <p>Q: Does it work with Python (1.5|2.0|2.1|2.2)?</p>
-<p>A: Yes.</p>
+<p>
+A: The basic modules ldap and ldif should still work with Python 1.5
+but python-ldap is not tested thoroughly with this version anymore.
+Any other version since 2.0 should not be a problem at all.
+</p>
 </li>
 
 <li>
@@ -96,7 +142,7 @@ version 2.0.0pre that does not work anymore?</p>
 <p>
 A:
 Despite some outdated programming examples the extension module
-<em>_ldap</em> should <strong>not</strong> be imported directly.
+<em>_ldap</em> <strong>SHOULD NOT</strong> be imported directly.
 Import <em>ldap</em> instead which is a Python wrapper around <em>_ldap</em>
 providing the full functionality.
 </p>
