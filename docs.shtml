@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.16 2002/02/09 16:21:02 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.17 2002/02/09 16:25:54 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -12,6 +12,7 @@ Here is documentation for the C extension module <em>ldap</em>.
 <ul>
   <li>
     <a href="doc/python-ldap/index.html">HTML</a>
+    (<a href="doc/python-ldap-docs-html.tar.g">tar.gz</a>)
   </li>
   <li>
     <a href="doc/python-ldap.pdf">PDF</a> (you may need Adobe's
