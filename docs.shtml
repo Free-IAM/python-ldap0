@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.26 2003/07/15 17:52:10 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.27 2004/01/05 22:49:56 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -105,7 +105,7 @@ or links might be broken.
   </dd>
 
   <dt>
-    <a href="http://www.opennc.org/directory/mats/blits25/index.htm">BLITS</a>
+    <a href="http://www.opengroup.org/dif/blits/">BLITS</a>
   </dt>
   <dd>
     Basic LDAP Interoperability Test Suite.
