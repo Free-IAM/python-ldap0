@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.21 2002/10/29 15:34:16 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.22 2002/11/03 17:31:31 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -36,6 +36,14 @@ Some pydoc-generated docs:
 <h2>Related information</h2>
 
 <dl>
+
+  <dt>
+    <a href="http://homepage.mac.com/mengelhart/python-ldap-samples.html">
+    python-ldap programming examples</a>
+  </dt>
+  <dd>
+    Useful for programmers beginning to deploy python-ldap.
+  </dd>
 
   <dt>
     <a href="http://tyvex.mrs.umn.edu/twiki/view/Dungeon/PythonLDAP">
