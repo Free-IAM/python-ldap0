@@ -1,13 +1,13 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.7 2001/05/16 01:20:15 leonard Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.8 2002/02/01 19:50:38 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
-<h2>_ldap</h2>
+<h2>ldap</h2>
 <p>
-Here is documentation for the C extension module <em>_ldap</em>.
+Here is documentation for the C extension module <em>ldap</em>.
 </p>
 <ul>
   <li>
@@ -18,10 +18,19 @@ Here is documentation for the C extension module <em>_ldap</em>.
     <a href="http://www.adobe.com/products/acrobat/readstep2.html">
     Acrobat Reader</a>)
   </li>
-  <li>
-    <a href="doc/lib.ps">PostScript</a>
-  </li>
 </ul>
+
+<h2>ldapurl</h2>
+<p>
+pydoc-generated docs for module
+<a href="doc/ldapurl.html">ldapurl</a>.
+</p>
+
+<h2>ldif</h2>
+<p>
+pydoc-generated docs for module
+<a href="doc/ldif.html">ldif</a>.
+</p>
 
 <h2>Related information</h2>
 
