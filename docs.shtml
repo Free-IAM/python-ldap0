@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.14 2002/02/09 15:38:47 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.15 2002/02/09 15:43:59 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -47,10 +47,9 @@ Some pydoc-generated docs:
     <a href="http://www.ietf.org/html.charters/ldapext-charter.html">LDAPEXT</a>
   </dt>
   <dd>
-    IETF working group which also defines LDAP API standards.
-    If you're interested in recently discussed LDAP topics and
-    upcoming standards you should dive into the Internet-Drafts
-    provided here.
+    Discontinued IETF working group which also tried to define
+    a LDAP C API standard. <em>draft-ietf-ldapext-ldap-c-api-04</em> is of
+    interest here since the OpenLDAP 2 libs implement this (expired) draft.
   </dd>
 
   <dt>
