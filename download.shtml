@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.22 2003/09/23 17:41:46 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.23 2003/09/23 17:42:40 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -50,7 +50,7 @@ except the binaries you can grab from the SF site.
 <h3>S.u.S.E. Linux</h3>
 <p>
 <a href="http://www.suse.de/">S.u.S.E. Linux</a> ships with python-ldap.
-There might sometimes be packages for certain version in the
+There might sometimes be packages for some versions in the
 <a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
 project file release area</a></p>
 
