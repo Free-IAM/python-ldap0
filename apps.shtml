@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.7 2003/01/24 15:27:11 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.8 2003/08/13 21:31:09 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -14,6 +14,16 @@ There are some applications implemented with the help of python-ldap
   <dd>
     <p>
       A web-based searching and browsing tool.
+    </p>
+  </dd>
+
+  <dt><a href="http://forge.novell.com/modules/xfmod/project/?ldapcfgtool">LDAP Configuration Tool</a></dt>
+  <dd>
+    <p>
+      LDAP Configuration Tool is a simple application that helps
+      you reconfigure your Linux box to take advantage of an
+      LDAP directory for access control, account management, and
+      user authentication.
     </p>
   </dd>
 
