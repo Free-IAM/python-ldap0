@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.11 2001/12/29 17:17:18 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.12 2002/02/01 18:16:25 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -9,25 +9,25 @@
 
 <li>
 <p>Q: Is python-ldap yet another abandon-ware project on SourceForge?</p>
-<p>A: 
-Answer 1: "Jump on in."<br />
-Answer 2: "Jump into the C ;-)"<br />
-Answer 3: <a href="http://sourceforge.net/project/stats/?group_id=2072">
-Not quite sure...</a><br />
+<p>
+A1: "Jump on in."<br>
+A2: "Jump into the C ;-)"<br>
+A3: <a href="http://sourceforge.net/project/stats/?group_id=2072">
+Not quite sure...</a><br>
 </p>
 </li>
 
 <li>
 <p>Q: Can I do a LDAPv3 bind via python-ldap?</p>
 <p>A:
-Yes, with recent version checked out from CVS. No release yet.
+Yes, with recent version 2.0.0pre03.
 </p>
 </li>
 
 <li>
 <p>Q: Can python-ldap can be built against OpenLDAP 2.0.x libs?</p>
 <p>A: 
-Yes, with recent version checked out from CVS. No release yet.
+Yes, with recent version 2.0.0pre03.
 </p>
 </li>
 
@@ -39,10 +39,12 @@ Yes, with recent version checked out from CVS. No release yet.
 <li>
 <p>Q: Does it work with Windows 32?</p>
 <p>
-A:
+A1:
 Older versions (1.x) work with UMich LDAP libs under Windows 32.
-The current CVS version needs OpenLDAP 2 libs which are currently
+The current version 2.0.0pre03 needs OpenLDAP 2 libs which are currently
 not available on Windows. Jump on in...
+A2:
+It' possible to run recent python-ldap with OpenLDAP 2 libs under cygwin.
 </p>
 </li>
 
