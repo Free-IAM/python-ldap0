@@ -26,9 +26,20 @@
 
 	$release_root = "ftp://python-ldap.sourceforge.net/pub/python-ldap";
 
-	function release($name, $desc, $vers) {
+	#-- Source code release
+	function srcrelease($name) {
 		print "<tr><td><a href=\"$release_root/$name\">$name</a></td>
-			   <td>$desc</td>
-			   <td>$vers</td></tr>\n";
+			   </tr>\n";
 	}
+
+	#-- Binary package release
+	function binrelease($name, $arch, $pyvers $ldaplib, $note) {
+		print "<tr><td><a href=\"$release_root/$name\">$name</a></td>
+			   <td>$arch</td>
+			   <td>$pyvers</td>
+			   <td>$ldaplib</td>
+			   <td>$note &nbsp;</td>
+			   </tr>\n";
+	}
+
 ?>

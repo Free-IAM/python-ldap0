@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.2 2000/08/13 22:46:25 leonard Exp $ -->
+<!-- $Id: release.php,v 1.3 2000/08/14 02:59:40 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -17,15 +17,26 @@
     <th> Binary </th>
 </tr><tr valign=top>
     <td>
-	<table>
-	<? release("src-dummy1", "dummy", "dummy") ?>
-	<? release("src-dummy2", "dummy", "dummy") ?>
+	<table border=1>
+	<? srcrelease("ldap-1.10alpha-src.tar.gz") ?>
 	</table>
     </td>
     <td>
-	<table>
-	<? release("src-dummy1", "dummy", "dummy") ?>
-	<? release("src-dummy2", "dummy", "dummy") ?>
+	<table border=1>
+	<tr><th>&nbsp;</th>
+	    <th>OS</th>
+	    <th>Python</th>
+	    <th>LDAP</th>
+	</tr>
+	<!--	   filename, OS, Python, LDAP -->
+	<? if (0) binrelease("ldap-1.10alpha-linux-x86.rpm", 
+		      "Linux 2.2.14-5.0.14smp",
+		      "1.5.2"
+		      "OpenLDAP 1.2.11") ?>
+	<? binrelease("ldap-1.10alpha-OpenBSD-i386.tgz", 
+		      "OpenBSD/i386 2.7",
+		      "1.6a2"
+		      "OpenLDAP 1.2.11") ?>
 	</table>
     </td>
 </tr>
@@ -33,8 +44,9 @@
 
 <dl>
 <dt>CVS
-<dd>Access the source repository at
+<dd>The CVS source repository can be accessed using pserver or ssh protocols at
 <i>cvs.python-ldap.sourceforge.net:/cvsroot/python-ldap</i>
+(username <tt>anonymous</tt>, password <tt>anonymous</tt>.)
 
 <dt>Historic
 <dd>Some historic release for <i>ldapmodule</i> may be available from
@@ -42,6 +54,6 @@
 </dl>
 
 <hr>
-<i>$Id: release.php,v 1.2 2000/08/13 22:46:25 leonard Exp $</i>
+<i>$Id: release.php,v 1.3 2000/08/14 02:59:40 leonard Exp $</i>
 </BODY>
 </HTML>
