@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.13 2002/03/04 21:45:16 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.14 2002/03/04 22:21:47 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -80,11 +80,13 @@ failed: No such file or directory
 </pre>
 </p>
 <p>A1:
-You need to make sure that the path to liblber.so.2 and and libldap.so.2
-is in your <em>LD_LIBRARY_PATH</em> environment variable.
+You need to make sure that the path to <em>liblber.so.2</em> and
+<em>libldap.so.2</em> is in your <em>LD_LIBRARY_PATH</em> environment
+variable.
 </p>
-<p>A2: Alternatively you can add the path to <em>liblber.so.2</em>
-and <em>libldap.so.2</em> to /etc/ld.so.conf and invoke ldconfig afterwards.
+<p>A2: Alternatively if you're on Linux you can add the path to
+<em>liblber.so.2</em> and <em>libldap.so.2</em> to /etc/ld.so.conf
+and invoke ldconfig afterwards.
 </p>
 </li>
 
