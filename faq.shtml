@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.6 2001/05/16 01:15:36 leonard Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.7 2001/05/29 12:40:08 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -26,7 +26,7 @@ No, since OpenLDAP 2.0.x implements a slightly different API
 (<a href="http://www.OpenLDAP.org/lists/openldap-software/200009/msg00408.html">read more</a>)
 python-ldap cannot be linked against this version.
 There are two patches available which work with CVS snapshot as
-of May 2001. See also <a href="download.html">download page</a>.
+of May 2001. See also <a href="download.shtml">download page</a>.
 </dd>
 
 <dt>4. Does it work with Python (1.5|2.0|2.1)?</dt>
