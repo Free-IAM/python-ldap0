@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.16 2000/12/10 12:54:55 leonard Exp $ -->
+<!-- $Id: release.php,v 1.17 2001/05/09 01:11:43 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -51,6 +51,13 @@
 </tr>
 </table>
 
+<p>
+Joe Little has also patched python-ldap 1.10a3 to work with OpenLDAP 2.0.x and released
+it for Redhat6.2 
+[<a href="http://www.open-it.org/download/redhat6.2/RPMS/python-ldap-1.10alpha3-1.i386.rpm">rpm</a>|<a href="http://www.open-it.org/download/redhat6.2/SRPMS/python-ldap-1.10alpha3-1.src.rpm">srpm</a>]
+and Redhat7.0
+[<a href="http://www.open-it.org/download/redhat7/RPMS/python-ldap-1.10alpha3-1.i386.rpm">rpm</a>|<a href="http://www.open-it.org/download/redhat7/SRPMS/python-ldap-1.10alpha3-1.src.rpm">srpm</a>].
+
 <dl>
 <dt>CVS
 <dd>The CVS source repository can be accessed using pserver or ssh protocols at
@@ -62,6 +69,6 @@
 </dl>
 
 <hr>
-<i>$Id: release.php,v 1.16 2000/12/10 12:54:55 leonard Exp $</i>
+<i>$Id: release.php,v 1.17 2001/05/09 01:11:43 leonard Exp $</i>
 </BODY>
 </HTML>
