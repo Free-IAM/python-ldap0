@@ -28,12 +28,14 @@
 
 	#-- Source code release
 	function srcrelease($name, $vers) {
+		global $release_root;
 		print "<tr><td><a href=\"$release_root/$name\">$vers</a></td>
 			   </tr>\n";
 	}
 
 	#-- Binary package release
 	function binrelease($name, $vers, $arch, $pyvers, $ldaplib, $note) {
+		global $release_root;
 		print "<tr><td><a href=\"$release_root/$name\">$vers</a></td>
 			   <td>$arch</td>
 			   <td>$pyvers</td>
