@@ -10,12 +10,12 @@ Here is documentation for the C extension module <em>_ldap</em>.
 </p>
 <ul>
   <li>
-    <a href="doc/_ldap.pdf">PDF</a> (you may need Adobe's
+    <a href="doc/lib.pdf">PDF</a> (you may need Adobe's
     <a href="http://www.adobe.com/products/acrobat/readstep2.html">
     Acrobat Reader</a>)
   </li>
   <li>
-    <a href="doc/_ldap.ps">PostScript</a>
+    <a href="doc/lib.ps">PostScript</a>
   </li>
   <li>
     <a href="doc/lib/index.html">HTML</a>
