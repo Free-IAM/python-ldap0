@@ -4,16 +4,31 @@
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
-<h2>Source</h2>
+<p>
+Because distributions seem to be all over the place, this page
+tries to list all the current ones we know of.
+</p>
 
+
+<h2>Official releases</h2>
+<p>The
+<a href="http://sourceforge.net/project/showfiles.php?group_id=2072">project
+release area</a>
+has the latest 'official' releases.
+</p>
+
+<h2>Source</h2>
 <ul>
   <li>
     <a href="ftp://python-ldap.sourceforge.net/pub/python-ldap/python-ldap-1.10alpha3-src.tar.gz">
-    1.10alpha3</a>
+    1.10alpha3 released source</a>
   </li>
   <li>
     <a href="http://cvs.sourceforge.net/cvstarballs/python-ldap-cvsroot.tar.gz">
     Daily CVS snapshot</a>
+  </li>
+  <li>
+    <a href="http://sourceforge.net/cvs/?group_id=2072">Anonymous CVS instructions</a>
   </li>
 </ul>
 
@@ -23,40 +38,41 @@
 
 <ul>
   <li>
-    Unpatched python-ldap RPMs are contributed
-    by Mirko Zeibig at <a href="http://www.webideal.de/ldap/">WebIdeal</a>.
+    <a href="http://www.webideal.de/ldap/">Unpatched RPMs</a>
+    contributed by Mirko Zeibig.
   </li>
   <li>
-    <a href="mailto:Joe Little <jlittle@open-it.org>">Joe Little</a> built
     <a href="http://www.open-it.org/download/">
-    RedHat-RPMs of python-ldap linked against OpenLDAP 2.0.x libs.</a>
+    RedHat-RPMs linked against OpenLDAP 2.0.x libs</a>
+    contributed by Joe Little.
   </li>
 </ul>
 
 <h3>S.u.S.E. Linux</h3>
 <p>
-S.u.S.E. Linux ships with python-ldap. They use a rather
+<a href="http://www.suse.de/">S.u.S.E. Linux</a>
+ships with python-ldap. They use a rather
 old version though.
 </p>
 
 <h3>Debian Linux</h3>
 <p>
-Also rather outdated version in a Debian package of
+An
+<em>outdated</em>
 <a href="http://packages.debian.org/stable/net/python-ldap.html">
-python-ldap 1.8</a>.
+Debian package</a> (1.8).
 </p>
-
-<h3>FreeBSD</h3>
 
 <h3>Win32</h3>
 <p>
-  <a href="mailto:Mauro Cicognini <mcicogni@siosistemi.it>">
-  Mauro Cicognini &lt;mcicogni@siosistemi.it&gt;</a> contributed
-  a Win32 build of python-ldap for Python 2.0.<br />
-  You can <a href="http://www.web2ldap.de/download/pyldap32.zip">download it here</a>.
-  You also need the
+  <a href="mailto:mcicogni&#64;siosistemi.it">
+  Mauro Cicognini &lt;mcicogni&#64;siosistemi.it&gt;</a> contributed
+  a
+  <a href="http://www.web2ldap.de/download/pyldap32.zip">Win32 build</a>
+  of python-ldap for Python 2.0.<br />
+  You will also need the DLLs from
   <a href="ftp://terminator.rs.itd.umich.edu/ldap/windows/">
-  Umich LDAP library for Windows</a>.
+  Umich LDAP distribution for Windows</a>.
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
