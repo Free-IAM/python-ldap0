@@ -1,22 +1,20 @@
 
 <!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html><head><title>Python: module ldap.functions</title>
-<style type="text/css"><!--
-TT { font-family: lucidatypewriter, lucida console, courier }
---></style></head><body bgcolor="#f0f0f8">
+</head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="ldap.html"><font color="#ffffff">ldap</font></a>.functions</strong></big></big> (version 0.0.2)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="ldap.html"><font color="#ffffff">ldap</font></a>.functions</strong></big></big> (version 0.1.1)</font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/ldap/functions.py">/usr/lib/python2.2/site-packages/ldap/functions.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.3/site-packages/ldap/functions.py">/usr/lib/python2.3/site-packages/ldap/functions.py</a></font></td></tr></table>
     <p><tt>functions.py&nbsp;-&nbsp;wraps&nbsp;functions&nbsp;of&nbsp;module&nbsp;_ldap<br>
 written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
 &nbsp;<br>
 See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
 &nbsp;<br>
-\$Id: ldap.functions.html,v 1.3 2003/05/27 14:34:26 stroeder Exp $<br>
+\$Id: ldap.functions.html,v 1.4 2004/03/25 11:40:00 stroeder Exp $<br>
 &nbsp;<br>
 Compability:<br>
 -&nbsp;Tested&nbsp;with&nbsp;Python&nbsp;2.0+&nbsp;but&nbsp;should&nbsp;work&nbsp;with&nbsp;Python&nbsp;1.5.x<br>
@@ -29,22 +27,23 @@ overridden.<br>
 Thread-lock:<br>
 Basically&nbsp;calls&nbsp;into&nbsp;the&nbsp;LDAP&nbsp;lib&nbsp;are&nbsp;serialized&nbsp;by&nbsp;the&nbsp;module-wide<br>
 lock&nbsp;_ldapmodule_lock.</tt></p>
-
+<p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="_ldap.html">_ldap</a><br>
 </td><td width="25%" valign=top><a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table>
+</td><td width="25%" valign=top><a href="traceback.html">traceback</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-explode_dn"><strong>explode_dn</strong></a>(dn, notypes<font color="#909090">=0</font>)</dt><dd><tt><a href="#-explode_dn">explode_dn</a>(dn&nbsp;[,&nbsp;notypes=0])&nbsp;-&gt;&nbsp;list<br>
 &nbsp;<br>
 This&nbsp;function&nbsp;takes&nbsp;a&nbsp;DN&nbsp;and&nbsp;breaks&nbsp;it&nbsp;up&nbsp;into&nbsp;its&nbsp;component&nbsp;parts.<br>
@@ -56,7 +55,9 @@ This&nbsp;function&nbsp;takes&nbsp;a&nbsp;RDN&nbsp;and&nbsp;breaks&nbsp;it&nbsp;
 if&nbsp;it&nbsp;is&nbsp;a&nbsp;multi-valued&nbsp;RDN.<br>
 The&nbsp;notypes&nbsp;parameter&nbsp;is&nbsp;used&nbsp;to&nbsp;specify&nbsp;that&nbsp;only&nbsp;the&nbsp;component's<br>
 attribute&nbsp;values&nbsp;be&nbsp;returned&nbsp;and&nbsp;not&nbsp;the&nbsp;attribute&nbsp;types.</tt></dd></dl>
- <dl><dt><a name="-get_option"><strong>get_option</strong></a>(option)</dt></dl>
+ <dl><dt><a name="-get_option"><strong>get_option</strong></a>(option)</dt><dd><tt><a href="#-get_option">get_option</a>(name)&nbsp;-&gt;&nbsp;value<br>
+&nbsp;<br>
+Get&nbsp;the&nbsp;value&nbsp;of&nbsp;an&nbsp;LDAP&nbsp;global&nbsp;option.</tt></dd></dl>
  <dl><dt><a name="-init"><strong>init</strong></a> = open(host, port<font color="#909090">=389</font>, trace_level<font color="#909090">=0</font>, trace_file<font color="#909090">=&lt;open file '&lt;stdout&gt;', mode 'w'&gt;</font>, trace_stack_limit<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;LDAPObject&nbsp;instance&nbsp;by&nbsp;opening&nbsp;LDAP&nbsp;connection&nbsp;to<br>
 specified&nbsp;LDAP&nbsp;host<br>
 &nbsp;<br>
@@ -82,10 +83,6 @@ trace_level<br>
 trace_file<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;object&nbsp;where&nbsp;to&nbsp;write&nbsp;the&nbsp;trace&nbsp;output&nbsp;to.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default&nbsp;is&nbsp;to&nbsp;use&nbsp;stdout.</tt></dd></dl>
- <dl><dt><a name="-is_ldap_url"><strong>is_ldap_url</strong></a>(url)</dt><dd><tt><a href="#-is_ldap_url">is_ldap_url</a>(url)&nbsp;-&gt;&nbsp;int<br>
-&nbsp;<br>
-This&nbsp;function&nbsp;returns&nbsp;true&nbsp;if&nbsp;url&nbsp;`looks&nbsp;like'&nbsp;an&nbsp;LDAP&nbsp;URL<br>
-(as&nbsp;opposed&nbsp;to&nbsp;some&nbsp;other&nbsp;kind&nbsp;of&nbsp;URL).</tt></dd></dl>
  <dl><dt><a name="-open"><strong>open</strong></a>(host, port<font color="#909090">=389</font>, trace_level<font color="#909090">=0</font>, trace_file<font color="#909090">=&lt;open file '&lt;stdout&gt;', mode 'w'&gt;</font>, trace_stack_limit<font color="#909090">=None</font>)</dt><dd><tt>Return&nbsp;LDAPObject&nbsp;instance&nbsp;by&nbsp;opening&nbsp;LDAP&nbsp;connection&nbsp;to<br>
 specified&nbsp;LDAP&nbsp;host<br>
 &nbsp;<br>
@@ -99,16 +96,16 @@ trace_level<br>
 trace_file<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;object&nbsp;where&nbsp;to&nbsp;write&nbsp;the&nbsp;trace&nbsp;output&nbsp;to.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default&nbsp;is&nbsp;to&nbsp;use&nbsp;stdout.</tt></dd></dl>
- <dl><dt><a name="-set_option"><strong>set_option</strong></a>(option, invalue)</dt></dl>
-</td></tr></table>
+ <dl><dt><a name="-set_option"><strong>set_option</strong></a>(option, invalue)</dt><dd><tt><a href="#-set_option">set_option</a>(name,&nbsp;value)<br>
+&nbsp;<br>
+Set&nbsp;the&nbsp;value&nbsp;of&nbsp;an&nbsp;LDAP&nbsp;global&nbsp;option.</tt></dd></dl>
+</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>__all__</strong> = ['open', 'initialize', 'init', 'explode_dn', 'explode_rdn', 'get_option', 'set_option']<br>
-<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/functions.pyc'<br>
-<strong>__name__</strong> = 'ldap.functions'<br>
-<strong>__version__</strong> = '0.0.2'</td></tr></table>
+<strong>__version__</strong> = '0.1.1'</td></tr></table>
 </body></html>

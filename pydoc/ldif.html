@@ -1,45 +1,43 @@
 
 <!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html><head><title>Python: module ldif</title>
-<style type="text/css"><!--
-TT { font-family: lucidatypewriter, lucida console, courier }
---></style></head><body bgcolor="#f0f0f8">
+</head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>ldif</strong></big></big> (version 0.5.1)</font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/ldif.py">/usr/lib/python2.2/site-packages/ldif.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.3/site-packages/ldif.py">/usr/lib/python2.3/site-packages/ldif.py</a></font></td></tr></table>
     <p><tt>ldif&nbsp;-&nbsp;generate&nbsp;and&nbsp;parse&nbsp;LDIF&nbsp;data&nbsp;(see&nbsp;<a href="http://www.rfc-editor.org/rfc/rfc2849.txt">RFC&nbsp;2849</a>)<br>
 written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
 &nbsp;<br>
 See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
 &nbsp;<br>
-$Id: ldif.html,v 1.4 2003/05/27 14:34:26 stroeder Exp $<br>
+$Id: ldif.html,v 1.5 2004/03/25 11:40:00 stroeder Exp $<br>
 &nbsp;<br>
 Python&nbsp;compability&nbsp;note:<br>
 Tested&nbsp;with&nbsp;Python&nbsp;2.0+,&nbsp;but&nbsp;should&nbsp;work&nbsp;with&nbsp;Python&nbsp;1.5.2+.</tt></p>
-
+<p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
-<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="base64.html">base64</a><br>
 <a href="re.html">re</a><br>
 </td><td width="25%" valign=top><a href="string.html">string</a><br>
 <a href="types.html">types</a><br>
 </td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
 <a href="urlparse.html">urlparse</a><br>
-</td><td width="25%" valign=top></td></tr></table></td></tr></table>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ee77aa">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
     
-<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl>
 <dt><font face="helvetica, arial"><a href="ldif.html#LDIFParser">LDIFParser</a>
 </font></dt><dd>
@@ -50,52 +48,39 @@ Tested&nbsp;with&nbsp;Python&nbsp;2.0+,&nbsp;but&nbsp;should&nbsp;work&nbsp;with
 </dd>
 <dt><font face="helvetica, arial"><a href="ldif.html#LDIFWriter">LDIFWriter</a>
 </font></dt></dl>
- 
+ <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="LDIFCopy">class <strong>LDIFCopy</strong></a>(<a href="ldif.html#LDIFParser">LDIFParser</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Copy&nbsp;LDIF&nbsp;input&nbsp;to&nbsp;LDIF&nbsp;output&nbsp;containing&nbsp;all&nbsp;data&nbsp;retrieved<br>
 via&nbsp;URLs<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="LDIFCopy-__init__"><strong>__init__</strong></a>(self, input_file, output_file, ignored_attr_types<font color="#909090">=None</font>, max_entries<font color="#909090">=0</font>, process_url_schemes<font color="#909090">=None</font>, base64_attrs<font color="#909090">=None</font>, cols<font color="#909090">=76</font>, line_sep<font color="#909090">='<font color="#c040c0">\n</font>'</font>)</dt><dd><tt>See&nbsp;<a href="#LDIFParser">LDIFParser</a>.<a href="#LDIFCopy-__init__">__init__</a>()&nbsp;and&nbsp;<a href="#LDIFWriter">LDIFWriter</a>.<a href="#LDIFCopy-__init__">__init__</a>()</tt></dd></dl>
 
 <dl><dt><a name="LDIFCopy-handle"><strong>handle</strong></a>(self, dn, entry)</dt><dd><tt>Write&nbsp;single&nbsp;LDIF&nbsp;record&nbsp;to&nbsp;output&nbsp;file.</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  Copy LDIF input to LDIF output containing all data retrieved<font color="#c040c0">\n</font>  via URLs<font color="#c040c0">\n</font>  '</dl>
-
-<dl><dt><strong>__module__</strong> = 'ldif'</dl>
-
-<hr>
 Methods inherited from <a href="ldif.html#LDIFParser">LDIFParser</a>:<br>
-<dl><dt><a name="LDIFCopy-_parseAttrTypeandValue"><strong>_parseAttrTypeandValue</strong></a>(self)</dt><dd><tt>Parse&nbsp;a&nbsp;single&nbsp;attribute&nbsp;type&nbsp;and&nbsp;value&nbsp;pair&nbsp;from&nbsp;one&nbsp;or<br>
-more&nbsp;lines&nbsp;of&nbsp;LDIF&nbsp;data</tt></dd></dl>
-
-<dl><dt><a name="LDIFCopy-_stripLineSep"><strong>_stripLineSep</strong></a>(self, s)</dt><dd><tt>Strip&nbsp;trailing&nbsp;line&nbsp;separators&nbsp;from&nbsp;s,&nbsp;but&nbsp;no&nbsp;other&nbsp;whitespaces</tt></dd></dl>
-
-<dl><dt><a name="LDIFCopy-_unfoldLDIFLine"><strong>_unfoldLDIFLine</strong></a>(self)</dt><dd><tt>Unfold&nbsp;several&nbsp;folded&nbsp;lines&nbsp;with&nbsp;trailing&nbsp;space&nbsp;into&nbsp;one&nbsp;line</tt></dd></dl>
-
 <dl><dt><a name="LDIFCopy-parse"><strong>parse</strong></a>(self)</dt><dd><tt>Continously&nbsp;read&nbsp;and&nbsp;parse&nbsp;LDIF&nbsp;records</tt></dd></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="LDIFParser">class <strong>LDIFParser</strong></a></font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Base&nbsp;class&nbsp;for&nbsp;a&nbsp;LDIF&nbsp;parser.&nbsp;Applications&nbsp;should&nbsp;sub-class&nbsp;this<br>
 class&nbsp;and&nbsp;override&nbsp;method&nbsp;<a href="#LDIFParser-handle">handle</a>()&nbsp;to&nbsp;implement&nbsp;something&nbsp;meaningful.<br>
 &nbsp;<br>
 Public&nbsp;class&nbsp;attributes:<br>
 records_read<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Counter&nbsp;for&nbsp;records&nbsp;processed&nbsp;so&nbsp;far<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="LDIFParser-__init__"><strong>__init__</strong></a>(self, input_file, ignored_attr_types<font color="#909090">=None</font>, max_entries<font color="#909090">=0</font>, process_url_schemes<font color="#909090">=None</font>, line_sep<font color="#909090">='<font color="#c040c0">\n</font>'</font>)</dt><dd><tt>Parameters:<br>
 input_file<br>
@@ -112,34 +97,21 @@ process_url_schemes<br>
 line_sep<br>
 &nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;used&nbsp;as&nbsp;line&nbsp;separator</tt></dd></dl>
 
-<dl><dt><a name="LDIFParser-_parseAttrTypeandValue"><strong>_parseAttrTypeandValue</strong></a>(self)</dt><dd><tt>Parse&nbsp;a&nbsp;single&nbsp;attribute&nbsp;type&nbsp;and&nbsp;value&nbsp;pair&nbsp;from&nbsp;one&nbsp;or<br>
-more&nbsp;lines&nbsp;of&nbsp;LDIF&nbsp;data</tt></dd></dl>
-
-<dl><dt><a name="LDIFParser-_stripLineSep"><strong>_stripLineSep</strong></a>(self, s)</dt><dd><tt>Strip&nbsp;trailing&nbsp;line&nbsp;separators&nbsp;from&nbsp;s,&nbsp;but&nbsp;no&nbsp;other&nbsp;whitespaces</tt></dd></dl>
-
-<dl><dt><a name="LDIFParser-_unfoldLDIFLine"><strong>_unfoldLDIFLine</strong></a>(self)</dt><dd><tt>Unfold&nbsp;several&nbsp;folded&nbsp;lines&nbsp;with&nbsp;trailing&nbsp;space&nbsp;into&nbsp;one&nbsp;line</tt></dd></dl>
-
-<dl><dt><a name="LDIFParser-handle"><strong>handle</strong></a>(self, *args, **kwargs)</dt><dd><tt>Process&nbsp;a&nbsp;single&nbsp;content&nbsp;LDIF&nbsp;record.&nbsp;This&nbsp;method&nbsp;should&nbsp;be<br>
+<dl><dt><a name="LDIFParser-handle"><strong>handle</strong></a>(self, dn, entry)</dt><dd><tt>Process&nbsp;a&nbsp;single&nbsp;content&nbsp;LDIF&nbsp;record.&nbsp;This&nbsp;method&nbsp;should&nbsp;be<br>
 implemented&nbsp;by&nbsp;applications&nbsp;using&nbsp;<a href="#LDIFParser">LDIFParser</a>.</tt></dd></dl>
 
 <dl><dt><a name="LDIFParser-parse"><strong>parse</strong></a>(self)</dt><dd><tt>Continously&nbsp;read&nbsp;and&nbsp;parse&nbsp;LDIF&nbsp;records</tt></dd></dl>
 
-<hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  Base class for a LDIF parser. Applications sh...d<font color="#c040c0">\n</font>        Counter for records processed so far<font color="#c040c0">\n</font>  '</dl>
-
-<dl><dt><strong>__module__</strong> = 'ldif'</dl>
-
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="LDIFRecordList">class <strong>LDIFRecordList</strong></a>(<a href="ldif.html#LDIFParser">LDIFParser</a>)</font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Collect&nbsp;all&nbsp;records&nbsp;of&nbsp;LDIF&nbsp;input&nbsp;into&nbsp;a&nbsp;single&nbsp;list.<br>
 of&nbsp;2-tuples&nbsp;(dn,entry).&nbsp;It&nbsp;can&nbsp;be&nbsp;a&nbsp;memory&nbsp;hog!<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="LDIFRecordList-__init__"><strong>__init__</strong></a>(self, input_file, ignored_attr_types<font color="#909090">=None</font>, max_entries<font color="#909090">=0</font>, process_url_schemes<font color="#909090">=None</font>)</dt><dd><tt>See&nbsp;<a href="#LDIFParser">LDIFParser</a>.<a href="#LDIFRecordList-__init__">__init__</a>()<br>
 &nbsp;<br>
@@ -150,33 +122,20 @@ all_records<br>
 <dl><dt><a name="LDIFRecordList-handle"><strong>handle</strong></a>(self, dn, entry)</dt><dd><tt>Append&nbsp;single&nbsp;record&nbsp;to&nbsp;dictionary&nbsp;of&nbsp;all&nbsp;records.</tt></dd></dl>
 
 <hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  Collect all records of LDIF input into a sing...f 2-tuples (dn,entry). It can be a memory hog!<font color="#c040c0">\n</font>  '</dl>
-
-<dl><dt><strong>__module__</strong> = 'ldif'</dl>
-
-<hr>
 Methods inherited from <a href="ldif.html#LDIFParser">LDIFParser</a>:<br>
-<dl><dt><a name="LDIFRecordList-_parseAttrTypeandValue"><strong>_parseAttrTypeandValue</strong></a>(self)</dt><dd><tt>Parse&nbsp;a&nbsp;single&nbsp;attribute&nbsp;type&nbsp;and&nbsp;value&nbsp;pair&nbsp;from&nbsp;one&nbsp;or<br>
-more&nbsp;lines&nbsp;of&nbsp;LDIF&nbsp;data</tt></dd></dl>
-
-<dl><dt><a name="LDIFRecordList-_stripLineSep"><strong>_stripLineSep</strong></a>(self, s)</dt><dd><tt>Strip&nbsp;trailing&nbsp;line&nbsp;separators&nbsp;from&nbsp;s,&nbsp;but&nbsp;no&nbsp;other&nbsp;whitespaces</tt></dd></dl>
-
-<dl><dt><a name="LDIFRecordList-_unfoldLDIFLine"><strong>_unfoldLDIFLine</strong></a>(self)</dt><dd><tt>Unfold&nbsp;several&nbsp;folded&nbsp;lines&nbsp;with&nbsp;trailing&nbsp;space&nbsp;into&nbsp;one&nbsp;line</tt></dd></dl>
-
 <dl><dt><a name="LDIFRecordList-parse"><strong>parse</strong></a>(self)</dt><dd><tt>Continously&nbsp;read&nbsp;and&nbsp;parse&nbsp;LDIF&nbsp;records</tt></dd></dl>
 
-</td></tr></table> 
+</td></tr></table> <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#ffc8d8">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="LDIFWriter">class <strong>LDIFWriter</strong></a></font></td></tr>
     
-<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
 <td colspan=2><tt>Write&nbsp;LDIF&nbsp;entry&nbsp;or&nbsp;change&nbsp;records&nbsp;to&nbsp;file&nbsp;object<br>
 Copy&nbsp;LDIF&nbsp;input&nbsp;to&nbsp;a&nbsp;file&nbsp;output&nbsp;object&nbsp;containing&nbsp;all&nbsp;data&nbsp;retrieved<br>
 via&nbsp;URLs<br>&nbsp;</tt></td></tr>
-<tr><td>&nbsp;&nbsp;</td>
+<tr><td>&nbsp;</td>
 <td width="100%">Methods defined here:<br>
 <dl><dt><a name="LDIFWriter-__init__"><strong>__init__</strong></a>(self, output_file, base64_attrs<font color="#909090">=None</font>, cols<font color="#909090">=76</font>, line_sep<font color="#909090">='<font color="#c040c0">\n</font>'</font>)</dt><dd><tt>output_file<br>
 &nbsp;&nbsp;&nbsp;&nbsp;file&nbsp;object&nbsp;for&nbsp;output<br>
@@ -188,40 +147,19 @@ cols<br>
 line_sep<br>
 &nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;used&nbsp;as&nbsp;line&nbsp;separator</tt></dd></dl>
 
-<dl><dt><a name="LDIFWriter-_unfoldLDIFLine"><strong>_unfoldLDIFLine</strong></a>(self, line)</dt><dd><tt>Write&nbsp;string&nbsp;line&nbsp;as&nbsp;one&nbsp;or&nbsp;more&nbsp;folded&nbsp;lines</tt></dd></dl>
-
-<dl><dt><a name="LDIFWriter-_unparseAttrTypeandValue"><strong>_unparseAttrTypeandValue</strong></a>(self, attr_type, attr_value)</dt><dd><tt>Write&nbsp;a&nbsp;single&nbsp;attribute&nbsp;type/value&nbsp;pair<br>
-&nbsp;<br>
-attr_type<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;type<br>
-attr_value<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;attribute&nbsp;value</tt></dd></dl>
-
-<dl><dt><a name="LDIFWriter-_unparseChangeRecord"><strong>_unparseChangeRecord</strong></a>(self, modlist)</dt><dd><tt>modlist<br>
-&nbsp;&nbsp;&nbsp;&nbsp;list&nbsp;of&nbsp;additions&nbsp;(2-tuple)&nbsp;or&nbsp;modifications&nbsp;(3-tuple)</tt></dd></dl>
-
-<dl><dt><a name="LDIFWriter-_unparseEntryRecord"><strong>_unparseEntryRecord</strong></a>(self, entry)</dt><dd><tt>entry<br>
-&nbsp;&nbsp;&nbsp;&nbsp;dictionary&nbsp;holding&nbsp;an&nbsp;entry</tt></dd></dl>
-
 <dl><dt><a name="LDIFWriter-unparse"><strong>unparse</strong></a>(self, dn, record)</dt><dd><tt>dn<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string-representation&nbsp;of&nbsp;distinguished&nbsp;name<br>
 record<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Either&nbsp;a&nbsp;dictionary&nbsp;holding&nbsp;the&nbsp;LDAP&nbsp;entry&nbsp;{attrtype:record}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;a&nbsp;list&nbsp;with&nbsp;a&nbsp;modify&nbsp;list&nbsp;like&nbsp;for&nbsp;LDAPObject.modify().</tt></dd></dl>
 
-<hr>
-Data and non-method functions defined here:<br>
-<dl><dt><strong>__doc__</strong> = '<font color="#c040c0">\n</font>  Write LDIF entry or change records to file ob...bject containing all data retrieved<font color="#c040c0">\n</font>  via URLs<font color="#c040c0">\n</font>  '</dl>
-
-<dl><dt><strong>__module__</strong> = 'ldif'</dl>
-
-</td></tr></table></td></tr></table>
+</td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
-<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-CreateLDIF"><strong>CreateLDIF</strong></a>(dn, record, base64_attrs<font color="#909090">=None</font>, cols<font color="#909090">=76</font>)</dt><dd><tt>Create&nbsp;LDIF&nbsp;single&nbsp;formatted&nbsp;record&nbsp;including&nbsp;trailing&nbsp;empty&nbsp;line.<br>
 This&nbsp;is&nbsp;a&nbsp;compability&nbsp;function.&nbsp;Use&nbsp;is&nbsp;deprecated!<br>
 &nbsp;<br>
@@ -241,20 +179,18 @@ This&nbsp;is&nbsp;a&nbsp;compability&nbsp;function.&nbsp;Use&nbsp;is&nbsp;deprec
  <dl><dt><a name="-is_dn"><strong>is_dn</strong></a>(s)</dt><dd><tt>returns&nbsp;1&nbsp;if&nbsp;s&nbsp;is&nbsp;a&nbsp;LDAP&nbsp;DN</tt></dd></dl>
  <dl><dt><a name="-list_dict"><strong>list_dict</strong></a>(l)</dt><dd><tt>return&nbsp;a&nbsp;dictionary&nbsp;with&nbsp;all&nbsp;items&nbsp;of&nbsp;l&nbsp;being&nbsp;the&nbsp;keys&nbsp;of&nbsp;the&nbsp;dictionary</tt></dd></dl>
  <dl><dt><a name="-needs_base64"><strong>needs_base64</strong></a>(s)</dt><dd><tt>returns&nbsp;1&nbsp;if&nbsp;s&nbsp;has&nbsp;to&nbsp;be&nbsp;base-64&nbsp;encoded&nbsp;because&nbsp;of&nbsp;special&nbsp;chars</tt></dd></dl>
-</td></tr></table>
+</td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
-<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><strong>CHANGE_TYPES</strong> = ['add', 'delete', 'modify', 'modrdn']<br>
 <strong>MOD_OP_INTEGER</strong> = {'add': 0, 'delete': 1, 'replace': 2}<br>
 <strong>MOD_OP_STR</strong> = {0: 'add', 1: 'delete', 2: 'replace'}<br>
 <strong>SAFE_STRING_PATTERN</strong> = '(^(<font color="#c040c0">\x00</font>|<font color="#c040c0">\n</font>|<font color="#c040c0">\r</font>| |:|&lt;)|[<font color="#c040c0">\x00\n\r\x80</font>-<font color="#c040c0">\xff</font>]+|[ ]+$)'<br>
 <strong>__all__</strong> = ['ldif_pattern', 'AttrTypeandValueLDIF', 'CreateLDIF', 'ParseLDIF']<br>
-<strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldif.pyc'<br>
-<strong>__name__</strong> = 'ldif'<br>
 <strong>__version__</strong> = '0.5.1'<br>
 <strong>attrtype_pattern</strong> = r'[\w;.]+(;[\w_-]+)*'<br>
 <strong>c</strong> = 'modrdn'<br>
