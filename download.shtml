@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.12 2002/02/02 15:56:57 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.13 2002/04/14 14:00:22 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -48,20 +48,21 @@ has the latest 'official' releases.
 <h3>S.u.S.E. Linux</h3>
 <p>
 <a href="http://www.suse.de/">S.u.S.E. Linux</a>
-ships with python-ldap. They use a rather old version though.
+ships with python-ldap. They use a rather old version in 7.x though.
+Version 8.0 comes with recent python-ldap.
 </p>
 
 <h3>Debian Linux</h3>
 <ul>
   <li>
-    An <em>outdated</em>
     <a href="http://packages.debian.org/stable/net/python-ldap.html">
-    Debian package</a> (1.8 based on OpenLDAP 1 libs).
+    Debian package python-ldap 1.8-1</a><br>
+    (based on outdated python-ldap 1.8, needs OpenLDAP 1 libs)
   </li>
   <li>
-    A <em>new</em>
     <a href="http://packages.debian.org/unstable/net/python-ldap.html">
-    Debian package</a> (claims to be 2001-12-31, based on OpenLDAP 2.0.14+ libs)
+    Debian package 1.9.999.pre04-1</a><br>
+    (based on python-ldap pre-release 2.0.0pre4, needs OpenLDAP 2.0.21+ libs)
   </li>
 </ul>
 
