@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="LDAP client API for Python" -->
 <!--#set var="head_pagedescription" value="LDAP client API for Python" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: index.shtml,v 1.6 2002/07/20 13:30:37 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: index.shtml,v 1.7 2002/09/24 16:07:28 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -9,8 +9,10 @@
 <p>
 python-ldap provides an object-oriented API to access LDAP
 directory servers from <a href="http://www.python.org/">Python</a>
-programs. It wraps the <a href="http://www.openldap.org/">OpenLDAP 2.x</a>
-libs for that purpose.
+programs. Mainly it wraps the <a href="http://www.openldap.org/">OpenLDAP 2.x</a>
+libs for that purpose.<br>
+Additionally the package contains modules for other LDAP-related
+stuff (e.g. processing LDIF, LDAPURLs, LDAPv3 schema, etc.).
 </p>
 
 <h2>Mailing list</h2>
