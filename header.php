@@ -4,6 +4,7 @@
 		"lists" =>	"Lists",
 		"release" =>	"Download"
 	);
+
 	function menubar() {
 		global $thishref, $pages;
 		$delim = "<p align=right>[";
@@ -21,5 +22,13 @@
 		if ($delim == "|") {
 			print "]</p>";
 		}
+	}
+
+	$release_root = "ftp://python-ldap.sourceforge.net/pub/python-ldap";
+
+	function release(name, desc, vers) {
+		print "<tr><td><a href="$release_root/$name">$name</a></td>
+			   <td>$desc</td>
+			   <td>$vers</td></tr>\n";
 	}
 ?>
