@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.14 2002/07/20 10:23:47 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.15 2002/07/21 11:56:28 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -35,7 +35,7 @@ project release area</a> has the latest 'official' releases.
 
 <ul>
   <li>
-    <a href="ftp://ftp.open-it.org/pub/redhat7.2">RPMs for Red Hat 7.2</a>
+    <a href="http://www.open-it.org/download/">RPMs for Red Hat Linux</a>
     maintained by Joe Little
   </li>
 </ul>
