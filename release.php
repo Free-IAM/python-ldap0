@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.5 2000/08/14 03:38:00 leonard Exp $ -->
+<!-- $Id: release.php,v 1.6 2000/08/14 03:40:20 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -27,18 +27,21 @@
 	    <th>OS</th>
 	    <th>Python</th>
 	    <th>LDAP</th>
+	    <th>Notes</th>
 	</tr>
 	<!--	   filename, version, OS, Python, LDAP -->
 	<? if (0) binrelease("python-ldap-1.10alpha-linux-x86.rpm", 
 		      "1.10alpha",
 		      "Linux/x86 2.2.14-5.0.14smp",
 		      "1.5.2",
-		      "OpenLDAP 1.2.11") ?>
+		      "OpenLDAP 1.2.11",
+		      "") ?>
 	<? binrelease("python-ldap-1.10alpha-OpenBSD-i386.tgz", 
 		      "1.10alpha",
 		      "OpenBSD/i386 2.7",
 		      "1.6a2",
-		      "OpenLDAP 1.2.11") ?>
+		      "OpenLDAP 1.2.11",
+		      "") ?>
 	</table>
     </td>
 </tr>
@@ -56,6 +59,6 @@
 </dl>
 
 <hr>
-<i>$Id: release.php,v 1.5 2000/08/14 03:38:00 leonard Exp $</i>
+<i>$Id: release.php,v 1.6 2000/08/14 03:40:20 leonard Exp $</i>
 </BODY>
 </HTML>
