@@ -1,13 +1,13 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.23 2003/01/24 11:30:39 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.24 2003/06/23 10:53:08 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
 <h2>ldap</h2>
 <p>
-Here is documentation for the C extension module <em>ldap</em>.
+Here is documentation for the module <em>ldap</em>.
 </p>
 <ul>
   <li>
@@ -35,6 +35,12 @@ Some pydoc-generated docs:
 
 <h2>Related information</h2>
 
+<p>
+The following documents referenced are not written by
+project members. Therefore some information might be outdated
+or links might be broken.
+</p>
+
 <dl>
 
   <dt>
@@ -46,12 +52,18 @@ Some pydoc-generated docs:
   </dd>
 
   <dt>
+    <a href="http://www.seekrut.com/rk/LDAP-Programming-in-Python.html">
+    LDAP Programming in Python</a>
+  </dt>
+  <dd>
+    Another article for getting started with python-ldap.
+  </dd>
+
+  <dt>
     <a href="http://csci.mrs.umn.edu/twiki/view/Dungeon/PythonLDAP">
     Short introduction to python-ldap programming</a>
   </dt>
   <dd>
-    Not written by python-ldap project members.
-    Therefore some information might be outdated.
     The text begins with &quot;Using the python-ldap module is pretty easy.&quot;.
   </dd>
 
