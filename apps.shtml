@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.9 2003/11/10 11:33:15 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.10 2004/01/25 17:16:06 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -10,14 +10,33 @@ There are some applications implemented with the help of python-ldap
 
 <dl>
 
-  <dt><a href="http://www.twoevils.org/html/files.php">Kantan</a></dt>
+  <dt>
+    <a href="http://olivier.sessink.nl/directoryassistant/">
+    Directory Assistant</a>
+  </dt>
+  <dd>
+    <p>
+      Directory Assistant is a small application for managing a
+      LDAP address book. The focus is to create a very easy to use
+      program, with only the few but necessary features. The target
+      is novice users that still need to keep their addresses in an
+      LDAP server.
+    </p>
+  </dd>
+
+  <dt>
+    <a href="http://www.twoevils.org/html/files.php">Kantan</a>
+  </dt>
   <dd>
     <p>
       A web-based searching and browsing tool.
     </p>
   </dd>
 
-  <dt><a href="http://forge.novell.com/modules/xfmod/project/?ldapcfgtool">LDAP Configuration Tool</a></dt>
+  <dt>
+    <a href="http://forge.novell.com/modules/xfmod/project/?ldapcfgtool">
+    LDAP Configuration Tool</a>
+  </dt>
   <dd>
     <p>
       LDAP Configuration Tool is a simple application that helps
