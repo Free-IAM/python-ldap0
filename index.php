@@ -1,4 +1,4 @@
-<!-- $Id: index.php,v 1.3 2000/08/11 08:24:59 leonard Exp $ -->
+<!-- $Id: index.php,v 1.4 2000/08/14 08:17:34 leonard Exp $ -->
 <?
 	$thishref = "index";
 	include("header.php");
@@ -24,10 +24,17 @@ It includes
 	    <li><a href="ftp://terminator.rs.itd.umich.edu/ldap/">UMich</a>
 	    <li><a href="http://developer.netscape.com/tech/directory/"
 								>Netscape</a>
-	    <li><a href="http://www.mozilla.org/directory/">Mozilla</a>
+	    <li><a href="http://www.mozilla.org/directory/csdk.html">Mozilla</a>
 	</ul>
 <li> an object-oriented API for X.500 directories
 </ul>
+</p>
+
+<p>
+<ul>
+<li><a href="release.php">Download a release</a>
+<li><a href="docs.php">Read documentation</a>
+<li><a href="lists.php">Join a mailing list</a>
 </p>
 
 <p>
@@ -39,6 +46,6 @@ You might also want to look at the SourceForge Python-LDAP
 <a href="http://sourceforge.net/project/?group_id=2072">project information</a>.
 
 <hr>
-<i>$Id: index.php,v 1.3 2000/08/11 08:24:59 leonard Exp $</i>
+<i>$Id: index.php,v 1.4 2000/08/14 08:17:34 leonard Exp $</i>
 </BODY>
 </HTML>
