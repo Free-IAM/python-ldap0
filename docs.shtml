@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.8 2002/02/01 19:50:38 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.9 2002/02/01 20:07:03 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -62,14 +62,6 @@ pydoc-generated docs for module
     manual pages</a> and the
     <a href="http://www.OpenLDAP.org/faq/data/cache/4.html">
     Developer's FAQ</a>.
-  </dd>
-
-  <dt>
-    <a href="http://developer.netscape.com/docs/manuals/dirsdk/csdk30">
-    Netscape Directory SDK 3.0 for C Programmer's Guide</a>
-  </dt>
-  <dd>
-    This is a rather outdated version of the Netscape Directory API.
   </dd>
 
   <dt>
