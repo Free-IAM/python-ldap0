@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.10 2002/02/02 12:53:00 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.11 2002/02/02 12:54:05 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -29,7 +29,7 @@ Some pydoc-generated docs:
 <a href="doc/ldap.modlist.html">ldap.modlist</a>
 <a href="doc/ldapurl.html">ldapurl</a>
 <a href="doc/ldif.html">ldif</a>
-<ul>
+</ul>
 
 <h2>Related information</h2>
 
