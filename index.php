@@ -1,4 +1,4 @@
-<!-- $Id: index.php,v 1.5 2000/08/14 22:59:54 leonard Exp $ -->
+<!-- $Id: index.php,v 1.6 2000/08/19 06:19:45 leonard Exp $ -->
 <?
 	$thishref = "index";
 	include("header.php");
@@ -19,12 +19,13 @@ This project provide an LDAP client API for
 It includes
 <ul>
 <li> a Python module called <em>_ldapmodule</em> that wraps an LDAP C library,
-	such as you can get from:
+	such as you can download from:
 	<ul><li><a href="http://www.openldap.org/">OpenLDAP</a>
 	    <li><a href="ftp://terminator.rs.itd.umich.edu/ldap/">UMich</a>
 	    <li><a href="http://developer.netscape.com/tech/directory/"
 								>Netscape</a>
 	    <li><a href="http://www.mozilla.org/directory/csdk.html">Mozilla</a>
+	    <li><a href="http://developer.novell.com/ndk/cldap.htm">Novell</a>
 	</ul>
 <li> an object-oriented API for X.500 directories
 </ul>
@@ -48,6 +49,6 @@ You might also want to look at the SourceForge Python-LDAP
 <a href="http://sourceforge.net/project/?group_id=2072">project information</a>.
 
 <hr>
-<i>$Id: index.php,v 1.5 2000/08/14 22:59:54 leonard Exp $</i>
+<i>$Id: index.php,v 1.6 2000/08/19 06:19:45 leonard Exp $</i>
 </BODY>
 </HTML>
