@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.15 2000/08/18 03:12:31 leonard Exp $ -->
+<!-- $Id: release.php,v 1.16 2000/12/10 12:54:55 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -54,10 +54,14 @@
 <dl>
 <dt>CVS
 <dd>The CVS source repository can be accessed using pserver or ssh protocols at
-<i>cvs.python-ldap.sourceforge.net:/cvsroot/python-ldap</i>
-(username &quot;<tt>anonymous</tt>&quot;, password &quot;<tt></tt>&quot;.)
+<ul><li><i>:pserver:anonymous@cvs.python-ldap.sourceforge.net:/cvsroot/python-ldap</i> (empty password)
+<li><i>:ext:username@cvs.python-ldap.sourceforge.net:/cvsroot/python-ldap</i> 
+ (for sourceforge developers)
+</ul>
+
+</dl>
 
 <hr>
-<i>$Id: release.php,v 1.15 2000/08/18 03:12:31 leonard Exp $</i>
+<i>$Id: release.php,v 1.16 2000/12/10 12:54:55 leonard Exp $</i>
 </BODY>
 </HTML>
