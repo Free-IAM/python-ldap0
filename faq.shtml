@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.16 2002/11/03 21:17:48 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.17 2003/01/23 11:50:57 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -43,9 +43,20 @@ Yes, with recent version 2.0.0pre03+.
 </li>
 
 <li>
-<p>Q: Can python-ldap be built against Netscape, Mozilla or Novell libs?</p>
+<p>Q: Can python-ldap 2.x be built against Netscape, Mozilla or Novell libs?</p>
 <p>A: 
 Nope.
+</p>
+</li>
+
+<li>
+<p>Q: During build there are warning messages displayed
+telling Lib/ldap.py and Lib/ldap/schema.py are not found.
+</p>
+<p>A: 
+ldap and ldap.schema are both module packages
+(directories containing various sub-modules).
+The messages above are falsely produced by DistUtils. Don't worry about it.
 </p>
 </li>
 
