@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.6 2003/01/24 15:23:02 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.7 2003/01/24 15:27:11 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -10,15 +10,6 @@ There are some applications implemented with the help of python-ldap
 
 <dl>
 
-  <dt><a href="http://www.dataflake.org/software/ldapuserfolder">LDAPUserFolder</a></dt>
-  <dd>
-    <p>
-      The LDAP User Folder is a user folder replacement
-      for Zope that authenticates Zope users against LDAP.
-      It is written for Zope versions 2.4.0 and higher.
-    </p>
-  </dd>
-
   <dt><a href="http://www.twoevils.org/html/files.php">Kantan</a></dt>
   <dd>
     <p>
@@ -26,22 +17,12 @@ There are some applications implemented with the help of python-ldap
     </p>
   </dd>
 
-  <dt>
-    <a href="http://www.dataflake.org/software/ldaploginadapter">
-    LDAPLoginAdapter</a> and
-    <a href="http://www.dataflake.org/software/ldapusermanager">
-    LDAPUserManager</a>
-  </dt>
+  <dt><a href="http://www.dataflake.org/software/ldapuserfolder">LDAPUserFolder</a></dt>
   <dd>
     <p>
-      The LDAPLoginAdapter is a user folder replacement for Zope
-      that authenticates Zope users against LDAP. It is written
-      for Zope versions 2.3.0 and higher.
-    </p>
-    <p>
-      The LDAPUserManager is a LDAP user record administration
-      tool to be used in conjunction with the LDAPLoginAdapter.
-      It is written for Zope versions 2.3.0 and higher.
+      The LDAP User Folder is a user folder replacement
+      for Zope that authenticates Zope users against LDAP.
+      It is written for Zope versions 2.4.0 and higher.
     </p>
   </dd>
 
