@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.26 2003/12/23 14:10:25 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.27 2004/01/05 22:31:58 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -83,8 +83,10 @@ Ported to the OpenBSD operating system as port
 
 <h3>Win32</h3>
 <p>
-  You can find some pre-compiled packages for 
-  <a href="http://www.zope.org/Members/volkerw/LdapWin32">Windows 32 platform</a>.
+  You can find some pre-compiled packages produced by
+  <a href="http://www.zope.org/Members/volkerw/LdapWin32">volkerw</a>
+  and
+  <a href="http://www.siosistemi.it/~mcicogni/">Mauro</a>.
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
