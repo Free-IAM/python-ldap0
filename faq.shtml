@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.9 2001/11/11 00:55:30 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.10 2001/12/29 17:15:07 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -19,39 +19,37 @@ Not quite sure...</a><br />
 
 <li>
 <p>Q: Can I do a LDAPv3 bind via python-ldap?</p>
-<p>A: 
-In general: No. In detail: Depends on the underlying LDAP lib.
+<p>A:
+Yes, with recent version checked out from CVS. No release yet.
 </p>
 </li>
 
 <li>
 <p>Q: Can python-ldap can be built against OpenLDAP 2.0.x libs?</p>
 <p>A: 
-There were patches commited to CVS 2001-11-11. No release yet.
+Yes, with recent version checked out from CVS. No release yet.
 </p>
 </li>
 
 <li>
-<p>Q: Does it work with Python (1.5|2.0|2.1)?</p>
+<p>Q: Does it work with Python (1.5|2.0|2.1|2.2)?</p>
 <p>A: Yes.</p>
 </li>
 
 <li>
-<p>Q: ./configure complains about not finding the OpenLDAP libs although
-they are in place. The following message is found in config.log:
+<p>Q: While importing module ldap there are undefined references reported.
 <pre>
-/usr/local/openldap1/lib/libldap.so: undefined reference to
-`__dn_expand'
-/usr/local/openldap1/lib/libldap.so: undefined reference to
-`__res_search'
-/usr/local/openldap1/lib/libldap.so: undefined reference to
-`_getshort'
+Traceback (most recent call last):
+  File "./ldap_connect", line 7, in ?
+    import _ldap
+ImportError: /usr/local/lib/libldap.so.2: undefined symbol: res_query
 </pre>
 </p>
-<p>A: You have to explicitly link against libresolv:
+<p>A: Especially on Linux systems you might have to explicitly link
+against libresolv.
+Tweak <em>setup.cfg</em> to contain this line:
 <pre>
-export "LDFLAGS=-lresolv"
-./configure
+libs = lber ldap resolv
 </pre>
 </p>
 </li>
