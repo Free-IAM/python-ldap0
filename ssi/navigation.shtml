@@ -20,14 +20,12 @@
         [<a href="<!--#echo var="base_path" -->faq.shtml">FAQ</a>]
         [<a href="<!--#echo var="base_path" -->apps.shtml">Apps</a>]
         <a href="<!--#echo var="base_path" -->http://sourceforge.net/project/?group_id=2072">
-        <a href="http://sourceforge.net/project/?group_id=2072">
-          <img
+        <a href="http://sourceforge.net/project/?group_id=2072"><img
             src="http://sourceforge.net/sflogo.php?group_id=2072&type=1"
             width="88" height="31"
             border="0"
-            alt="SourceForge Logo"
-          >
-        </a>
+            alt="SourceForge"
+          ></a>
       </td>
     </tr>
   </table>
