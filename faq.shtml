@@ -7,14 +7,17 @@
 <dl>
 <dt>1. Is python-ldap yet another abandon-ware project on SourceForge?</dt>
 <dd>
-1: "Jump on in."<br />
-2: "Jump into the C ;-)"<br />
-3: <a href="http://sourceforge.net/project/stats/?group_id=2072">
+Answer 1: "Jump on in."<br />
+Answer 2: "Jump into the C ;-)"<br />
+Answer 3: <a href="http://sourceforge.net/project/stats/?group_id=2072">
 Not quite sure...</a><br />
 </dd>
 
 <dt>2. Can I do a LDAPv3 bind via python-ldap?</dt>
-<dd>In general: No. In detail: Depends on the underlying LDAP lib.</dd>
+<dd>
+In general: No.<br />
+In detail: Depends on the underlying LDAP lib.
+</dd>
 
 <dt>3. Can python-ldap can be built against OpenLDAP 2.0.x libs?</dt>
 <dd>
