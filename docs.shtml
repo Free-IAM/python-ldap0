@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.18 2002/02/09 16:27:24 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.19 2002/07/28 00:27:19 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -37,6 +37,16 @@ Some pydoc-generated docs:
 <h2>Related information</h2>
 
 <dl>
+
+  <dt>
+    <a href="http://tyvex.mrs.umn.edu/twiki/view/Dungeon/PythonLDAP">
+    Short introduction to python-ldap programming</a>
+  </dt>
+  <dd>
+    Not written by python-ldap project members.
+    Therefore some information might be outdated.
+    The text begins with &quot;Using the python-ldap module is pretty easy.&quot;.
+  </dd>
 
   <dt>
     <a href="http://www.ietf.org/rfc/rfc1823.txt">RFC1823</a>
