@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.20 2003/07/31 07:45:19 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.21 2003/09/23 17:37:56 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -35,6 +35,8 @@ project release area</a> has the latest 'official' releases.
 
 <h2>Binaries</h2>
 
+Note that the python-ldap team is not responsible for the binary packages.
+
 <h3>Red Hat Linux</h3>
 
 <ul>
@@ -60,6 +62,15 @@ project release area</a> has the latest 'official' releases.
   <li>
     <a href="http://packages.debian.org/unstable/python/python-ldap.html">
     unstable</a><br>
+  </li>
+</ul>
+
+<h3>OpenBSD</h3>
+Ported to the OpenBSD operating system as port <em>py-ldap</em>.
+<ul>
+  <li>
+    <a href="http://www.etc.msys.ch/ports/">
+    OpenBSD ports</a>
   </li>
 </ul>
 
