@@ -1,0 +1,71 @@
+<!--#set var="head_title" value="Documentation" -->
+<!--#set var="head_pagedescription" value="Documentation" -->
+<!--#set var="base_path" value="" -->
+<!--#include file="ssi/head.shtml" -->
+<!--#include file="ssi/navigation.shtml" -->
+
+<h2>_ldap</h2>
+<p>
+There's documentation available for the C extension module <em>_ldap</em>.
+</p>
+<ul>
+  <li>
+    <a href="_ldap.pdf">PDF document</a> (needs
+    <a href="http://www.adobe.com/products/acrobat/readstep2.html">
+    Acrobat Reader</a>)
+  </li>
+  <li>
+    <a href="_ldap.ps">Postscript document</a>
+  </li>
+</ul>
+
+<h2>Related information</h2>
+
+<dl>
+
+  <dt>
+    <a href="http://www.ietf.org/rfc/rfc1823.txt">RFC1823</a>
+  </dt>
+  <dd>
+    The LDAP Application Program Interface, mainly for LDAPv2.
+  </dd>
+
+  <dt>
+    <a href="http://www.ietf.org/html.charters/ldapext-charter.html">LDAPEXT</a>
+  </dt>
+  <dd>
+    IETF working group which also defines LDAP API standards.
+    If you're interested in recently discussed LDAP topics and
+    upcoming standards you should dive into the Internet-Drafts
+    provided here.
+  </dd>
+
+  <dt>
+    <a href="http://www.openldap.org/">OpenLDAP</a>
+  </dt>
+  <dd>
+    It's worth to have a look at the
+    <a href="http://www.openldap.org/software/man.cgi?query=ldap">
+    manual pages</a> and the
+    <a href="http://www.OpenLDAP.org/faq/data/cache/4.html">
+    Developer's FAQ</a>.
+  </dd>
+
+  <dt>
+    <a href="http://developer.netscape.com/docs/manuals/dirsdk/csdk30">
+    Netscape Directory SDK 3.0 for C Programmer's Guide</a>
+  </dt>
+  <dd>
+    This is a rather outdated version of the Netscape Directory API.
+  </dd>
+
+  <dt>
+    <a href="http://www.opennc.org/directory/mats/blits25/index.htm">BLITS</a>
+  </dt>
+  <dd>
+    Basic LDAP Interoperability Test Suite.
+  </dd>
+
+</dl>
+
+<!--#include file="ssi/footer.shtml" -->
