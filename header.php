@@ -26,7 +26,7 @@
 
 	$release_root = "ftp://python-ldap.sourceforge.net/pub/python-ldap";
 
-	function release(name, desc, vers) {
+	function release($name, $desc, $vers) {
 		print "<tr><td><a href="$release_root/$name">$name</a></td>
 			   <td>$desc</td>
 			   <td>$vers</td></tr>\n";
