@@ -12,7 +12,11 @@
 <h1>Python-LDAP: Documentation</h1>
 
 <p>
-Eventually there will be documentation links here, and maybe even a FAQ!
+_ldap module:
+<ul>
+<li><a href="lib.pdf">Python-LDAP 1.10 PDF</a>
+<li><a href="lib.ps">Python-LDAP 1.10 PostScript</a>
+</ul>
 </p>
 
 <h2>Related documentation</h2>
@@ -30,6 +34,6 @@ Eventually there will be documentation links here, and maybe even a FAQ!
 </ul>
 
 <hr>
-<i>$Id: docs.php,v 1.4 2000/08/14 23:14:16 leonard Exp $</i>
+<i>$Id: docs.php,v 1.5 2001/03/10 10:12:47 leonard Exp $</i>
 </BODY>
 </HTML>
