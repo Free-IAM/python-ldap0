@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.14 2002/03/04 22:21:47 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.15 2002/07/30 14:54:41 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -20,7 +20,7 @@ Not quite sure...</a><br>
 <li>
 <p>Q: Can I do a LDAPv3 bind via python-ldap?</p>
 <p>A:
-Yes, with recent version 2.0.0pre03.
+Yes, with recent version 2.0.0pre03+.
 </p>
 </li>
 
@@ -87,6 +87,18 @@ variable.
 <p>A2: Alternatively if you're on Linux you can add the path to
 <em>liblber.so.2</em> and <em>libldap.so.2</em> to /etc/ld.so.conf
 and invoke ldconfig afterwards.
+</p>
+</li>
+
+<li>
+<p>Q: My code imports module <em>_ldap</em>. That used to work but with recent
+version 2.0.0pre that does not work anymore?</p>
+<p>
+A:
+Despite some outdated programming examples the extension module
+<em>_ldap</em> should <strong>not</strong> be imported directly.
+Import <em>ldap</em> instead which is a Python wrapper around <em>_ldap</em>
+providing the full functionality.
 </p>
 </li>
 
