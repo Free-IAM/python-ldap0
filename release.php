@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.13 2000/08/16 13:35:19 leonard Exp $ -->
+<!-- $Id: release.php,v 1.14 2000/08/16 13:42:12 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -27,9 +27,9 @@
     <td>
 	<table border=1>
 	<tr><th>Version</th>
-	    <th>OS</th>
+	    <th>Build OS</th>
 	    <th>Python</th>
-	    <th>LDAP</th>
+	    <th>LDAP lib</th>
 	    <th>Notes</th>
 	</tr>
 	<!--	   filename, version, OS, Python, LDAP -->
@@ -63,6 +63,6 @@
 </dl>
 
 <hr>
-<i>$Id: release.php,v 1.13 2000/08/16 13:35:19 leonard Exp $</i>
+<i>$Id: release.php,v 1.14 2000/08/16 13:42:12 leonard Exp $</i>
 </BODY>
 </HTML>
