@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.8 2001/06/28 11:33:07 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.9 2001/11/11 00:55:30 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -27,11 +27,7 @@ In general: No. In detail: Depends on the underlying LDAP lib.
 <li>
 <p>Q: Can python-ldap can be built against OpenLDAP 2.0.x libs?</p>
 <p>A: 
-No, since OpenLDAP 2.0.x implements a slightly different API
-(<a href="http://www.OpenLDAP.org/lists/openldap-software/200009/msg00408.html">read more</a>)
-python-ldap cannot be linked against this version.
-There are two patches available which work with CVS snapshot as
-of May 2001. See also <a href="download.shtml">download page</a>.
+There were patches commited to CVS 2001-11-11. No release yet.
 </p>
 </li>
 
