@@ -1,70 +1,38 @@
-<?php
-// Default Web Page for groups that haven't setup their page yet
-// Please replace this file with your own website
-//
-// $Id: index.php,v 1.1 2000/02/01 10:14:44 leonard Exp $
-//
-$headers = getallheaders();
+<!-- $Id: index.php,v 1.2 2000/02/03 08:37:47 leonard Exp $ -->
+<?
+	$thishref = "index";
+	include("header.php");
 ?>
-<HTML>
-<HEAD>
-<TITLE>SourceForge: Welcome</TITLE>
-<LINK rel="stylesheet" href="http://sourceforge.net/sourceforge.css" type="text/css">
+<HTML><HEAD>
+	<TITLE>Python-LDAP</TITLE>
 </HEAD>
+<BODY>
 
-<BODY bgcolor=#FFFFFF topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<? menubar() ?>
 
-<!-- top strip -->
-<TABLE width="100%" border=0 cellspacing=0 cellpadding=2 bgcolor="737b9c">
-  <TR>
-    <TD><SPAN class=maintitlebar>&nbsp;&nbsp;
-      <A class=maintitlebar href="http://sourceforge.net/"><B>Home</B></A> | 
-      <A class=maintitlebar href="http://sourceforge.net/about.php"><B>About</B></A> | 
-      <A class=maintitlebar href="http://sourceforge.net/partners.php"><B>Partners</B></a> |
-      <A class=maintitlebar href="http://sourceforge.net/contact.php"><B>Contact Us</B></A> |
-      <A class=maintitlebar href="http://sourceforge.net/account/logout.php"><B>Logout</B></A></SPAN></TD>
-    </TD>
-  </TR>
-</TABLE>
-<!-- end top strip -->
+<h1>Python-LDAP</h1>
 
-<!-- top title table -->
-<TABLE width="100%" border=0 cellspacing=0 cellpadding=0 bgcolor="" valign="center">
-  <TR valign="top" bgcolor="#eeeef8">
-    <TD>
-      <A href="http://sourceforge.net/"><IMG src="http://sourceforge.net/images/sflogo2-steel.png" vspace="0" border=0 width="215" height="105"></A>
-    </TD>
-    <TD width="99%"><!-- right of logo -->
-      <a href="http://www.valinux.com"><IMG src="http://sourceforge.net/images/va-btn-small-light.png" align="right" alt="VA Linux Systems" hspace="5" vspace="7" border=0 width="136" height="40"></A>
-    </TD><!-- right of logo -->
-  </TR>
-  <TR><TD bgcolor="#543a48" colspan=2><IMG src="http://sourceforge.net/images/blank.gif" height=2 vspace=0></TD></TR>
-</TABLE>
-<!-- end top title table -->
+<p>
+This project provide an LDAP client API for 
+<a href="http://www.python.org/">Python</a> in the spirit of 
+<a href="http://mirror.aarnet.edu.au/rfc/rfc1823.txt">RFC1823</a>.
+This includes
+<ul>
+<li> a C wrapper 
+    <a href="http://www.openssl.org/">SSL</a> module around 
+    <a href="http://www.openldap.org/">OpenLDAP</a> or U
+<li> an object-oriented API for X.500 directories
+</ul>
+</p>
 
-<!-- center table -->
-<TABLE width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#FFFFFF" align="center">
-  <TR>
-    <TD>
-      <CENTER><BR>
-      <H1>Welcome to http://<?php print $headers[Host]; ?>/</H1>
-      <P>We're Sorry but this Project hasn't yet uploaded their personal webpage yet.<BR>
-      Please check back soon for updates or visit <A href="http://sourceforge.net/">SourceForge</A></P><BR>
-      </CENTER>
-    </TD>
-  </TR>
-</TABLE>
-<!-- end center table -->
+<p>
+<img align=right alt="[SourceForge]" src="http://sourceforge.net/images/sflogo2-steel.png" width="43" height="21">
+This project is hosted by 
+<a href="http://sourceforge.net/">SourceForge</a> (thanks!)
+You can look at the Python-LDAP
+<a href="http://sourceforge.net/project/?group_id=2072">project information</a>.
 
-<!-- footer table -->
-<TABLE width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="737b9c">
-  <TR>
-    <TD align="center"><FONT color="#ffffff"><SPAN class="titlebar">
-      All trademarks and copyrights on this page are properties of their respective owners. Forum comments are owned by the poster. The rest is copyright ©1999-2000 VA Linux Systems, Inc.</SPAN></FONT>
-    </TD>
-  </TR>
-</TABLE>
-
-<!-- end footer table -->
+<hr>
+<i>$Id: index.php,v 1.2 2000/02/03 08:37:47 leonard Exp $</i>
 </BODY>
 </HTML>
