@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.11 2002/01/03 13:01:27 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.12 2002/02/02 15:56:57 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -40,9 +40,8 @@ has the latest 'official' releases.
 
 <ul>
   <li>
-    <a href="http://www.open-it.org/download/">
-    RedHat-RPMs linked against OpenLDAP 2.0.x libs</a>
-    contributed by Joe Little.
+    <a href="ftp://ftp.open-it.org/pub/redhat7.2">RPMs for Red Hat 7.2</a>
+    maintained by Joe Little
   </li>
 </ul>
 
