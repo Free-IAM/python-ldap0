@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.29 2004/10/07 18:23:14 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.30 2004/12/11 16:27:52 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -11,8 +11,15 @@ The <a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
 project file release area</a> has the latest 'official' released
 documentation packages as HTML (tar.gz or zip) and PDF for off-line reading.
 </p>
+
 <p>
-You can also <a href="doc/python-ldap/index.html">browse the docs  on-line</a>.
+See current file
+<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/python-ldap/python-ldap/CHANGES?rev=HEAD&content-type=text/plain">
+CHANGES</a> for a reading about latest improvements and fixes.
+</p>
+
+<p>
+You can also <a href="doc/python-ldap/index.html">browse the docs on-line</a>.
 </p>
 
 
