@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.8 2000/08/14 22:55:36 leonard Exp $ -->
+<!-- $Id: release.php,v 1.9 2000/08/14 23:14:31 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -56,11 +56,11 @@
 (username &quot;<tt>anonymous</tt>&quot;, password &quot;<tt></tt>&quot;.)
 
 <dt>Historic
-<dd>Some historic release for <i>ldapmodule</i> may be available from
+<dd>Some historic releases for <i>ldapmodule</i> may be available from
     <a href="http://www.csee.uq.edu.au/~leonard/dc-prj/ldapmodule/">David Leonard's ldapmodule page</a>.
 </dl>
 
 <hr>
-<i>$Id: release.php,v 1.8 2000/08/14 22:55:36 leonard Exp $</i>
+<i>$Id: release.php,v 1.9 2000/08/14 23:14:31 leonard Exp $</i>
 </BODY>
 </HTML>
