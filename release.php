@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.14 2000/08/16 13:42:12 leonard Exp $ -->
+<!-- $Id: release.php,v 1.15 2000/08/18 03:12:31 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -57,12 +57,7 @@
 <i>cvs.python-ldap.sourceforge.net:/cvsroot/python-ldap</i>
 (username &quot;<tt>anonymous</tt>&quot;, password &quot;<tt></tt>&quot;.)
 
-<dt>Historic
-<dd>Some historic releases for <i>ldapmodule</i> may be available from
-    <a href="http://www.csee.uq.edu.au/~leonard/dc-prj/ldapmodule/">David Leonard's ldapmodule page</a>.
-</dl>
-
 <hr>
-<i>$Id: release.php,v 1.14 2000/08/16 13:42:12 leonard Exp $</i>
+<i>$Id: release.php,v 1.15 2000/08/18 03:12:31 leonard Exp $</i>
 </BODY>
 </HTML>
