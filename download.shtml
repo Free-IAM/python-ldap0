@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.21 2003/09/23 17:37:56 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.22 2003/09/23 17:41:46 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -14,7 +14,7 @@ tries to list all the current ones we know of.
 <h2>Releases</h2>
 <p>
 The <a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
-project release area</a> has the latest 'official' releases.
+project file release area</a> has the latest 'official' releases.
 </p>
 
 <h2>CVS access</h2>
@@ -35,7 +35,8 @@ project release area</a> has the latest 'official' releases.
 
 <h2>Binaries</h2>
 
-Note that the python-ldap team is not responsible for the binary packages.
+Note that the python-ldap team is not responsible for the binary packages
+except the binaries you can grab from the SF site.
 
 <h3>Red Hat Linux</h3>
 
@@ -49,7 +50,9 @@ Note that the python-ldap team is not responsible for the binary packages.
 <h3>S.u.S.E. Linux</h3>
 <p>
 <a href="http://www.suse.de/">S.u.S.E. Linux</a> ships with python-ldap.
-</p>
+There might sometimes be packages for certain version in the
+<a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
+project file release area</a></p>
 
 <h3>Debian Linux</h3>
 <ul>
@@ -66,13 +69,8 @@ Note that the python-ldap team is not responsible for the binary packages.
 </ul>
 
 <h3>OpenBSD</h3>
-Ported to the OpenBSD operating system as port <em>py-ldap</em>.
-<ul>
-  <li>
-    <a href="http://www.etc.msys.ch/ports/">
-    OpenBSD ports</a>
-  </li>
-</ul>
+Ported to the OpenBSD operating system as port
+<a href="http://www.etc.msys.ch/ports/">py-ldap</a>.
 
 <h3>Win32</h3>
 <p>
