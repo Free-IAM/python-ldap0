@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.23 2003/09/23 17:42:40 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.24 2003/12/21 12:50:17 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -39,7 +39,6 @@ Note that the python-ldap team is not responsible for the binary packages
 except the binaries you can grab from the SF site.
 
 <h3>Red Hat Linux</h3>
-
 <ul>
   <li>
     <a href="http://www.open-it.org/download/">RPMs for Red Hat Linux</a>
@@ -65,6 +64,14 @@ project file release area</a></p>
   <li>
     <a href="http://packages.debian.org/unstable/python/python-ldap.html">
     unstable</a><br>
+  </li>
+</ul>
+
+<h3>Mac OS X</h3>
+<ul>
+  <li>
+    <a href="http://darwinports.opendarwin.org/ports?by=name&substr=py-ldap">
+    Darwin port</a>maintained by Markus W. Weissmann
   </li>
 </ul>
 
