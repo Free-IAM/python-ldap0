@@ -3,7 +3,7 @@
 		"index" =>	"Home",
 		"lists" =>	"Lists",
 		"release" =>	"Download",
-		"docs" =>	"Docs",
+		"docs" =>	"Docs"
 	);
 
 	function menubar() {
