@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.22 2002/11/03 17:31:31 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.23 2003/01/24 11:30:39 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -46,7 +46,7 @@ Some pydoc-generated docs:
   </dd>
 
   <dt>
-    <a href="http://tyvex.mrs.umn.edu/twiki/view/Dungeon/PythonLDAP">
+    <a href="http://csci.mrs.umn.edu/twiki/view/Dungeon/PythonLDAP">
     Short introduction to python-ldap programming</a>
   </dt>
   <dd>
