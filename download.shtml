@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.7 2001/09/18 12:32:39 leonard Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.8 2001/09/20 14:47:53 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -66,12 +66,8 @@ Debian package</a> (1.8).
 
 <h3>Win32</h3>
 <p>
-  Mauro Cicognini contributed a
-  <a href="http://www.web2ldap.de/download/pyldap32.zip">Win32 build</a>
-  of python-ldap for Python 2.0.<br />
-  You will also need the DLLs from
-  <a href="ftp://terminator.rs.itd.umich.edu/ldap/windows/">
-  Umich LDAP distribution for Windows</a>.
+  You can find some pre-compiled
+  <a href="http://www.zope.org/Members/barryp/win32_ldap">packages for Windows 32 platform</a>.
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
