@@ -8,7 +8,7 @@ TT { font-family: lucidatypewriter, lucida console, courier }
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="ldap.html"><font color="#ffffff">ldap</font></a>.schema</strong></big></big> (version 0.2.0)</font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="ldap.html"><font color="#ffffff">ldap</font></a>.schema</strong></big></big> (version 0.2.1)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python2.2/site-packages/ldap/schema/__init__.py">/usr/lib/python2.2/site-packages/ldap/schema/__init__.py</a></font></td></tr></table>
     <p><tt>ldap.schema&nbsp;-&nbsp;&nbsp;LDAPv3&nbsp;schema&nbsp;handling<br>
@@ -16,7 +16,7 @@ written&nbsp;by&nbsp;Michael&nbsp;Stroeder&nbsp;&lt;michael@stroeder.com&gt;<br>
 &nbsp;<br>
 See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourceforge.net</a>&nbsp;for&nbsp;details.<br>
 &nbsp;<br>
-\$Id: ldap.schema.html,v 1.2 2003/04/04 00:07:41 stroeder Exp $</tt></p>
+\$Id: ldap.schema.html,v 1.3 2003/05/27 14:34:26 stroeder Exp $</tt></p>
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -37,12 +37,11 @@ See&nbsp;<a href="http://python-ldap.sourceforge.net">http://python-ldap.sourcef
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;&nbsp;</td>
 <td width="100%"><strong>AttributeUsage</strong> = {'userapplications': 0, 'directoryoperation': 1,... 'userapplication': 0, 'distributedoperation': 2}<br>
 <strong>NOT_HUMAN_READABLE_LDAP_SYNTAXES</strong> = {'1.3.6.1.4.1.1466.115.121.1.10': None, '1.3.6.1.4.1.1466.115.121.1.23': None, '1.3.6.1.4.1.1466.115.121.1.28': None, '1.3.6.1.4.1.1466.115.121.1.4': None, '1.3.6.1.4.1.1466.115.121.1.40': None, '1.3.6.1.4.1.1466.115.121.1.49': None, '1.3.6.1.4.1.1466.115.121.1.5': None, '1.3.6.1.4.1.1466.115.121.1.6': None, '1.3.6.1.4.1.1466.115.121.1.8': None, '1.3.6.1.4.1.1466.115.121.1.9': None}<br>
-<strong>SCHEMA_ATTRS</strong> = ['attributeTypes', 'dITStructureRules', 'matchingRuleUse', 'objectClasses', 'nameForms', 'ldapSyntaxes', 'matchingRules']<br>
-<strong>SCHEMA_ATTR_MAPPING</strong> = {&lt;class ldap.schema.models.ObjectClass&gt;: 'objectClasses', &lt;class ldap.schema.models.AttributeType&gt;: 'attributeTypes', &lt;class ldap.schema.models.LDAPSyntax&gt;: 'ldapSyntaxes', &lt;class ldap.schema.models.MatchingRule&gt;: 'matchingRules', &lt;class ldap.schema.models.MatchingRuleUse&gt;: 'matchingRuleUse', &lt;class ldap.schema.models.DITStructureRule&gt;: 'dITStructureRules', &lt;class ldap.schema.models.NameForm&gt;: 'nameForms'}<br>
-<strong>SCHEMA_CLASS_MAPPING</strong> = {'attributetypes': &lt;class ldap.schema.models.Att...ss ldap.schema.models.MatchingRule at 0x822a5e4&gt;}<br>
+<strong>SCHEMA_ATTRS</strong> = ['attributeTypes', 'dITStructureRules', 'matchingRuleUse', 'ldapSyntaxes', 'nameForms', 'dITContentRules', 'objectClasses', 'matchingRules']<br>
+<strong>SCHEMA_ATTR_MAPPING</strong> = {&lt;class ldap.schema.models.ObjectClass&gt;: 'objectClasses', &lt;class ldap.schema.models.AttributeType&gt;: 'attributeTypes', &lt;class ldap.schema.models.LDAPSyntax&gt;: 'ldapSyntaxes', &lt;class ldap.schema.models.MatchingRule&gt;: 'matchingRules', &lt;class ldap.schema.models.MatchingRuleUse&gt;: 'matchingRuleUse', &lt;class ldap.schema.models.DITContentRule&gt;: 'dITContentRules', &lt;class ldap.schema.models.DITStructureRule&gt;: 'dITStructureRules', &lt;class ldap.schema.models.NameForm&gt;: 'nameForms'}<br>
+<strong>SCHEMA_CLASS_MAPPING</strong> = {'attributetypes': &lt;class ldap.schema.models.Att...ss ldap.schema.models.MatchingRule at 0x8229efc&gt;}<br>
 <strong>__file__</strong> = '/usr/lib/python2.2/site-packages/ldap/schema/__init__.pyc'<br>
 <strong>__name__</strong> = 'ldap.schema'<br>
 <strong>__path__</strong> = ['/usr/lib/python2.2/site-packages/ldap/schema']<br>
-<strong>__version__</strong> = '0.2.0'<br>
-<strong>schema_attribute</strong> = 'dITContentRules'</td></tr></table>
+<strong>__version__</strong> = '0.2.1'</td></tr></table>
 </body></html>
