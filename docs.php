@@ -25,9 +25,11 @@ Eventually there will be documentation links here, and maybe even a FAQ!
 	Application Program Interface</a>
 <li><a href="http://www.ietf.org/internet-drafts/draft-ietf-ldapext-ldap-c-api-05.txt">The C LDAP Application Program Interface</a> (expired)
 <li><a href="http://www.ietf.org/internet-drafts/draft-ietf-ldapext-ldap-java-api-11.txt">The Java LDAP Application Program Interface</a> (expired)
+<li><a href="http://www.opennc.org/directory/mats/blits24/index.htm">
+	Basic LDAP Interoperability Test Suite</a>
 </ul>
 
 <hr>
-<i>$Id: docs.php,v 1.3 2000/08/14 08:55:28 leonard Exp $</i>
+<i>$Id: docs.php,v 1.4 2000/08/14 23:14:16 leonard Exp $</i>
 </BODY>
 </HTML>
