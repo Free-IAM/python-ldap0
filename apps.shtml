@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.4 2002/07/18 08:19:28 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.5 2002/11/03 21:24:43 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -69,14 +69,8 @@ There are some applications implemented with the help of python-ldap
   <dt><a href="http://www.web2ldap.de">web2ldap</a></dt>
   <dd>
     <p>
-      A web gateway to LDAP servers.
-    </p>
-  </dd>
-
-  <dt>
-  </dt>
-  <dd>
-    <p>
+      web2ldap is a full-featured web-based LDAPv3 client with
+      schema support/schema browser.
     </p>
   </dd>
 
