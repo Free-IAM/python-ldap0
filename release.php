@@ -1,4 +1,4 @@
-<!-- $Id: release.php,v 1.6 2000/08/14 03:40:20 leonard Exp $ -->
+<!-- $Id: release.php,v 1.7 2000/08/14 22:53:27 leonard Exp $ -->
 <?
 	$thishref = "release";
 	include("header.php");
@@ -18,7 +18,8 @@
 </tr><tr valign=top>
     <td>
 	<table border=1>
-	<? srcrelease("python-ldap-1.10alpha-src.tar.gz", "1.10alpha") ?>
+	<? srcrelease("python-ldap-1.10alpha-src.tar.gz",    "1.10alpha") ?>
+	<? srcrelease("python-ldap-1.10alpha2-src.tar.gz",   "1.10alpha2") ?>
 	</table>
     </td>
     <td>
@@ -59,6 +60,6 @@
 </dl>
 
 <hr>
-<i>$Id: release.php,v 1.6 2000/08/14 03:40:20 leonard Exp $</i>
+<i>$Id: release.php,v 1.7 2000/08/14 22:53:27 leonard Exp $</i>
 </BODY>
 </HTML>
