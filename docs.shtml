@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.25 2003/06/26 08:47:31 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.26 2003/07/15 17:52:10 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -52,7 +52,7 @@ or links might be broken.
   </dd>
 
   <dt>
-    <a href="http://www.seekrut.com/rk/LDAP-Programming-in-Python.html">
+    <a href="http://linuxjournal.com/article.php?sid=6988&mode=thread&order=0">
     LDAP Programming in Python</a>
   </dt>
   <dd>
