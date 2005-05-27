@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.12 2005/05/27 11:52:07 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.13 2005/05/27 11:59:25 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -18,10 +18,7 @@ More and more LDAP applications and integration tools are using python-ldap.
   <dd>
     <p>
       Directory Assistant is a small application for managing a
-      LDAP address book. The focus is to create a very easy to use
-      program, with only the few but necessary features. The target
-      is novice users that still need to keep their addresses in an
-      LDAP server.
+      LDAP address book.
     </p>
   </dd>
 
@@ -40,7 +37,7 @@ More and more LDAP applications and integration tools are using python-ldap.
   <dd>
     <p>
       web2ldap is a full-featured web-based LDAPv3 client with
-      schema support/schema browser.
+      full schema support, a schema browser and plugin-support.
     </p>
   </dd>
 
