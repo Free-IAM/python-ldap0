@@ -1,12 +1,13 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.11 2005/03/08 08:59:33 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.12 2005/05/27 11:52:07 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
-There are some applications and tools using python-ldap
-(in alphabetical order):
+More and more LDAP applications and integration tools are using python-ldap.
+
+<h2>General-purpose LDAP administration tools</h2>
 
 <dl>
 
@@ -23,6 +24,31 @@ There are some applications and tools using python-ldap
       LDAP server.
     </p>
   </dd>
+
+  <dt><a href="http://luma.sourceforge.net/">Luma</a></dt>
+  <dd>
+    <p>
+      Luma is a graphical utility for accessing and managing
+      data stored on LDAP servers. It is written in Python,
+      using PyQt and python-ldap. Plugin-support is included
+      and useful widgets with LDAP-functionality for easy
+      creation of plugins are delivered.
+    </p>
+  </dd>
+
+  <dt><a href="http://www.web2ldap.de">web2ldap</a></dt>
+  <dd>
+    <p>
+      web2ldap is a full-featured web-based LDAPv3 client with
+      schema support/schema browser.
+    </p>
+  </dd>
+
+</dl>
+
+<h2>Integration Tools</h2>
+
+<dl>
 
   <dt>
     <a href="http://www.twoevils.org/html/files.php">Kantan</a>
@@ -55,14 +81,13 @@ There are some applications and tools using python-ldap
     </p>
   </dd>
 
-  <dt><a href="http://luma.sourceforge.net/">Luma</a></dt>
+  <dt>
+    <a href="https://wiki.clusterfs.com/lustre/LustreLDAP">LustreLDAP</a>
+  </dt>
   <dd>
     <p>
-      Luma is a graphical utility for accessing and managing
-      data stored on LDAP servers. It is written in Python,
-      using PyQt and python-ldap. Plugin-support is included
-      and useful widgets with LDAP-functionality for easy
-      creation of plugins are delivered.
+      Storing cluster configuration data for <a href="http://www.lustre.org/">
+      Lustre</a> on a LDAP server.
     </p>
   </dd>
 
@@ -73,6 +98,18 @@ There are some applications and tools using python-ldap
     <p>
       A simple script for authenticating users accessing a
       Squid proxy.
+    </p>
+  </dd>
+
+  <dt>
+    <a href="http://www.nongnu.org/prua/">
+    PRUA - Program for Rational User Administration</a>
+  </dt>
+  <dd>
+    <p>
+      Main purpose of this software is to really help UNIX system administrators
+      in those tasks regarding users management. It is mainly a library and the
+      command line tool included is only a possible use of this library.
     </p>
   </dd>
 
@@ -92,14 +129,6 @@ There are some applications and tools using python-ldap
       PyKota is a full featured, internationalized, centralized, and extensible
       print quota system for CUPS and LPRng. It supports both PostgreSQL and
       OpenLDAP as the quota database backend.
-    </p>
-  </dd>
-
-  <dt><a href="http://www.web2ldap.de">web2ldap</a></dt>
-  <dd>
-    <p>
-      web2ldap is a full-featured web-based LDAPv3 client with
-      schema support/schema browser.
     </p>
   </dd>
 
