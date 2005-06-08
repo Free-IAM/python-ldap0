@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="LDAP client API for Python" -->
 <!--#set var="head_pagedescription" value="LDAP client API for Python" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: index.shtml,v 1.9 2005/06/08 23:41:59 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: index.shtml,v 1.10 2005/06/08 23:48:36 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -33,7 +33,7 @@ list archive</a>.
 There will be a OpenLDAP project's booth (F87)
 at the <a href="http://www.linuxtag.de/2005/">Linuxtag 2005</a>, Karlsruhe.
 Anyone with questions concerning python-ldap
-is invited to visit me there.
+is invited to drop by.
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
