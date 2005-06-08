@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.22 2004/05/05 19:43:54 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.23 2005/06/08 23:52:11 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -12,7 +12,7 @@
 <p>
 A1: "Jump on in."<br>
 A2: "Jump into the C ;-)"<br>
-A3: <a href="http://sourceforge.net/project/stats/?group_id=2072">
+A3: <a href="http://sourceforge.net/project/stats/?group_id=2072&ugn=python-ldap">
 Not quite sure...</a><br>
 A4: <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/python-ldap/python-ldap/CHANGES?rev=HEAD&content-type=text/plain">
 CHANGES</a><br>
