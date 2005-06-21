@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.28 2004/11/03 16:54:46 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.29 2005/06/21 16:37:50 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -55,10 +55,20 @@ hit a problem already fixed in recent releases.
 <a href="http://www.suse.de/">S.u.S.E. Linux</a> ships with python-ldap.
 </p>
 
+<h3>Mandrake Linux</h3>
+<ul>
+  <li>
+    python-ldap is available in the
+    <em>contrib</em> medium for Mandrake/Mandriva since 10.0
+    <a href="http://cvs.mandrakesoft.com/cgi-bin/cvsweb.cgi/contrib-SPECS/python-ldap/">
+    webcvs</a>.
+  </li>
+</ul>
+
 <h3>Debian Linux</h3>
 <ul>
-  They use different version numbers. 1.9.999.pre06
-  translates to 2.0.0pre06.
+  They use different version numbers for pre-releases.
+  1.9.999.pre06 translates to 2.0.0pre06.
   <li>
     <a href="http://packages.debian.org/stable/net/python-ldap.html">
     stable</a><br>
