@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.30 2005/09/16 08:36:08 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.31 2005/11/07 11:53:13 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -94,7 +94,7 @@ Ported to the OpenBSD operating system as port
 <h3>Win32</h3>
 <p>
   Mauro maintains pre-compiled
-  <a href="http://www.siosistemi.it/~mcicogni/">Win32 installer packages</a>.
+  <a href="http://www.agescibs.org/mauro/">Win32 installer packages</a>.
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
