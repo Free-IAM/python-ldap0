@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.13 2005/05/27 11:59:25 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.14 2006/05/17 21:50:03 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -48,7 +48,7 @@ More and more LDAP applications and integration tools are using python-ldap.
 <dl>
 
   <dt>
-    <a href="http://www.twoevils.org/html/files.php">Kantan</a>
+    <a href="http://sourceforge.net/projects/kantan/">Kantan</a>
   </dt>
   <dd>
     <p>
@@ -57,7 +57,7 @@ More and more LDAP applications and integration tools are using python-ldap.
   </dd>
 
   <dt>
-    <a href="http://forge.novell.com/modules/xfmod/project/?ldapcfgtool">
+    <a href="http://developer.novell.com/wiki/index.php/LDAP_Configuration_Tool">
     LDAP Configuration Tool</a>
   </dt>
   <dd>
@@ -89,7 +89,7 @@ More and more LDAP applications and integration tools are using python-ldap.
   </dd>
 
   <dt>
-    <a href="http://stroeder.com/python/proxy_auth_ldap/">proxy_auth_ldap</a>
+    <a href="http://stroeder.com/proxy_auth_ldap.html">proxy_auth_ldap</a>
   </dt>
   <dd>
     <p>
