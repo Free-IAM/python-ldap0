@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.24 2006/05/25 07:50:44 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.25 2006/05/25 07:51:55 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -10,12 +10,15 @@
 <li>
 <p>Q: Is python-ldap yet another abandon-ware project on SourceForge?</p>
 <p>
+
 A1: "Jump on in."<br>
+
 A2: "Jump into the C ;-)"<br>
-A3: <a href="http://sourceforge.net/project/stats/?group_id=2072&ugn=python-ldap">
-Not quite sure...</a><br>
-A4: <a href="http://python-ldap.cvs.sourceforge.net/python-ldap/python-ldap/CHANGES?view=log">
-CHANGES</a><br>
+
+A3: <a href="http://sourceforge.net/project/stats/?group_id=2072&ugn=python-ldap">Not quite sure...</a><br>
+
+A4: <a href="http://python-ldap.cvs.sourceforge.net/python-ldap/python-ldap/CHANGES?view=markup">CHANGES</a><br>
+
 </p>
 </li>
 
