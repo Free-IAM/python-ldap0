@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.14 2006/05/17 21:50:03 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.15 2006/11/15 18:18:21 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -33,6 +33,17 @@ More and more LDAP applications and integration tools are using python-ldap.
     </p>
   </dd>
 
+  <dt>
+    <a href="http://www.mnot.net/wallal/">
+    Wallal</a>
+  </dt>
+  <dd>
+    <p>
+      Another small application for managing a
+      LDAP address book.
+    </p>
+  </dd>
+
   <dt><a href="http://www.web2ldap.de">web2ldap</a></dt>
   <dd>
     <p>
@@ -46,6 +57,17 @@ More and more LDAP applications and integration tools are using python-ldap.
 <h2>Integration Tools</h2>
 
 <dl>
+
+  <dt>
+    <a href="http://www.komkon.org/~ugen/dflex/">dflex</a>
+  </dt>
+  <dd>
+    <p>
+      Meta-directory application: a set of applications to be used
+      for LDAP directory replication and directory data mapping and
+      translation.
+    </p>
+  </dd>
 
   <dt>
     <a href="http://sourceforge.net/projects/kantan/">Kantan</a>
