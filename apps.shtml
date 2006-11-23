@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.15 2006/11/15 18:18:21 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.16 2006/11/23 19:57:38 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -148,6 +148,14 @@ More and more LDAP applications and integration tools are using python-ldap.
       PyKota is a full featured, internationalized, centralized, and extensible
       print quota system for CUPS and LPRng. It supports both PostgreSQL and
       OpenLDAP as the quota database backend.
+    </p>
+  </dd>
+
+  <dt><a href="http://www.gnome.org/projects/sabayon/">Sabayon</a></dt>
+  <dd>
+    <p>
+      Sabayon is a system administration tool to manage GNOME desktop settings
+      which can also be stored on a LDAP server.
     </p>
   </dd>
 
