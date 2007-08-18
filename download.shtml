@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.35 2006/07/20 11:07:29 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.36 2007/08/18 12:12:22 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -41,6 +41,14 @@ packages are most times not up to date. If you experience troubles
 with a binary package it would be nice if you try to build a recent version
 of python-ldap before submitting a bug report to make sure you did not
 hit a problem already fixed in recent releases.
+
+<h3>.egg builds</h3>
+<ul>
+  <li>
+    <a href="http://svn.kmrc.de/download/distribution">Various EGGs</a>
+    maintained by Torsten Kurbad.
+  </li>
+</ul>
 
 <h3>Red Hat Linux</h3>
 <ul>
@@ -96,8 +104,8 @@ Ported to the OpenBSD operating system as port
 
 <h3>Win32</h3>
 <p>
-  Mauro maintains pre-compiled
-  <a href="http://www.agescibs.org/mauro/">Win32 installer packages</a>.
+  Most recent pre-compiled
+  <a href="http://www.osuch.org/python-ldap">Win32 installer package and simple ZIP</a>.
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
