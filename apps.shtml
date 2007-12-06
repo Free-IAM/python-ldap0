@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.17 2007/10/02 10:07:44 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.18 2007/12/06 12:32:04 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -127,6 +127,17 @@ More and more LDAP applications and integration tools are using python-ldap.
     <p>
       A simple script for authenticating users accessing a
       Squid proxy.
+    </p>
+  </dd>
+
+  <dt>
+    <a href="http://www.openmetadir.org/?q=node/10">py-om</a>
+  </dt>
+  <dd>
+    <p>
+      The Python implementation of
+      <a href="http://www.openmetadir.org/">OM2 (openmetadir v2)</a>
+      an open source meta-directory framework.
     </p>
   </dd>
 
