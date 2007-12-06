@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.18 2007/12/06 12:32:04 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.19 2007/12/06 12:51:59 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -111,7 +111,7 @@ More and more LDAP applications and integration tools are using python-ldap.
   </dd>
 
   <dt>
-    <a href="https://wiki.clusterfs.com/lustre/LustreLDAP">LustreLDAP</a>
+    <a href="http://wiki.lustre.org/index.php?title=Lustre_LDAP">LustreLDAP</a>
   </dt>
   <dd>
     <p>
