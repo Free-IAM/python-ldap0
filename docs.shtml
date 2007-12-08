@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.31 2006/11/23 19:55:44 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.32 2007/12/08 14:22:48 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -32,6 +32,14 @@ or links might be broken.
 </p>
 
 <dl>
+
+  <dt>
+    <a href="http://www.packtpub.com/article/installing-and-configuring-the-python-ldap-library-and-binding-to-an-ldap-directory">
+    Python LDAP Applications: Part 1 - Installing and Configuring the Python-LDAP Library and Binding to an LDAP Directory</a>
+  </dt>
+  <dd>
+    This also covers SASL.
+  </dd>
 
   <dt>
     <a href="http://linuxjournal.com/article.php?sid=6988&mode=thread&order=0">
