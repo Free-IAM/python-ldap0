@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.19 2007/12/06 12:51:59 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.20 2007/12/08 13:35:57 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -127,6 +127,15 @@ More and more LDAP applications and integration tools are using python-ldap.
     <p>
       A simple script for authenticating users accessing a
       Squid proxy.
+    </p>
+  </dd>
+
+  <dt>
+    <a href="http://www.boskant.nl/trac/python-ad">Python-AD</a>
+  </dt>
+  <dd>
+    <p>
+      A module for accessing MS Active Directory client from Python.
     </p>
   </dd>
 
