@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.37 2008/03/03 20:53:44 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.38 2008/03/03 20:58:31 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -52,18 +52,8 @@ hit a problem already fixed in recent releases.
 
 <h3>openSUSE Linux</h3>
 <p>
-<a href="http://www.opensuse.org/">openSUSE Linux</a> ships with python-ldap.
+  <a href="http://www.opensuse.org/">openSUSE Linux</a> ships with python-ldap.
 </p>
-
-<h3>Mandrake Linux</h3>
-<ul>
-  <li>
-    python-ldap is available in the
-    <em>contrib</em> medium for Mandrake/Mandriva since 10.0
-    <a href="http://cvs.mandrakesoft.com/cgi-bin/cvsweb.cgi/contrib-SPECS/python-ldap/">
-    webcvs</a>.
-  </li>
-</ul>
 
 <h3>Debian Linux</h3>
 <ul>
@@ -71,28 +61,7 @@ hit a problem already fixed in recent releases.
     <a href="http://packages.debian.org/stable/python/python-ldap">
     stable</a><br>
   </li>
-  <li>
-    <a href="http://packages.debian.org/unstable/python/python-ldap.html">
-    unstable</a><br>
-  </li>
 </ul>
-
-<h3>Mac OS X</h3>
-<ul>
-  <li>
-    <a href="http://darwinports.opendarwin.org/ports?by=name&substr=py-ldap">
-    Darwin port</a> maintained by Markus W. Weissmann
-  </li>
-  <li>
-    <a href="http://pythonmac.org/packages/py24-fat/">Universal binary (PPC & Intel) package</a>
-    maintained by Ben Gollmer.
-    This is a standard Mac OS X installer which does not require DarwinPorts or Fink.
-  </li>
-</ul>
-
-<h3>OpenBSD</h3>
-Ported to the OpenBSD operating system as port
-<a href="http://ftp.etc.msys.ch/pub/ports/databases/py-ldap/">py-ldap</a>.
 
 <h3>Win32</h3>
 <p>
