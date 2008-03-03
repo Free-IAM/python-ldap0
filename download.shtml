@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.36 2007/08/18 12:12:22 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.37 2008/03/03 20:53:44 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -50,17 +50,9 @@ hit a problem already fixed in recent releases.
   </li>
 </ul>
 
-<h3>Red Hat Linux</h3>
-<ul>
-  <li>
-    <a href="http://www.open-it.org/download/">RPMs for Red Hat Linux</a>
-    maintained by Joe Little
-  </li>
-</ul>
-
-<h3>S.u.S.E. Linux</h3>
+<h3>openSUSE Linux</h3>
 <p>
-<a href="http://www.suse.de/">S.u.S.E. Linux</a> ships with python-ldap.
+<a href="http://www.opensuse.org/">openSUSE Linux</a> ships with python-ldap.
 </p>
 
 <h3>Mandrake Linux</h3>
