@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.32 2007/12/08 14:22:48 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.33 2008/04/08 14:26:55 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -19,7 +19,7 @@ CHANGES</a> for a reading about latest improvements and fixes.
 </p>
 
 <p>
-You can also <a href="doc/python-ldap/index.html">browse the docs on-line</a>.
+You can also <a href="doc/html/index.html">browse the docs on-line</a>.
 </p>
 
 
