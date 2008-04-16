@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.25 2006/05/25 07:51:55 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.26 2008/04/16 21:47:01 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -23,27 +23,19 @@ A4: <a href="http://python-ldap.cvs.sourceforge.net/python-ldap/python-ldap/CHAN
 </li>
 
 <li>
-<p>Q: Can I use LDAPv3 via python-ldap?</p>
+<p>Q: Can I use LDAPv2 via python-ldap?</p>
 <p>A:
-Yes, with recent version 2.0.0pre03+ and OpenLDAP 2.x libs.
+Yes, by explicitly setting the class attribute
+<a href="http://python-ldap.sourceforge.net/doc/html/ldap.html#ldap.LDAPObject.protocol_version">
+protocol_version</a>.
 </p>
 </li>
 
 <li>
-<p>
-Q: Can I use LDAPv3 with the binary builds for my platform?
-</p>
-<p>A:
-That depends very much on which version of python-ldap was
-used and which underlying LDAP lib was used. Check with the
-provider of the binary package.
-</p>
-</li>
-
-<li>
-<p>Q: Can python-ldap be built against OpenLDAP 2.x libs?</p>
+<p>Q: Can python-ldap be built against OpenLDAP 2.2 libs or older?</p>
 <p>A: 
-Yes, with recent version 2.0.0pre03+.
+No, OpenLDAP 2.3 or newer is required. Patched builds of python-ldap
+linked to older libs are not supported by the python-ldap project.
 </p>
 </li>
 
@@ -88,7 +80,7 @@ OpenLDAP 2.x is a full-fledged LDAPv3 implementation. Still it has
 its roots in Umich code but has many more features/improvements.<br>
 
 You cannot compile recent python-ldap 2.x against old Umich 3.3 or
-OpenLDAP 1.x libs. You have to use the OpenLDAP 2.x.x libs.
+OpenLDAP 1.x libs.
 
 </p>
 </li>
