@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.38 2008/03/03 20:58:31 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.39 2008/04/21 18:09:36 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -43,11 +43,30 @@ of python-ldap before submitting a bug report to make sure you did not
 hit a problem already fixed in recent releases.
 
 <h3>.egg builds</h3>
+
+Eggs are Python packages that are built and installed using the
+<a href="http://peak.telecommunity.com/DevCenter/setuptools">setuptools</a> package.
+The .egg files provided below include the Python code as well as precompiled versions
+of the C-extensions included in the Python-LDAP distribution.
+
 <ul>
   <li>
-    <a href="http://svn.kmrc.de/download/distribution">Various EGGs</a>
-    maintained by Torsten Kurbad.
+    <a href="http://svn.kmrc.de/download/distribution">.egg files</a> for various
+    platforms maintained by Torsten Kurbad.
   </li>
+</ul>
+
+For the .egg files to work the following shared libraries are required:
+
+<ul>
+  <li>
+    <b>for Linux/MacOS X:</b> OpenLDAP-2.3.x, OpenSSL-0.9.8, and Cyrus-SASL-2.1.x must be
+    properly installed on your system.
+  </li>
+  <li>
+    <b>for MS Windows:</b> The .dlls from the latest OpenLDAP-x.x.x+OpenSSL-x.x.x-Win32.zip must be
+    copied to a directory in your PATH (C:\Windows\System32 should be fine).<br>
+    The .dll archive can be downloaded from the same directory as the .egg files.
 </ul>
 
 <h3>openSUSE Linux</h3>
