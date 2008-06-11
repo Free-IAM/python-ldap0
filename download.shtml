@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.39 2008/04/21 18:09:36 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.40 2008/06/11 07:32:28 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -26,10 +26,6 @@ project file release area</a> has the latest 'official' releases.
   <li>
     <a href="http://python-ldap.cvs.sourceforge.net/python-ldap">
     Browse CVS repository</a>
-  </li>
-  <li>
-    <a href="http://cvs.sourceforge.net/cvstarballs/python-ldap-cvsroot.tar.gz">
-    Daily snapshot of CVS archive</a> (mainly for backup purposes)
   </li>
 </ul>
 
