@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.20 2007/12/08 13:35:57 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.21 2008/11/02 16:06:19 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -131,11 +131,11 @@ More and more LDAP applications and integration tools are using python-ldap.
   </dd>
 
   <dt>
-    <a href="http://www.boskant.nl/trac/python-ad">Python-AD</a>
+    <a href="http://code.google.com/p/python-ad/">Python-AD</a>
   </dt>
   <dd>
     <p>
-      A module for accessing MS Active Directory client from Python.
+      A module for accessing MS Active Directory from Python.
     </p>
   </dd>
 
