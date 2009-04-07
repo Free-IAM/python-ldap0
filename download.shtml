@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.40 2008/06/11 07:32:28 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.41 2009/04/07 13:48:37 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -11,11 +11,19 @@ tries to list all the current ones we know of.
 </p>
 
 
-<h2>Releases</h2>
+<h2>Releases on PyPI</h2>
 <p>
-The <a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
-project file release area</a> has the latest 'official' releases.
+The preferred point for downloading the 'official' source distribution
+is now the <a href="http://pypi.python.org/pypi/python-ldap/">PyPI repository</a>
+which supports installing via setuptools.
 </p>
+
+<!--h2>Releases on SourceForge</h2>
+<p>
+Still there is the
+<a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
+project file release area</a> has the latest 'official' releases.
+</p-->
 
 <h2>CVS access</h2>
 <ul>
