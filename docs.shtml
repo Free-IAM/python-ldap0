@@ -1,16 +1,18 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.33 2008/04/08 14:26:55 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.34 2009/04/09 13:36:37 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
 <h2>python-ldap Docs</h2>
 <p>
-The <a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
-project file release area</a> has the latest 'official' released
-documentation packages as HTML (tar.gz or zip) and PDF for off-line reading.
+Documentation packages as HTML:
 </p>
+<ul>
+  <li><a href="doc/python-ldap-docs-html-2.3.7.tar.gz">python-ldap-docs-html-2.3.7.tar.gz</a></li>
+  <li><a href="doc/python-ldap-docs-html-2.3.7.zip">python-ldap-docs-html-2.3.7.zip</a></li>
+</ul>
 
 <p>
 See current file
