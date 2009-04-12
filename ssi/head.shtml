@@ -1,6 +1,8 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <!-- $Id: head.shtml,v 1.2 2001/05/16 00:10:18 leonard Exp $ -->
+  <!-- $Id: head.shtml,v 1.3 2009/04/12 10:49:16 stroeder Exp $ -->
   <title>python-ldap: <!--#echo var="head_title" --></title>
   <meta name="AUTHOR" content="michael@stroeder.com">
   <meta name="DESCRIPTION" content="python-ldap: <!--#echo var="head_pagedescription" -->">
@@ -8,7 +10,7 @@
   <meta name="ROBOTS" content="INDEX,FOLLOW">
   <link rev="MADE" HREF="mailto:www@stroeder.com">
   <link rel="STYLESHEET" HREF="style.css" TYPE="text/css">
-  <script language="JavaScript">
+  <script language="JavaScript" type="text/javascript">
     <!--
      if(top.frames.length > 0)
       top.location.href=self.location;
