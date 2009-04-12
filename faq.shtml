@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.26 2008/04/16 21:47:01 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.27 2009/04/12 10:54:00 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -10,15 +10,9 @@
 <li>
 <p>Q: Is python-ldap yet another abandon-ware project on SourceForge?</p>
 <p>
-
 A1: "Jump on in."<br>
-
 A2: "Jump into the C ;-)"<br>
-
-A3: <a href="http://sourceforge.net/project/stats/?group_id=2072&ugn=python-ldap">Not quite sure...</a><br>
-
-A4: <a href="http://python-ldap.cvs.sourceforge.net/python-ldap/python-ldap/CHANGES?view=markup">CHANGES</a><br>
-
+A3: <a href="http://python-ldap.cvs.sourceforge.net/python-ldap/python-ldap/CHANGES?view=markup">CHANGES</a><br>
 </p>
 </li>
 
@@ -49,11 +43,11 @@ Nope.
 <li>
 <p>Q: During build there are warning messages displayed
 telling Lib/ldap.py and Lib/ldap/schema.py are not found:
+</p>
 <pre>
 warning: build_py: file Lib/ldap.py (for module ldap) not found
 warning: build_py: file Lib/ldap/schema.py (for module ldap.schema) not found
 </pre>
-</p>
 <p>A: 
 ldap and ldap.schema are both module packages
 (directories containing various sub-modules).
@@ -105,25 +99,26 @@ A: You can find links to pre-compiled packages for Win32 on the
 <li>
 <p>Q: While importing module ldap there are undefined references reported.
 Error message looks similar to this:
+</p>
 <pre>
 Traceback (most recent call last):
   File "./ldap_connect", line 7, in ?
     import _ldap
 ImportError: /usr/local/lib/libldap.so.2: undefined symbol: res_query
 </pre>
-</p>
 <p>A: Especially on Linux systems you might have to explicitly link
 against libresolv.
 Tweak <em>setup.cfg</em> to contain this line:
+</p>
 <pre>
 libs = lber ldap resolv
 </pre>
-</p>
 </li>
 
 <li>
 <p>Q: While importing module ldap some shared lib files are not found.
 Error message looks similar to this:
+</p>
 <pre>
     import ldap
   File "/usr/local/lib/python2.1/site-packages/ldap/__init__.py", line
@@ -132,7 +127,6 @@ Error message looks similar to this:
 ImportError: ld.so.1: /usr/local/bin/python: fatal: liblber.so.2: open
 failed: No such file or directory
 </pre>
-</p>
 <p>A1:
 You need to make sure that the path to <em>liblber.so.2</em> and
 <em>libldap.so.2</em> is in your <em>LD_LIBRARY_PATH</em> environment
