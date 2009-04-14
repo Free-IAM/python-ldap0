@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.27 2009/04/12 10:54:00 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.28 2009/04/14 14:10:15 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -163,6 +163,29 @@ A: In older OpenLDAP versions <em>libldap_r</em> was not complete. Either try
 to build against (not re-entrant) <em>libldap</em> or use a newer OpenLDAP version
 (see also <a href="http://www.openldap.org/lists/openldap-bugs/200207/msg00005.html">OpenLDAP ITS#1922</a>).
 </p>
+</li>
+
+<li>
+<p>Q: My script bound to MS Active Directory but a a search operation results
+in an exception <var>ldap.OPERATIONS_ERROR</var> with the diagnostic messages text
+&quot;In order to perform this operation a successful bind must be
+completed on the connection.&quot;.<br>
+What's happening here?</p>
+<p>A: 
+When searching from the domain level MS AD returns referrals (search continuations)
+for some objects to indicate to the client where to look for these objects.
+Client-chasing of referrals is a broken concept since LDAPv3 does not specify
+which credentials to use when chasing the referral. Windows clients are supposed
+to simply use their Windows credentials but this does not work in general when
+chasing referrals received from and pointing to arbitrary LDAP servers.<br>
+Therefore per default <var>libldap</var> automatically chases the referrals
+internally with an <em>anonymous</em> access which fails with MS AD.<br>
+So best thing is to switch this behaviour off:
+</p>
+<code>
+l = ldap.initialize('ldap://foobar')<br>
+l.set_option(ldap.OPT_REFERRALS,0)<br>
+</code>
 </li>
 
 </ol>
