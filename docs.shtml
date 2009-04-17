@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.35 2009/04/14 15:30:32 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.36 2009/04/17 17:00:39 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -41,6 +41,14 @@ or links might be broken.
   </dt>
   <dd>
     This also covers SASL.
+  </dd>
+
+  <dt>
+    <a href="http://blogs.sun.com/trawick/entry/installing_python_ldap_in_opensolaris">
+    Installing python-ldap in OpenSolaris 2009.06</a>
+  </dt>
+  <dd>
+    Blog entry by Jeffrey Trawick.
   </dd>
 
   <dt>
