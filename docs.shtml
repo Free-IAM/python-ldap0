@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.37 2009/04/17 17:11:27 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.38 2009/04/17 17:20:00 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -25,39 +25,38 @@ You can also <a href="doc/html/index.html">browse the docs on-line</a>.
 </p>
 
 
-<h2>Related information</h2>
+<h2>Third-party documentation</h2>
 
 <p>
-The following documents referenced are not written by
-project members. Therefore some information might be outdated
-or links might be broken.
+The following documents referenced are not written by python-ldap project
+members. Therefore some information might be outdated or links might be broken.
 </p>
 
-<dl>
-
-  <dt>
+<p>
+  A series of articles by Matt Butcher about python-ldap:
+</p>
+<ul>
+  <li>
     <a href="http://www.packtpub.com/article/installing-and-configuring-the-python-ldap-library-and-binding-to-an-ldap-directory">
-    Python LDAP Applications: Part 1 - Installing and Configuring the Python-LDAP Library and Binding to an LDAP Directory</a>
-  </dt>
-  <dd>
+    Python LDAP Applications: Part 1 - Installing and Configuring the Python-LDAP Library and Binding to an LDAP Directory</a><br>
     This also covers SASL.
-  </dd>
-
-  <dt>
+  </li>
+  <li>
+    <a href="http://www.packtpub.com/article/python-ldap-applications-ldap-opearations">
+    Python LDAP Applications: Part 2 - LDAP Operations</a>
+  </li>
+  <li>
+    <a href="http://www.packtpub.com/article/python-ldap-applications-more-ldap-operations-and-the-ldap-url-library">
+    Python LDAP Applications: Part 3 - More LDAP Operations and the LDAP URL Library</a>
+  </li>
+  <li>
     <a href="http://www.packtpub.com/article/python-ldap-applications-ldap-schema/li">
-    Python LDAP Applications: Part 4 - LDAP Schema</a>
-  </dt>
-  <dd>
+    Python LDAP Applications: Part 4 - LDAP Schema</a><br>
     Gee, someone waded through the yet undocumented mysteries of module <var>ldap.schema</var>.
-  </dd>
+  </li>
+</ul>
 
-  <dt>
-    <a href="http://blogs.sun.com/trawick/entry/installing_python_ldap_in_opensolaris">
-    Installing python-ldap in OpenSolaris 2009.06</a>
-  </dt>
-  <dd>
-    Blog entry by Jeffrey Trawick.
-  </dd>
+<dl>
 
   <dt>
     <a href="http://linuxjournal.com/article.php?sid=6988&mode=thread&order=0">
@@ -83,6 +82,14 @@ or links might be broken.
   </dt>
   <dd>
     The text begins with &quot;Using the python-ldap module is pretty easy.&quot;.
+  </dd>
+
+  <dt>
+    <a href="http://blogs.sun.com/trawick/entry/installing_python_ldap_in_opensolaris">
+    Installing python-ldap in OpenSolaris 2009.06</a>
+  </dt>
+  <dd>
+    Blog entry by Jeffrey Trawick.
   </dd>
 
   <dt>
