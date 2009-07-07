@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.43 2009/04/12 10:50:34 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.44 2009/07/07 14:56:36 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -48,30 +48,40 @@ hit a problem already fixed in recent releases.
 
 <h3>.egg builds</h3>
 
-Eggs are Python packages that are built and installed using the
-<a href="http://peak.telecommunity.com/DevCenter/setuptools">setuptools</a> package.
-The .egg files provided below include the Python code as well as precompiled versions
-of the C-extensions included in the Python-LDAP distribution.
+<p>
+  Eggs are Python packages that are built and installed using the
+  <a href="http://peak.telecommunity.com/DevCenter/setuptools">setuptools</a> package.
+  The .egg files provided below include the Python code as well as precompiled versions
+  of the C-extensions included in the Python-LDAP distribution.
+</p>
 
-<ul>
-  <li>
-    <a href="http://svn.kmrc.de/download/distribution">.egg files</a> for various
-    platforms maintained by Torsten Kurbad.
-  </li>
-</ul>
+<p>
+  <a href="http://svn.kmrc.de/download/distribution/contrib/">.egg files</a> for various
+  platforms maintained by Torsten Kurbad.
+</p>
 
-For the .egg files to work the following shared libraries are required:
+<h4>Prerequisites</h4>
 
-<ul>
-  <li>
-    <b>for Linux/MacOS X:</b> OpenLDAP-2.3.x, OpenSSL-0.9.8, and Cyrus-SASL-2.1.x must be
-    properly installed on your system.
-  </li>
-  <li>
-    <b>for MS Windows:</b> The .dlls from the latest OpenLDAP-x.x.x+OpenSSL-x.x.x-Win32.zip must be
-    copied to a directory in your PATH (C:\Windows\System32 should be fine).<br>
-    The .dll archive can be downloaded from the same directory as the .egg files.
-</ul>
+<dl>
+  <dt>for Linux:</dt>
+  <dd>
+    OpenLDAP-2.4.16, OpenSSL-0.9.8k, and
+    Cyrus-SASL-2.1.23 must be properly installed on your system.
+  </dd>
+  <dt>for MacOS X:</dt>
+  <dd>
+    The .egg files are statically linked to
+    OpenLDAP 2.4.16, but only tested on OS X 10.5.7 Intel.<br>
+    (Testers with 10.3 through 10.4 and/or PPC machines are
+    welcome!)
+  </dd>
+  <dt>for MS Windows:</dt>
+  <dd>
+    The Windows eggs are statically linked to
+    all necessary libraries and should run out of the box.
+  </dd>
+</dl>
+
 
 <h3>openSUSE Linux</h3>
 <p>
