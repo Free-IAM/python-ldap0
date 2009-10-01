@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="LDAP client API for Python" -->
 <!--#set var="head_pagedescription" value="LDAP client API for Python" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: index.shtml,v 1.11 2005/07/04 20:27:22 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: index.shtml,v 1.12 2009/10/01 22:13:32 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -22,7 +22,7 @@ the <em>python-ldap-dev</em> mailing list.
 You can
 <a href="http://lists.sourceforge.net/lists/listinfo/python-ldap-dev">
 subscribe or unsubscribe</a> to this list or browse
-the <a href="http://sourceforge.net/mailarchive/forum.php?forum_id=4346">
+the <a href="http://sourceforge.net/mailarchive/forum.php?forum_name=python-ldap-dev">
 list archive</a>.
 </p>
 
