@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.38 2009/04/17 17:20:00 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.39 2010/02/27 10:14:24 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -10,8 +10,8 @@
 Documentation packages as HTML:
 </p>
 <ul>
-  <li><a href="doc/python-ldap-docs-html-2.3.7.tar.gz">python-ldap-docs-html-2.3.7.tar.gz</a></li>
-  <li><a href="doc/python-ldap-docs-html-2.3.7.zip">python-ldap-docs-html-2.3.7.zip</a></li>
+  <li><a href="doc/python-ldap-docs-html-2.3.11.tar.gz">python-ldap-docs-html-2.3.11.tar.gz</a></li>
+  <li><a href="doc/python-ldap-docs-html-2.3.11.zip">python-ldap-docs-html-2.3.11.zip</a></li>
 </ul>
 
 <p>
