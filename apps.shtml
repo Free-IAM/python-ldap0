@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.21 2008/11/02 16:06:19 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.22 2011/04/04 08:06:37 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -40,17 +40,6 @@ More and more LDAP applications and integration tools are using python-ldap.
       using PyQt and python-ldap. Plugin-support is included
       and useful widgets with LDAP-functionality for easy
       creation of plugins are delivered.
-    </p>
-  </dd>
-
-  <dt>
-    <a href="http://www.mnot.net/wallal/">
-    Wallal</a>
-  </dt>
-  <dd>
-    <p>
-      Another small application for managing a
-      LDAP address book.
     </p>
   </dd>
 
