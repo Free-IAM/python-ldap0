@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Applications" -->
 <!--#set var="head_pagedescription" value="Third-party applications" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.23 2011/04/04 08:09:18 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: apps.shtml,v 1.24 2011/04/04 08:10:26 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -83,16 +83,6 @@ More and more LDAP applications and integration tools are using python-ldap.
       The LDAP User Folder is a user folder replacement
       for Zope that authenticates Zope users against LDAP.
       It is written for Zope versions 2.4.0 and higher.
-    </p>
-  </dd>
-
-  <dt>
-    <a href="http://wiki.lustre.org/index.php?title=Lustre_LDAP">LustreLDAP</a>
-  </dt>
-  <dd>
-    <p>
-      Storing cluster configuration data for <a href="http://www.lustre.org/">
-      Lustre</a> on a LDAP server.
     </p>
   </dd>
 
