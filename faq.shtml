@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.28 2009/04/14 14:10:15 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.29 2011/07/08 18:55:23 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -187,6 +187,18 @@ l = ldap.initialize('ldap://foobar')<br>
 l.set_option(ldap.OPT_REFERRALS,0)<br>
 </code>
 </li>
+
+<li>
+<p>Q: Why am I seeing <var>ldap.SUCCESS</var> traceback as output?</p>
+<p>A:
+Most likely you are using one of the non-synchronous calls,
+such as <code>LDAPobject.search()</code> and probably mean
+to be using a synchronous call, such as
+<code>LDAPobject.search_s()</code>.  If you have no idea what
+any of that means, you should definitely be using the
+synchronous calls ending in <code>_s</code>.
+</p>
+</li> 
 
 </ol>
 
