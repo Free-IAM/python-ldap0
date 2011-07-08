@@ -1,7 +1,8 @@
 
-/* $Id: style.css,v 1.1 2001/05/16 00:10:18 leonard Exp $ */
+/* $Id: style.css,v 1.2 2011/07/08 18:57:35 stroeder Exp $ */
 
 BODY      		{ background:	white;
+                          margin:       3em 4em;
 	  		  color:	#484848; }
 
 A:link    		{ color: 	#f4a460; }
