@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.29 2011/07/08 18:55:23 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.30 2011/07/26 07:31:25 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -20,7 +20,7 @@ A3: <a href="http://python-ldap.cvs.sourceforge.net/python-ldap/python-ldap/CHAN
 <p>Q: Can I use LDAPv2 via python-ldap?</p>
 <p>A:
 Yes, by explicitly setting the class attribute
-<a href="http://python-ldap.sourceforge.net/doc/html/ldap.html#ldap.LDAPObject.protocol_version">
+<a href="http://www.python-ldap.org/doc/html/ldap.html#object-attributes">
 protocol_version</a>.
 </p>
 </li>
