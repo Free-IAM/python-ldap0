@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.41 2011/07/26 11:32:54 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.42 2011/07/26 11:34:23 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -74,14 +74,6 @@ members. Therefore some information might be outdated or links might be broken.
     Includes ready-to-use worked examples to connect to an eDirectory
     sandbox via LDAP, Java or Python for non-encrypted and encrypted (SSL)
     connections.
-  </dd>
-
-  <dt>
-    <a href="http://csci.mrs.umn.edu/twiki/view/Dungeon/PythonLDAP">
-    Short introduction to python-ldap programming</a>
-  </dt>
-  <dd>
-    The text begins with &quot;Using the python-ldap module is pretty easy.&quot;.
   </dd>
 
   <dt>
