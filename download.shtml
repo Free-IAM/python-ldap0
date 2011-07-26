@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.45 2009/10/31 10:33:44 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.46 2011/07/26 07:06:11 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -17,13 +17,6 @@ The preferred point for downloading the 'official' source distribution
 is now the <a href="http://pypi.python.org/pypi/python-ldap/">PyPI repository</a>
 which supports installing via setuptools.
 </p>
-
-<!--h2>Releases on SourceForge</h2>
-<p>
-Still there is the
-<a href="http://sourceforge.net/project/showfiles.php?group_id=2072">
-project file release area</a> has the latest 'official' releases.
-</p-->
 
 <h2>CVS access</h2>
 <ul>
@@ -45,43 +38,6 @@ packages are most times not up to date. If you experience troubles
 with a binary package it would be nice if you try to build a recent version
 of python-ldap before submitting a bug report to make sure you did not
 hit a problem already fixed in recent releases.
-
-<h3>.egg builds</h3>
-
-<p>
-  Eggs are Python packages that are built and installed using the
-  <a href="http://peak.telecommunity.com/DevCenter/setuptools">setuptools</a> package.
-  The .egg files provided below include the Python code as well as precompiled versions
-  of the C-extensions included in the Python-LDAP distribution.
-</p>
-
-<p>
-  <a href="http://svn.kmrc.de/download/distribution/contrib/">.egg files</a> for various
-  platforms maintained by Torsten Kurbad.
-</p>
-
-<h4>Prerequisites</h4>
-
-<dl>
-  <dt>for Linux:</dt>
-  <dd>
-    OpenLDAP-2.4.16, OpenSSL-0.9.8k, and
-    Cyrus-SASL-2.1.23 must be properly installed on your system.
-  </dd>
-  <dt>for MacOS X:</dt>
-  <dd>
-    The .egg files are statically linked to
-    OpenLDAP 2.4.16, but only tested on OS X 10.5.7 Intel.<br>
-    (Testers with 10.3 through 10.4 and/or PPC machines are
-    welcome!)
-  </dd>
-  <dt>for MS Windows:</dt>
-  <dd>
-    The Windows eggs are statically linked to
-    all necessary libraries and should run out of the box.
-  </dd>
-</dl>
-
 
 <h3>openSUSE Linux</h3>
 <p>
