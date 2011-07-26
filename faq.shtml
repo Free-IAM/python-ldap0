@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="FAQ" -->
 <!--#set var="head_pagedescription" value="Frequently Asked Questions" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.30 2011/07/26 07:31:25 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: faq.shtml,v 1.31 2011/07/26 07:37:21 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -26,10 +26,11 @@ protocol_version</a>.
 </li>
 
 <li>
-<p>Q: Can python-ldap be built against OpenLDAP 2.2 libs or older?</p>
+<p>Q: Can python-ldap be built against OpenLDAP 2.3 libs or older?</p>
 <p>A: 
-No, OpenLDAP 2.3 or newer is required. Patched builds of python-ldap
-linked to older libs are not supported by the python-ldap project.
+No, for recent python-ldap 2.4.x the OpenLDAP 2.4 client libs or newer are required.
+Patched builds of python-ldap linked to older libs are not supported by the
+python-ldap project.
 </p>
 </li>
 
@@ -147,21 +148,6 @@ Despite some outdated programming examples the extension module
 <em>_ldap</em> <strong>SHOULD NOT</strong> be imported directly.
 Import <em>ldap</em> instead which is a Python wrapper around <em>_ldap</em>
 providing the full functionality.
-</p>
-</li>
-
-<li>
-<p>Q: python-ldap build with OpenLDAP libs prior to 2.1.3 and the following
-error happens during import:</p>
-<pre>
-ImportError: /usr/lib/python2.2/site-packages/_ldap.so: undefined symbol:
-ldap_first_reference
-</pre>
-
-<p>
-A: In older OpenLDAP versions <em>libldap_r</em> was not complete. Either try
-to build against (not re-entrant) <em>libldap</em> or use a newer OpenLDAP version
-(see also <a href="http://www.openldap.org/lists/openldap-bugs/200207/msg00005.html">OpenLDAP ITS#1922</a>).
 </p>
 </li>
 
