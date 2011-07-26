@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.40 2011/07/26 07:00:52 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.41 2011/07/26 11:32:54 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -100,12 +100,13 @@ members. Therefore some information might be outdated or links might be broken.
   </dd>
 
   <dt>
-    <a href="http://www.ietf.org/html.charters/ldapext-charter.html">LDAPEXT</a>
+    <a href="http://tools.ietf.org/html/draft-ietf-ldapext-ldap-c-api">
+    draft-ietf-ldapext-ldap-c-api</a>
   </dt>
   <dd>
-    Discontinued IETF working group which also tried to define
-    a LDAP C API standard. <em>draft-ietf-ldapext-ldap-c-api-04</em> is of
-    interest here since the OpenLDAP 2 libs implement this (expired) draft.
+    This Internet draft of the discontinued IETF working group
+    <a href="http://www.ietf.org/html.charters/ldapext-charter.html">LDAPEXT</a>
+    is of interest here since the OpenLDAP 2 libs implement this (expired) draft.
   </dd>
 
   <dt>
