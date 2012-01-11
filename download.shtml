@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.46 2011/07/26 07:06:11 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.47 2012/01/11 20:51:52 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -73,6 +73,14 @@ hit a problem already fixed in recent releases.
 <p>
   The CVS repository of FreeBSD contains the package
   <a href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/net/py-ldap2/">py-ldap2</a>.
+</p>
+
+<h3>Mac OS X</h3>
+<p>
+  I don't know of current python-ldap builds for download.
+  However Rob wrote some hints on this page:<br>
+  <a href="http://projects.skurfer.com/posts/2011/python_ldap_lion/">
+  &quot;Installing python-ldap in Mac OS X Lion&quot;</a>
 </p>
 
 <!--#include file="ssi/footer.shtml" -->
