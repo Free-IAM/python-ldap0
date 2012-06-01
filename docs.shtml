@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.46 2012/06/01 16:54:57 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.47 2012/06/01 17:05:46 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -60,7 +60,7 @@ members. Therefore some information might be outdated or links might be broken.
 <dl>
 
   <dt>
-    <a href="http://linuxjournal.com/article.php?sid=6988&mode=thread&order=0">
+    <a href="http://www.linuxjournal.com/article/6988">
     LDAP Programming in Python</a>
   </dt>
   <dd>
@@ -114,10 +114,10 @@ members. Therefore some information might be outdated or links might be broken.
   </dd>
 
   <dt>
-    <a href="http://www.opengroup.org/dif/mats/blits25/blits25.htm">BLITS</a>
+    <a href="http://www.opengroup.org/openbrand/testing/checklist/guide/config_base.html">VSLDAP</a>
   </dt>
   <dd>
-    Basic LDAP Interoperability Test Suite.
+    VSLDAP Interoperability Test Suite.
   </dd>
 
 </dl>
