@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.shtml,v 1.47 2012/01/11 20:51:52 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.shtml,v 1.48 2014/09/10 13:54:43 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -41,7 +41,12 @@ hit a problem already fixed in recent releases.
 
 <h3>openSUSE Linux</h3>
 <p>
-  <a href="http://www.opensuse.org/">openSUSE Linux</a> ships with python-ldap.
+  <a href="http://www.opensuse.org/">openSUSE Linux</a> ships with python-ldap
+  and there's an additional
+  <a href="http://download.opensuse.org/repositories/devel:/languages:/python/">
+  OBS repository</a> which contains builds of latest releases
+  (see also <a href="https://build.opensuse.org/package/show/devel:languages:python/python-ldap">
+  OBS package</a>).
 </p>
 
 <h3>Debian Linux</h3>
