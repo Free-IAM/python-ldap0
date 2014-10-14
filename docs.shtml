@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Documentation" -->
 <!--#set var="head_pagedescription" value="Documentation" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.49 2012/08/09 07:14:48 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: docs.shtml,v 1.50 2014/10/14 18:53:47 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -10,8 +10,8 @@
 Documentation packages as HTML:
 </p>
 <ul>
-  <li><a href="doc/python-ldap-docs-html-2.4.10.tar.gz">python-ldap-docs-html-2.4.10.tar.gz</a></li>
-  <li><a href="doc/python-ldap-docs-html-2.4.10.zip">python-ldap-docs-html-2.4.10.zip</a></li>
+  <li><a href="doc/python-ldap-docs-html-2.4.17.tar.gz">python-ldap-docs-html-2.4.17.tar.gz</a></li>
+  <li><a href="doc/python-ldap-docs-html-2.4.17.zip">python-ldap-docs-html-2.4.17.zip</a></li>
 </ul>
 
 <p>
@@ -25,6 +25,11 @@ You can also <a href="doc/html/index.html">browse the docs on-line</a>
 (which might be sometimes more recent and complete than the downloadable docs).
 </p>
 
+
+<p>
+  See what's going on in file
+  <a href="http://python-ldap.cvs.sourceforge.net/python-ldap/python-ldap/CHANGES?view=markup">CHANGES</a>
+</p>
 
 <h2>Third-party documentation</h2>
 
