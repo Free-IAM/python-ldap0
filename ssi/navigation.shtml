@@ -1,4 +1,4 @@
-  <!-- $Id: navigation.shtml,v 1.5 2009/04/12 10:49:36 stroeder Exp $ -->
+  <!-- $Id: navigation.shtml,v 1.6 2015/08/15 19:42:27 stroeder Exp $ -->
   <table class="navigation" summary="Navigation">
     <tr>
       <td class="navtitle"><a href="<!--#echo var="base_path" -->/">
@@ -6,10 +6,10 @@
         </a>
       </td>
       <td align="right" valign="top">
-        [<a href="<!--#echo var="base_path" -->download.shtml">Downloads</a>]
-        [<a href="<!--#echo var="base_path" -->docs.shtml">Docs</a>]
-        [<a href="<!--#echo var="base_path" -->faq.shtml">FAQ</a>]
-        [<a href="<!--#echo var="base_path" -->apps.shtml">Apps</a>]
+        [<a href="<!--#echo var="base_path" -->download.html">Downloads</a>]
+        [<a href="<!--#echo var="base_path" -->docs.html">Docs</a>]
+        [<a href="<!--#echo var="base_path" -->faq.html">FAQ</a>]
+        [<a href="<!--#echo var="base_path" -->apps.html">Apps</a>]
       </td>
     </tr>
   </table>
