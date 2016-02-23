@@ -1,7 +1,7 @@
 <!--#set var="head_title" value="Downloads" -->
 <!--#set var="head_pagedescription" value="Downloads" -->
 <!--#set var="base_path" value="" -->
-<!--#set var="rcsid" value="\$Id: download.html,v 1.7 2016/02/23 20:36:19 stroeder Exp $" -->
+<!--#set var="rcsid" value="\$Id: download.html,v 1.8 2016/02/23 20:51:58 stroeder Exp $" -->
 <!--#include file="ssi/head.shtml" -->
 <!--#include file="ssi/navigation.shtml" -->
 
@@ -42,38 +42,39 @@
 
 <dl>
 
-  <dt><a id="opensuse">openSUSE Linux</a></dt>
+  <dt id="opensuse">
+    <a href="https://www.opensuse.org/">openSUSE Linux</a>
+  </dt>
   <dd>
-    <a href="https://www.opensuse.org/">openSUSE Linux</a> ships with python-ldap
-    and there's an additional
+    ships with python-ldap and there's an additional
     <a href="http://download.opensuse.org/repositories/devel:/languages:/python/">
-    OBS repository</a> which contains builds of latest releases
+    download repository</a> which contains builds of latest releases
     (see also <a href="https://build.opensuse.org/package/show/devel:languages:python/python-ldap">
     OBS package</a>).
   </dd>
 
-  <dt><a id="debian">Debian Linux</a></dt>
+  <dt id="debian"><a href="https://www.debian.org">Debian Linux</a></dt>
   <dd>
     Have a look into the
     <a href="https://tracker.debian.org/pkg/python-ldap">Debian Package Tracker</a>
-    to get up to date information which versions are available in Debian.
+    to get up to date information which versions are available.
   </dd>
 
-  <dt><a id="win32">Win32</a></dt>
+  <dt id="win32">Windows</dt>
   <dd>
-    Win32 installer packages are also available in the
+    Windows installer packages are also available in the
     <a href="https://pypi.python.org/pypi/python-ldap/">PyPI repository</a> now.
     The maintainer Waldemar Osuch has some <a href="http://www.osuch.org/python-ldap">
     comments about his builds</a> too.
   </dd>
 
-  <dt><a id="freebsd">FreeBSD</a></dt>
+  <dt id="freebsd"><a href="https://www.freebsd.org/">FreeBSD</a></dt>
   <dd>
     The CVS repository of FreeBSD contains the package
     <a href="https://svnweb.freebsd.org/ports/head/net/py-ldap/">py-ldap</a>.
   </dd>
 
-  <dt><a id="macosx">Mac OS X</a></dt>
+  <dt id="macosx">Mac OS X</dt>
   <dd>
     I don't know of current python-ldap builds for download.
     However Rob wrote some hints on this page:<br>
