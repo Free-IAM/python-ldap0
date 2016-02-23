@@ -8,3 +8,9 @@ ExpiresDefault A86400
 AddType text/html .html .shtml
 AddOutputFilter INCLUDES .html .shtml
 AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript
+
+RedirectPermanent /apps.shtml /apps.html
+RedirectPermanent /docs.shtml /docs.html
+RedirectPermanent /download.shtml /download.html
+RedirectPermanent /faq.shtml /faq.html
+RedirectPermanent /index.shtml /index.html
