@@ -1,25 +1,153 @@
+body {
+  margin: 3em;
+  padding: 0;
+  background-color: #ffffff;
+}
 
-/* $Id: style.css,v 1.3 2011/07/08 18:59:11 stroeder Exp $ */
+div#footer {
+  width: 100%;
+  clear: both;
+  background-color: #ffffff;
+}
 
-BODY      		{ background:	white;
-                          margin:       2em 3em;
-	  		  color:	#484848; }
+/* position and colour of header text */
+div#header div.header_text {
+  position: absolute;
+  bottom: 1em;
+  left: 1em; color: #ffffff; }
 
-A:link    		{ color: 	#f4a460; }
-A:visited 		{ color: 	#909090; }
-A:active  		{ color: 	#ff9933; }
+/*---------------------------------------
+GENERAL STYLING
+----------------------------------------*/
 
-P:footer  		{ font-size:	x-small; }
+p {
+  margin: 0.25em 0 0 1.5em;
+  line-height: 1.4em;
+}
 
-TABLE:navigation	{ width:	100%;
-			  border:	0;	 }
+iframe {
+  margin: 0.7em;
+  width: 100%;
+  line-height: 1.0em;
+  min-height: 15em;
+}
 
-TABLE:navigation TR	{ background:	white; 
-			  padding:	10%;	 }
+li {
+  margin: 0.25em 0 0 1.5em;
+  line-height: 1.4em;
+}
 
-TD:navtitle 		{ color:	#f4a560;
-			  font-size:	xx-large;
-			  text-style:	bold;	 }
+h1 {
+  font-size:1.65em;
+  font-weight: bold;
+  margin: 1em 0 0.5em 0;
+}
 
-IMG			{ border:	0;	 }
+h2 {
+  font-size:1.25em;
+  font-weight: bold;
+  margin: 0.75em 0 0.25em 0;
+}
 
+h3 {
+  font-size:1.0em;
+  font-weight: bold;
+  margin: 0.75em 0 0.1em 0;
+}
+
+html, body, div {
+  font-family: Arial, Helvetica, Verdana, sans-serif;
+  font-size: 100%;
+  text-decoration: none;
+}
+
+ul {
+  list-style-type:square;
+}
+
+address {
+}
+
+/* Links */
+
+a {
+  color: #CF5022;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #802000;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Navigationsbereich */
+
+div#navigation {
+  width:100%;
+  border-bottom: solid 1px;
+  padding-bottom: 1em;
+}
+
+div#navigation a.entrylink {
+  width:10%;
+  font-weight:bold;
+  font-size:1.75em;
+}
+
+div#navigation .menu {
+  align:right;
+}
+
+/* Impressum */
+
+table.impressum {
+  margin: 1.5em;
+}
+
+table.impressum th {
+  vertical-align: top;
+  width: 18%;
+  text-align: left;
+  padding: 0.5em;
+  text-decoration: none;
+}
+
+table.impressum td {
+  vertical-align: top;
+  text-align: left;
+  padding: 0.5em;
+}
+
+table.publications {
+  margin: 1.5em 0 1.5em 0;
+}
+
+table.publications td {
+  vertical-align: top;
+  text-align: left;
+  padding: 0.5em;
+}
+
+table.publications th {
+  vertical-align: top;
+  width: 30%;
+  text-align: left;
+  padding: 0.5em;
+  text-decoration: none;
+}
+
+div#footer {
+  width:100%;
+  font-size:0.75em;
+  padding-top: 1em;
+  margin-top:2em;
+  border-top: solid 1px;
+}
+
+img.titelbild {
+  float:right;
+}
