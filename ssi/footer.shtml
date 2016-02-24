@@ -1,8 +1,17 @@
-<!-- $Id: footer.shtml,v 1.4 2001/05/16 01:15:36 leonard Exp $ -->
-<hr>
-<p class="footer">
-    <!--#echo var="rcsid" -->
-</p>
+</div>
+
+<footer>
+  <div id="footer">
+    <p>
+      <!--#echo encoding="none" var="rcsid" -->
+    </p>
+    <p class="contact">
+      <a href="#top">&uarr; TOP</a>
+      /
+      <a href="mailto:python-ldap@python.org">python-ldap@python.org</a>
+    </p>
+  </div>
+</footer>
 
 </body>
 </html>

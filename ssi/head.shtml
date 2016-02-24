@@ -1,24 +1,40 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
+
+  <!-- $Id: head.shtml,v 1.6 2016/02/24 23:19:14 stroeder Exp $ -->
+
   <head>
-    <!-- $Id: head.shtml,v 1.5 2016/02/17 18:56:13 stroeder Exp $ -->
-    <title>python-ldap: <!--#echo var="head_title" --></title>
-    <meta name="description" content="python-ldap: <!--#echo var="head_pagedescription" -->">
+    <title>python-ldap: <!--#echo encoding="none" var="head_title" --></title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="description" content="python-ldap: <!--#echo encoding="none" var="head_pagedescription" -->">
     <meta name="keywords" content="Python,LDAP,LDIF,Directory,X.500">
     <meta name="robots" content="INDEX,FOLLOW">
     <meta name="revisit-after" content="5 days">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" HREF="style.css" TYPE="text/css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <link rel="start" title="Startseite" href=".">
 
     <script type="text/javascript">
       <!--
-      if(top.frames.length > 0)
+       if(top.frames.length > 0)
         top.location.href=self.location;
       //-->
     </script>
 
   </head>
 
-<body>
+<body lang="en">
+
+<a id="top"></a>
+
+<header>
+<!--#include file="navigation.shtml" -->
+</header>
+
+<div id="content">
+
+<h1><!--#echo encoding="none" var="head_title" --></h1>
+
