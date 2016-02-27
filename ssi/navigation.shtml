@@ -1,7 +1,7 @@
-<!-- $Id: navigation.shtml,v 1.7 2016/02/24 23:19:14 stroeder Exp $ -->
+<!-- $Id: navigation.shtml,v 1.8 2016/02/27 13:05:20 stroeder Exp $ -->
 <div id="navigation">
   <ul>
-    <li><a href=".">python-ldap</a> /</li>
+    <li><a href="." rel="home">python-ldap</a> /</li>
     <li><a href="download.html">Downloads</a> /</li>
     <li><a href="docs.html">Docs</a> /</li>
     <li><a href="faq.html">FAQ</a> /</li>
