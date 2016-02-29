@@ -2,9 +2,6 @@
 
 <footer>
   <div id="footer">
-    <p>
-      <!--#echo encoding="none" var="rcsid" -->
-    </p>
     <p class="contact">
       <a href="#top">&uarr; TOP</a>
       /
