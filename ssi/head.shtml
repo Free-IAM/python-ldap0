@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-  <!-- $Id: head.shtml,v 1.6 2016/02/24 23:19:14 stroeder Exp $ -->
+  <!-- $Id: head.shtml,v 1.7 2016/12/10 12:40:07 stroeder Exp $ -->
 
   <head>
     <title>python-ldap: <!--#echo encoding="none" var="head_title" --></title>
