@@ -145,6 +145,18 @@
     </p>
   </li>
 
+  <li id="install_macosx">
+    <p>
+      Q: What's the correct way to install on Mac OS X?
+    </p>
+    <pre>
+      xcode-select --install
+      pip install python-ldap \
+         --global-option=build_ext \
+         --global-option="-I$(xcrun --show-sdk-path)/usr/include/sasl"
+    </pre>
+  </li>
+
   <li>
     <p>Q: While importing module ldap some shared lib files are not found.
     Error message looks similar to this:
