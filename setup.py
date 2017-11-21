@@ -25,7 +25,7 @@ else:
         zip_safe=False
     )
 
-sys.path.insert(0, os.path.join(os.getcwd(), 'Lib/ldap'))
+sys.path.insert(0, os.path.join(os.getcwd(), 'ldap0'))
 import pkginfo
 
 
@@ -43,10 +43,10 @@ class OpenLDAP2BuildConfig:
         self.libs = ['ldap', 'lber']
         self.defines = []
         self.extra_files = []
-        #-- Read the [_ldap] section of setup.cfg
+        #-- Read the [_libldap0] section of setup.cfg
         cfg = ConfigParser()
         cfg.read('setup.cfg')
-        _ldap_cfg = dict(cfg.items('_ldap'))
+        _ldap_cfg = dict(cfg.items('_libldap0'))
         for name, value in _ldap_cfg.items():
             _ldap_cfg[name] = [ val for val in value.split(' ') if val ]
         # split values of extra_files
@@ -120,7 +120,7 @@ setup(
     #-- C extension modules
     ext_modules=[
         Extension(
-            '_ldap',
+            '_libldap0',
             [
                 'Modules/LDAPObject.c',
                 'Modules/ldapcontrol.c',
@@ -128,7 +128,7 @@ setup(
                 'Modules/constants.c',
                 'Modules/errors.c',
                 'Modules/functions.c',
-                'Modules/ldapmodule.c',
+                'Modules/libldap0module.c',
                 'Modules/message.c',
                 'Modules/options.c',
                 'Modules/berval.c',
@@ -145,45 +145,44 @@ setup(
     ],
     #-- Python "stand alone" modules
     py_modules=[
-        'ldapurl',
-        'ldif',
-        'ldap',
-        'slapdtest',
-        'ldap.async',
-        'ldap.controls',
-        'ldap.controls.deref',
-        'ldap.controls.libldap',
-        'ldap.controls.openldap',
-        'ldap.controls.ppolicy',
-        'ldap.controls.psearch',
-        'ldap.controls.pwdpolicy',
-        'ldap.controls.readentry',
-        'ldap.controls.sessiontrack',
-        'ldap.controls.simple',
-        'ldap.controls.sss',
-        'ldap.controls.vlv',
-        'ldap.cidict',
-        'ldap.dn',
-        'ldap.extop',
-        'ldap.extop.dds',
-        'ldap.filter',
-        'ldap.functions',
-        'ldap.ldapobject',
-        'ldap.ldapobject.simple',
-        'ldap.ldapobject.reconnect',
-        'ldap.logger',
-        'ldap.modlist',
-        'ldap.pkginfo',
-        'ldap.resiter',
-        'ldap.sasl',
-        'ldap.schema',
-        'ldap.schema.models',
-        'ldap.schema.subentry',
-        'ldap.schema.tokenizer',
-        'ldap.syncrepl',
+        'ldap0',
+        'ldap0.async',
+        'ldap0.cidict',
+        'ldap0.controls',
+        'ldap0.controls.deref',
+        'ldap0.controls.libldap',
+        'ldap0.controls.openldap',
+        'ldap0.controls.ppolicy',
+        'ldap0.controls.psearch',
+        'ldap0.controls.pwdpolicy',
+        'ldap0.controls.readentry',
+        'ldap0.controls.sessiontrack',
+        'ldap0.controls.simple',
+        'ldap0.controls.sss',
+        'ldap0.controls.vlv',
+        'ldap0.dn',
+        'ldap0.extop',
+        'ldap0.extop.dds',
+        'ldap0.filter',
+        'ldap0.functions',
+        'ldap0.ldapobject',
+        'ldap0.ldapobject.reconnect',
+        'ldap0.ldapobject.simple',
+        'ldap0.ldapurl',
+        'ldap0.ldif',
+        'ldap0.logger',
+        'ldap0.modlist',
+        'ldap0.pkginfo',
+        'ldap0.resiter',
+        'ldap0.sasl',
+        'ldap0.schema',
+        'ldap0.schema.models',
+        'ldap0.schema.subentry',
+        'ldap0.schema.tokenizer',
+        'ldap0.syncrepl',
     ],
-    package_dir={'': 'Lib'},
+    package_dir={'': '.'},
     data_files=LDAP_CLASS.extra_files,
-    test_suite='Tests',
+    test_suite='tests',
     **setup_kwargs
 )

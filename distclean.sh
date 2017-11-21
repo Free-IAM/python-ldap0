@@ -2,4 +2,4 @@
 
 python setup.py clean
 rm -r MANIFEST dist/* build/* Lib/*.egg-info .tox 
-rm Lib/_ldap.so Lib/*.py? Lib/ldap/*.py? Lib/ldap/*/*.py? Tests/*.py? *.py?
+rm _libldap0.so ldap0/*.py? ldap0/*/*.py? tests/*.py? *.py?
