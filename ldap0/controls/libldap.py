@@ -27,7 +27,7 @@ class AssertionControl(RequestControl):
     self.filterstr = filterstr
 
   def encodeControlValue(self):
-    return _ldap.encode_assertion_control(self.filterstr)
+    return _libldap0.encode_assertion_control(self.filterstr)
 
 KNOWN_RESPONSE_CONTROLS[_libldap0.CONTROL_ASSERT] = AssertionControl
 
@@ -48,7 +48,7 @@ class MatchedValuesControl(RequestControl):
     self.filterstr = filterstr
 
   def encodeControlValue(self):
-    return _ldap.encode_valuesreturnfilter_control(self.filterstr)
+    return _libldap0.encode_valuesreturnfilter_control(self.filterstr)
 
 KNOWN_RESPONSE_CONTROLS[_libldap0.CONTROL_VALUESRETURNFILTER] = MatchedValuesControl
 
@@ -69,9 +69,9 @@ class SimplePagedResultsControl(LDAPControl):
     self.size,self.cookie = size,cookie
 
   def encodeControlValue(self):
-    return _ldap.encode_page_control(self.size,self.cookie)
+    return _libldap0.encode_page_control(self.size,self.cookie)
 
   def decodeControlValue(self,encodedControlValue):
-    self.size,self.cookie = _ldap.decode_page_control(encodedControlValue)
+    self.size,self.cookie = _libldap0.decode_page_control(encodedControlValue)
 
 KNOWN_RESPONSE_CONTROLS[_libldap0.CONTROL_PAGEDRESULTS] = SimplePagedResultsControl

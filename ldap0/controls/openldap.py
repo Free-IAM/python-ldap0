@@ -9,6 +9,8 @@ from ldap0.pkginfo import __version__, __author__, __license__
 import ldap0.controls
 from ldap0.controls import ValueLessRequestControl, ResponseControl
 
+import _libldap0
+
 from pyasn1.type import univ
 from pyasn1.codec.ber import decoder
 
@@ -40,8 +42,7 @@ class SearchNoOpControl(ValueLessRequestControl,ResponseControl):
     self.numSearchResults = int(decodedValue[1])
     self.numSearchContinuations = int(decodedValue[2])
 
-
-ldap.controls.KNOWN_RESPONSE_CONTROLS[SearchNoOpControl.controlType] = SearchNoOpControl
+ldap0.controls.KNOWN_RESPONSE_CONTROLS[SearchNoOpControl.controlType] = SearchNoOpControl
 
 
 class SearchNoOpMixIn:
@@ -52,7 +53,7 @@ class SearchNoOpMixIn:
   for easily using the no-op search control.
   """
 
-  def noop_search_st(self,base,scope=ldap.SCOPE_SUBTREE,filterstr='(objectClass=*)',timeout=-1):
+  def noop_search_st(self,base,scope=ldap0.SCOPE_SUBTREE,filterstr='(objectClass=*)',timeout=-1):
     try:
       msg_id = self.search_ext(
         base,
@@ -64,13 +65,13 @@ class SearchNoOpMixIn:
       )
       _,_,_,search_response_ctrls = self.result3(msg_id,all=1,timeout=timeout)
     except (
-      ldap.TIMEOUT,
-      ldap.TIMELIMIT_EXCEEDED,
-      ldap.SIZELIMIT_EXCEEDED,
-      ldap.ADMINLIMIT_EXCEEDED
-    ),e:
+      ldap0.TIMEOUT,
+      ldap0.TIMELIMIT_EXCEEDED,
+      ldap0.SIZELIMIT_EXCEEDED,
+      ldap0.ADMINLIMIT_EXCEEDED
+    ),err:
       self.abandon(msg_id)
-      raise e
+      raise err
     else:
       noop_srch_ctrl = [
         c

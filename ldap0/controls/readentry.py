@@ -7,11 +7,10 @@ See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__
-import ldap0
+from ldap0.controls import LDAPControl, KNOWN_RESPONSE_CONTROLS
+import _libldap0
 
 from pyasn1.codec.ber import encoder,decoder
-from ldap0.controls import LDAPControl, KNOWN_RESPONSE_CONTROLS
-
 from pyasn1_modules.rfc2251 import AttributeDescriptionList,SearchResultEntry
 
 
@@ -63,7 +62,7 @@ class PreReadControl(ReadEntryControl):
       dictionary holding the LDAP entry
       before the operation was done by the server
   """
-  controlType = ldap.CONTROL_PRE_READ
+  controlType = _libldap0.CONTROL_PRE_READ
 
 KNOWN_RESPONSE_CONTROLS[PreReadControl.controlType] = PreReadControl
 
@@ -84,6 +83,6 @@ class PostReadControl(ReadEntryControl):
       dictionary holding the LDAP entry
       after the operation was done by the server
   """
-  controlType = ldap.CONTROL_POST_READ
+  controlType = _libldap0.CONTROL_POST_READ
 
 KNOWN_RESPONSE_CONTROLS[PostReadControl.controlType] = PostReadControl

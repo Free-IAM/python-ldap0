@@ -82,7 +82,7 @@ class ManageDSAITControl(ValueLessRequestControl):
   """
 
   def __init__(self,criticality=False):
-    ValueLessRequestControl.__init__(self,ldap.CONTROL_MANAGEDSAIT,criticality=False)
+    ValueLessRequestControl.__init__(self,_libldap0.CONTROL_MANAGEDSAIT,criticality=False)
 
 KNOWN_RESPONSE_CONTROLS[_libldap0.CONTROL_MANAGEDSAIT] = ManageDSAITControl
 
@@ -93,7 +93,7 @@ class RelaxRulesControl(ValueLessRequestControl):
   """
 
   def __init__(self,criticality=False):
-    ValueLessRequestControl.__init__(self,ldap.CONTROL_RELAX,criticality=False)
+    ValueLessRequestControl.__init__(self,_libldap0.CONTROL_RELAX,criticality=False)
 
 KNOWN_RESPONSE_CONTROLS[_libldap0.CONTROL_RELAX] = RelaxRulesControl
 
@@ -108,7 +108,7 @@ class ProxyAuthzControl(RequestControl):
   """
 
   def __init__(self,criticality,authzId):
-    RequestControl.__init__(self,ldap.CONTROL_PROXY_AUTHZ,criticality,authzId)
+    RequestControl.__init__(self,_libldap0.CONTROL_PROXY_AUTHZ,criticality,authzId)
 
 
 class AuthorizationIdentityRequestControl(ValueLessRequestControl):
