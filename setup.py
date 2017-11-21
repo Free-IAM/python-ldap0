@@ -85,11 +85,11 @@ LDAP_CLASS = OpenLDAP2BuildConfig(
 #-- Let distutils/setuptools do the rest
 
 setup(
-    name='python-ldap',
+    name='ldap0',
     license=pkginfo.__license__,
     version=pkginfo.__version__,
     description='Python modules for implementing LDAP clients',
-    long_description="""python-ldap:
+    long_description="""ldap0 is a fork of python-ldap in separate module name-space:
     python-ldap provides an object-oriented API to access LDAP directory servers
     from Python programs. Mainly it wraps the OpenLDAP 2.x libs for that purpose.
     Additionally the package contains modules for other LDAP-related stuff
@@ -97,9 +97,9 @@ setup(
     and controls, etc.).
     """,
     author=pkginfo.__author__,
-    author_email='python-ldap@python.org',
-    url='https://www.python-ldap.org/',
-    download_url='https://pypi.python.org/pypi/python-ldap/',
+    author_email='michael@stroeder.com',
+    url='https://www.stroeder.com/python-ldap0',
+    download_url='https://pypi.python.org/pypi/ldap0/',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
