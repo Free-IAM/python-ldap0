@@ -96,7 +96,7 @@ setup(
     """,
     author=pkginfo.__author__,
     author_email='michael@stroeder.com',
-    url='https://www.stroeder.com/python-ldap0',
+    url='https://pypi.python.org/pypi/ldap0/',
     download_url='https://pypi.python.org/pypi/ldap0/',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
