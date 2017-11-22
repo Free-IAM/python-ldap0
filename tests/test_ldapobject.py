@@ -34,13 +34,13 @@ objectClass: simpleSecurityObject
 cn: user1
 userPassword: user1_pw
 
-dn: cn=Foo1,%(suffix)s
-objectClass: organizationalRole
-cn: Foo1
-
 dn: cn=Foo2,%(suffix)s
 objectClass: organizationalRole
 cn: Foo2
+
+dn: cn=Foo1,%(suffix)s
+objectClass: organizationalRole
+cn: Foo1
 
 dn: cn=Foo3,%(suffix)s
 objectClass: organizationalRole
@@ -180,7 +180,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         else:
             self.fail("expected INVALID_CREDENTIALS, got %r" % r)
 
-    def test006_sasl_extenal_bind_s(self):
+    def test006_sasl_external_bind_s(self):
         l = self.ldap_object_class(self.server.ldapi_uri)
         l.sasl_external_bind_s()
         self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
