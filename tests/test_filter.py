@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Automatic tests for python-ldap's module ldap.filter
+Automatic tests for module ldap0.filter
 
 See https://www.stroeder.com/python-ldap0 for details.
 """

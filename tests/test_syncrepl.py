@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Automatic tests for python-ldap's module ldap0.syncrepl
+Automatic tests for module ldap0.syncrepl
 
 See https://www.stroeder.com/python-ldap0 for details.
 """

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Automatic tests for python-ldap's class ldap.schema.SubSchema
+Automatic tests for class ldap0.schema.SubSchema
 
 See https://www.stroeder.com/python-ldap0 for details.
 """
