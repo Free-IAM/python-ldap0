@@ -93,7 +93,7 @@ class SlapdObject(object):
     """
     slapd_conf_template = SLAPD_CONF_TEMPLATE
     database = 'mdb'
-    suffix = 'dc=slapd-test,dc=python-ldap,dc=org'
+    suffix = 'dc=slapd-test,dc=example,dc=org'
     root_cn = 'Manager'
     root_dn = 'cn=%s,%s' % (root_cn, suffix)
     root_pw = 'password'
