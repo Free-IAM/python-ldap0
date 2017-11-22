@@ -33,16 +33,16 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'python-ldap'
-copyright = '2008-2017, python-ldap project team'
+project = 'ldap0'
+copyright = '2017, python-ldap project team'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '2.5'
+version = '0.0'
 # The full version, including alpha/beta/rc tags.
-release = '2.5.2.0'
+release = '0.0.1.0'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -106,7 +106,7 @@ html_use_modindex = True
 #html_copy_source = True
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'python-ldap-doc'
+htmlhelp_basename = 'ldap0-doc'
 
 
 # Options for LaTeX output
@@ -120,8 +120,8 @@ htmlhelp_basename = 'python-ldap-doc'
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
-latex_documents = [('index', 'python-ldap.tex', 'python-ldap Documentation',
-                    'python-ldap project', 'manual')]
+latex_documents = [('index', 'ldap0.tex', 'ldap0 Documentation',
+                    'ldap0 project', 'manual')]
 
 # Additional stuff for the LaTeX preamble.
 #latex_preamble = ''

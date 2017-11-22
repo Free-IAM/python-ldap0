@@ -1,8 +1,8 @@
 ***********************************************
-:py:mod:`ldap.sasl` SASL Authentication Methods
+:py:mod:`ldap0.sasl` SASL Authentication Methods
 ***********************************************
 
-.. py:module:: ldap.sasl
+.. py:module:: ldap0.sasl
 
 This module implements various authentication methods for SASL bind.
 
@@ -33,35 +33,35 @@ Constants
 Classes
 =======
 
-.. autoclass:: ldap.sasl.sasl
+.. autoclass:: ldap0.sasl.sasl
    :members:
    
    This class is used with :py:meth:`ldap.LDAPObject.sasl_interactive_bind_s()`.
 
 
-.. autoclass:: ldap.sasl.cram_md5
+.. autoclass:: ldap0.sasl.cram_md5
    :members:
 
 
-.. autoclass:: ldap.sasl.digest_md5
+.. autoclass:: ldap0.sasl.digest_md5
    :members:
 
 
-.. autoclass:: ldap.sasl.gssapi
+.. autoclass:: ldap0.sasl.gssapi
    :members:
 
    You might consider using convenience method :py:meth:`ldap.LDAPObject.sasl_gssapi_bind_s()`.
 
 
-.. autoclass:: ldap.sasl.external
+.. autoclass:: ldap0.sasl.external
    :members:
 
    You might consider using convenience method :py:meth:`ldap.LDAPObject.sasl_external_bind_s()`.
 
 
-.. _ldap.sasl-example:
+.. _ldap0.sasl-example:
 
-Examples for ldap.sasl
+Examples for ldap0.sasl
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 This example connects to an OpenLDAP server via LDAP over IPC
@@ -70,7 +70,7 @@ and sends a SASL external bind request.
 
 ::
 
-   import ldap, ldap.sasl, urllib
+   import ldap, ldap0.sasl, urllib
 
    ldapi_path = '/tmp/openldap-socket'
    ldap_conn = ldap.initialize(

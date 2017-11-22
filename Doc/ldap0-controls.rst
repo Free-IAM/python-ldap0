@@ -1,8 +1,8 @@
 *********************************************************************
-:py:mod:`ldap.controls` High-level access to LDAPv3 extended controls
+:py:mod:`ldap0.controls` High-level access to LDAPv3 extended controls
 *********************************************************************
 
-.. py:module:: ldap.controls
+.. py:module:: ldap0.controls
    :synopsis: High-level access to LDAPv3 extended controls.
 .. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
 
@@ -25,13 +25,13 @@ Classes
 This module defines the following classes:
 
 
-.. autoclass:: ldap.controls.RequestControl
+.. autoclass:: ldap0.controls.RequestControl
    :members:
 
-.. autoclass:: ldap.controls.ResponseControl
+.. autoclass:: ldap0.controls.ResponseControl
    :members:
 
-.. autoclass:: ldap.controls.LDAPControl
+.. autoclass:: ldap0.controls.LDAPControl
    :members:
 
 
@@ -41,17 +41,17 @@ Functions
 This module defines the following functions:
 
 
-.. autofunction:: ldap.controls.RequestControlTuples
+.. autofunction:: ldap0.controls.RequestControlTuples
 
-.. autofunction:: ldap.controls.DecodeControlTuples
+.. autofunction:: ldap0.controls.DecodeControlTuples
 
 
 Sub-modules
 ===========
 
 Various sub-modules implement specific LDAPv3 extended controls. The classes
-therein are derived from the base-classes :py:class:`ldap.controls.RequestControl`,
-:py:class:`ldap.controls.ResponseControl` or :py:class:`ldap.controls.LDAPControl`.
+therein are derived from the base-classes :py:class:`ldap0.controls.RequestControl`,
+:py:class:`ldap0.controls.ResponseControl` or :py:class:`ldap0.controls.LDAPControl`.
 
 Some of them require :py:mod:`pyasn1` and :py:mod:`pyasn1_modules` to be installed:
 
@@ -60,74 +60,74 @@ the ASN.1 identifiers used in the specification. So looking at the referenced
 RFC or Internet-Draft is very helpful to understand the API.
 
 
-:py:mod:`ldap.controls.simple` Very simple controls
+:py:mod:`ldap0.controls.simple` Very simple controls
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. py:module:: ldap.controls.simple
+.. py:module:: ldap0.controls.simple
    :synopsis: simple request and response controls implemented in pure Python
 
 
-.. autoclass:: ldap.controls.simple.ValueLessRequestControl
+.. autoclass:: ldap0.controls.simple.ValueLessRequestControl
    :members:
 
-.. autoclass:: ldap.controls.simple.OctetStringInteger
+.. autoclass:: ldap0.controls.simple.OctetStringInteger
    :members:
 
-.. autoclass:: ldap.controls.simple.BooleanControl
+.. autoclass:: ldap0.controls.simple.BooleanControl
    :members:
 
-.. autoclass:: ldap.controls.simple.ManageDSAITControl
+.. autoclass:: ldap0.controls.simple.ManageDSAITControl
    :members:
 
    .. seealso::
 
       :rfc:`3296` - Named Subordinate References in Lightweight Directory Access Protocol (LDAP) Directories
 
-.. autoclass:: ldap.controls.simple.RelaxRulesControl
+.. autoclass:: ldap0.controls.simple.RelaxRulesControl
    :members:
 
    .. seealso::
 
       `draft-zeilenga-ldap-relax <https://tools.ietf.org/html/draft-zeilenga-ldap-relax>`_
 
-.. autoclass:: ldap.controls.simple.ProxyAuthzControl
+.. autoclass:: ldap0.controls.simple.ProxyAuthzControl
    :members:
 
    .. seealso::
 
       :rfc:`4370` - Lightweight Directory Access Protocol (LDAP): Proxied Authorization Control
 
-.. autoclass:: ldap.controls.simple.AuthorizationIdentityRequestControl
+.. autoclass:: ldap0.controls.simple.AuthorizationIdentityRequestControl
    :members:
 
    .. seealso::
 
       :rfc:`3829` - Lightweight Directory Access Protocol (LDAP): Authorization Identity Request and Response Controls
 
-.. autoclass:: ldap.controls.simple.AuthorizationIdentityResponseControl
+.. autoclass:: ldap0.controls.simple.AuthorizationIdentityResponseControl
    :members:
 
    .. seealso::
 
       :rfc:`3829` - Lightweight Directory Access Protocol (LDAP): Authorization Identity Request and Response Controls
 
-.. autoclass:: ldap.controls.simple.GetEffectiveRightsControl
+.. autoclass:: ldap0.controls.simple.GetEffectiveRightsControl
    :members:
 
 
 
-:py:mod:`ldap.controls.libldap` Various controls implemented in OpenLDAP libs
+:py:mod:`ldap0.controls.libldap` Various controls implemented in OpenLDAP libs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-.. py:module:: ldap.controls.libldap
+.. py:module:: ldap0.controls.libldap
    :synopsis: request and response controls implemented by OpenLDAP libs
 
 This module wraps C functions in OpenLDAP client libs which implement various
 request and response controls into Python classes.
 
 
-.. autoclass:: ldap.controls.libldap.AssertionControl
+.. autoclass:: ldap0.controls.libldap.AssertionControl
    :members:
 
    .. seealso::
@@ -135,7 +135,7 @@ request and response controls into Python classes.
       :rfc:`4528` - Lightweight Directory Access Protocol (LDAP) Assertion Control
 
 
-.. autoclass:: ldap.controls.libldap.MatchedValuesControl
+.. autoclass:: ldap0.controls.libldap.MatchedValuesControl
    :members:
 
    .. seealso::
@@ -143,7 +143,7 @@ request and response controls into Python classes.
       :rfc:`3876` - Returning Matched Values with the Lightweight Directory Access Protocol version 3 (LDAPv3)
 
 
-.. autoclass:: ldap.controls.libldap.SimplePagedResultsControl
+.. autoclass:: ldap0.controls.libldap.SimplePagedResultsControl
    :members:
 
    .. seealso::
@@ -151,10 +151,10 @@ request and response controls into Python classes.
       :rfc:`2696` - LDAP Control Extension for Simple Paged Results Manipulation
 
 
-:py:mod:`ldap.controls.psearch` LDAP Persistent Search
+:py:mod:`ldap0.controls.psearch` LDAP Persistent Search
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. py:module:: ldap.controls.psearch
+.. py:module:: ldap0.controls.psearch
    :synopsis: request and response controls for LDAP persistent search
 
 This module implements request and response controls for LDAP persistent
@@ -165,17 +165,17 @@ search.
    `draft-ietf-ldapext-psearch <https://tools.ietf.org/html/draft-ietf-ldapext-psearch>`_
 
 
-.. autoclass:: ldap.controls.psearch.PersistentSearchControl
+.. autoclass:: ldap0.controls.psearch.PersistentSearchControl
    :members:
 
-.. autoclass:: ldap.controls.psearch.EntryChangeNotificationControl
+.. autoclass:: ldap0.controls.psearch.EntryChangeNotificationControl
    :members:
 
 
-:py:mod:`ldap.controls.sessiontrack` Session tracking control
+:py:mod:`ldap0.controls.sessiontrack` Session tracking control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. py:module:: ldap.controls.sessiontrack
+.. py:module:: ldap0.controls.sessiontrack
    :synopsis: request control for session tracking
 
 .. seealso::
@@ -183,14 +183,14 @@ search.
    `draft-wahl-ldap-session <https://tools.ietf.org/html/draft-wahl-ldap-session>`_
 
 
-.. autoclass:: ldap.controls.sessiontrack.SessionTrackingControl
+.. autoclass:: ldap0.controls.sessiontrack.SessionTrackingControl
    :members:
 
 
-:py:mod:`ldap.controls.readentry` Read entry control
+:py:mod:`ldap0.controls.readentry` Read entry control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. py:module:: ldap.controls.readentry
+.. py:module:: ldap0.controls.readentry
    :synopsis: read entryrequest and response controls
 
 .. seealso::
@@ -198,11 +198,11 @@ search.
    :rfc:`4527` - Lightweight Directory Access Protocol (LDAP): Read Entry Controls
 
 
-.. autoclass:: ldap.controls.readentry.ReadEntryControl
+.. autoclass:: ldap0.controls.readentry.ReadEntryControl
    :members:
 
-.. autoclass:: ldap.controls.readentry.PreReadControl
+.. autoclass:: ldap0.controls.readentry.PreReadControl
    :members:
 
-.. autoclass:: ldap.controls.readentry.PostReadControl
+.. autoclass:: ldap0.controls.readentry.PostReadControl
    :members:

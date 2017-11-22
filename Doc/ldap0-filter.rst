@@ -1,7 +1,7 @@
-:py:mod:`ldap.filter` LDAP filter handling
+:py:mod:`ldap0.filter` LDAP filter handling
 ============================================
 
-.. py:module:: ldap.filter
+.. py:module:: ldap0.filter
    :synopsis: LDAP filter handling.
 .. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
 
@@ -13,7 +13,7 @@
 
    :rfc:`4515` - Lightweight Directory Access Protocol (LDAP): String Representation of Search Filters.
 
-The :mod:`ldap.filter` module defines the following functions:
+The :mod:`ldap0.filter` module defines the following functions:
 
 
 .. function:: escape_filter_chars(assertion_value[, escape_mode=0])

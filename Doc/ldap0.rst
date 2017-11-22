@@ -1,8 +1,8 @@
-********************************************
-:py:mod:`ldap` LDAP library interface module
-********************************************
+*********************************************
+:py:mod:`ldap0` LDAP library interface module
+*********************************************
 
-.. py:module:: ldap
+.. py:module:: ldap0
     :platform: Posix, Windows
     :synopsis: Access to an underlying LDAP C library.
 .. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)

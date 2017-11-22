@@ -1,8 +1,8 @@
 **************************************************************
-:py:mod:`ldap.async` Stream-processing of large search results
+:py:mod:`ldap0.async` Stream-processing of large search results
 **************************************************************
 
-.. py:module:: ldap.async
+.. py:module:: ldap0.async
    :synopsis: Framework for stream-processing of large search results.
 
 With newer Python versions one might want to consider using
@@ -12,38 +12,38 @@ With newer Python versions one might want to consider using
 Classes
 =======
 
-.. autoclass:: ldap.async.AsyncSearchHandler
+.. autoclass:: ldap0.async.AsyncSearchHandler
    :members:
 
-.. autoclass:: ldap.async.List
+.. autoclass:: ldap0.async.List
    :members:
 
-.. autoclass:: ldap.async.Dict
+.. autoclass:: ldap0.async.Dict
    :members:
 
-.. autoclass:: ldap.async.IndexedDict
+.. autoclass:: ldap0.async.IndexedDict
    :members:
 
-.. autoclass:: ldap.async.LDIFWriter
+.. autoclass:: ldap0.async.LDIFWriter
    :members:
 
-.. _ldap.async-example:
+.. _ldap0.async-example:
 
 Examples
 ========
 
-.. _ldap.async-example.List:
+.. _ldap0.async-example.List:
 
-Using ldap.async.List
+Using ldap0.async.List
 ^^^^^^^^^^^^^^^^^^^^^
 
-This example demonstrates how to use class ldap.async.List for
+This example demonstrates how to use class ldap0.async.List for
 retrieving partial search results even though the exception
 :exc:`ldap.SIZELIMIT_EXCEEDED` was raised because a server side limit was hit. ::
 
-   import sys,ldap,ldap.async
+   import sys,ldap,ldap0.async
 
-   s = ldap.async.List(
+   s = ldap0.async.List(
      ldap.initialize('ldap://localhost'),
    )
 
@@ -67,17 +67,17 @@ retrieving partial search results even though the exception
      )
    )
 
-.. _ldap.async-example.LDIFWriter:
+.. _ldap0.async-example.LDIFWriter:
 
-Using ldap.async.LDIFWriter
+Using ldap0.async.LDIFWriter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This example demonstrates how to use class ldap.async.LDIFWriter
+This example demonstrates how to use class ldap0.async.LDIFWriter
 for writing search results as LDIF to stdout. ::
 
-   import sys,ldap,ldap.async
+   import sys,ldap,ldap0.async
 
-   s = ldap.async.LDIFWriter(
+   s = ldap0.async.LDIFWriter(
      ldap.initialize('ldap://localhost:1390'),
      sys.stdout
    )

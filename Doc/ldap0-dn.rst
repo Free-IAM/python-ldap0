@@ -1,7 +1,7 @@
-:py:mod:`ldap.dn` LDAP Distinguished Name handling
+:py:mod:`ldap0.dn` LDAP Distinguished Name handling
 ====================================================
 
-.. py:module:: ldap.dn
+.. py:module:: ldap0.dn
    :synopsis: LDAP Distinguished Name handling.
 .. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
 
@@ -21,7 +21,7 @@
 
    :rfc:`1779` - A String Representation of Distinguished Names
 
-The :mod:`ldap.dn` module defines the following functions:
+The :mod:`ldap0.dn` module defines the following functions:
 
 
 .. function:: escape_dn_chars(s) -> string
@@ -85,26 +85,26 @@ Splitting a LDAPv3 DN to AVA level. Note that both examples have the same result
 but in the first example the non-ASCII chars are passed as is (byte buffer string)
 whereas in the second example the hex-encoded DN representation are passed to the function.
 
->>> ldap.dn.str2dn('cn=Michael Str\xc3\xb6der,dc=example,dc=com',flags=ldap.DN_FORMAT_LDAPV3)
+>>> ldap0.dn.str2dn('cn=Michael Str\xc3\xb6der,dc=example,dc=com',flags=ldap.DN_FORMAT_LDAPV3)
 [[('cn', 'Michael Str\xc3\xb6der', 4)], [('dc', 'example', 1)], [('dc', 'com', 1)]]
->>> ldap.dn.str2dn('cn=Michael Str\C3\B6der,dc=example,dc=com',flags=ldap.DN_FORMAT_LDAPV3)
+>>> ldap0.dn.str2dn('cn=Michael Str\C3\B6der,dc=example,dc=com',flags=ldap.DN_FORMAT_LDAPV3)
 [[('cn', 'Michael Str\xc3\xb6der', 4)], [('dc', 'example', 1)], [('dc', 'com', 1)]]
 
 
 Splitting a LDAPv2 DN into RDN parts:
 
->>> ldap.dn.explode_dn('cn=John Doe;dc=example;dc=com',flags=ldap.DN_FORMAT_LDAPV2)
+>>> ldap0.dn.explode_dn('cn=John Doe;dc=example;dc=com',flags=ldap.DN_FORMAT_LDAPV2)
 ['cn=John Doe', 'dc=example', 'dc=com']
 
 
 Splitting a multi-valued RDN:
 
->>> ldap.dn.explode_rdn('cn=John Doe+mail=john.doe@example.com',flags=ldap.DN_FORMAT_LDAPV2)
+>>> ldap0.dn.explode_rdn('cn=John Doe+mail=john.doe@example.com',flags=ldap.DN_FORMAT_LDAPV2)
 ['cn=John Doe', 'mail=john.doe@example.com']
 
 Splitting a LDAPv3 DN with a multi-valued RDN into its AVA parts:
 
 
->>> ldap.dn.str2dn('cn=John Doe+mail=john.doe@example.com,dc=example,dc=com')
+>>> ldap0.dn.str2dn('cn=John Doe+mail=john.doe@example.com,dc=example,dc=com')
 [[('cn', 'John Doe', 1), ('mail', 'john.doe@example.com', 1)], [('dc', 'example', 1)], [('dc', 'com', 1)]]
 

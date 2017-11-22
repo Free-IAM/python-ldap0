@@ -1,8 +1,8 @@
 ********************************************************************
-:py:mod:`ldap.syncrepl` Implementation of a syncrepl consumer
+:py:mod:`ldap0.syncrepl` Implementation of a syncrepl consumer
 ********************************************************************
 
-.. py:module:: ldap.syncrepl
+.. py:module:: ldap0.syncrepl
    :synopsis: Implementation of a syncrepl consumer
 
 .. seealso::
@@ -18,6 +18,6 @@ Classes
 This module defines the following classes:
 
 
-.. autoclass:: ldap.syncrepl.SyncreplConsumer
+.. autoclass:: ldap0.syncrepl.SyncreplConsumer
    :members:
 

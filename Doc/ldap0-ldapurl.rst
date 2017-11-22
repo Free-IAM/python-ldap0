@@ -1,8 +1,8 @@
-###################################
-:py:mod:`ldapurl` LDAP URL handling
-###################################
+********************************************************************
+:py:mod:`ldap0.ldapurl` LDAP URL handling
+********************************************************************
 
-.. py:module:: ldapurl
+.. py:module:: ldap0.ldapurl
    :synopsis: Parses and generates LDAP URLs
 .. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
 
@@ -20,7 +20,7 @@ module has been solely tested on Python 2.x and above.
 Constants
 =========
 
-The :mod:`ldapurl` module exports the following constants:
+The :mod:`ldap0.ldapurl` module exports the following constants:
 
 .. py:data:: SEARCH_SCOPE
 
@@ -47,10 +47,10 @@ The :mod:`ldapurl` module exports the following constants:
 Functions
 =========
 
-.. autofunction:: ldapurl.isLDAPUrl
+.. autofunction:: ldap0.ldapurl.isLDAPUrl
 
 
-.. autofunction:: ldapurl.ldapUrlEscape
+.. autofunction:: ldap0.ldapurl.ldapUrlEscape
 
 
 Classes
@@ -63,7 +63,7 @@ LDAP URLs
 
 A :py:class:`LDAPUrl` object represents a complete LDAP URL.
 
-.. autoclass:: ldapurl.LDAPUrl
+.. autoclass:: ldap0.ldapurl.LDAPUrl
    :members:
 
 
@@ -76,12 +76,12 @@ whereas :py:class:`LDAPUrlExtensions` represents a list of LDAP URL extensions.
 
 .. _ldapurl-ldapurlextension:
 
-.. autoclass:: ldapurl.LDAPUrlExtension
+.. autoclass:: ldap0.ldapurl.LDAPUrlExtension
    :members:
 
 .. _ldapurl-ldapurlextensions:
 
-.. autoclass:: ldapurl.LDAPUrlExtensions
+.. autoclass:: ldap0.ldapurl.LDAPUrlExtensions
    :members:
 
 
@@ -99,7 +99,7 @@ with :mod:`ldapurl` module.
 
 
 >>> import ldapurl
->>> ldap_url = ldapurl.LDAPUrl('ldap://localhost:1389/dc=stroeder,dc=com?cn,mail???bindname=cn=Michael%2cdc=stroeder%2cdc=com,X-BINDPW=secret')
+>>> ldap_url = ldap0.ldapurlLDAPUrl('ldap://localhost:1389/dc=stroeder,dc=com?cn,mail???bindname=cn=Michael%2cdc=stroeder%2cdc=com,X-BINDPW=secret')
 >>> # Using the parsed LDAP URL by reading the class attributes
 >>> ldap_url.dn
 'dc=stroeder,dc=com'
@@ -121,7 +121,7 @@ The following example demonstrates how to generate a LDAP URL
 with \module{ldapurl} module.
 
 >>> import ldapurl
->>> ldap_url = ldapurl.LDAPUrl(hostport='localhost:1389',dn='dc=stroeder,dc=com',attrs=['cn','mail'],who='cn=Michael,dc=stroeder,dc=com',cred='secret')
+>>> ldap_url = ldap0.ldapurl.LDAPUrl(hostport='localhost:1389',dn='dc=stroeder,dc=com',attrs=['cn','mail'],who='cn=Michael,dc=stroeder,dc=com',cred='secret')
 >>> ldap_url.unparse()
 'ldap://localhost:1389/dc=stroeder,dc=com?cn,mail?base?(objectclass=*)?bindname=cn=Michael%2Cdc=stroeder%2Cdc=com,X-BINDPW=secret'
 

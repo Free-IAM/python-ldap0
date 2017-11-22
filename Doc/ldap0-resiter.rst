@@ -1,41 +1,41 @@
-:py:mod:`ldap.resiter` Generator for stream-processing of large search results
+:py:mod:`ldap0.resiter` Generator for stream-processing of large search results
 ==============================================================================
 
-.. py:module:: ldap.resiter
+.. py:module:: ldap0.resiter
    :synopsis: Generator for stream-processing of large search results.
 .. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
 
 
-.. _ldap.resiter-classes:
+.. _ldap0.resiter-classes:
 
 .. py:class:: ResultProcessor
 
 This is a mix-in class to be used with class :py:class:`ldap.LDAPObject` or
 derived classes which has these methods:
 
-  .. automethod:: ldap.resiter.ResultProcessor.allresults
+  .. automethod:: ldap0.resiter.ResultProcessor.allresults
 
 
-.. _ldap.resiter-example:
+.. _ldap0.resiter-example:
 
 
 Examples
 ========
 
-.. _ldap.resiter.ResultProcessor-example:
+.. _ldap0.resiter.ResultProcessor-example:
 
-Using ldap.resiter.ResultProcessor
+Using ldap0.resiter.ResultProcessor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This example demonstrates how to use mix-in class ldap.resiter.ResultProcessor for
+This example demonstrates how to use mix-in class ldap0.resiter.ResultProcessor for
 retrieving results formerly requested with :py:meth:`ldap.LDAPObject.search()` and
 processing them in a for-loop.
 
 ::
 
-  import sys,ldap,ldap.resiter
+  import sys,ldap,ldap0.resiter
 
-  class MyLDAPObject(ldap.ldapobject.LDAPObject,ldap.resiter.ResultProcessor):
+  class MyLDAPObject(ldap.ldapobject.LDAPObject,ldap0.resiter.ResultProcessor):
     pass
 
   l = MyLDAPObject('ldap://localhost')

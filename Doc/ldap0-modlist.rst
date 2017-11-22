@@ -1,10 +1,10 @@
-:py:mod:`ldap.modlist` Generate modify lists
+:py:mod:`ldap0.modlist` Generate modify lists
 ==============================================
 
-.. py:module:: ldap.modlist
+.. py:module:: ldap0.modlist
 
 
-The :mod:`ldap.modlist` module defines the following functions:
+The :mod:`ldap0.modlist` module defines the following functions:
 
 
 .. function:: addModlist(entry [, ignore_attr_types=[]]) -> list

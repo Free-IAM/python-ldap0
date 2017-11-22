@@ -1,8 +1,7 @@
-#####################################
-:mod:`ldif` LDIF parser and generator
-#####################################
+:mod:`ldap0.ldif` LDIF parser and generator
+===========================================
 
-.. py:module:: ldif
+.. py:module:: ldap0.ldif
    :synopsis: Parses and generates LDIF files
 .. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
 
@@ -20,18 +19,18 @@ package.
 Functions
 ^^^^^^^^^
 
-.. autofunction:: ldif.CreateLDIF
+.. autofunction:: ldap0.ldif.CreateLDIF
 
-.. autofunction:: ldif.ParseLDIF
+.. autofunction:: ldap0.ldif.ParseLDIF
 
 
 Classes
 ^^^^^^^
 
-.. autoclass:: ldif.LDIFWriter
+.. autoclass:: ldap0.ldif.LDIFWriter
    :members:
 
-.. autoclass:: ldif.LDIFParser
+.. autoclass:: ldap0.ldif.LDIFParser
    :members:
 
 .. autoclass:: LDIFRecordList
@@ -52,7 +51,7 @@ of an LDAP entry with :mod:`ldif` module.
 >>> import sys,ldif
 >>> entry={'objectClass':['top','person'],'cn':['Michael Stroeder'],'sn':['Stroeder']}
 >>> dn='cn=Michael Stroeder,ou=Test'
->>> ldif_writer=ldif.LDIFWriter(sys.stdout)
+>>> ldif_writer=ldap0.ldif.LDIFWriter(sys.stdout)
 >>> ldif_writer.unparse(dn,entry)
 dn: cn=Michael Stroeder,ou=Test
 cn: Michael Stroeder
