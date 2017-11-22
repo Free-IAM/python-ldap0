@@ -212,6 +212,33 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
             ],
         )
 
+    def test009_readentry_control(self):
+        from ldap0.controls.readentry import PreReadControl, PostReadControl            
+        attr_list = sorted([
+            'entryUUID',
+            'entryDN',
+            'createTimestamp',
+            'modifyTimestamp',
+        ])
+        new_dn = 'cn=Anna Blume,'+self.server.suffix
+        _, _, _, resp_ctrls = self._ldap_conn.add_ext_s(
+            new_dn,
+            [
+                ('objectClass', ['applicationProcess']),
+                ('cn', ['Anna Blume']),
+            ],
+            serverctrls=[
+                PostReadControl(
+                    criticality=True,
+                    attrList=attr_list,
+                )
+            ],
+        )
+        self.assertEqual(resp_ctrls[0].dn, new_dn)
+        self.assertEqual(resp_ctrls[0].entry['entryDN'], [new_dn])
+        self.assertEqual(len(resp_ctrls[0].entry), len(attr_list))
+        self.assertEqual(sorted(resp_ctrls[0].entry.keys()), attr_list)
+
 
 class Test01_ReconnectLDAPObject(Test00_SimpleLDAPObject):
     """
