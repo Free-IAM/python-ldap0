@@ -6,7 +6,6 @@ Automatic tests for module ldap0.filter
 # from Python's standard lib
 import unittest
 
-# from python-ldap
 from ldap0.filter import escape_filter_chars
 
 

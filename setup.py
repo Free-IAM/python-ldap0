@@ -1,7 +1,5 @@
 """
 setup.py - Setup package with the help Python's DistUtils
-
-See https://www.python-ldap.org/ for details.
 """
 
 import sys
@@ -90,7 +88,7 @@ setup(
     version=pkginfo.__version__,
     description='Python modules for implementing LDAP clients',
     long_description="""ldap0 is a fork of python-ldap in separate module name-space:
-    python-ldap provides an object-oriented API to access LDAP directory servers
+    ldap0 provides an object-oriented API to access LDAP directory servers
     from Python programs. Mainly it wraps the OpenLDAP 2.x libs for that purpose.
     Additionally the package contains modules for other LDAP-related stuff
     (e.g. processing LDIF, LDAPURLs, LDAPv3 schema, LDAPv3 extended operations

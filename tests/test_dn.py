@@ -6,7 +6,6 @@ Automatic tests for module ldap0.dn
 # from Python's standard lib
 import unittest
 
-# from python-ldap
 import ldap0.dn
 
 

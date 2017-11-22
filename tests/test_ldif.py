@@ -12,7 +12,6 @@ try:
 except ImportError:
     from io import StringIO
 
-# from python-ldap
 import ldap0.ldif
 
 

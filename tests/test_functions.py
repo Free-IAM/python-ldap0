@@ -6,7 +6,6 @@ Automatic tests for module ldap0.functions
 # from Python's standard lib
 import unittest
 
-# from python-ldap
 import ldap0
 from ldap0.dn import escape_dn_chars
 from ldap0.filter import escape_filter_chars
