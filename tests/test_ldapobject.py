@@ -15,6 +15,10 @@ os.environ['LDAPNOINIT'] = '1'
 
 import ldap0
 from ldap0.ldapobject import SimpleLDAPObject, ReconnectLDAPObject
+from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
+from ldap0.controls.readentry import PreReadControl, PostReadControl
+from ldap0.controls.pagedresults import SimplePagedResultsControl as SimplePagedResultsControl_pyasn1
+from ldap0.controls.libldap import SimplePagedResultsControl as SimplePagedResultsControl_libldap
 
 LDIF_TEMPLATE = """dn: %(suffix)s
 objectClass: dcObject
@@ -50,9 +54,21 @@ dn: ou=Container,%(suffix)s
 objectClass: organizationalUnit
 ou: Container
 
+dn: cn=Foo5,ou=Container,%(suffix)s
+objectClass: organizationalRole
+cn: Foo5
+
 dn: cn=Foo4,ou=Container,%(suffix)s
 objectClass: organizationalRole
 cn: Foo4
+
+dn: cn=Foo7,ou=Container,%(suffix)s
+objectClass: organizationalRole
+cn: Foo7
+
+dn: cn=Foo6,ou=Container,%(suffix)s
+objectClass: organizationalRole
+cn: Foo6
 
 """
 
@@ -63,6 +79,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
     """
 
     ldap_object_class = SimpleLDAPObject
+    maxDiff = None
 
     @classmethod
     def setUpClass(cls):
@@ -97,21 +114,16 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
             result,
             [
                 (
-                    'cn=Foo1,'+self.server.suffix,
-                    {'cn': ['Foo1'], 'objectClass': ['organizationalRole']}
-                ),
+                    'cn=Foo%d,%s' % (i, self.server.suffix),
+                    {'cn': ['Foo%d' % i], 'objectClass': ['organizationalRole']}
+                )
+                for i in range(1, 4)
+            ] + [
                 (
-                    'cn=Foo2,'+self.server.suffix,
-                    {'cn': ['Foo2'], 'objectClass': ['organizationalRole']}
-                ),
-                (
-                    'cn=Foo3,'+self.server.suffix,
-                    {'cn': ['Foo3'], 'objectClass': ['organizationalRole']}
-                ),
-                (
-                    'cn=Foo4,ou=Container,'+self.server.suffix,
-                    {'cn': ['Foo4'], 'objectClass': ['organizationalRole']}
-                ),
+                    'cn=Foo%d,ou=Container,%s' % (i, self.server.suffix),
+                    {'cn': ['Foo%d' % i], 'objectClass': ['organizationalRole']}
+                )
+                for i in range(4, 8)
             ]
         )
 
@@ -195,10 +207,8 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         l.abandon(m)
         with self.assertRaises(ldap0.TIMEOUT):
             result = l.result(m, timeout=0.001)
-        
+
     def test008_sessiontrack_control(self):
-        from ldap0.controls.sessiontrack import \
-            SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
         self._ldap_conn.search_ext_s(
             '',
             ldap0.SCOPE_BASE,
@@ -213,7 +223,6 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         )
 
     def test009_readentry_control(self):
-        from ldap0.controls.readentry import PreReadControl, PostReadControl            
         attr_list = sorted([
             'entryUUID',
             'entryDN',
@@ -238,6 +247,60 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         self.assertEqual(resp_ctrls[0].entry['entryDN'], [new_dn])
         self.assertEqual(len(resp_ctrls[0].entry), len(attr_list))
         self.assertEqual(sorted(resp_ctrls[0].entry.keys()), attr_list)
+
+    def test010_pagedresults(self):
+        self.assertEqual(
+            SimplePagedResultsControl_pyasn1.controlType,
+            SimplePagedResultsControl_libldap.controlType,
+        )
+        expected_ldap_result = sorted(
+            self._ldap_conn.search_ext_s(
+                self.server.suffix,
+                ldap0.SCOPE_SUBTREE,
+                attrlist=['1.1'],
+            )
+        )
+        expected_num_results = len(expected_ldap_result)
+        self.assertEqual(expected_ldap_result >= 10, True)
+        page_size = 3
+        expected_num_pages = expected_num_results / page_size + \
+                            (expected_num_results % page_size > 0)
+        for simple_paged_control_class in (
+            SimplePagedResultsControl_libldap,
+            SimplePagedResultsControl_pyasn1,
+        ):
+            paged_results_control = simple_paged_control_class(
+                True,
+                size=page_size,
+                cookie=''
+            )
+            result_pages = 0
+            all_paged_results = []
+            msg_id = self._ldap_conn.search_ext(
+                self.server.suffix,
+                ldap0.SCOPE_SUBTREE,
+                attrlist=['1.1'],
+                serverctrls=[paged_results_control],
+            )
+            while True:
+                rtype, rdata, rmsgid, rctrls = self._ldap_conn.result3(msg_id)
+                self.assertEqual(rmsgid, msg_id)
+                all_paged_results.extend(rdata)
+                result_pages += 1
+                self.assertEqual(rctrls[0].controlType, simple_paged_control_class.controlType)
+                if rctrls[0].cookie:
+                    # Copy cookie from response control to request control
+                    paged_results_control.cookie = rctrls[0].cookie
+                    msg_id = self._ldap_conn.search_ext(
+                        self.server.suffix,
+                        ldap0.SCOPE_SUBTREE,
+                        attrlist=['1.1'],
+                        serverctrls=[paged_results_control],
+                    )
+                else:
+                    break # no more pages available
+            self.assertEqual(sorted(all_paged_results), expected_ldap_result)
+            self.assertEqual(result_pages, expected_num_pages)
 
 
 class Test01_ReconnectLDAPObject(Test00_SimpleLDAPObject):
