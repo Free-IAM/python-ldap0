@@ -159,7 +159,7 @@ class SyncStateControl(ResponseControl):
         self.state = self.__class__.opnames[int(state)]
         self.entryUUID = str(uuid)
 
-KNOWN_RESPONSE_CONTROLS[SyncStateControl.controlType] = SyncStateControl
+KNOWN_RESPONSE_CONTROLS.reg(SyncStateControl)
 
 
 class SyncDoneValue(univ.Sequence):
@@ -200,7 +200,7 @@ class SyncDoneControl(ResponseControl):
         else:
             self.refreshDeletes = None
 
-KNOWN_RESPONSE_CONTROLS[SyncDoneControl.controlType] = SyncDoneControl
+KNOWN_RESPONSE_CONTROLS.reg(SyncDoneControl)
 
 
 class RefreshDelete(univ.Sequence):

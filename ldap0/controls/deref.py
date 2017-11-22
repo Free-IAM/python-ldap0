@@ -117,4 +117,4 @@ class DereferenceControl(LDAPControl):
       except KeyError:
         self.derefRes[str(deref_attr)] = [(str(deref_val),partial_attrs_dict)]
 
-KNOWN_RESPONSE_CONTROLS[DereferenceControl.controlType] = DereferenceControl
+KNOWN_RESPONSE_CONTROLS.reg(DereferenceControl)

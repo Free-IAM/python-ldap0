@@ -7,44 +7,43 @@ See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__
-import ldap0.controls
 from ldap0.controls import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 # Imports from pyasn1
-from pyasn1.type import tag,namedtype,univ,constraint
-from pyasn1.codec.ber import encoder,decoder
+from pyasn1.type import namedtype, univ
+from pyasn1.codec.ber import encoder, decoder
 from pyasn1_modules.rfc2251 import LDAPString
 
 __all__ = [
-  'SimplePagedResultsControl'
+    'SimplePagedResultsControl'
 ]
 
+class SimplePagedResultsControl(RequestControl, ResponseControl):
+    controlType = '1.2.840.113556.1.4.319'
 
-class PagedResultsControlValue(univ.Sequence):
-  componentType = namedtype.NamedTypes(
-    namedtype.NamedType('size',univ.Integer()),
-    namedtype.NamedType('cookie',LDAPString()),
-  )
+    class PagedResultsControlValue(univ.Sequence):
+        componentType = namedtype.NamedTypes(
+            namedtype.NamedType('size', univ.Integer()),
+            namedtype.NamedType('cookie', LDAPString()),
+        )
 
+    def __init__(self, criticality=False, size=10, cookie=''):
+        RequestControl.__init__(self, criticality=criticality)
+        self.size = size
+        self.cookie = cookie or ''
 
-class SimplePagedResultsControl(RequestControl,ResponseControl):
-  controlType = '1.2.840.113556.1.4.319'
+    def encodeControlValue(self):
+        pc = self.PagedResultsControlValue()
+        pc.setComponentByName('size', univ.Integer(self.size))
+        pc.setComponentByName('cookie', LDAPString(self.cookie))
+        return encoder.encode(pc)
 
-  def __init__(self,criticality=False,size=10,cookie=''):
-    self.criticality = criticality
-    self.size = size
-    self.cookie = cookie or ''
+    def decodeControlValue(self, encodedControlValue):
+        decodedValue, _ = decoder.decode(
+            encodedControlValue,
+            asn1Spec=self.PagedResultsControlValue(),
+        )
+        self.size = int(decodedValue.getComponentByName('size'))
+        self.cookie = str(decodedValue.getComponentByName('cookie'))
 
-  def encodeControlValue(self):
-    pc = PagedResultsControlValue()
-    pc.setComponentByName('size',univ.Integer(self.size))
-    pc.setComponentByName('cookie',LDAPString(self.cookie))
-    return encoder.encode(pc)
-
-  def decodeControlValue(self,encodedControlValue):
-    decodedValue,_ = decoder.decode(encodedControlValue,asn1Spec=PagedResultsControlValue())
-    self.size = int(decodedValue.getComponentByName('size'))
-    self.cookie = str(decodedValue.getComponentByName('cookie'))
-
-
-KNOWN_RESPONSE_CONTROLS[SimplePagedResultsControl.controlType] = SimplePagedResultsControl
+KNOWN_RESPONSE_CONTROLS.reg(SimplePagedResultsControl)

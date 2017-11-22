@@ -7,34 +7,33 @@ See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__
-import ldap0.controls
-from ldap0.controls import RequestControl,ResponseControl,ValueLessRequestControl,KNOWN_RESPONSE_CONTROLS
+from ldap0.controls import ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 __all__ = [
-  'PasswordExpiringControl',
-  'PasswordExpiredControl',
+    'PasswordExpiringControl',
+    'PasswordExpiredControl',
 ]
 
 
 class PasswordExpiringControl(ResponseControl):
-  """
-  Indicates time in seconds when password will expire
-  """
-  controlType = '2.16.840.1.113730.3.4.5'
+    """
+    Indicates time in seconds when password will expire
+    """
+    controlType = '2.16.840.1.113730.3.4.5'
 
-  def decodeControlValue(self,encodedControlValue):
-    self.gracePeriod = int(encodedControlValue)
+    def decodeControlValue(self, encodedControlValue):
+        self.gracePeriod = int(encodedControlValue)
 
-KNOWN_RESPONSE_CONTROLS[PasswordExpiringControl.controlType] = PasswordExpiringControl
+KNOWN_RESPONSE_CONTROLS.reg(PasswordExpiringControl)
 
 
 class PasswordExpiredControl(ResponseControl):
-  """
-  Indicates that password is expired
-  """
-  controlType = '2.16.840.1.113730.3.4.4'
+    """
+    Indicates that password is expired
+    """
+    controlType = '2.16.840.1.113730.3.4.4'
 
-  def decodeControlValue(self,encodedControlValue):
-    self.passwordExpired = encodedControlValue=='0'
+    def decodeControlValue(self, encodedControlValue):
+        self.passwordExpired = (encodedControlValue == '0')
 
-KNOWN_RESPONSE_CONTROLS[PasswordExpiredControl.controlType] = PasswordExpiredControl
+KNOWN_RESPONSE_CONTROLS.reg(PasswordExpiredControl)

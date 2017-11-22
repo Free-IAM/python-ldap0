@@ -8,141 +8,175 @@ See https://www.stroeder.com/python-ldap0 for details.
 import struct
 
 from ldap0.pkginfo import __version__, __author__, __license__
-import ldap0
 from ldap0.controls import RequestControl, ResponseControl, LDAPControl, KNOWN_RESPONSE_CONTROLS
 import _libldap0
 
 class ValueLessRequestControl(RequestControl):
-  """
-  Base class for controls without a controlValue.
-  The presence of the control in a LDAPv3 request changes the server's
-  behaviour when processing the request simply based on the controlType.
+    """
+    Base class for controls without a controlValue.
+    The presence of the control in a LDAPv3 request changes the server's
+    behaviour when processing the request simply based on the controlType.
 
-  controlType
-    OID of the request control
-  criticality
-    criticality request control
-  """
+    controlType
+      OID of the request control
+    criticality
+      criticality request control
+    """
 
-  def __init__(self,controlType=None,criticality=False):
-    self.controlType = controlType
-    self.criticality = criticality
+    def __init__(self, controlType=None, criticality=False):
+        RequestControl.__init__(
+            self,
+            controlType=controlType,
+            criticality=criticality,
+        )
 
-  def encodeControlValue(self):
-    return None
+    def encodeControlValue(self):
+        return None
 
 
 class OctetStringInteger(LDAPControl):
-  """
-  Base class with controlValue being unsigend integer values
+    """
+    Base class with controlValue being unsigend integer values
 
-  integerValue
-    Integer to be sent as OctetString
-  """
+    integerValue
+      Integer to be sent as OctetString
+    """
 
-  def __init__(self,controlType=None,criticality=False,integerValue=None):
-    self.controlType = controlType
-    self.criticality = criticality
-    self.integerValue = integerValue
+    def __init__(self, controlType=None, criticality=False, integerValue=None):
+        LDAPControl.__init__(
+            self,
+            controlType=controlType,
+            criticality=criticality,
+        )
+        self.integerValue = integerValue
 
-  def encodeControlValue(self):
-    return struct.pack('!Q',self.integerValue)
+    def encodeControlValue(self):
+        return struct.pack('!Q', self.integerValue)
 
-  def decodeControlValue(self,encodedControlValue):
-    self.integerValue = struct.unpack('!Q',encodedControlValue)[0]
+    def decodeControlValue(self, encodedControlValue):
+        self.integerValue = struct.unpack('!Q', encodedControlValue)[0]
 
 
 class BooleanControl(LDAPControl):
-  """
-  Base class for simple request controls with boolean control value.
+    """
+    Base class for simple request controls with boolean control value.
 
-  Constructor argument and class attribute:
+    Constructor argument and class attribute:
 
-  booleanValue
-    Boolean (True/False or 1/0) which is the boolean controlValue.
-  """
-  boolean2ber = { 1:'\x01\x01\xFF', 0:'\x01\x01\x00' }
-  ber2boolean = { '\x01\x01\xFF':1, '\x01\x01\x00':0 }
+    booleanValue
+      Boolean (True/False or 1/0) which is the boolean controlValue.
+    """
+    boolean2ber = {
+        1: '\x01\x01\xFF',
+        0: '\x01\x01\x00',
+    }
+    ber2boolean = {
+        '\x01\x01\xFF': 1,
+        '\x01\x01\x00': 0,
+    }
 
-  def __init__(self,controlType=None,criticality=False,booleanValue=False):
-    self.controlType = controlType
-    self.criticality = criticality
-    self.booleanValue = booleanValue
+    def __init__(self, controlType=None, criticality=False, booleanValue=False):
+        LDAPControl.__init__(
+            self,
+            controlType=controlType,
+            criticality=criticality,
+        )
+        self.booleanValue = booleanValue
 
-  def encodeControlValue(self):
-    return self.boolean2ber[int(self.booleanValue)]
+    def encodeControlValue(self):
+        return self.boolean2ber[int(self.booleanValue)]
 
-  def decodeControlValue(self,encodedControlValue):
-    self.booleanValue = self.ber2boolean[encodedControlValue]
+    def decodeControlValue(self, encodedControlValue):
+        self.booleanValue = bool(self.ber2boolean[encodedControlValue])
 
 
 class ManageDSAITControl(ValueLessRequestControl):
-  """
-  Manage DSA IT Control
-  """
+    """
+    Manage DSA IT Control
+    """
+    controlType = _libldap0.CONTROL_MANAGEDSAIT
 
-  def __init__(self,criticality=False):
-    ValueLessRequestControl.__init__(self,_libldap0.CONTROL_MANAGEDSAIT,criticality=False)
+    def __init__(self, criticality=False):
+        ValueLessRequestControl.__init__(
+            self,
+            criticality=criticality,
+        )
 
-KNOWN_RESPONSE_CONTROLS[_libldap0.CONTROL_MANAGEDSAIT] = ManageDSAITControl
+KNOWN_RESPONSE_CONTROLS.reg(ManageDSAITControl)
 
 
 class RelaxRulesControl(ValueLessRequestControl):
-  """
-  Relax Rules Control
-  """
+    """
+    Relax Rules Control
+    """
+    controlType = _libldap0.CONTROL_RELAX
 
-  def __init__(self,criticality=False):
-    ValueLessRequestControl.__init__(self,_libldap0.CONTROL_RELAX,criticality=False)
+    def __init__(self, criticality=False):
+        ValueLessRequestControl.__init__(
+            self,
+            criticality=criticality,
+        )
 
-KNOWN_RESPONSE_CONTROLS[_libldap0.CONTROL_RELAX] = RelaxRulesControl
+KNOWN_RESPONSE_CONTROLS.reg(RelaxRulesControl)
 
 
 class ProxyAuthzControl(RequestControl):
-  """
-  Proxy Authorization Control
+    """
+    Proxy Authorization Control
 
-  authzId
-    string containing the authorization ID indicating the identity
-    on behalf which the server should process the request
-  """
+    authzId
+      string containing the authorization ID indicating the identity
+      on behalf which the server should process the request
+    """
+    controlType = _libldap0.CONTROL_PROXY_AUTHZ
 
-  def __init__(self,criticality,authzId):
-    RequestControl.__init__(self,_libldap0.CONTROL_PROXY_AUTHZ,criticality,authzId)
+    def __init__(self, criticality=False, authzId=''):
+        RequestControl.__init__(
+            self,
+            criticality=criticality,
+            encodedControlValue=authzId,
+        )
 
 
 class AuthorizationIdentityRequestControl(ValueLessRequestControl):
-  """
-  Authorization Identity Request and Response Controls
-  """
-  controlType = '2.16.840.1.113730.3.4.16'
+    """
+    Authorization Identity Request and Response Controls
+    """
+    controlType = '2.16.840.1.113730.3.4.16'
 
-  def __init__(self,criticality):
-    ValueLessRequestControl.__init__(self,self.controlType,criticality)
+    def __init__(self, criticality=False):
+        ValueLessRequestControl.__init__(
+            self,
+            criticality=criticality,
+        )
 
 
 class AuthorizationIdentityResponseControl(ResponseControl):
-  """
-  Authorization Identity Request and Response Controls
+    """
+    Authorization Identity Request and Response Controls
 
-  Class attributes:
+    Class attributes:
 
-  authzId
-    decoded authorization identity
-  """
-  controlType = '2.16.840.1.113730.3.4.15'
+    authzId
+        decoded authorization identity
+    """
+    controlType = '2.16.840.1.113730.3.4.15'
 
-  def decodeControlValue(self,encodedControlValue):
-    self.authzId = encodedControlValue
+    def decodeControlValue(self, encodedControlValue):
+        self.authzId = encodedControlValue
 
-
-KNOWN_RESPONSE_CONTROLS[AuthorizationIdentityResponseControl.controlType] = AuthorizationIdentityResponseControl
+KNOWN_RESPONSE_CONTROLS.reg(AuthorizationIdentityResponseControl)
 
 
 class GetEffectiveRightsControl(RequestControl):
-  """
-  Get Effective Rights Control
-  """
+    """
+    Get Effective Rights Control
+    """
+    controlType = '1.3.6.1.4.1.42.2.27.9.5.2'
 
-  def __init__(self,criticality,authzId=None):
-    RequestControl.__init__(self,'1.3.6.1.4.1.42.2.27.9.5.2',criticality,authzId)
+    def __init__(self, criticality=False, authzId=None):
+        RequestControl.__init__(
+            self,
+            criticality=criticality,
+            encodedControlValue=authzId,
+        )
