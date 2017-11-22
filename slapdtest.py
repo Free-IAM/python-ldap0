@@ -18,15 +18,22 @@ import urllib
 
 # a template string for generating simple slapd.conf file
 SLAPD_CONF_TEMPLATE = r"""
-serverID %(serverid)s
 moduleload back_%(database)s
+
 include "%(schema_prefix)s/core.schema"
+
+serverID %(serverid)s
 loglevel %(loglevel)s
 allow bind_v2
 
 authz-regexp
   "gidnumber=%(root_gid)s\\+uidnumber=%(root_uid)s,cn=peercred,cn=external,cn=auth"
   "%(rootdn)s"
+
+database config
+access to
+  dn.subtree="cn=config"
+    by dn.exact="%(rootdn)s" manage
 
 database %(database)s
 directory "%(directory)s"
@@ -115,11 +122,11 @@ class SlapdObject(object):
     _start_sleep = 1.5
 
     def __init__(self):
-        self._log = combined_logger('python-ldap-test')
+        self._log = combined_logger('slapdtest')
         self._proc = None
         self._port = self._avail_tcp_port()
         self.server_id = self._port % 4096
-        self.testrundir = os.path.join(self.TMPDIR, 'python-ldap-test-%d' % self._port)
+        self.testrundir = os.path.join(self.TMPDIR, 'slapdtest-%d' % self._port)
         self._schema_prefix = os.path.join(self.testrundir, 'schema')
         self._slapd_conf = os.path.join(self.testrundir, 'slapd.conf')
         self._db_directory = os.path.join(self.testrundir, "openldap-data")
