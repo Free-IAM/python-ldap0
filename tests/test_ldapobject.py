@@ -158,7 +158,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         l = self.ldap_object_class('ldap://127.0.0.1:42')
         try:
             m = l.simple_bind_s("", "")
-            r = l.result4(m, ldap0.MSG_ALL, self.timeout)
+            r = l.result4(m, ldap0.MSG_ALL, 1.0)
         except ldap0.SERVER_DOWN as ldap_err:
             errno = ldap_err.args[0]['errno']
             if errno != 107:
@@ -196,6 +196,22 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         with self.assertRaises(ldap0.TIMEOUT):
             result = l.result(m, timeout=0.001)
         
+    def test008_sessiontrack_control(self):
+        from ldap0.controls.sessiontrack import \
+            SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
+        self._ldap_conn.search_ext_s(
+            '',
+            ldap0.SCOPE_BASE,
+            serverctrls=[
+                SessionTrackingControl(
+                    '192.0.2.1',
+                    'app.example.com',
+                    SESSION_TRACKING_FORMAT_OID_USERNAME,
+                    'bloggs'
+                )
+            ],
+        )
+
 
 class Test01_ReconnectLDAPObject(Test00_SimpleLDAPObject):
     """
