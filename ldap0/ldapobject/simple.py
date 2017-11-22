@@ -61,7 +61,11 @@ class SimpleLDAPObject:
         self._trace_stack_limit = trace_stack_limit
         self._uri = uri
         self._ldap_object_lock = self._ldap_lock('opcall')
-        self._l = ldap0.functions._ldap_function_call(ldap0._ldap_module_lock, _libldap0.initialize, uri)
+        self._l = ldap0.functions._ldap_function_call(
+            ldap0._ldap_module_lock,
+            _libldap0.initialize,
+            self._uri,
+        )
         self.timeout = -1
         self.protocol_version = _libldap0.VERSION3
 
