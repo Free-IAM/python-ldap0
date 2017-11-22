@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.readentry - classes for the Read Entry controls
+ldap0.controls.readentry - classes for the Read Entry controls
 (see RFC 4527)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

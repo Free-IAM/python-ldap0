@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.psearch - classes for Persistent Search Control
+ldap0.controls.psearch - classes for Persistent Search Control
 (see https://tools.ietf.org/html/draft-ietf-ldapext-psearch)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

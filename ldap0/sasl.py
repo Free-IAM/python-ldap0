@@ -1,15 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-sasl.py - support for SASL mechanism
-
-See https://www.stroeder.com/python-ldap0 for details.
-
-Description:
-The ldap.sasl module provides SASL authentication classes.
-Each class provides support for one SASL mechanism. This is done by
-implementing a callback() - method, which will be called by the
-LDAPObject's sasl_bind_s() method
-Implementing support for new sasl mechanism is very easy --- see
-the examples of digest_md5 and gssapi.
+ldap0.sasl - support for SASL mechanism
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

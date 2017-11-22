@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Automatic tests for module ldap0.cidict
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 # from Python's standard lib

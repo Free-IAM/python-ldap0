@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.paged - classes for Simple Paged control
+ldap0.controls.pagedresults - classes for Simple Paged control
 (see RFC 2696)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

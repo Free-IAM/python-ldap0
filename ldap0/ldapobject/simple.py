@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
 ldap0.ldapobject - wraps class _ldap0.LDAPObject
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 import sys

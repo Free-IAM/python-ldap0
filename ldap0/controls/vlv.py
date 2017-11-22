@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.vlv - classes for Virtual List View
+ldap0.controls.vlv - classes for Virtual List View
 (see draft-ietf-ldapext-ldapv3-vlv)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

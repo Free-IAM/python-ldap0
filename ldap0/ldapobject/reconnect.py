@@ -1,8 +1,7 @@
+# -*- coding: utf-8 -*-
 """
 ldap0.ldapobject.reconnect - wraps class ldap0.ldapobject.SimpleLDAPObject
 to implement automatic reconnects for synchronous operations
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 import sys

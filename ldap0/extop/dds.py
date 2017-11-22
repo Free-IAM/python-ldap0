@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.extop.dds - Classes for Dynamic Entries extended operations
+ldap0.extop.dds - Classes for Dynamic Entries extended operations
 (see RFC 2589)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

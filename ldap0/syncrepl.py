@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-ldap.syncrepl - for implementing syncrepl consumer (see RFC 4533)
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.syncrepl - for implementing syncrepl consumer (see RFC 4533)
 """
 
 from uuid import UUID

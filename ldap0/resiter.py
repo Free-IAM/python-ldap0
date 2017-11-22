@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-ldap.resiter - processing LDAP results with iterators
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.resiter - processing LDAP results with iterators
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

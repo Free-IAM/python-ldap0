@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Automatic tests for C wrapper module _libldap0
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 import os

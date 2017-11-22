@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.simple - classes for some very simple LDAP controls
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.controls.simple - classes for some very simple LDAP controls
 """
 
 import struct

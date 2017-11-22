@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.sessiontrack - class for session tracking control
+ldap0.controls.sessiontrack - class for session tracking control
 (see draft-wahl-ldap-session)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

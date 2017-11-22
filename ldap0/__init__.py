@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-ldap - base module
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0 - base module
 """
 
 # This is also the overall release version number

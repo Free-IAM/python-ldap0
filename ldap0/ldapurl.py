@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-ldapurl - handling of LDAP URLs as described in RFC 4516
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.ldapurl - handling of LDAP URLs as described in RFC 4516
 """
 
 __version__ = '2.5.3'

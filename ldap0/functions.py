@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-functions.py - wraps functions of module _ldap
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.functions - wraps functions of module _ldap
 """
 
 __all__ = [

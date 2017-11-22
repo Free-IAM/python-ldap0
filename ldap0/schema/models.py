@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-schema.py - support for subSchemaSubEntry information
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.schema.models - support for subSchemaSubEntry information
 """
 
 import UserDict

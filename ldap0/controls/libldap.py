@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-controls.libldap - LDAP controls wrapper classes with en-/decoding done
+ldap0.controls.libldap - LDAP controls wrapper classes with en-/decoding done
 by OpenLDAP functions
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

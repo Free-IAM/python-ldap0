@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-filters.py - misc stuff for handling LDAP filter strings (see RFC 4515)
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.filters - misc stuff for handling LDAP filter strings (see RFC 4515)
 """
 
 import time

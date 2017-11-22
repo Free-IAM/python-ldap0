@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Automatic tests for module ldap0.ldapurl
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 import unittest

@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-dn.py - misc stuff for handling distinguished names (see RFC 4514)
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.dn - misc stuff for handling distinguished names (see RFC 4514)
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

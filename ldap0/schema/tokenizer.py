@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-ldap.schema.tokenizer - Low-level parsing functions for schema element strings
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.schema.tokenizer - Low-level parsing functions for schema element strings
 """
 
 import re

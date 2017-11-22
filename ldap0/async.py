@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-ldap.async - handle async LDAP operations
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.async - handle async LDAP operations
 """
 
 import ldap

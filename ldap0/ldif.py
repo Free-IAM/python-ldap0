@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-ldif - generate and parse LDIF data (see RFC 2849)
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.ldif - generate and parse LDIF data (see RFC 2849)
 """
 
 import urlparse

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Helper class for using logging as trace file object
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.logger - Helper class for using logging as trace file object
 """
 
 import logging

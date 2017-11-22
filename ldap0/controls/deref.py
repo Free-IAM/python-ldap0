@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.deref - classes for 
+ldap0.controls.deref - classes for
 (see https://tools.ietf.org/html/draft-masarati-ldap-deref)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

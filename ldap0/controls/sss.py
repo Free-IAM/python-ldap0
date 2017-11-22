@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.sss - classes for Server Side Sorting
+ldap0.controls.sss - classes for Server Side Sorting
 (see RFC 2891)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

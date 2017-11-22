@@ -1,9 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-This is a convenience wrapper for dictionaries
-returned from LDAP servers containing attribute
-names of variable case.
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.cidict - custom dictionary class with keys being strings handled case-insensitive
 """
 
 from UserDict import IterableUserDict

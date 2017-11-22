@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-ldap.schema.subentry -  subschema subentry handling
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.schema.subentry -  subschema subentry handling
 """
 
 import ldap0.schema

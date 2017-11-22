@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.openldap - classes for OpenLDAP-specific controls
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.controls.openldap - classes for OpenLDAP-specific controls
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

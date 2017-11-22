@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-controls.py - support classes for LDAP controls
+ldap0.controls - support classes for LDAP controls
 
-See https://www.stroeder.com/python-ldap0 for details.
-
-Description:
 The ldap.controls module provides LDAPControl classes.
 Each class provides support for a certain control.
 """

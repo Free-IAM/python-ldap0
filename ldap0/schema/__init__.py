@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-ldap.schema -  LDAPv3 schema handling
-
-See https://www.stroeder.com/python-ldap0 for details.
+ldap0.schema -  LDAPv3 schema handling
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

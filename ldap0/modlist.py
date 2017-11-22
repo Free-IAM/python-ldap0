@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 """
 ldap0.modlist - create add/modify modlist's
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

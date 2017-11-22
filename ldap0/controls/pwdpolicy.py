@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-ldap.controls.pwdpolicy - classes for Password Policy controls
+ldap0.controls.pwdpolicy - classes for Password Policy controls
 (see https://tools.ietf.org/html/draft-vchu-ldap-pwd-policy)
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 from ldap0.pkginfo import __version__, __author__, __license__

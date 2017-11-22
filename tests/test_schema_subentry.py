@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Automatic tests for class ldap0.schema.SubSchema
-
-See https://www.stroeder.com/python-ldap0 for details.
 """
 
 import unittest
