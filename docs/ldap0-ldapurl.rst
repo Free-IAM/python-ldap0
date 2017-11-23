@@ -1,16 +1,13 @@
-********************************************************************
+*****************************************
 :py:mod:`ldap0.ldapurl` LDAP URL handling
-********************************************************************
+*****************************************
 
 .. py:module:: ldap0.ldapurl
    :synopsis: Parses and generates LDAP URLs
-.. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
+.. moduleauthor:: Michael Ströder <michael@stroeder.com>
 
 
-This module parses and generates LDAP URLs.    It is implemented in pure Python
-and does not rely on any  non-standard modules. Therefore it can be used stand-
-alone without  the rest of the python-ldap package.    Compability note: This
-module has been solely tested on Python 2.x and above.
+This module parses and generates LDAP URLs.
 
 .. seealso::
 

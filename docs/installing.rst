@@ -2,7 +2,7 @@
 Building and installing
 ***********************
 
-python-ldap is built and installed using the Python DistUtils installed
+This module is built and installed using the Python DistUtils installed
 along with your Python installation:
 
 ::
@@ -11,7 +11,7 @@ along with your Python installation:
   python setup.py install
 
 If you have more than one Python interpreter installed locally you should
-use the same one you plan to use python-ldap with.
+use the same one you plan to use the module with.
 
 See further instructions for using DistUtils here: https://docs.python.org/2.7/install/index.html
 
@@ -19,7 +19,7 @@ Build prerequisites
 ===================
 
 The following software packages are required to be installed
-on the local system when building python-ldap:
+on the local system when building the module:
 
 - Python version 2.3 or later including its development files: https://www.python.org/
 - OpenLDAP client libs version 2.4.11 or later: https://www.openldap.org/
@@ -99,7 +99,7 @@ Example
 =============
 
 The following example is for a full-featured build (including SSL and SASL support)
-of python-ldap with OpenLDAP installed in a different prefix directory
+of the module with OpenLDAP installed in a different prefix directory
 (here /opt/openldap-2.4) and SASL header files found in /usr/include/sasl.
 Debugging symbols are preserved with compile option -g.
 

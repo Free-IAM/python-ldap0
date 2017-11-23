@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# python-ldap documentation build configuration file, created by
+# ldap0 documentation build configuration file, created by
 # sphinx-quickstart on Sat Mar 29 15:08:17 2008.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -34,7 +34,7 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'ldap0'
-copyright = '2017, python-ldap project team'
+copyright = u'2017, Michael Ströder <michael@stroeder.com>'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.

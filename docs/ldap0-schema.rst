@@ -1,8 +1,10 @@
-********************************************
+*********************************************
 :py:mod:`ldap0.schema` Handling LDAPv3 schema
-********************************************
+*********************************************
 
 .. py:module:: ldap0.schema
+   :synopsis: Parses and handles LDAPv3 subschema information
+.. moduleauthor:: Michael Ströder <michael@stroeder.com>
 
 This module deals with schema information usually retrieved from
 a special subschema subentry provided by the server.
@@ -31,7 +33,7 @@ when trying to use this module:
 Functions
 =========
 
-.. autofunction:: ldap0.schema.subentry.urlfetch
+.. autofunction:: ldap0.schema.util.urlfetch
 
 Classes
 =======

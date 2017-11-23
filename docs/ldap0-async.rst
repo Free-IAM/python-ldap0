@@ -1,6 +1,6 @@
-**************************************************************
+***************************************************************
 :py:mod:`ldap0.async` Stream-processing of large search results
-**************************************************************
+***************************************************************
 
 .. py:module:: ldap0.async
    :synopsis: Framework for stream-processing of large search results.
@@ -35,7 +35,7 @@ Examples
 .. _ldap0.async-example.List:
 
 Using ldap0.async.List
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
 
 This example demonstrates how to use class ldap0.async.List for
 retrieving partial search results even though the exception

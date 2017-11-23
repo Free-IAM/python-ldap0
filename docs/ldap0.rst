@@ -5,7 +5,7 @@
 .. py:module:: ldap0
     :platform: Posix, Windows
     :synopsis: Access to an underlying LDAP C library.
-.. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
+.. moduleauthor:: Michael Ströder <michael@stroeder.com>
 
 
 This module provides access to the LDAP (Lightweight Directory Access Protocol)
@@ -19,59 +19,14 @@ and errors appear as exceptions.
       `draft-ietf-ldapext-ldap-c-api <https://tools.ietf.org/html/draft-ietf-ldapext-ldap-c-api>`_
 
 
-This documentation is current for the Python LDAP module, version
-|release|.  Source and binaries are available from
-https://www.python-ldap.org/.
+This documentation is current for the Python *ldap0* module, version
+|release|.
 
 
 Functions
 =========
 
 This module defines the following functions:
-
-.. py:function:: initialize(uri [, trace_level=0 [, trace_file=sys.stdout [, trace_stack_limit=None]]]) -> LDAPObject object
-
-   Initializes a new connection object for accessing the given LDAP server,
-   and return an LDAP object (see :ref:`ldap-objects`) used to perform operations
-   on that server.
-
-   The *uri* parameter may be a comma- or whitespace-separated list of URIs
-   containing only the schema, the host, and the port fields. Note that
-   when using multiple URIs you cannot determine to which URI your client
-   gets connected.
-
-   Note that internally the OpenLDAP funtion
-   `ldap_initialize(3) <https://www.openldap.org/software/man.cgi?query=ldap_init&sektion=3>`_
-   is called which just initializes the LDAP connection struct in the C API
-   - nothing else. Therefore the first call to an operation method (bind,
-   search etc.) then really opens the connection (lazy connect). Before
-   that nothing is sent on the wire. The error handling in the calling
-   application has to correctly handle this behaviour.
-
-   The optional arguments are for generating debug log information:
-   *trace_level* specifies the amount of information being logged,
-   *trace_file* specifies a file-like object as target of the debug log and
-   *trace_stack_limit* specifies the stack limit of tracebacks in debug log.
-
-   Possible values for *trace_level* are
-   :py:const:`0` for no logging,
-   :py:const:`1` for only logging the method calls with arguments,
-   :py:const:`2` for logging the method calls with arguments and the complete results and
-   :py:const:`9` for also logging the traceback of method calls.
-
-   .. seealso::
-
-      :rfc:`4516` - Lightweight Directory Access Protocol (LDAP): Uniform Resource Locator
-
-.. py:function:: open(host [, port=PORT]) -> LDAPObject object
-
-   Opens a new connection with an LDAP server, and return an LDAP object  (see
-   :ref:`ldap-objects`) used to perform operations on that server.  *host* is a
-   string containing solely the host name. *port* is an integer specifying the
-   port where the LDAP server is  listening (default is 389).
-
-   Note: Using this function is deprecated.
-
 
 .. py:function:: get_option(option) -> int|string
 
@@ -103,12 +58,12 @@ General
 
 .. py:data:: SASL_AVAIL
 
-   Integer where a non-zero value indicates that python-ldap was built with
+   Integer where a non-zero value indicates that module was built with
    support for SASL (Cyrus-SASL).
 
 .. py:data:: TLS_AVAIL
 
-   Integer where a non-zero value indicates that python-ldap was built with
+   Integer where a non-zero value indicates that module was built with
    support for SSL/TLS (OpenSSL or similar libs).
 
 
@@ -571,9 +526,38 @@ LDAPObject classes
 
 .. py:class:: SimpleLDAPObject(uri [, trace_level=0 [, trace_file=sys.stdout [, trace_stack_limit=5]]])
 
-   This basic class wraps all methods of the underlying C API object.
+   Initializes a new connection object for accessing the given LDAP server,
+   and return an LDAP object (see :ref:`ldap-objects`) used to perform operations
+   on that server.
 
-   The arguments are same like for function :py:func:`initialize()`.
+   The *uri* parameter may be a comma- or whitespace-separated list of URIs
+   containing only the schema, the host, and the port fields. Note that
+   when using multiple URIs you cannot determine to which URI your client
+   gets connected.
+
+   Note that internally the OpenLDAP funtion
+   `ldap_initialize(3) <https://www.openldap.org/software/man.cgi?query=ldap_init&sektion=3>`_
+   is called which just initializes the LDAP connection struct in the C API
+   - nothing else. Therefore the first call to an operation method (bind,
+   search etc.) then really opens the connection (lazy connect). Before
+   that nothing is sent on the wire. The error handling in the calling
+   application has to correctly handle this behaviour.
+
+   The optional arguments are for generating debug log information:
+   *trace_level* specifies the amount of information being logged,
+   *trace_file* specifies a file-like object as target of the debug log and
+   *trace_stack_limit* specifies the stack limit of tracebacks in debug log.
+
+   Possible values for *trace_level* are
+   :py:const:`0` for no logging,
+   :py:const:`1` for only logging the method calls with arguments,
+   :py:const:`2` for logging the method calls with arguments and the complete results and
+   :py:const:`9` for also logging the traceback of method calls.
+
+   .. seealso::
+
+      :rfc:`4516` - Lightweight Directory Access Protocol (LDAP): Uniform Resource Locator
+
 
 .. py:class:: ReconnectLDAPObject(uri [, trace_level=0 [, trace_file=sys.stdout [, trace_stack_limit=5] [, retry_max=1 [, retry_delay=60.0]]]])
 
@@ -933,7 +917,7 @@ and wait for and return with the server's result, or with
 .. py:method:: LDAPObject.sasl_interactive_bind_s(who, auth[, serverctrls=None [, clientctrls=None [, sasl_flags=ldap.SASL_QUIET]]]) -> None
 
    This call is used to bind to the directory with a SASL bind request.
-   
+
    *auth* is an :py:class:`ldap.sasl.sasl()` instance.
 
    *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.

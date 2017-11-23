@@ -1,10 +1,10 @@
-*********************************************************************
+**********************************************************************
 :py:mod:`ldap0.controls` High-level access to LDAPv3 extended controls
-*********************************************************************
+**********************************************************************
 
 .. py:module:: ldap0.controls
    :synopsis: High-level access to LDAPv3 extended controls.
-.. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
+.. moduleauthor:: Michael Ströder <michael@stroeder.com>
 
 
 Variables
@@ -61,7 +61,7 @@ RFC or Internet-Draft is very helpful to understand the API.
 
 
 :py:mod:`ldap0.controls.simple` Very simple controls
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. py:module:: ldap0.controls.simple
    :synopsis: simple request and response controls implemented in pure Python
@@ -117,7 +117,7 @@ RFC or Internet-Draft is very helpful to understand the API.
 
 
 :py:mod:`ldap0.controls.libldap` Various controls implemented in OpenLDAP libs
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 .. py:module:: ldap0.controls.libldap
@@ -152,7 +152,7 @@ request and response controls into Python classes.
 
 
 :py:mod:`ldap0.controls.psearch` LDAP Persistent Search
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. py:module:: ldap0.controls.psearch
    :synopsis: request and response controls for LDAP persistent search
@@ -173,7 +173,7 @@ search.
 
 
 :py:mod:`ldap0.controls.sessiontrack` Session tracking control
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. py:module:: ldap0.controls.sessiontrack
    :synopsis: request control for session tracking
@@ -188,7 +188,7 @@ search.
 
 
 :py:mod:`ldap0.controls.readentry` Read entry control
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. py:module:: ldap0.controls.readentry
    :synopsis: read entryrequest and response controls

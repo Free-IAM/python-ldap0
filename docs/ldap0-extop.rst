@@ -1,6 +1,6 @@
-********************************************************************
+*********************************************************************
 :py:mod:`ldap0.extop` High-level access to LDAPv3 extended operations
-********************************************************************
+*********************************************************************
 
 .. py:module:: ldap0.extop
    :synopsis: High-level access to LDAPv3 extended operations.
@@ -20,7 +20,7 @@ This module defines the following classes:
 
 
 :py:mod:`ldap0.extop.dds` Classes for Dynamic Entries extended operations
-========================================================================
+=========================================================================
 
 .. py:module:: ldap0.extop.dds
    :synopsis: Classes for Dynamic Entries extended operations

@@ -1,6 +1,6 @@
-***********************************************
+************************************************
 :py:mod:`ldap0.sasl` SASL Authentication Methods
-***********************************************
+************************************************
 
 .. py:module:: ldap0.sasl
 
@@ -62,7 +62,7 @@ Classes
 .. _ldap0.sasl-example:
 
 Examples for ldap0.sasl
-^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
 
 This example connects to an OpenLDAP server via LDAP over IPC
 (see `draft-chu-ldap-ldapi <https://tools.ietf.org/html/draft-chu-ldap-ldapi>`_)

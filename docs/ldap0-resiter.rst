@@ -1,9 +1,9 @@
 :py:mod:`ldap0.resiter` Generator for stream-processing of large search results
-==============================================================================
+===============================================================================
 
 .. py:module:: ldap0.resiter
    :synopsis: Generator for stream-processing of large search results.
-.. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
+.. moduleauthor:: Michael Ströder <michael@stroeder.com>
 
 
 .. _ldap0.resiter-classes:
@@ -25,7 +25,7 @@ Examples
 .. _ldap0.resiter.ResultProcessor-example:
 
 Using ldap0.resiter.ResultProcessor
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This example demonstrates how to use mix-in class ldap0.resiter.ResultProcessor for
 retrieving results formerly requested with :py:meth:`ldap.LDAPObject.search()` and

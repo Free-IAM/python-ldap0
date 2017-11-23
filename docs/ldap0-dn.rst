@@ -1,9 +1,9 @@
 :py:mod:`ldap0.dn` LDAP Distinguished Name handling
-====================================================
+===================================================
 
 .. py:module:: ldap0.dn
    :synopsis: LDAP Distinguished Name handling.
-.. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
+.. moduleauthor:: Michael Ströder <michael@stroeder.com>
 
 
 .. % Author of the module code;
@@ -79,7 +79,7 @@ The :mod:`ldap0.dn` module defines the following functions:
 .. _ldap-dn-example:
 
 Examples
-^^^^^^^^^
+^^^^^^^^
 
 Splitting a LDAPv3 DN to AVA level. Note that both examples have the same result
 but in the first example the non-ASCII chars are passed as is (byte buffer string)

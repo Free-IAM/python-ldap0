@@ -1,5 +1,5 @@
 :py:mod:`ldap0.modlist` Generate modify lists
-==============================================
+=============================================
 
 .. py:module:: ldap0.modlist
 

@@ -1,9 +1,9 @@
 :py:mod:`ldap0.filter` LDAP filter handling
-============================================
+===========================================
 
 .. py:module:: ldap0.filter
    :synopsis: LDAP filter handling.
-.. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
+.. moduleauthor:: Michael Ströder <michael@stroeder.com>
 
 
 .. % Author of the module code;

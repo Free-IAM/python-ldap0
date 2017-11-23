@@ -3,13 +3,10 @@
 
 .. py:module:: ldap0.ldif
    :synopsis: Parses and generates LDIF files
-.. moduleauthor:: python-ldap project (see https://www.python-ldap.org/)
+.. moduleauthor:: Michael Ströder <michael@stroeder.com>
 
 
-This module parses and generates LDAP data in the format LDIF.    It is
-implemented in pure Python and does not rely on any non-standard modules.
-Therefore it can be used stand-alone without the rest of the python-ldap
-package.
+This module parses and generates LDAP data in the format LDIF.
 
 .. seealso::
 
