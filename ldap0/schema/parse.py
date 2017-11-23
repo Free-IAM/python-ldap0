@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-ldap0.schema.tokenizer - Low-level parsing functions for schema element strings
+ldap0.schema.parse - Low-level parsing functions for schema element strings
 """
 
 import re
+
+from ldap0.pkginfo import __version__, __author__, __license__
 
 TOKENS_FINDALL = re.compile(
     r"(\()"           # opening parenthesis

@@ -22,8 +22,10 @@ assert _libldap0.__version__ == __version__, ImportError(
     'ldap %s and _libldap0 %s version mismatch!' % (__version__, _libldap0.__version__)
 )
 
-from functions import open, initialize, init, get_option, set_option
+from functions import get_option, set_option
 from functions import escape_str, strf_secs, strp_secs
+from ldapobject.simple import SimpleLDAPObject
+from ldapobject.reconnect import ReconnectLDAPObject
 from ldapobject import NO_UNIQUE_ENTRY
 from ldap0.dn import explode_dn, explode_rdn
 

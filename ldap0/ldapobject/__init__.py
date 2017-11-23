@@ -31,15 +31,6 @@ __all__ = [
     'ReconnectLDAPObject',
 ]
 
-
-class NO_UNIQUE_ENTRY(_libldap0.NO_SUCH_OBJECT):
-    """
-    Exception raised if a LDAP search returned more than entry entry
-    although assumed to return a unique single search result.
-    """
-
-# For back-ward compability import ReconnectLDAPObject here
-from simple import SimpleLDAPObject
+from simple import SimpleLDAPObject, NO_UNIQUE_ENTRY
 from reconnect import ReconnectLDAPObject
-# Used as default for ldap.open() and ldap.initialize()
 LDAPObject = SimpleLDAPObject

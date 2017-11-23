@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Automatic tests for module ldap0.schema.tokenizer
+Automatic tests for module ldap0.schema.parse
 """
 
 import unittest
 
-from ldap0.schema.tokenizer import split_tokens
+from ldap0.schema.parse import split_tokens
 
 # basic test cases
 TESTCASES_BASIC = (
@@ -61,7 +61,7 @@ TESTCASES_BROKEN = (
 
 class TestSplitTokens(unittest.TestCase):
     """
-    test function ldap0.schema.tokenizer.split_tokens()
+    test function ldap0.schema.parse.split_tokens()
     """
 
     def _run_split_tokens_tests(self, test_cases):

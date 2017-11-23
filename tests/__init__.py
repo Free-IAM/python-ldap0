@@ -9,7 +9,7 @@ import test_dn
 import test_filter
 import test_functions
 import test_modlist
-import test_schema_tokenizer
+import test_schema_parse
 import test_ldapurl
 import test_ldif
 import test_ldapobject

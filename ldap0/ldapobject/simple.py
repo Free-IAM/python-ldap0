@@ -23,12 +23,19 @@ import ldap0.functions
 
 from ldap0.schema import SCHEMA_ATTRS
 from ldap0.controls import DecodeControlTuples, RequestControlTuples
-from ldap0.ldapobject import NO_UNIQUE_ENTRY
 
 
 __all__ = [
     'SimpleLDAPObject',
+    'NO_UNIQUE_ENTRY',
 ]
+
+
+class NO_UNIQUE_ENTRY(_libldap0.NO_SUCH_OBJECT):
+    """
+    Exception raised if a LDAP search returned more than entry entry
+    although assumed to return a unique single search result.
+    """
 
 
 class SimpleLDAPObject:
