@@ -95,11 +95,11 @@ The following example demonstrates how to parse a LDAP URL
 with :mod:`ldapurl` module.
 
 
->>> import ldapurl
->>> ldap_url = ldap0.ldapurlLDAPUrl('ldap://localhost:1389/dc=stroeder,dc=com?cn,mail???bindname=cn=Michael%2cdc=stroeder%2cdc=com,X-BINDPW=secret')
+>>> import ldap0.ldapurl
+>>> ldap_url = ldap0.ldapurlLDAPUrl('ldap://localhost:1389/dc=example,dc=com?cn,mail???bindname=cn=Michael%2cdc=stroeder%2cdc=com,X-BINDPW=secret')
 >>> # Using the parsed LDAP URL by reading the class attributes
 >>> ldap_url.dn
-'dc=stroeder,dc=com'
+'dc=example,dc=com'
 >>> ldap_url.hostport
 'localhost:1389'
 >>> ldap_url.attrs
@@ -107,7 +107,7 @@ with :mod:`ldapurl` module.
 >>> ldap_url.filterstr
 '(objectclass=*)'
 >>> ldap_url.who
-'cn=Michael,dc=stroeder,dc=com'
+'cn=Michael,dc=example,dc=com'
 >>> ldap_url.cred
 'secret'
 >>> ldap_url.scope
@@ -117,8 +117,8 @@ with :mod:`ldapurl` module.
 The following example demonstrates how to generate a LDAP URL
 with \module{ldapurl} module.
 
->>> import ldapurl
->>> ldap_url = ldap0.ldapurl.LDAPUrl(hostport='localhost:1389',dn='dc=stroeder,dc=com',attrs=['cn','mail'],who='cn=Michael,dc=stroeder,dc=com',cred='secret')
+>>> from ldap0.ldapurl import LDAPUrl
+>>> ldap_url = LDAPUrl(hostport='localhost:1389',dn='dc=example,dc=com',attrs=['cn','mail'],who='cn=Michael,dc=example,dc=com',cred='secret')
 >>> ldap_url.unparse()
-'ldap://localhost:1389/dc=stroeder,dc=com?cn,mail?base?(objectclass=*)?bindname=cn=Michael%2Cdc=stroeder%2Cdc=com,X-BINDPW=secret'
+'ldap://localhost:1389/dc=example,dc=com?cn,mail?base?(objectclass=*)?bindname=cn=Michael%2Cdc=stroeder%2Cdc=com,X-BINDPW=secret'
 

@@ -45,7 +45,7 @@ Example
 The following example demonstrates how to write LDIF output
 of an LDAP entry with :mod:`ldif` module.
 
->>> import sys,ldif
+>>> import sys, ldap0.ldif
 >>> entry={'objectClass':['top','person'],'cn':['Michael Stroeder'],'sn':['Stroeder']}
 >>> dn='cn=Michael Stroeder,ou=Test'
 >>> ldif_writer=ldap0.ldif.LDIFWriter(sys.stdout)
@@ -61,7 +61,7 @@ The following example demonstrates how to parse an LDIF file
 with :mod:`ldif` module, skip some entries and write the result to stdout. ::
 
    import sys
-   from ldif import LDIFParser,LDIFWriter
+   from ldap0.ldif import LDIFParser, LDIFWriter
 
    SKIP_DN = ["uid=foo,ou=People,dc=example,dc=com",
       "uid=bar,ou=People,dc=example,dc=com"]
