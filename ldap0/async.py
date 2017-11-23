@@ -3,19 +3,18 @@
 ldap0.async - handle async LDAP operations
 """
 
-import ldap
-
 from ldap0.pkginfo import __version__, __author__, __license__
+import _libldap0
 
 SEARCH_RESULT_TYPES = set([
-    ldap.RES_SEARCH_ENTRY,
-    ldap.RES_SEARCH_RESULT,
-    ldap.RES_SEARCH_REFERENCE,
+    _libldap0.RES_SEARCH_ENTRY,
+    _libldap0.RES_SEARCH_RESULT,
+    _libldap0.RES_SEARCH_REFERENCE,
 ])
 
 ENTRY_RESULT_TYPES = set([
-    ldap.RES_SEARCH_ENTRY,
-    ldap.RES_SEARCH_RESULT,
+    _libldap0.RES_SEARCH_ENTRY,
+    _libldap0.RES_SEARCH_RESULT,
 ])
 
 __all__ = [
@@ -140,7 +139,7 @@ class AsyncSearchHandler:
             If non-zero this parameters indicates the number of results
             processed is limited to processResultsCount.
         timeout
-            See parameter timeout of ldap.LDAPObject.result()
+            See parameter timeout of LDAPObject.result()
         """
         self.preProcessing()
         result_counter = 0
