@@ -66,7 +66,7 @@ class OpenLDAP2BuildConfig:
             for defm in set(self.defines)
         ]
         self.define_macros.extend(meta_defines)
-        self.include_dirs.insert(0, 'Modules')
+        self.include_dirs.insert(0, '_libldap0')
         if sys.platform.startswith("win"):
             self.library_dirs = []
 
@@ -120,16 +120,16 @@ setup(
         Extension(
             '_libldap0',
             [
-                'Modules/LDAPObject.c',
-                'Modules/ldapcontrol.c',
-                'Modules/common.c',
-                'Modules/constants.c',
-                'Modules/errors.c',
-                'Modules/functions.c',
-                'Modules/libldap0module.c',
-                'Modules/message.c',
-                'Modules/options.c',
-                'Modules/berval.c',
+                '_libldap0/LDAPObject.c',
+                '_libldap0/ldapcontrol.c',
+                '_libldap0/common.c',
+                '_libldap0/constants.c',
+                '_libldap0/errors.c',
+                '_libldap0/functions.c',
+                '_libldap0/libldap0module.c',
+                '_libldap0/message.c',
+                '_libldap0/options.c',
+                '_libldap0/berval.c',
             ],
             libraries=LDAP_CLASS.libs,
             include_dirs=LDAP_CLASS.include_dirs,
