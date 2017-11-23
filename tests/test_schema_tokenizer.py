@@ -5,7 +5,7 @@ Automatic tests for module ldap0.schema.tokenizer
 
 import unittest
 
-import ldap0.schema
+from ldap0.schema.tokenizer import split_tokens
 
 # basic test cases
 TESTCASES_BASIC = (
@@ -66,14 +66,14 @@ class TestSplitTokens(unittest.TestCase):
 
     def _run_split_tokens_tests(self, test_cases):
         for test_value, test_result in test_cases:
-            token_list = ldap0.schema.split_tokens(test_value)
+            token_list = split_tokens(test_value)
             self.assertEqual(token_list, test_result)
 
     def _run_failure_tests(self, test_cases):
         should_have_failed = []
         for test_value in test_cases:
             try:
-                _ = ldap0.schema.split_tokens(test_value)
+                _ = split_tokens(test_value)
             except ValueError:
                 pass
             else:
