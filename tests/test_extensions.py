@@ -122,69 +122,66 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
 
     def _add_overlay(self, slapo_entry):
         olc_overlay = slapo_entry['olcOverlay'][0]
-        self._ldap_conn.modify_s(
-            'cn=module{0},cn=config',
-            [(_libldap0.MOD_ADD, 'olcModuleLoad', [olc_overlay])]
-        )
-        self._ldap_conn.add_s(
-            'olcOverlay={{0}}{0},{1}'.format(
-                olc_overlay,
-                self.mdb_config_dn,
-            ),
-            addModlist(slapo_entry),
-        )
-        self._ldap_conn.add_s(
-            'olcOverlay={{0}}{0},{1}'.format(
-                olc_overlay,
-                self.mdb_config_dn,
-            ),
-            addModlist(slapo_entry),
-        )
+        try:
+            self._ldap_conn.modify_s(
+                'cn=module{0},cn=config',
+                [(_libldap0.MOD_ADD, 'olcModuleLoad', [olc_overlay])]
+            )
+            self._ldap_conn.add_s(
+                'olcOverlay={{0}}{0},{1}'.format(
+                    olc_overlay,
+                    self.mdb_config_dn,
+                ),
+                addModlist(slapo_entry),
+            )
+            self._ldap_conn.add_s(
+                'olcOverlay={{0}}{0},{1}'.format(
+                    olc_overlay,
+                    self.mdb_config_dn,
+                ),
+                addModlist(slapo_entry),
+            )
+        except _libldap0.OTHER as ldap_err:
+            self.skipTest(
+                'installing slapo-%s failed: %s' % (
+                    olc_overlay,
+                    ldap_err,
+                )
+            )
 
     def test_deref(self):
-        try:
-            self._add_overlay({
-                'olcOverlay': ['deref'],
-                'objectClass': ['olcOverlayConfig'],
-            })
-        except _libldap0.OTHER as ldap_err:
-            self.skipTest('installing slapo-deref failed: %s' % ldap_err)
+        self._add_overlay({
+            'olcOverlay': ['deref'],
+            'objectClass': ['olcOverlayConfig'],
+        })
 
     def test_noopsrch(self):
-        try:
-            self._add_overlay({
-                'olcOverlay': ['noopsrch'],
-                'objectClass': ['olcOverlayConfig'],
-            })
-        except _libldap0.OTHER as ldap_err:
-            self.skipTest('installing slapo-noopsrch failed: %s' % ldap_err)
+        self._add_overlay({
+            'olcOverlay': ['noopsrch'],
+            'objectClass': ['olcOverlayConfig'],
+        })
 
     def test_dds(self):
-        try:
-            self._add_overlay({
-                'olcOverlay': ['dds'],
-                'objectClass': ['olcOverlayConfig', 'olcDDSConfig'],
-                'olcDDSdefaultTtl': '1h',
-                'olcDDSmaxTtl': '1d',
-                'olcDDSminTtl': '1m',
-                'olcDDSstate': 'TRUE',
-            })
-        except _libldap0.OTHER as ldap_err:
-            self.skipTest('installing slapo-dds failed: %s' % ldap_err)
+        self._add_overlay({
+            'olcOverlay': ['dds'],
+            'objectClass': ['olcOverlayConfig', 'olcDDSConfig'],
+            'olcDDSdefaultTtl': '1h',
+            'olcDDSmaxTtl': '1d',
+            'olcDDSminTtl': '1m',
+            'olcDDSstate': 'TRUE',
+        })
 
     def test_ppolicy(self):
-        try:
-            self._add_overlay({
-                'olcOverlay': ['ppolicy'],
-                'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
-                'olcPPolicyDefault': 'cn=ppolicy-default,'+self.server.suffix,
-                'olcPPolicyForwardUpdates': 'FALSE',
-                'olcPPolicyHashCleartext': 'FALSE',
-                'olcPPolicyUseLockout': 'TRUE',
-                'olcPPolicyUseLockout': 'TRUE',
-            })
-        except _libldap0.OTHER as ldap_err:
-            self.skipTest('installing slapo-ppolicy failed: %s' % ldap_err)
+        self._add_overlay({
+            'olcOverlay': ['ppolicy'],
+            'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
+            'olcPPolicyDefault': 'cn=ppolicy-default,'+self.server.suffix,
+            'olcPPolicyForwardUpdates': 'FALSE',
+            'olcPPolicyHashCleartext': 'FALSE',
+            'olcPPolicyUseLockout': 'TRUE',
+            'olcPPolicyUseLockout': 'TRUE',
+        })
+
 
 if __name__ == '__main__':
     unittest.main()
