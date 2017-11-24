@@ -19,8 +19,12 @@ except ImportError:
 else:
     setup_kwargs = dict(
         include_package_data=True,
-        install_requires=['setuptools'],
-        zip_safe=False
+        install_requires=[
+            'setuptools',
+            'pyasn1>=0.3.7',
+            'pyasn1_modules>=0.1.5',
+        ],
+        zip_safe=False,
     )
 
 sys.path.insert(0, os.path.join(os.getcwd(), 'ldap0'))
@@ -183,5 +187,6 @@ setup(
     package_dir={'': '.'},
     data_files=LDAP_CLASS.extra_files,
     test_suite='tests',
+    python_requires = '==2.7.*',
     **setup_kwargs
 )
