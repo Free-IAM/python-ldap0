@@ -15,4 +15,5 @@ from . import test_schema_parse
 from . import test_ldapurl
 from . import test_ldif
 from . import test_ldapobject
+from . import test_extensions
 from . import test_schema_subentry
