@@ -4,6 +4,8 @@ ldap0.controls.sessiontrack - class for session tracking control
 (see draft-wahl-ldap-session)
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.controls import RequestControl
 

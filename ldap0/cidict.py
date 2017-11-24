@@ -3,6 +3,8 @@
 ldap0.cidict - custom dictionary class with keys being strings handled case-insensitive
 """
 
+from __future__ import absolute_import
+
 from UserDict import IterableUserDict
 
 from ldap0.pkginfo import __version__, __author__, __license__

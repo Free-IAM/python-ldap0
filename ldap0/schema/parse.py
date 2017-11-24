@@ -3,6 +3,8 @@
 ldap0.schema.parse - Low-level parsing functions for schema element strings
 """
 
+from __future__ import absolute_import
+
 import re
 
 from ldap0.pkginfo import __version__, __author__, __license__

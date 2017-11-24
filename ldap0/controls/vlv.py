@@ -4,6 +4,8 @@ ldap0.controls.vlv - classes for Virtual List View
 (see draft-ietf-ldapext-ldapv3-vlv)
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 import ldap0
 from ldap0.ldapobject import LDAPObject

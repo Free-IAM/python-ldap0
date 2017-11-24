@@ -3,6 +3,8 @@
 ldap0.schema.models - support for subSchemaSubEntry information
 """
 
+from __future__ import absolute_import
+
 from UserDict import IterableUserDict
 
 from ldap0.pkginfo import __version__, __author__, __license__

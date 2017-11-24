@@ -4,6 +4,8 @@ ldap0.controls.pagedresults - classes for Simple Paged control
 (see RFC 2696)
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.controls import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 

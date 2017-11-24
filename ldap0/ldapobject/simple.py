@@ -3,6 +3,8 @@
 ldap0.ldapobject - wraps class _ldap0.LDAPObject
 """
 
+from __future__ import absolute_import
+
 import sys
 import time
 from os import strerror

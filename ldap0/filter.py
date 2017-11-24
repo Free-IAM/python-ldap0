@@ -3,6 +3,8 @@
 ldap0.filters - misc stuff for handling LDAP filter strings (see RFC 4515)
 """
 
+from __future__ import absolute_import
+
 import time
 
 from ldap0.pkginfo import __version__, __author__, __license__

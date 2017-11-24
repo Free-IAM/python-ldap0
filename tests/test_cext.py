@@ -3,6 +3,8 @@
 Automatic tests for C wrapper module _libldap0
 """
 
+from __future__ import absolute_import
+
 import os
 import unittest
 from slapdtest import SlapdTestCase

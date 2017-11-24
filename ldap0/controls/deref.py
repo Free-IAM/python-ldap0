@@ -4,6 +4,8 @@ ldap0.controls.deref - classes for
 (see https://tools.ietf.org/html/draft-masarati-ldap-deref)
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 
 import ldap0.controls

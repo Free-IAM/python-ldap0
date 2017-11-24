@@ -3,6 +3,8 @@
 ldap0.ldif - generate and parse LDIF data (see RFC 2849)
 """
 
+from __future__ import absolute_import
+
 import urlparse
 import urllib
 import re

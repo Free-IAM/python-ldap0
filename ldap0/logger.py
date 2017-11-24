@@ -3,6 +3,8 @@
 ldap0.logger - Helper class for using logging as trace file object
 """
 
+from __future__ import absolute_import
+
 import logging
 
 from ldap0.pkginfo import __version__, __author__, __license__

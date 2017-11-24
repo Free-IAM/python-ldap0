@@ -4,6 +4,8 @@ ldap0.ldapobject.reconnect - wraps class ldap0.ldapobject.SimpleLDAPObject
 to implement automatic reconnects for synchronous operations
 """
 
+from __future__ import absolute_import
+
 import sys
 import time
 

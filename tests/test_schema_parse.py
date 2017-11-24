@@ -3,6 +3,8 @@
 Automatic tests for module ldap0.schema.parse
 """
 
+from __future__ import absolute_import
+
 import unittest
 
 from ldap0.schema.parse import split_tokens

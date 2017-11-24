@@ -3,6 +3,8 @@
 ldap0.sasl - support for SASL mechanism
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 
 if __debug__:

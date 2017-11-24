@@ -3,6 +3,8 @@
 Automatic tests for class ldap0.schema.SubSchema
 """
 
+from __future__ import absolute_import
+
 import unittest
 
 import ldap0.ldif

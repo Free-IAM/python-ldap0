@@ -3,6 +3,8 @@
 Automatic tests for module ldap0.cidict
 """
 
+from __future__ import absolute_import
+
 # from Python's standard lib
 import unittest
 

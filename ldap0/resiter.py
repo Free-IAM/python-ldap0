@@ -3,6 +3,8 @@
 ldap0.resiter - processing LDAP results with iterators
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 
 

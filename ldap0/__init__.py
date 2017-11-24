@@ -3,7 +3,7 @@
 ldap0 - base module
 """
 
-# This is also the overall release version number
+from __future__ import absolute_import
 
 import sys
 

@@ -3,6 +3,8 @@
 ldap0.functions - wraps functions of module _ldap
 """
 
+from __future__ import absolute_import
+
 __all__ = [
     'escape_str',
     'explode_dn',
@@ -30,8 +32,6 @@ assert _libldap0.__version__ == __version__, ImportError(
 
 import ldap0
 from ldap0 import LDAPError
-from ldap0.dn import explode_dn, explode_rdn
-from ldap0.ldapobject import LDAPObject
 
 if __debug__:
     # Tracing is only supported in debugging mode

@@ -3,9 +3,7 @@
 ldap0.ldapobject - wrapper classes above _libldap0.LDAPObject
 """
 
-import sys
-import time
-from os import strerror
+from __future__ import absolute_import
 
 if __debug__:
     # Tracing is only supported in debugging mode
@@ -15,14 +13,7 @@ if __debug__:
 from ldap0.pkginfo import __version__, __author__, __license__
 
 import _libldap0
-import ldap0
-import ldap0.sasl
-import ldap0.functions
-from ldap0 import LDAPError
-
-from ldap0.schema import SCHEMA_ATTRS
-from ldap0.controls import DecodeControlTuples, RequestControlTuples
-
+from _libldap0 import LDAPError
 
 __all__ = [
     'NO_UNIQUE_ENTRY',
@@ -31,6 +22,6 @@ __all__ = [
     'ReconnectLDAPObject',
 ]
 
-from simple import SimpleLDAPObject, NO_UNIQUE_ENTRY
-from reconnect import ReconnectLDAPObject
+from .simple import SimpleLDAPObject, NO_UNIQUE_ENTRY
+from .reconnect import ReconnectLDAPObject
 LDAPObject = SimpleLDAPObject

@@ -4,6 +4,8 @@ ldap0.extop.dds - Classes for Dynamic Entries extended operations
 (see RFC 2589)
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.extop import ExtendedRequest, ExtendedResponse
 

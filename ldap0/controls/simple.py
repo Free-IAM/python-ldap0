@@ -3,6 +3,8 @@
 ldap0.controls.simple - classes for some very simple LDAP controls
 """
 
+from __future__ import absolute_import
+
 import struct
 
 from ldap0.pkginfo import __version__, __author__, __license__

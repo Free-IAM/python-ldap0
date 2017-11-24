@@ -4,6 +4,8 @@ ldap0.controls.readentry - classes for the Read Entry controls
 (see RFC 4527)
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.controls import LDAPControl, KNOWN_RESPONSE_CONTROLS
 import _libldap0

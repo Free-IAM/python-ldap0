@@ -4,6 +4,8 @@ ldap0.controls.psearch - classes for Persistent Search Control
 (see https://tools.ietf.org/html/draft-ietf-ldapext-psearch)
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.controls import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 

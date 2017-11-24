@@ -3,6 +3,8 @@
 ldap0.syncrepl - for implementing syncrepl consumer (see RFC 4533)
 """
 
+from __future__ import absolute_import
+
 from uuid import UUID
 
 # Imports from pyasn1

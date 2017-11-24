@@ -3,6 +3,8 @@
 Automatic tests for module ldap0.modlist
 """
 
+from __future__ import absolute_import
+
 import unittest
 
 import ldap0

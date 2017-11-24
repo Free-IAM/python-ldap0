@@ -4,6 +4,8 @@ ldap0.controls.ppolicy - classes for Password Policy controls
 (see https://tools.ietf.org/html/draft-behera-ldap-password-policy)
 """
 
+from __future__ import absolute_import
+
 from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.controls import ResponseControl, ValueLessRequestControl, KNOWN_RESPONSE_CONTROLS
 

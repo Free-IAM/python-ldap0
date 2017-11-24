@@ -3,6 +3,8 @@
 ldap0.ldapurl - handling of LDAP URLs as described in RFC 4516
 """
 
+from __future__ import absolute_import
+
 __version__ = '2.5.3'
 
 __all__ = [
