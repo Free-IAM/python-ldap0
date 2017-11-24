@@ -111,10 +111,6 @@ RFC or Internet-Draft is very helpful to understand the API.
 
       :rfc:`3829` - Lightweight Directory Access Protocol (LDAP): Authorization Identity Request and Response Controls
 
-.. autoclass:: ldap0.controls.simple.GetEffectiveRightsControl
-   :members:
-
-
 
 :py:mod:`ldap0.controls.libldap` Various controls implemented in OpenLDAP libs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
