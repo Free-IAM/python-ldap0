@@ -11,6 +11,19 @@ from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.controls import RequestControl, ResponseControl, LDAPControl, KNOWN_RESPONSE_CONTROLS
 import _libldap0
 
+
+__all__ = [
+    'AuthorizationIdentityRequestControl',
+    'AuthorizationIdentityResponseControl',
+    'BooleanControl',
+    'ManageDSAITControl',
+    'OctetStringInteger',
+    'ProxyAuthzControl',
+    'RelaxRulesControl',
+    'ValueLessRequestControl',
+]
+
+
 class ValueLessRequestControl(RequestControl):
     """
     Base class for controls without a controlValue.
@@ -166,17 +179,3 @@ class AuthorizationIdentityResponseControl(ResponseControl):
         self.authzId = encodedControlValue
 
 KNOWN_RESPONSE_CONTROLS.reg(AuthorizationIdentityResponseControl)
-
-
-class GetEffectiveRightsControl(RequestControl):
-    """
-    Get Effective Rights Control
-    """
-    controlType = '1.3.6.1.4.1.42.2.27.9.5.2'
-
-    def __init__(self, criticality=False, authzId=None):
-        RequestControl.__init__(
-            self,
-            criticality=criticality,
-            encodedControlValue=authzId,
-        )
