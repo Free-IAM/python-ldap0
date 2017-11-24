@@ -900,21 +900,28 @@ class SimpleLDAPObject:
         ):
         return self.search_ext_s(base, scope, filterstr, attrlist, attrsonly, None, None, timeout)
 
-    def noop_search_st(
+    def noop_search(
             self,
             base,
             scope=_libldap0.SCOPE_SUBTREE,
             filterstr='(objectClass=*)',
+            serverctrls=None,
+            clientctrls=None,
             timeout=-1,
+            sizelimit=0,
         ):
+        serverctrls = serverctrls or []
+        serverctrls.append(SearchNoOpControl(criticality=True))
         try:
             msg_id = self.search_ext(
                 base,
                 scope,
                 filterstr=filterstr,
                 attrlist=['1.1'],
+                serverctrls=serverctrls,
+                clientctrls=clientctrls,
                 timeout=timeout,
-                serverctrls=[SearchNoOpControl(criticality=True)],
+                sizelimit=sizelimit,
             )
             _, _, _, search_response_ctrls = self.result3(
                 msg_id,
