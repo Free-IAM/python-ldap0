@@ -161,7 +161,7 @@ class SyncreplClient(SimpleLDAPObject, SyncreplConsumer):
         SimpleLDAPObject.unbind_s(self)
 
 
-    def search(self, search_base, search_mode):
+    def start_search(self, search_base, search_mode):
         """
         Start a syncrepl search operation, given a base DN and search mode.
         """
@@ -173,7 +173,7 @@ class SyncreplClient(SimpleLDAPObject, SyncreplConsumer):
         )
 
 
-    def cancel(self):
+    def cancel_search(self):
         """
         A simple wrapper to call parent class with syncrepl search ID.
         """
@@ -308,7 +308,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.search(
+        self.tester.start_search(
             self.server.suffix,
             'refreshOnly'
         )
@@ -320,7 +320,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.search(
+        self.tester.start_search(
             self.server.suffix,
             'refreshAndPersist'
         )
@@ -335,7 +335,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.search(
+        self.tester.start_search(
             self.server.suffix,
             'refreshOnly'
         )
@@ -356,7 +356,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.search(
+        self.tester.start_search(
             self.server.suffix,
             'refreshAndPersist'
         )
@@ -381,7 +381,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.search(
+        self.tester.start_search(
             self.server.suffix,
             'refreshAndPersist'
         )
@@ -416,7 +416,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.search(
+        self.tester.start_search(
             self.server.suffix,
             'refreshAndPersist'
         )
@@ -433,7 +433,7 @@ class Test00_Syncrepl(SlapdTestCase):
         self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
 
         # Request cancellation.
-        self.tester.cancel()
+        self.tester.cancel_search()
 
         # Run another poll, without timeout, but which should cancel out.
         self.assertRaises(
