@@ -910,6 +910,11 @@ class SimpleLDAPObject:
             timeout=-1,
             sizelimit=0,
         ):
+        """
+        convenience method for counting entries and search continuations
+        potentially returned by a search operation without actually
+        transferring the results
+        """
         serverctrls = serverctrls or []
         serverctrls.append(SearchNoOpControl(criticality=True))
         try:
