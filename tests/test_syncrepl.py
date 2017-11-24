@@ -177,7 +177,7 @@ class SyncreplClient(SimpleLDAPObject, SyncreplConsumer):
         """
         A simple wrapper to call parent class with syncrepl search ID.
         """
-        SimpleLDAPObject.cancel(self, self.search_id)
+        SimpleLDAPObject.cancel_s(self, self.search_id)
 
 
     def poll(self, timeout=None, all=0):
