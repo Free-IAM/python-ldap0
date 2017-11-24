@@ -15,12 +15,14 @@ from slapdtest import SlapdTestCase
 os.environ['LDAPNOINIT'] = '1'
 
 import _libldap0
+import ldap0
 from ldap0 import LDAPError
 from ldap0.ldapobject import LDAPObject
 from ldap0.filter import escape_filter_chars
 from ldap0.modlist import addModlist
 from ldap0.ldif import LDIFRecordList
 
+from ldap0.controls.simple import ManageDSAITControl
 from ldap0.controls.deref import DereferenceControl
 from ldap0.controls.openldap import SearchNoOpControl
 from ldap0.controls.ppolicy import PasswordPolicyControl
@@ -81,6 +83,18 @@ roleOccupant: cn=Foo6,ou=Container,%(suffix)s
 dn: cn=Foo6,ou=Container,%(suffix)s
 objectClass: organizationalRole
 cn: Foo6
+
+dn: dc=ref1,%(suffix)s
+objectClass: referral
+objectClass: dcObject
+dc: ref1
+ref: ldap://ldap.example.com/dc=example,dc=com??one?(objectClass=*)
+
+dn: dc=ref2,%(suffix)s
+objectClass: referral
+objectClass: dcObject
+dc: ref2
+ref: ldap://ldap.example.net/
 
 """
 
@@ -177,7 +191,28 @@ class TestNoopSrch(ExtensionTestCase):
             'olcOverlay': ['noopsrch'],
             'objectClass': ['olcOverlayConfig'],
         })
-
+        expected_num_refs = LDIF_TEMPLATE.count('objectClass: referral')
+        expected_num_entries = LDIF_TEMPLATE.count('dn: ') - expected_num_refs
+        num_entries, num_refs = self._ldap_conn.noop_search(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+        )
+        self.assertEqual(num_entries, expected_num_entries)
+        self.assertEqual(num_refs, expected_num_refs)
+        num_entries, num_refs = self._ldap_conn.noop_search(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(objectClass=organizationalRole)',
+        )
+        self.assertEqual(num_entries, LDIF_TEMPLATE.count('objectClass: organizationalRole'))
+        self.assertEqual(num_refs, LDIF_TEMPLATE.count('objectClass: referral'))
+        num_entries, num_refs = self._ldap_conn.noop_search(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            serverctrls=[ManageDSAITControl()]
+        )
+        self.assertEqual(num_entries, LDIF_TEMPLATE.count('dn: '))
+        self.assertEqual(num_refs, 0)
 
 class TestDDS(ExtensionTestCase):
 
