@@ -5,11 +5,12 @@ ldap0.schema.util -  misc. subschema utility stuff
 
 from __future__ import absolute_import
 
+from urllib import urlopen
+
 from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.cidict import cidict
 from ldap0.ldapurl import LDAPUrl
-from ldap0.ldapobject.simple import SimpleLDAPObject
-from urllib import urlopen
+from ldap0.ldapobject import SimpleLDAPObject
 from ldap0.ldif import LDIFRecordList
 from ldap0.schema import SubSchema, SCHEMA_ATTRS, SCHEMA_CLASS_MAPPING
 

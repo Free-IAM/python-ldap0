@@ -23,7 +23,7 @@ import ldap0
 import ldap0.sasl
 import ldap0.functions
 
-from ldap0.schema import SCHEMA_ATTRS
+from ldap0.schema.subentry import SCHEMA_ATTRS
 from ldap0.controls import DecodeControlTuples, RequestControlTuples
 from ldap0.controls.openldap import SearchNoOpControl
 
