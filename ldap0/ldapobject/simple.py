@@ -199,7 +199,7 @@ class SimpleLDAPObject:
 
     def add_s(self, dn, modlist, serverctrls=None, clientctrls=None):
         msgid = self.add(dn, modlist, serverctrls, clientctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result3(
+        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -229,7 +229,7 @@ class SimpleLDAPObject:
             clientctrls=None
         ):
         msgid = self.simple_bind(who, cred, serverctrls, clientctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result3(
+        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -335,7 +335,7 @@ class SimpleLDAPObject:
     def compare_s(self, dn, attr, value, serverctrls=None, clientctrls=None):
         msgid = self.compare(dn, attr, value, serverctrls, clientctrls)
         try:
-            ldap_res = self.result3(
+            ldap_res = self.result(
                 msgid,
                 all=1,
                 timeout=self.timeout
@@ -358,7 +358,7 @@ class SimpleLDAPObject:
 
     def delete_s(self, dn, serverctrls=None, clientctrls=None):
         msgid = self.delete(dn, serverctrls, clientctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result3(
+        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -375,7 +375,7 @@ class SimpleLDAPObject:
         )
 
     def extop_result(self, msgid=_libldap0.RES_ANY, all=1, timeout=None):
-        resulttype, msg, msgid, respctrls, respoid, respvalue = self.result4(
+        resulttype, msg, msgid, respctrls, respoid, respvalue = self.result(
             msgid,
             all=1,
             timeout=self.timeout,
@@ -411,7 +411,7 @@ class SimpleLDAPObject:
 
     def modify_s(self, dn, modlist, serverctrls=None, clientctrls=None):
         msgid = self.modify(dn, modlist, serverctrls, clientctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result3(
+        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -467,34 +467,14 @@ class SimpleLDAPObject:
             clientctrls=None
         ):
         msgid = self.rename(dn, newrdn, newsuperior, delold, serverctrls, clientctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result3(
+        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
             msgid,
             all=1,
             timeout=self.timeout
         )
         return resp_type, resp_data, resp_msgid, resp_ctrls
 
-    def result(self, msgid=_libldap0.RES_ANY, all=1, timeout=None):
-        resp_type, resp_data, _ = self.result2(msgid, all, timeout)
-        return resp_type, resp_data
-
-    def result2(self, msgid=_libldap0.RES_ANY, all=1, timeout=None):
-        resp_type, resp_data, resp_msgid, _ = self.result3(msgid, all, timeout)
-        return resp_type, resp_data, resp_msgid
-
-    def result3(self, msgid=_libldap0.RES_ANY, all=1, timeout=None, resp_ctrl_classes=None):
-        resp_type, resp_data, resp_msgid, decoded_resp_ctrls, _, _ = self.result4(
-            msgid,
-            all,
-            timeout,
-            add_ctrls=0,
-            add_intermediates=0,
-            add_extop=0,
-            resp_ctrl_classes=resp_ctrl_classes
-        )
-        return resp_type, resp_data, resp_msgid, decoded_resp_ctrls
-
-    def result4(
+    def result(
             self, msgid=_libldap0.RES_ANY,
             all=1,
             timeout=None,
@@ -506,7 +486,7 @@ class SimpleLDAPObject:
         if timeout is None:
             timeout = self.timeout
         ldap_result = self._ldap_call(
-            self._l.result4,
+            self._l.result,
             msgid,
             all,
             timeout,
@@ -605,7 +585,7 @@ class SimpleLDAPObject:
                 timeout=timeout,
                 sizelimit=sizelimit,
             )
-            _, _, _, search_response_ctrls = self.result3(
+            _, _, _, search_response_ctrls, _, _ = self.result(
                 msg_id,
                 all=1,
                 timeout=timeout,
@@ -646,7 +626,7 @@ class SimpleLDAPObject:
     def unbind_s(self, serverctrls=None, clientctrls=None):
         msgid = self.unbind(serverctrls, clientctrls)
         if msgid != None:
-            result = self.result3(msgid, all=1, timeout=self.timeout)
+            result = self.result(msgid, all=1, timeout=self.timeout)
         else:
             result = None
         if __debug__ and self._trace_level >= 1:

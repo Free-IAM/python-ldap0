@@ -154,7 +154,7 @@ class AsyncSearchHandler:
             result_type, result_list = None, None
             while go_ahead:
                 while result_type is None and not result_list:
-                    result_type, result_list, _, _ = self._ldap_conn.result3(
+                    result_type, result_list, _, _, _, _ = self._ldap_conn.result(
                         self._msg_id,
                         0,
                         timeout

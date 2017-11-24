@@ -170,7 +170,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         l = self.ldap_object_class('ldap://127.0.0.1:42')
         try:
             m = l.simple_bind_s("", "")
-            r = l.result4(m, ldap0.MSG_ALL, 1.0)
+            r = l.result(m, ldap0.MSG_ALL, 1.0)
         except ldap0.SERVER_DOWN as ldap_err:
             errno = ldap_err.args[0]['errno']
             if errno != 107:
@@ -186,7 +186,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         # search with invalid filter
         try:
             m = l.simple_bind(self.server.root_dn, self.server.root_pw+'wrong')
-            r = l.result4(m, ldap0.MSG_ALL)
+            r = l.result(m, ldap0.MSG_ALL)
         except ldap0.INVALID_CREDENTIALS:
             pass
         else:
@@ -283,7 +283,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
                 serverctrls=[paged_results_control],
             )
             while True:
-                rtype, rdata, rmsgid, rctrls = self._ldap_conn.result3(msg_id)
+                rtype, rdata, rmsgid, rctrls, _, _ = self._ldap_conn.result(msg_id)
                 self.assertEqual(rmsgid, msg_id)
                 all_paged_results.extend(rdata)
                 result_pages += 1

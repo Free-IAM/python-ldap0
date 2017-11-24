@@ -795,7 +795,7 @@ and wait for and return with the server's result, or with
    *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.result([msgid=RES_ANY [, all=1 [, timeout=None]]]) -> 2-tuple
+.. py:method:: LDAPObject.result([msgid=RES_ANY [, all=1 [, timeout=None [, add_ctrls=0 [, add_intermediates=0 [, add_extop=0 [, resp_ctrl_classes=None]]]]]]]) -> 6-tuple
 
    This method is used to wait for and return the result of an operation
    previously initiated by one of the LDAP *asynchronous* operations
@@ -855,29 +855,13 @@ and wait for and return with the server's result, or with
    See :py:meth:`search()` for a description of the search result's
    ``result-data``, otherwise the ``result-data`` is normally meaningless.
 
-
-
-.. py:method:: LDAPObject.result2([msgid=RES_ANY [, all=1 [, timeout=None]]]) -> 3-tuple
-
-   This method behaves almost exactly like :py:meth:`result()`. But
-   it returns a 3-tuple also containing the message id of the
+   The third tuple element contains the message id of the
    outstanding LDAP operation a particular result message belongs
    to. This is especially handy if one needs to dispatch results
    obtained with ``msgid=``:py:const:`RES_ANY` to several consumer
    threads which invoked a particular LDAP operation.
 
-
-.. py:method:: LDAPObject.result3([msgid=RES_ANY [, all=1 [, timeout=None]]]) -> 4-tuple
-
-   This method behaves almost exactly like :py:meth:`result2()`. But it
-   returns an extra item in the tuple, the decoded server controls.
-
-.. py:method:: LDAPObject.result4([msgid=RES_ANY [, all=1 [, timeout=None [, add_ctrls=0 [, add_intermediates=0 [, add_extop=0 [, resp_ctrl_classes=None]]]]]]]) -> 6-tuple
-
-   This method behaves almost exactly like :py:meth:`result3()`. But it
-   returns an extra items in the tuple, the decoded results of an extended response.
-
-   The additional arguments are:
+   The fourth tuple element contains the decoded server controls.
 
    *add_ctrls* (integer flag) specifies whether response controls are returned.
 

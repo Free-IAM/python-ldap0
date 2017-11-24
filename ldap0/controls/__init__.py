@@ -141,7 +141,7 @@ def DecodeControlTuples(ldapControlTuples, knownLDAPControls=None):
     Returns list of readily decoded ResponseControl objects
 
     ldapControlTuples
-        Sequence-type of 3-tuples returned by _ldap.result4() containing
+        Sequence-type of 3-tuples returned by _ldap.result() containing
         the encoded ASN.1 control values of response controls.
     knownLDAPControls
         Dictionary mapping extended control's OID to ResponseControl class

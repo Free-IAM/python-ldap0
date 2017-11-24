@@ -16,10 +16,10 @@ class ResultProcessor:
     def allresults(self, msgid, timeout=-1, add_ctrls=0):
         """
         Generator function which returns an iterator for processing all LDAP operation
-        results of the given msgid like retrieved with LDAPObject.result3() -> 4-tuple
+        results of the given msgid like retrieved with LDAPObject.result()
         """
         result_type, result_list, result_msgid, result_serverctrls, _, _ = \
-            self.result4(
+            self.result(
                 msgid,
                 0,
                 timeout,
@@ -33,7 +33,7 @@ class ResultProcessor:
                 result_serverctrls
             )
             result_type, result_list, result_msgid, result_serverctrls, _, _ = \
-                self.result4(
+                self.result(
                     msgid,
                     0,
                     timeout,

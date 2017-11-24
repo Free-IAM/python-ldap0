@@ -945,10 +945,10 @@ l_ldap_rename( LDAPObject* self, PyObject *args )
 }
 
 
-/* ldap_result4 */
+/* ldap_result */
 
 static PyObject *
-l_ldap_result4( LDAPObject* self, PyObject *args )
+l_ldap_result( LDAPObject* self, PyObject *args )
 {
     int msgid = LDAP_RES_ANY;
     int all = 1;
@@ -981,7 +981,7 @@ l_ldap_result4( LDAPObject* self, PyObject *args )
     LDAP_END_ALLOW_THREADS( self );
 
     if (res_type < 0)   /* LDAP or system error */
-        return LDAPerror( self->ldap, "ldap_result4" );
+        return LDAPerror( self->ldap, "ldap_result" );
 
     if (res_type == 0) {
         /* Polls return (None, None, None, None); timeouts raise an exception */
@@ -1364,7 +1364,7 @@ static PyMethodDef methods[] = {
     {"delete_ext",      (PyCFunction)l_ldap_delete_ext,         METH_VARARGS },
     {"modify_ext",      (PyCFunction)l_ldap_modify_ext,         METH_VARARGS },
     {"rename",          (PyCFunction)l_ldap_rename,             METH_VARARGS },
-    {"result4",         (PyCFunction)l_ldap_result4,            METH_VARARGS },
+    {"result",          (PyCFunction)l_ldap_result,            METH_VARARGS },
     {"search_ext",      (PyCFunction)l_ldap_search_ext,         METH_VARARGS },
 #ifdef HAVE_TLS
     {"start_tls_s",     (PyCFunction)l_ldap_start_tls_s,        METH_VARARGS },
