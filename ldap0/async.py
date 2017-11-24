@@ -97,7 +97,7 @@ class AsyncSearchHandler:
         clientctrls
             list of client-side LDAP controls
         """
-        self._msg_id = self._ldap_conn.search_ext(
+        self._msg_id = self._ldap_conn.search(
             searchRoot,
             searchScope,
             filterStr,

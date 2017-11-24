@@ -203,13 +203,13 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
 
     def test007_timeout(self):
         l = self.ldap_object_class(self.server.ldap_uri)
-        m = l.search_ext(self.server.suffix, ldap0.SCOPE_SUBTREE, '(objectClass=*)')
+        m = l.search(self.server.suffix, ldap0.SCOPE_SUBTREE, '(objectClass=*)')
         l.abandon(m)
         with self.assertRaises(ldap0.TIMEOUT):
             result = l.result(m, timeout=0.001)
 
     def test008_sessiontrack_control(self):
-        self._ldap_conn.search_ext_s(
+        self._ldap_conn.search_s(
             '',
             ldap0.SCOPE_BASE,
             serverctrls=[
@@ -230,7 +230,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
             'modifyTimestamp',
         ])
         new_dn = 'cn=Anna Blume,'+self.server.suffix
-        _, _, _, resp_ctrls = self._ldap_conn.add_ext_s(
+        _, _, _, resp_ctrls = self._ldap_conn.add_s(
             new_dn,
             [
                 ('objectClass', ['applicationProcess']),
@@ -254,7 +254,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
             SimplePagedResultsControl_libldap.controlType,
         )
         expected_ldap_result = sorted(
-            self._ldap_conn.search_ext_s(
+            self._ldap_conn.search_s(
                 self.server.suffix,
                 ldap0.SCOPE_SUBTREE,
                 attrlist=['1.1'],
@@ -276,7 +276,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
             )
             result_pages = 0
             all_paged_results = []
-            msg_id = self._ldap_conn.search_ext(
+            msg_id = self._ldap_conn.search(
                 self.server.suffix,
                 ldap0.SCOPE_SUBTREE,
                 attrlist=['1.1'],
@@ -291,7 +291,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
                 if rctrls[0].cookie:
                     # Copy cookie from response control to request control
                     paged_results_control.cookie = rctrls[0].cookie
-                    msg_id = self._ldap_conn.search_ext(
+                    msg_id = self._ldap_conn.search(
                         self.server.suffix,
                         ldap0.SCOPE_SUBTREE,
                         attrlist=['1.1'],

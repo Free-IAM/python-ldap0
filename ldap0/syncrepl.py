@@ -384,7 +384,7 @@ class SyncreplConsumer:
             search_args['serverctrls'] = [syncreq]
 
         self.__refreshDone = False
-        return self.search_ext(base, scope, **search_args)
+        return self.search(base, scope, **search_args)
 
     def syncrepl_poll(self, msgid=-1, timeout=None, all=0):
         """

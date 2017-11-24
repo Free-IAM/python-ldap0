@@ -17,3 +17,5 @@ from . import test_ldif
 from . import test_ldapobject
 from . import test_extensions
 from . import test_schema_subentry
+from . import test_syncrepl
+
