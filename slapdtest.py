@@ -377,12 +377,13 @@ class SlapdTestCase(unittest.TestCase):
     server_class = SlapdObject
     server = None
     ldap_object_class = None
+    trace_level = 0
 
     def _open_ldap_conn(self, who=None, cred=None):
         """
         return a LDAPObject instance after simple bind
         """
-        ldap_conn = self.ldap_object_class(self.server.ldap_uri)
+        ldap_conn = self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level)
         ldap_conn.protocol_version = 3
         #ldap_conn.set_option(ldap.OPT_REFERRALS, 0)
         ldap_conn.simple_bind_s(who or self.server.root_dn, cred or self.server.root_pw)
