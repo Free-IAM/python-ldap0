@@ -85,7 +85,7 @@ cn: Foo6
 """
 
 
-class Test00_SimpleLDAPObject(SlapdTestCase):
+class ExtensionTestCase(SlapdTestCase):
     """
     test LDAP search operations
     """
@@ -95,7 +95,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(Test00_SimpleLDAPObject, cls).setUpClass()
+        super(ExtensionTestCase, cls).setUpClass()
         # insert some Foo* objects via ldapadd
         cls.server.ldapadd(
             LDIF_TEMPLATE % {
@@ -161,17 +161,25 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
                 )
             )
 
+class TestDeRef(ExtensionTestCase):
+
     def test_deref(self):
         self._enable_overlay({
             'olcOverlay': ['deref'],
             'objectClass': ['olcOverlayConfig'],
         })
 
+
+class TestNoopSrch(ExtensionTestCase):
+
     def test_noopsrch(self):
         self._enable_overlay({
             'olcOverlay': ['noopsrch'],
             'objectClass': ['olcOverlayConfig'],
         })
+
+
+class TestDDS(ExtensionTestCase):
 
     def test_dds(self):
         self._enable_overlay({
@@ -182,19 +190,47 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
             'olcDDSminTtl': ['1m'],
             'olcDDSstate': ['TRUE'],
         })
+        dds_entry_dn = 'cn=dds-1,'+self.server.suffix
+        try:
+            self._ldap_conn.add_s(
+                dds_entry_dn,
+                addModlist({
+                    'objectClass': ['applicationProcess', 'dynamicObject'],
+                    'cn': ['dds-1'],
+                }),
+            )
+        except _libldap0.SERVER_DOWN as ldap_err:
+            self.skipTest(
+                'adding %s crashed slapd: %s' % (
+                    dds_entry_dn,
+                    ldap_err,
+                )
+            )
+
+
+class TestPPolicy(ExtensionTestCase):
 
     def test_ppolicy(self):
+        ppolicy_default_dn = 'cn=ppolicy-default,'+self.server.suffix
         self._enable_overlay(
             {
                 'olcOverlay': ['ppolicy'],
                 'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
-                'olcPPolicyDefault': 'cn=ppolicy-default,'+self.server.suffix,
+                'olcPPolicyDefault': [ppolicy_default_dn],
                 'olcPPolicyForwardUpdates': ['FALSE'],
                 'olcPPolicyHashCleartext': ['FALSE'],
                 'olcPPolicyUseLockout': ['TRUE'],
                 'olcPPolicyUseLockout': ['TRUE'],
             },
             ['ppolicy.ldif'],
+        )
+        self._ldap_conn.add_s(
+            ppolicy_default_dn,
+            addModlist({
+                'objectClass': ['applicationProcess', 'pwdPolicy'],
+                'cn': ['ppolicy-default'],
+                'pwdAttribute': ['userPassword'],
+            }),
         )
 
     def test_sssvlv(self):
