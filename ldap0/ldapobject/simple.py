@@ -25,6 +25,7 @@ import ldap0.functions
 
 from ldap0.schema import SCHEMA_ATTRS
 from ldap0.controls import DecodeControlTuples, RequestControlTuples
+from ldap0.controls.openldap import SearchNoOpControl
 
 
 __all__ = [
@@ -898,6 +899,45 @@ class SimpleLDAPObject:
             timeout=-1
         ):
         return self.search_ext_s(base, scope, filterstr, attrlist, attrsonly, None, None, timeout)
+
+    def noop_search_st(
+            self,
+            base,
+            scope=_libldap0.SCOPE_SUBTREE,
+            filterstr='(objectClass=*)',
+            timeout=-1,
+        ):
+        try:
+            msg_id = self.search_ext(
+                base,
+                scope,
+                filterstr=filterstr,
+                attrlist=['1.1'],
+                timeout=timeout,
+                serverctrls=[SearchNoOpControl(criticality=True)],
+            )
+            _, _, _, search_response_ctrls = self.result3(
+                msg_id,
+                all=1,
+                timeout=timeout,
+            )
+        except (
+                _libldap0.TIMEOUT,
+                _libldap0.TIMELIMIT_EXCEEDED,
+                _libldap0.SIZELIMIT_EXCEEDED,
+                _libldap0.ADMINLIMIT_EXCEEDED
+            ) as err:
+            self.abandon(msg_id)
+            raise err
+        else:
+            noop_srch_ctrl = [
+                c
+                for c in search_response_ctrls
+                if c.controlType == SearchNoOpControl.controlType
+            ]
+            if noop_srch_ctrl:
+                return noop_srch_ctrl[0].numSearchResults, noop_srch_ctrl[0].numSearchContinuations
+            return (None, None)
 
     def start_tls_s(self):
         """
