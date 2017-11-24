@@ -19,6 +19,7 @@ from ldap0 import LDAPError
 from ldap0.ldapobject import LDAPObject
 from ldap0.filter import escape_filter_chars
 from ldap0.modlist import addModlist
+from ldap0.ldif import LDIFRecordList
 
 from ldap0.controls.deref import DereferenceControl
 from ldap0.controls.openldap import SearchNoOpControl
@@ -120,9 +121,20 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
                 ),
             )[0]
 
-    def _add_overlay(self, slapo_entry):
+    def _enable_overlay(self, slapo_entry, schema_files=None):
         olc_overlay = slapo_entry['olcOverlay'][0]
+        schema_entries = []
+        for schema_filename in schema_files or []:
+            with open(os.path.join(self.server.SCHEMADIR, schema_filename), 'rb') as schema_file:
+                ldif_parser = LDIFRecordList(schema_file)
+                ldif_parser.parse()
+            schema_entries.extend(ldif_parser.all_records)
         try:
+            for dn, entry in schema_entries:
+                self._ldap_conn.add_s(
+                    dn,
+                    addModlist(entry),
+                )
             self._ldap_conn.modify_s(
                 'cn=module{0},cn=config',
                 [(_libldap0.MOD_ADD, 'olcModuleLoad', [olc_overlay])]
@@ -150,19 +162,19 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
             )
 
     def test_deref(self):
-        self._add_overlay({
+        self._enable_overlay({
             'olcOverlay': ['deref'],
             'objectClass': ['olcOverlayConfig'],
         })
 
     def test_noopsrch(self):
-        self._add_overlay({
+        self._enable_overlay({
             'olcOverlay': ['noopsrch'],
             'objectClass': ['olcOverlayConfig'],
         })
 
     def test_dds(self):
-        self._add_overlay({
+        self._enable_overlay({
             'olcOverlay': ['dds'],
             'objectClass': ['olcOverlayConfig', 'olcDDSConfig'],
             'olcDDSdefaultTtl': '1h',
@@ -172,15 +184,18 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         })
 
     def test_ppolicy(self):
-        self._add_overlay({
-            'olcOverlay': ['ppolicy'],
-            'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
-            'olcPPolicyDefault': 'cn=ppolicy-default,'+self.server.suffix,
-            'olcPPolicyForwardUpdates': 'FALSE',
-            'olcPPolicyHashCleartext': 'FALSE',
-            'olcPPolicyUseLockout': 'TRUE',
-            'olcPPolicyUseLockout': 'TRUE',
-        })
+        self._enable_overlay(
+            {
+                'olcOverlay': ['ppolicy'],
+                'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
+                'olcPPolicyDefault': 'cn=ppolicy-default,'+self.server.suffix,
+                'olcPPolicyForwardUpdates': 'FALSE',
+                'olcPPolicyHashCleartext': 'FALSE',
+                'olcPPolicyUseLockout': 'TRUE',
+                'olcPPolicyUseLockout': 'TRUE',
+            },
+            ['ppolicy.ldif'],
+        )
 
 
 if __name__ == '__main__':
