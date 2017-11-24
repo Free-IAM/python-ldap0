@@ -177,10 +177,10 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         self._enable_overlay({
             'olcOverlay': ['dds'],
             'objectClass': ['olcOverlayConfig', 'olcDDSConfig'],
-            'olcDDSdefaultTtl': '1h',
-            'olcDDSmaxTtl': '1d',
-            'olcDDSminTtl': '1m',
-            'olcDDSstate': 'TRUE',
+            'olcDDSdefaultTtl': ['1h'],
+            'olcDDSmaxTtl': ['1d'],
+            'olcDDSminTtl': ['1m'],
+            'olcDDSstate': ['TRUE'],
         })
 
     def test_ppolicy(self):
@@ -189,12 +189,23 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
                 'olcOverlay': ['ppolicy'],
                 'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
                 'olcPPolicyDefault': 'cn=ppolicy-default,'+self.server.suffix,
-                'olcPPolicyForwardUpdates': 'FALSE',
-                'olcPPolicyHashCleartext': 'FALSE',
-                'olcPPolicyUseLockout': 'TRUE',
-                'olcPPolicyUseLockout': 'TRUE',
+                'olcPPolicyForwardUpdates': ['FALSE'],
+                'olcPPolicyHashCleartext': ['FALSE'],
+                'olcPPolicyUseLockout': ['TRUE'],
+                'olcPPolicyUseLockout': ['TRUE'],
             },
             ['ppolicy.ldif'],
+        )
+
+    def test_sssvlv(self):
+        self._enable_overlay(
+            {
+                'olcOverlay': ['sssvlv'],
+                'objectClass': ['olcOverlayConfig', 'olcSssVlvConfig'],
+                'olcSssVlvMax': ['0'],
+                'olcSssVlvMaxKeys': ['5'],
+                'olcSssVlvMaxPerConn': ['5'],
+            },
         )
 
 
