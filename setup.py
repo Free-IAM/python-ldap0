@@ -6,6 +6,8 @@ import sys
 import os
 from ConfigParser import ConfigParser
 
+LDAP0_BASEDIR = os.path.dirname(os.path.realpath(__file__))
+
 # Python 2.3.6+ and setuptools are needed to build eggs, so
 # let's handle setuptools' additional  keyword arguments to
 # setup() in a fashion that doesn't break compatibility  to
@@ -27,7 +29,7 @@ else:
         zip_safe=False,
     )
 
-sys.path.insert(0, os.path.join(os.getcwd(), 'ldap0'))
+sys.path.insert(0, os.path.join(LDAP0_BASEDIR, 'ldap0'))
 import pkginfo
 
 
@@ -47,7 +49,7 @@ class OpenLDAP2BuildConfig:
         self.extra_files = []
         #-- Read the [_libldap0] section of setup.cfg
         cfg = ConfigParser()
-        cfg.read('setup.cfg')
+        cfg.read(os.path.join(LDAP0_BASEDIR, 'setup.cfg'))
         _ldap_cfg = dict(cfg.items('_libldap0'))
         for name, value in _ldap_cfg.items():
             _ldap_cfg[name] = [ val for val in value.split(' ') if val ]
