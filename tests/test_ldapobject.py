@@ -318,6 +318,17 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
             self.assertEqual(sorted(all_paged_results), expected_ldap_result)
             self.assertEqual(result_pages, expected_num_pages)
 
+    def test011_add_dict(self):
+        new_dn = 'cn=Kurt Schwitters,'+self.server.suffix
+        new_entry = {
+            'objectClass': ['applicationProcess'],
+            'cn': ['Kurt Schwitters'],
+            'description': ['Dada!'],
+        }
+        self._ldap_conn.add_s(new_dn, new_entry)
+        entry = self._ldap_conn.read_s(new_dn, attrlist=new_entry.keys())
+        self.assertEqual(entry, new_entry)
+
 
 class Test01_ReconnectLDAPObject(Test00_SimpleLDAPObject):
     """
