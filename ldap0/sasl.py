@@ -25,41 +25,14 @@ CB_GETREALM = 0x4008
 class SaslAuth:
     """
     This class handles SASL interactions for authentication.
-    If an instance of this class is passed to ldap's sasl_bind_s()
-    method, the library will call its callback method. For
-    specific SASL authentication mechanisms, this method can be
-    overridden
     """
 
     def __init__(self, cb_value_dict, mech=None):
-        """
-        The (generic) base class takes a cb_value_dictionary of
-        question-answer pairs. Questions are specified by the respective
-        SASL callback id's. The mech argument is a string that specifies
-        the SASL mechaninsm to be uesd.
-        """
         self.cb_value_dict = cb_value_dict or {}
         if mech is not None:
             self.mech = mech
 
     def callback(self, cb_id, challenge, prompt, defresult):
-        """
-        The callback method will be called by the sasl_bind_s()
-        method several times. Each time it will provide the id, which
-        tells us what kind of information is requested (the CB_ ...
-        constants above). The challenge might be a short (english) text
-        or some binary string, from which the return value is calculated.
-        The prompt argument is always a human-readable description string;
-        The defresult is a default value provided by the sasl library
-
-        Currently, we do not use the challenge and prompt information, and
-        return only information which is stored in the self.cb_value_dict
-        cb_value_dictionary. Note that the current callback interface is not very
-        useful for writing generic sasl GUIs, which would need to know all
-        the questions to ask, before the answers are returned to the sasl
-        lib (in contrast to one question at a time).
-        """
-
         # The following print command might be useful for debugging
         # new sasl mechanisms. So it is left here
         cb_result = self.cb_value_dict.get(cb_id, defresult) or ''
