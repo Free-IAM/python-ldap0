@@ -13,6 +13,8 @@
 
 import sys
 
+from pkginfo import __version__, __author__, __license__
+
 # If your extensions are in another directory, add it here.
 #sys.path.append('some/directory')
 
@@ -34,15 +36,15 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'ldap0'
-copyright = u'2017, Michael Ströder <michael@stroeder.com>'
+copyright = u'2017, ' + __author__
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '0.0'
+version = '.'.join(__version__.split('.')[:2])
 # The full version, including alpha/beta/rc tags.
-release = '0.0.1.0'
+release = __version__
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
