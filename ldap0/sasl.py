@@ -26,7 +26,7 @@ class sasl:
     """
     This class handles SASL interactions for authentication.
     If an instance of this class is passed to ldap's sasl_bind_s()
-    method, the library will call its callback() method. For
+    method, the library will call its callback method. For
     specific SASL authentication mechanisms, this method can be
     overridden
     """
