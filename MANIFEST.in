@@ -1,0 +1,7 @@
+include distclean.sh setup.py setup.cfg tox.ini
+recursive-include docs *
+recursive-include _libldap0 *.c *.h
+recursive-include ldap0 *.py
+recursive-include tests *.py
+prune dist/*
+prune build/*
