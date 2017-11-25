@@ -25,7 +25,7 @@ import ldap0.functions
 from ldap0.schema.subentry import SCHEMA_ATTRS
 from ldap0.controls import DecodeControlTuples, RequestControlTuples
 from ldap0.controls.openldap import SearchNoOpControl
-from ldap0.sasl import SaslAuth
+from ldap0.sasl import SaslNoninteractiveAuth
 
 __all__ = [
     'SimpleLDAPObject',
@@ -270,9 +270,9 @@ class SimpleLDAPObject:
             sasl_flags=_libldap0.SASL_QUIET,
             authz_id=''
         ):
-        auth = SaslAuth(
-            {ldap0.sasl.CB_USER:authz_id},
-            sasl_mech
+        auth = SaslNoninteractiveAuth(
+            sasl_mech,
+            authz_id=authz_id,
         )
         self.sasl_interactive_bind_s(
             '',

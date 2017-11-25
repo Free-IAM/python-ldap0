@@ -8,17 +8,19 @@ from __future__ import absolute_import
 import os
 import unittest
 import pickle
-from ldap0.test import SlapdTestCase
 
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
 
 import ldap0
+from ldap0.sasl import SaslAuth, SaslPasswordAuth
+from ldap0.test import SlapdTestCase
 from ldap0.ldapobject import SimpleLDAPObject, ReconnectLDAPObject
 from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
 from ldap0.controls.readentry import PreReadControl, PostReadControl
 from ldap0.controls.pagedresults import SimplePagedResultsControl as SimplePagedResultsControl_pyasn1
 from ldap0.controls.libldap import SimplePagedResultsControl as SimplePagedResultsControl_libldap
+
 
 LDIF_TEMPLATE = """dn: %(suffix)s
 objectClass: dcObject
@@ -200,6 +202,20 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         l = self.ldap_object_class(self.server.ldapi_uri)
         l.sasl_external_bind_s(authz_id=authz_id)
         self.assertEqual(l.whoami_s(), authz_id.lower())
+
+    def test006_sasl_password_mechs(self):
+        authz_id = 'dn:cn=user1,%s' % (self.server.suffix)
+        for sasl_mech in (
+            'PLAIN',
+            'CRAM-MD5',
+            'DIGEST-MD5',
+            'SCRAM-SHA-1',
+        ):
+            sasl_auth = SaslPasswordAuth(sasl_mech, 'user1', 'user1_pw')
+            l = self.ldap_object_class(self.server.ldapi_uri)
+            l.sasl_interactive_bind_s('', sasl_auth)
+            self.assertEqual(l.whoami_s(), authz_id.lower())
+            l.unbind_s()
 
     def test007_timeout(self):
         l = self.ldap_object_class(self.server.ldap_uri)
