@@ -12,7 +12,7 @@ import time
 import _libldap0
 from ldap0.pkginfo import __version__, __author__, __license__
 import ldap0
-from ldap0.ldapobject.simple import SimpleLDAPObject
+from .simple import SimpleLDAPObject
 
 
 __all__ = [
@@ -22,7 +22,7 @@ __all__ = [
 
 class ReconnectLDAPObject(SimpleLDAPObject):
     """
-    In case of server failure (ldap0.SERVER_DOWN) the implementations
+    In case of server failure (_libldap0.SERVER_DOWN) the implementations
     of all synchronous operation methods (search_s() etc.) are doing
     an automatic reconnect and rebind and will retry the very same
     operation.
@@ -106,7 +106,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
             func(self, *args, **kwargs)
         else:
             # Send explicit anon simple bind request to provoke
-            # ldap0.SERVER_DOWN in method reconnect()
+            # _libldap0.SERVER_DOWN in method reconnect()
             SimpleLDAPObject.simple_bind_s(self, '', '')
 
     def _restore_options(self):
@@ -145,7 +145,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
                         SimpleLDAPObject.start_tls_s(self)
                     # Repeat last simple or SASL bind
                     self._apply_last_bind()
-                except (ldap0.SERVER_DOWN, ldap0.TIMEOUT) as ldap_error:
+                except (_libldap0.SERVER_DOWN, _libldap0.TIMEOUT) as ldap_error:
                     if __debug__ and self._trace_level >= 1:
                         self._trace_file.write('*** %s reconnect to %s failed\n' % (
                             counter_text, uri
@@ -176,7 +176,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
             self.reconnect(self._uri, retry_max=self._retry_max, retry_delay=self._retry_delay)
         try:
             return func(self, *args, **kwargs)
-        except ldap0.SERVER_DOWN:
+        except _libldap0.SERVER_DOWN:
             SimpleLDAPObject.unbind_s(self)
             # Try to reconnect
             self.reconnect(self._uri, retry_max=self._retry_max, retry_delay=self._retry_delay)
