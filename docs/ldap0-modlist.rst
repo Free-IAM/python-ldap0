@@ -10,8 +10,8 @@ The :mod:`ldap0.modlist` module defines the following functions:
 .. function:: addModlist(entry [, ignore_attr_types=[]]) -> list
 
    This function builds a list suitable for passing it directly as argument
-   *modlist* to method :py:meth:`ldap.ldapobject.LDAPObject.add` or
-   its synchronous counterpart :py:meth:`ldap.ldapobject.LDAPObject.add_s`.
+   *modlist* to method :py:meth:`ldap0.ldapobject.LDAPObject.add` or
+   its synchronous counterpart :py:meth:`ldap0.ldapobject.LDAPObject.add_s`.
 
    *entry* is a dictionary like returned when receiving search results.
 
@@ -23,8 +23,8 @@ The :mod:`ldap0.modlist` module defines the following functions:
 .. function:: modifyModlist( old_entry, new_entry [, ignore_attr_types=[] [, ignore_oldexistent=0 [, case_ignore_attr_types=None]]]) -> list
 
    This function builds a list suitable for passing it directly as argument
-   *modlist* to method :py:meth:`ldap.ldapobject.LDAPObject.modify` or
-   its synchronous counterpart :py:meth:`ldap.ldapobject.LDAPObject.modify_s`.
+   *modlist* to method :py:meth:`ldap0.ldapobject.LDAPObject.modify` or
+   its synchronous counterpart :py:meth:`ldap0.ldapobject.LDAPObject.modify_s`.
 
    Roughly when applying the resulting modify list to an entry
    holding  the data *old_entry* it will be modified in such a way that the entry
@@ -51,8 +51,8 @@ The :mod:`ldap0.modlist` module defines the following functions:
 
    .. note::
       Replacing attribute values is always done with a
-      :py:const:`ldap.MOD_DELETE`/:py:const:`ldap.MOD_ADD` pair instead of
-      :py:const:`ldap.MOD_REPLACE` to work-around potential issues with
+      :py:const:`ldap0.MOD_DELETE`/:py:const:`ldap0.MOD_ADD` pair instead of
+      :py:const:`ldap0.MOD_REPLACE` to work-around potential issues with
       attributes for which no EQUALITY matching rule are defined in the
       server's subschema.  This works correctly in most situations but
       rarely fails with some LDAP servers implementing (schema) checks on

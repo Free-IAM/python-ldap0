@@ -85,21 +85,21 @@ Splitting a LDAPv3 DN to AVA level. Note that both examples have the same result
 but in the first example the non-ASCII chars are passed as is (byte buffer string)
 whereas in the second example the hex-encoded DN representation are passed to the function.
 
->>> ldap0.dn.str2dn('cn=Michael Str\xc3\xb6der,dc=example,dc=com',flags=ldap.DN_FORMAT_LDAPV3)
+>>> ldap0.dn.str2dn('cn=Michael Str\xc3\xb6der,dc=example,dc=com',flags=ldap0.DN_FORMAT_LDAPV3)
 [[('cn', 'Michael Str\xc3\xb6der', 4)], [('dc', 'example', 1)], [('dc', 'com', 1)]]
->>> ldap0.dn.str2dn('cn=Michael Str\C3\B6der,dc=example,dc=com',flags=ldap.DN_FORMAT_LDAPV3)
+>>> ldap0.dn.str2dn('cn=Michael Str\C3\B6der,dc=example,dc=com',flags=ldap0.DN_FORMAT_LDAPV3)
 [[('cn', 'Michael Str\xc3\xb6der', 4)], [('dc', 'example', 1)], [('dc', 'com', 1)]]
 
 
 Splitting a LDAPv2 DN into RDN parts:
 
->>> ldap0.dn.explode_dn('cn=John Doe;dc=example;dc=com',flags=ldap.DN_FORMAT_LDAPV2)
+>>> ldap0.dn.explode_dn('cn=John Doe;dc=example;dc=com',flags=ldap0.DN_FORMAT_LDAPV2)
 ['cn=John Doe', 'dc=example', 'dc=com']
 
 
 Splitting a multi-valued RDN:
 
->>> ldap0.dn.explode_rdn('cn=John Doe+mail=john.doe@example.com',flags=ldap.DN_FORMAT_LDAPV2)
+>>> ldap0.dn.explode_rdn('cn=John Doe+mail=john.doe@example.com',flags=ldap0.DN_FORMAT_LDAPV2)
 ['cn=John Doe', 'mail=john.doe@example.com']
 
 Splitting a LDAPv3 DN with a multi-valued RDN into its AVA parts:

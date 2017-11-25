@@ -36,7 +36,7 @@ Classes
 .. autoclass:: ldap0.sasl.sasl
    :members:
    
-   This class is used with :py:meth:`ldap.LDAPObject.sasl_interactive_bind_s()`.
+   This class is used with :py:meth:`ldap0.LDAPObject.sasl_interactive_bind_s()`.
 
 
 .. autoclass:: ldap0.sasl.cram_md5
@@ -50,13 +50,13 @@ Classes
 .. autoclass:: ldap0.sasl.gssapi
    :members:
 
-   You might consider using convenience method :py:meth:`ldap.LDAPObject.sasl_gssapi_bind_s()`.
+   You might consider using convenience method :py:meth:`ldap0.LDAPObject.sasl_gssapi_bind_s()`.
 
 
 .. autoclass:: ldap0.sasl.external
    :members:
 
-   You might consider using convenience method :py:meth:`ldap.LDAPObject.sasl_external_bind_s()`.
+   You might consider using convenience method :py:meth:`ldap0.LDAPObject.sasl_external_bind_s()`.
 
 
 .. _ldap0.sasl-example:
@@ -70,10 +70,10 @@ and sends a SASL external bind request.
 
 ::
 
-   import ldap, ldap0.sasl, urllib
+   import ldap0.ldapobject, ldap0.sasl, urllib
 
    ldapi_path = '/tmp/openldap-socket'
-   ldap_conn = ldap.initialize(
+   ldap_conn = ldap0.ldapobject.LDAPObject(
        'ldapi://%s' % (
            urllib.quote_plus(ldapi_path)
        )

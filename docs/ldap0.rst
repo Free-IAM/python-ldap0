@@ -74,7 +74,7 @@ Options
 
 .. seealso::
 
-   :manpage:`ldap.conf(5)` and :manpage:`ldap_get_option(3)`
+   :manpage:`ldap0.conf(5)` and :manpage:`ldap_get_option(3)`
 
 
 For use with functions :py:func:set_option() and :py:func:get_option()
@@ -111,7 +111,7 @@ following option identifiers are defined as constants:
 .. py:data:: OPT_PROTOCOL_VERSION
 
    Sets the LDAP protocol version used for a connection. This is mapped to
-   object attribute `ldap.LDAPObject.protocol_version`
+   object attribute `ldap0.LDAPObject.protocol_version`
 
 .. py:data:: OPT_REFERRALS
 
@@ -211,7 +211,7 @@ DN format flags
 ----------------
 
 This constants are used for DN-parsing functions found in
-sub-module :py:mod:`ldap.dn`.
+sub-module :py:mod:`ldap0.dn`.
 
 .. seealso::
    `ldap_str2dn(3) <https://www.openldap.org/software/man.cgi?query=ldap_str2dn&sektion=3>`_
@@ -570,7 +570,7 @@ LDAPObject classes
    For automatic reconnects it has additional arguments:
 
    *retry_max* specifies the number of reconnect attempts before
-   re-raising the :py:exc:`ldap.SERVER_DOWN` exception.
+   re-raising the :py:exc:`ldap0.SERVER_DOWN` exception.
 
    *retry_delay* specifies the time in seconds between reconnect attempts.
 
@@ -580,19 +580,19 @@ LDAPObject classes
 Arguments for LDAPv3 controls
 -----------------------------
 
-The :py:mod:`ldap.controls` module can be used for constructing and
+The :py:mod:`ldap0.controls` module can be used for constructing and
 decoding LDAPv3 controls.
 
 *serverctrls*
-  is a list of :py:class:`ldap.controls.LDAPControl` instances sent to the server along
-  with the LDAP request (see module :py:mod:`ldap.controls`). These are
+  is a list of :py:class:`ldap0.controls.LDAPControl` instances sent to the server along
+  with the LDAP request (see module :py:mod:`ldap0.controls`). These are
   controls which alter the behaviour of the server when processing the
   request if the control is supported by the server. The effect of controls
   might differ depending on the type of LDAP request or controls might not
   be applicable with certain LDAP requests at all.
 
 *clientctrls*
-  is a list of :py:class:`ldap.controls.LDAPControl` instances passed to the
+  is a list of :py:class:`ldap0.controls.LDAPControl` instances passed to the
   client API and alter the behaviour of the client when processing the
   request.
 
@@ -630,7 +630,7 @@ and wait for and return with the server's result, or with
    name (DN) of the entry to add, and *modlist* is a list of attributes to be
    added. The modlist is similar the one passed to :py:meth:`modify()`, except that the
    operation integer is omitted from the tuples in modlist. You might want to
-   look into sub-module \refmodule{ldap.modlist} for generating the modlist.
+   look into sub-module \refmodule{ldap0.modlist} for generating the modlist.
 
    The asynchronous method :py:meth:`add()` returns the message ID of the 
    initiated request.
@@ -669,8 +669,8 @@ and wait for and return with the server's result, or with
    :py:meth:`result()`.
 
    Note that the asynchronous technique yields the answer
-   by raising the exception objects :py:exc:`ldap.COMPARE_TRUE` or
-   :py:exc:`ldap.COMPARE_FALSE`.
+   by raising the exception objects :py:exc:`ldap0.COMPARE_TRUE` or
+   :py:exc:`ldap0.COMPARE_FALSE`.
 
    *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
 
@@ -699,16 +699,16 @@ and wait for and return with the server's result, or with
    form returns the message id of the initiated request, and the
    result can be obtained from a subsequent call to :py:meth:`extop_result()`.
 
-   The *extreq* is an instance of class :py:class:`ldap.extop.ExtendedRequest`
+   The *extreq* is an instance of class :py:class:`ldap0.extop.ExtendedRequest`
    containing the parameters for the extended operation request.
 
    *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
 
    If argument *extop_resp_class* is set to a sub-class of
-   :py:class:`ldap.extop.ExtendedResponse` this class is used to return an
+   :py:class:`ldap0.extop.ExtendedResponse` this class is used to return an
    object of this class instead of a raw BER value in respvalue.
 
-.. py:method:: LDAPObject.extop_result(self,msgid=ldap.RES_ANY,all=1,timeout=None) -> (respoid,respvalue)
+.. py:method:: LDAPObject.extop_result(self,msgid=ldap0.RES_ANY,all=1,timeout=None) -> (respoid,respvalue)
 
    Wrapper method around :py:meth:`result4()` just for retrieving
    the result of an extended operation sent before.
@@ -724,8 +724,8 @@ and wait for and return with the server's result, or with
 
    Each element in the list *modlist* should be a tuple of the form
    *(mod_op,mod_type,mod_vals)*,
-   where *mod_op* indicates the operation (one of :py:const:`ldap.MOD_ADD`,
-   :py:const:`ldap.MOD_DELETE`, or :py:const:`ldap.MOD_REPLACE`),
+   where *mod_op* indicates the operation (one of :py:const:`ldap0.MOD_ADD`,
+   :py:const:`ldap0.MOD_DELETE`, or :py:const:`ldap0.MOD_REPLACE`),
    *mod_type* is a string indicating the attribute type name, and
    *mod_vals* is either a string value or a list of string values to add,
    delete or replace respectively.  For the delete operation, *mod_vals*
@@ -736,7 +736,7 @@ and wait for and return with the server's result, or with
    The asynchronous method :py:meth:`modify()` returns the message ID of 
    the initiated request.
 
-   You might want to look into sub-module :py:mod:`ldap.modlist` for
+   You might want to look into sub-module :py:mod:`ldap0.modlist` for
    generating *modlist*.
 
 
@@ -836,7 +836,7 @@ and wait for and return with the server's result, or with
    the method will wait indefinitely for a response.
    The timeout can be expressed as a floating-point value, and
    a value of :py:const:`0` effects a poll.
-   If a timeout does occur, a :py:exc:`ldap.TIMEOUT` exception is raised,
+   If a timeout does occur, a :py:exc:`ldap0.TIMEOUT` exception is raised,
    unless polling, in which case ``(None, None)`` is returned.
 
    The :py:meth:`result()` method returns a tuple of the form
@@ -874,21 +874,21 @@ and wait for and return with the server's result, or with
    :py:meth:`extop_s()` instead.
 
    *resp_ctrl_classes* is a dictionary mapping the OID of a response controls to a
-   :py:class:`ldap.controls.ResponseControl` class of response controls known by the
+   :py:class:`ldap0.controls.ResponseControl` class of response controls known by the
    application. So the response control value will be automatically decoded.
-   If :py:const:`None` the global dictionary :py:data:`ldap.controls.KNOWN_RESPONSE_CONTROLS`
+   If :py:const:`None` the global dictionary :py:data:`ldap0.controls.KNOWN_RESPONSE_CONTROLS`
    is used instead.
 
-.. py:method:: LDAPObject.sasl_interactive_bind_s(who, auth[, serverctrls=None [, clientctrls=None [, sasl_flags=ldap.SASL_QUIET]]]) -> None
+.. py:method:: LDAPObject.sasl_interactive_bind_s(who, auth[, serverctrls=None [, clientctrls=None [, sasl_flags=ldap0.SASL_QUIET]]]) -> None
 
    This call is used to bind to the directory with a SASL bind request.
 
-   *auth* is an :py:class:`ldap.sasl.sasl()` instance.
+   *auth* is an :py:class:`ldap0.sasl.sasl()` instance.
 
    *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.sasl_non_interactive_bind_s(sasl_mech[, serverctrls=None [, clientctrls=None [, sasl_flags=ldap.SASL_QUIET [, authz_id='']]]]) -> None
+.. py:method:: LDAPObject.sasl_non_interactive_bind_s(sasl_mech[, serverctrls=None [, clientctrls=None [, sasl_flags=ldap0.SASL_QUIET [, authz_id='']]]]) -> None
 
    This call is used to bind to the directory with a SASL bind request with
    non-interactive SASL mechanism defined with argument *sasl_mech* and
@@ -897,7 +897,7 @@ and wait for and return with the server's result, or with
    *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.sasl_external_bind_s([serverctrls=None [, clientctrls=None [, sasl_flags=ldap.SASL_QUIET [, authz_id='']]]]) -> None
+.. py:method:: LDAPObject.sasl_external_bind_s([serverctrls=None [, clientctrls=None [, sasl_flags=ldap0.SASL_QUIET [, authz_id='']]]]) -> None
 
    This call is used to bind to the directory with a SASL bind request with
    mechanism EXTERNAL and internally calls :py:meth:`sasl_non_interactive_bind_s()`.
@@ -905,7 +905,7 @@ and wait for and return with the server's result, or with
    *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.sasl_gssapi_bind_s([serverctrls=None [, clientctrls=None [, sasl_flags=ldap.SASL_QUIET [, authz_id='']]]]) -> None
+.. py:method:: LDAPObject.sasl_gssapi_bind_s([serverctrls=None [, clientctrls=None [, sasl_flags=ldap0.SASL_QUIET [, authz_id='']]]]) -> None
 
    This call is used to bind to the directory with a SASL bind request with
    mechanism GSSAPI and internally calls :py:meth:`sasl_non_interactive_bind_s()`.
@@ -967,7 +967,7 @@ and wait for and return with the server's result, or with
 
    The synchronous form with timeout, :py:meth:`searchs()`,
    will block for at most *timeout* seconds (or indefinitely if *timeout*
-   is negative). A :py:exc:`ldap.TIMEOUT` exception is raised if no result is received
+   is negative). A :py:exc:`ldap0.TIMEOUT` exception is raised if no result is received
    within the specified time.
 
    The amount of search results retrieved can be limited with the 
@@ -1062,7 +1062,7 @@ These attributes are mutable unless described as read-only.
    .. note::
 
       It is highly recommended to set the protocol version after establishing
-      a LDAP connection with :py:func:`ldap.initialize()` and before submitting
+      a LDAP connection with :py:func:`ldap0.initialize()` and before submitting
       the first request.
 
 
@@ -1101,12 +1101,11 @@ The following example demonstrates how to open a connection to an
 LDAP server using the :py:mod:`ldap` module and invoke a synchronous
 subtree search.
 
->>> import ldap
->>> l = ldap.initialize('ldap://localhost:1390')
->>> l.search_s('ou=Testing,dc=stroeder,dc=de',ldap.SCOPE_SUBTREE,'(cn=fred*)',['cn','mail'])
+>>> import ldap, ldap0.ldapobject
+>>> ldap_conn = ldap0.ldapobject.LDAPObject(('ldap://localhost:1390')
+>>> ldap_conn.search_s('ou=Testing,dc=stroeder,dc=de',ldap0.SCOPE_SUBTREE,'(cn=fred*)',['cn','mail'])
 [('cn=Fred Feuerstein,ou=Testing,dc=stroeder,dc=de', {'cn': ['Fred Feuerstein']})]
->>> r = l.search_s('ou=Testing,dc=stroeder,dc=de',ldap.SCOPE_SUBTREE,'(objectClass=*)',['cn','mail'])
->>> for dn,entry in r:
->>>   print 'Processing',repr(dn)
->>>   handle_ldap_entry(entry)
-
+>>> r = ldap_conn.search_s('ou=Testing,dc=stroeder,dc=de',ldap0.SCOPE_SUBTREE,'(objectClass=*)',['cn','mail'])
+>>> for dn, entry in r:
+>>>     print 'Processing',repr(dn)
+>>>     handle_ldap_entry(entry)
