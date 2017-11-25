@@ -37,6 +37,10 @@ authz-regexp
   "gidnumber=%(root_gid)s\\+uidnumber=%(root_uid)s,cn=peercred,cn=external,cn=auth"
   "%(rootdn)s"
 
+authz-regexp
+  "uid=([a-zA-Z0-9_-]+),cn=(DIGEST-MD5|CRAM-MD5|NTLM|PLAIN|LOGIN|SCRAM-SHA-1|GSSAPI),cn=auth"
+  "ldap:///%(suffix)s??sub?(cn=$1)"
+
 database config
 access to
   dn.subtree="cn=config"
@@ -47,6 +51,10 @@ directory "%(directory)s"
 suffix "%(suffix)s"
 rootdn "%(rootdn)s"
 rootpw "%(rootpw)s"
+
+access to
+  dn.subtree="%(suffix)s"
+    by * auth
 """
 
 LOCALHOST = '127.0.0.1'
