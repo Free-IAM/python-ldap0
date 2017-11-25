@@ -33,7 +33,7 @@ Constants
 Classes
 =======
 
-.. autoclass:: ldap0.sasl.sasl
+.. autoclass:: ldap0.sasl.SaslAuth
    :members:
    
    This class is used with :py:meth:`ldap0.LDAPObject.sasl_interactive_bind_s()`.

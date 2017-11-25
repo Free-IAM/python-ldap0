@@ -20,13 +20,12 @@ import _libldap0
 from _libldap0 import LDAPError
 
 import ldap0
-import ldap0.sasl
 import ldap0.functions
 
 from ldap0.schema.subentry import SCHEMA_ATTRS
 from ldap0.controls import DecodeControlTuples, RequestControlTuples
 from ldap0.controls.openldap import SearchNoOpControl
-
+from ldap0.sasl import SaslAuth
 
 __all__ = [
     'SimpleLDAPObject',
@@ -184,7 +183,7 @@ class SimpleLDAPObject:
         msgid = self.cancel(cancelid, serverctrls, clientctrls)
         try:
             res = self.result(msgid, all=1, timeout=self.timeout)
-        except (ldap0.CANCELLED, ldap0.SUCCESS):
+        except (_libldap0.CANCELLED, _libldap0.SUCCESS):
             res = None
         return res
 
@@ -271,7 +270,7 @@ class SimpleLDAPObject:
             sasl_flags=_libldap0.SASL_QUIET,
             authz_id=''
         ):
-        auth = ldap0.sasl.sasl(
+        auth = SaslAuth(
             {ldap0.sasl.CB_USER:authz_id},
             sasl_mech
         )
@@ -340,11 +339,11 @@ class SimpleLDAPObject:
                 all=1,
                 timeout=self.timeout
             )
-        except ldap0.COMPARE_TRUE:
+        except _libldap0.COMPARE_TRUE:
             return True
-        except ldap0.COMPARE_FALSE:
+        except _libldap0.COMPARE_FALSE:
             return False
-        raise ldap0.PROTOCOL_ERROR(
+        raise _libldap0.PROTOCOL_ERROR(
             'Compare operation returned wrong result: %r' % (ldap_res)
         )
 
@@ -358,7 +357,7 @@ class SimpleLDAPObject:
 
     def delete_s(self, dn, serverctrls=None, clientctrls=None):
         msgid = self.delete(dn, serverctrls, clientctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
+        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -391,7 +390,7 @@ class SimpleLDAPObject:
         if extop_resp_class:
             respoid, respvalue = res
             if extop_resp_class.responseName != respoid:
-                raise ldap0.PROTOCOL_ERROR(
+                raise _libldap0.PROTOCOL_ERROR(
                     "Wrong OID in extended response! Expected %s, got %s" % (
                         extop_resp_class.responseName,
                         respoid
@@ -467,7 +466,7 @@ class SimpleLDAPObject:
             clientctrls=None
         ):
         msgid = self.rename(dn, newrdn, newsuperior, delold, serverctrls, clientctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
+        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -659,12 +658,12 @@ class SimpleLDAPObject:
                 attrlist=['subschemaSubentry'],
             )
         except (
-                ldap0.NO_SUCH_OBJECT,
-                ldap0.NO_SUCH_ATTRIBUTE,
-                ldap0.INSUFFICIENT_ACCESS,
+                _libldap0.NO_SUCH_OBJECT,
+                _libldap0.NO_SUCH_ATTRIBUTE,
+                _libldap0.INSUFFICIENT_ACCESS,
             ):
             r = []
-        except ldap0.UNDEFINED_TYPE:
+        except _libldap0.UNDEFINED_TYPE:
             return None
         try:
             if r:
@@ -711,7 +710,7 @@ class SimpleLDAPObject:
                 filterstr='(objectClass=subschema)',
                 attrlist=attrs or SCHEMA_ATTRS
             )
-        except ldap0.NO_SUCH_OBJECT:
+        except _libldap0.NO_SUCH_OBJECT:
             return None
         else:
             return subschemasubentry
