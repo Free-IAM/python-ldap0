@@ -31,6 +31,7 @@ Contents
    ldap0-sasl.rst
    ldap0-ldif.rst
    ldap0-ldapurl.rst
+   ldap0-test.rst
 
 
 ******************

@@ -5,7 +5,7 @@ slapdtest - module for spawning test instances of OpenLDAP's slapd server
 See https://www.python-ldap.org/ for details.
 """
 
-__version__ = '2.5.3'
+from __future__ import absolute_import
 
 import os
 import socket
@@ -15,6 +15,13 @@ import logging
 from logging.handlers import SysLogHandler
 import unittest
 import urllib
+
+from ldap0.pkginfo import __version__, __author__, __license__
+import _libldap0
+import ldap0.ldapobject
+from ldap0.filter import escape_filter_chars
+import ldap0.modlist
+from ldap0.ldif import LDIFRecordList
 
 # a template string for generating simple slapd.conf file
 SLAPD_CONF_TEMPLATE = r"""
@@ -375,8 +382,8 @@ class SlapdTestCase(unittest.TestCase):
     """
 
     server_class = SlapdObject
+    ldap_object_class = ldap0.ldapobject.LDAPObject
     server = None
-    ldap_object_class = None
     trace_level = 0
 
     def _open_ldap_conn(self, who=None, cred=None):
@@ -398,3 +405,57 @@ class SlapdTestCase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.server.stop()
+
+    def setUp(self):
+        try:
+            self._ldap_conn
+        except AttributeError:
+            # open local LDAP connection
+            self._ldap_conn = self._open_ldap_conn()
+            self.mdb_config_dn, _ = self._ldap_conn.search_s(
+                'cn=config',
+                _libldap0.SCOPE_SUBTREE,
+                '(olcSuffix={0})'.format(
+                    escape_filter_chars(self.server.suffix)
+                ),
+            )[0]
+
+    def enable_overlay(self, slapo_entry, schema_files=None):
+        olc_overlay = slapo_entry['olcOverlay'][0]
+        schema_entries = []
+        for schema_filename in schema_files or []:
+            with open(os.path.join(self.server.SCHEMADIR, schema_filename), 'rb') as schema_file:
+                ldif_parser = LDIFRecordList(schema_file)
+                ldif_parser.parse()
+            schema_entries.extend(ldif_parser.all_records)
+        try:
+            for dn, entry in schema_entries:
+                self._ldap_conn.add_s(
+                    dn,
+                    ldap0.modlist.addModlist(entry),
+                )
+            self._ldap_conn.modify_s(
+                'cn=module{0},cn=config',
+                [(_libldap0.MOD_ADD, 'olcModuleLoad', [olc_overlay])]
+            )
+            self._ldap_conn.add_s(
+                'olcOverlay={{0}}{0},{1}'.format(
+                    olc_overlay,
+                    self.mdb_config_dn,
+                ),
+                ldap0.modlist.addModlist(slapo_entry),
+            )
+            self._ldap_conn.add_s(
+                'olcOverlay={{0}}{0},{1}'.format(
+                    olc_overlay,
+                    self.mdb_config_dn,
+                ),
+                ldap0.modlist.addModlist(slapo_entry),
+            )
+        except _libldap0.OTHER as ldap_err:
+            self.skipTest(
+                'installing slapo-%s failed: %s' % (
+                    olc_overlay,
+                    ldap_err,
+                )
+            )

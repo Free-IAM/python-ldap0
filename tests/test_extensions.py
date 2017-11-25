@@ -9,7 +9,7 @@ from __future__ import absolute_import
 
 import os
 import unittest
-from slapdtest import SlapdTestCase
+from ldap0.test import SlapdTestCase
 
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
@@ -18,9 +18,7 @@ import _libldap0
 import ldap0
 from ldap0 import LDAPError
 from ldap0.ldapobject import LDAPObject
-from ldap0.filter import escape_filter_chars
-from ldap0.modlist import addModlist
-from ldap0.ldif import LDIFRecordList
+import ldap0.modlist
 
 from ldap0.controls.simple import ManageDSAITControl
 from ldap0.controls.deref import DereferenceControl
@@ -121,64 +119,11 @@ class ExtensionTestCase(SlapdTestCase):
             }
         )
 
-    def setUp(self):
-        try:
-            self._ldap_conn
-        except AttributeError:
-            # open local LDAP connection
-            self._ldap_conn = self._open_ldap_conn()
-            self.mdb_config_dn, _ = self._ldap_conn.search_s(
-                'cn=config',
-                _libldap0.SCOPE_SUBTREE,
-                '(olcSuffix={0})'.format(
-                    escape_filter_chars(self.server.suffix)
-                ),
-            )[0]
-
-    def _enable_overlay(self, slapo_entry, schema_files=None):
-        olc_overlay = slapo_entry['olcOverlay'][0]
-        schema_entries = []
-        for schema_filename in schema_files or []:
-            with open(os.path.join(self.server.SCHEMADIR, schema_filename), 'rb') as schema_file:
-                ldif_parser = LDIFRecordList(schema_file)
-                ldif_parser.parse()
-            schema_entries.extend(ldif_parser.all_records)
-        try:
-            for dn, entry in schema_entries:
-                self._ldap_conn.add_s(
-                    dn,
-                    addModlist(entry),
-                )
-            self._ldap_conn.modify_s(
-                'cn=module{0},cn=config',
-                [(_libldap0.MOD_ADD, 'olcModuleLoad', [olc_overlay])]
-            )
-            self._ldap_conn.add_s(
-                'olcOverlay={{0}}{0},{1}'.format(
-                    olc_overlay,
-                    self.mdb_config_dn,
-                ),
-                addModlist(slapo_entry),
-            )
-            self._ldap_conn.add_s(
-                'olcOverlay={{0}}{0},{1}'.format(
-                    olc_overlay,
-                    self.mdb_config_dn,
-                ),
-                addModlist(slapo_entry),
-            )
-        except _libldap0.OTHER as ldap_err:
-            self.skipTest(
-                'installing slapo-%s failed: %s' % (
-                    olc_overlay,
-                    ldap_err,
-                )
-            )
 
 class TestDeRef(ExtensionTestCase):
 
     def test_deref(self):
-        self._enable_overlay({
+        self.enable_overlay({
             'olcOverlay': ['deref'],
             'objectClass': ['olcOverlayConfig'],
         })
@@ -187,7 +132,7 @@ class TestDeRef(ExtensionTestCase):
 class TestNoopSrch(ExtensionTestCase):
 
     def test_noopsrch(self):
-        self._enable_overlay({
+        self.enable_overlay({
             'olcOverlay': ['noopsrch'],
             'objectClass': ['olcOverlayConfig'],
         })
@@ -217,7 +162,7 @@ class TestNoopSrch(ExtensionTestCase):
 class TestDDS(ExtensionTestCase):
 
     def test_dds(self):
-        self._enable_overlay({
+        self.enable_overlay({
             'olcOverlay': ['dds'],
             'objectClass': ['olcOverlayConfig', 'olcDDSConfig'],
             'olcDDSdefaultTtl': ['1h'],
@@ -229,7 +174,7 @@ class TestDDS(ExtensionTestCase):
         try:
             self._ldap_conn.add_s(
                 dds_entry_dn,
-                addModlist({
+                ldap0.modlist.addModlist({
                     'objectClass': ['applicationProcess', 'dynamicObject'],
                     'cn': ['dds-1'],
                 }),
@@ -247,7 +192,7 @@ class TestPPolicy(ExtensionTestCase):
 
     def test_ppolicy(self):
         ppolicy_default_dn = 'cn=ppolicy-default,'+self.server.suffix
-        self._enable_overlay(
+        self.enable_overlay(
             {
                 'olcOverlay': ['ppolicy'],
                 'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
@@ -261,7 +206,7 @@ class TestPPolicy(ExtensionTestCase):
         )
         self._ldap_conn.add_s(
             ppolicy_default_dn,
-            addModlist({
+            ldap0.modlist.addModlist({
                 'objectClass': ['applicationProcess', 'pwdPolicy'],
                 'cn': ['ppolicy-default'],
                 'pwdAttribute': ['userPassword'],
@@ -269,7 +214,7 @@ class TestPPolicy(ExtensionTestCase):
         )
 
     def test_sssvlv(self):
-        self._enable_overlay(
+        self.enable_overlay(
             {
                 'olcOverlay': ['sssvlv'],
                 'objectClass': ['olcOverlayConfig', 'olcSssVlvConfig'],

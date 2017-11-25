@@ -9,7 +9,7 @@ import os
 import unittest
 import shelve
 
-from slapdtest import SlapdObject, SlapdTestCase
+from ldap0.test import SlapdObject, SlapdTestCase
 
 # Switch off processing .ldaprc or ldap.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'

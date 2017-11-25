@@ -183,6 +183,7 @@ setup(
         'ldap0.schema.parse',
         'ldap0.schema.util',
         'ldap0.syncrepl',
+        'ldap0.test',
     ],
     package_dir={'': '.'},
     data_files=LDAP_CLASS.extra_files,
