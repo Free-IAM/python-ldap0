@@ -438,10 +438,7 @@ class SlapdTestCase(unittest.TestCase):
             schema_entries.extend(ldif_parser.all_records)
         try:
             for dn, entry in schema_entries:
-                self._ldap_conn.add_s(
-                    dn,
-                    ldap0.modlist.addModlist(entry),
-                )
+                self._ldap_conn.add_s(dn, entry)
             self._ldap_conn.modify_s(
                 'cn=module{0},cn=config',
                 [(_libldap0.MOD_ADD, 'olcModuleLoad', [olc_overlay])]
@@ -451,14 +448,7 @@ class SlapdTestCase(unittest.TestCase):
                     olc_overlay,
                     self.mdb_config_dn,
                 ),
-                ldap0.modlist.addModlist(slapo_entry),
-            )
-            self._ldap_conn.add_s(
-                'olcOverlay={{0}}{0},{1}'.format(
-                    olc_overlay,
-                    self.mdb_config_dn,
-                ),
-                ldap0.modlist.addModlist(slapo_entry),
+                slapo_entry,
             )
         except _libldap0.OTHER as ldap_err:
             self.skipTest(
