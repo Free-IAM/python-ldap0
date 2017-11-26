@@ -391,6 +391,9 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
         self.assertEqual(
             l1.__getstate__(),
             {
+                '_cache': {},
+                '_cache_hits': 0,
+                '_cache_misses': 0,
                 '_last_bind': (
                     'simple_bind_s',
                     (bind_dn, 'user1_pw'),
@@ -404,6 +407,7 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
                 '_trace_level': 0,
                 '_trace_stack_limit': 5,
                 '_uri': self.server.ldapi_uri,
+                'cache_ttl': 0.0,
                 'timeout': -1,
             },
         )

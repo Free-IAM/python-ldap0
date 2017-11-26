@@ -64,7 +64,8 @@ class LDAPObject:
             uri,
             trace_level=0,
             trace_file=None,
-            trace_stack_limit=5
+            trace_stack_limit=5,
+            cache_ttl=0.0,
         ):
         self._trace_level = trace_level
         self._trace_file = trace_file or sys.stdout
@@ -78,6 +79,8 @@ class LDAPObject:
         )
         self.timeout = -1
         self.protocol_version = _libldap0.VERSION3
+        self.cache_ttl = cache_ttl
+        self.flush_cache()
 
     def _ldap_lock(self, desc=''):
         if _libldap0.LIBLDAP_R:
@@ -603,6 +606,40 @@ class LDAPObject:
             sizelimit,
         )
 
+    def cache_hit_ratio(self):
+        """
+        Returns percentage of cache hit ratio
+        """
+        try:
+            return (
+                100 * float(self._cache_hits) /
+                float(self._cache_hits+self._cache_misses)
+            )
+        except ZeroDivisionError:
+            return None
+
+    def flush_cache(self):
+        """
+        reset/flush the internal cache
+        """
+        self._cache_misses = 0
+        self._cache_hits = 0
+        self._cache = {}
+
+    def uncache_entry(self, entry_dn):
+        """
+        remove all cached entries related to dn from internal cache
+        """
+        entry_dn = entry_dn.lower()
+        for cache_key_args, cached_results in self._cache.items():
+            if cache_key_args[0].lower() == entry_dn:
+                del self._cache[cache_key_args]
+            else:
+                for cached_dn, _ in cached_results[1]:
+                    if not cached_dn is None and cached_dn.lower() == entry_dn:
+                        del self._cache[cache_key_args]
+                        break # stop looping through results
+
     def search_s(
             self,
             base,
@@ -613,8 +650,45 @@ class LDAPObject:
             serverctrls=None,
             clientctrls=None,
             timeout=-1,
-            sizelimit=0
+            sizelimit=0,
+            cache_ttl=None,
         ):
+        """
+        caching variant of LDAPObject.search_ext_s()
+        """
+        if cache_ttl is None:
+            cache_ttl = self.cache_ttl
+        current_time = time.time()
+        result = None
+        if cache_ttl > 0:
+            cache_key_args = (
+                base,
+                scope,
+                filterstr,
+                tuple(attrlist or []),
+                attrsonly,
+                tuple([
+                  c.encodeControlValue()
+                  for c in serverctrls or []
+                ]),
+                tuple(clientctrls or []),
+                timeout,
+                sizelimit
+            )
+            # first look into cache for non-expired search results
+            try:
+                result_cache_time, result = self._cache[cache_key_args]
+            except KeyError:
+                pass
+            else:
+                if current_time > result_cache_time + cache_ttl:
+                    # cache entry is expired => remove it no matter what happens later
+                    del self._cache[cache_key_args]
+                else:
+                    self._cache_hits += 1
+                    return result
+        # no cached result
+        self._cache_misses += 1
         msgid = self.search(
             base,
             scope,
@@ -626,7 +700,14 @@ class LDAPObject:
             timeout,
             sizelimit
         )
-        return self.result(msgid, all=1, timeout=timeout)[1]
+        result = self.result(msgid, all=1, timeout=timeout)[1]
+        if self.cache_ttl > 0:
+            # store result in cache if caching is enabled at all
+            self._cache[cache_key_args] = (
+                current_time,
+                result
+            )
+        return result # search_s()
 
     def noop_search(
             self,
@@ -861,8 +942,12 @@ class ReconnectLDAPObject(LDAPObject):
     def __init__(
             self,
             uri,
-            trace_level=0, trace_file=None, trace_stack_limit=5,
-            retry_max=1, retry_delay=60.0
+            trace_level=0,
+            trace_file=None,
+            trace_stack_limit=5,
+            cache_ttl=0.0,
+            retry_max=1,
+            retry_delay=60.0,
         ):
         """
         Parameters like LDAPObject.__init__() with these
