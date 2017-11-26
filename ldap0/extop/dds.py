@@ -37,7 +37,7 @@ class RefreshRequest(ExtendedRequest):
         )
 
     def __init__(self, entryName, requestTtl=None):
-        ExtendedRequest.__init__(self, entryName)
+        ExtendedRequest.__init__(self)
         self.entryName = entryName
         self.requestTtl = requestTtl or self.defaultRequestTtl
 

@@ -19,8 +19,9 @@ class ExtendedRequest(object):
         (here it is the BER-encoded ASN.1 request value)
     """
 
-    def __init__(self, requestName, requestValue=None):
-        self.requestName = requestName
+    def __init__(self, requestName=None, requestValue=None):
+        if requestName is not None:
+            self.requestName = requestName
         self.requestValue = requestValue
 
     def __repr__(self):
