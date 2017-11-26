@@ -18,7 +18,6 @@ import _libldap0
 import ldap0
 from ldap0 import LDAPError
 from ldap0.ldapobject import LDAPObject
-import ldap0.modlist
 
 from ldap0.controls.simple import ManageDSAITControl
 from ldap0.controls.deref import DereferenceControl
@@ -174,10 +173,10 @@ class TestDDS(ExtensionTestCase):
         try:
             self._ldap_conn.add_s(
                 dds_entry_dn,
-                ldap0.modlist.addModlist({
+                {
                     'objectClass': ['applicationProcess', 'dynamicObject'],
                     'cn': ['dds-1'],
-                }),
+                },
             )
         except _libldap0.SERVER_DOWN as ldap_err:
             self.skipTest(
@@ -206,11 +205,11 @@ class TestPPolicy(ExtensionTestCase):
         )
         self._ldap_conn.add_s(
             ppolicy_default_dn,
-            ldap0.modlist.addModlist({
+            {
                 'objectClass': ['applicationProcess', 'pwdPolicy'],
                 'cn': ['ppolicy-default'],
                 'pwdAttribute': ['userPassword'],
-            }),
+            },
         )
 
     def test_sssvlv(self):
