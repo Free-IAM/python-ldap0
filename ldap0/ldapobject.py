@@ -29,7 +29,7 @@ from ldap0.modlist import add_modlist
 __all__ = [
     'NO_UNIQUE_ENTRY',
     'LDAPObject',
-    'SimpleLDAPObject',
+    'LDAPObject',
     'ReconnectLDAPObject',
 ]
 
@@ -41,7 +41,7 @@ class NO_UNIQUE_ENTRY(_libldap0.NO_SUCH_OBJECT):
     """
 
 
-class SimpleLDAPObject:
+class LDAPObject:
     """
     Wrapper class around _libldap0.LDAPObject
     """
@@ -786,10 +786,10 @@ class SimpleLDAPObject:
         ).get('namingContexts', [])
 
 
-LDAPObject = SimpleLDAPObject
+LDAPObject = LDAPObject
 
 
-class ReconnectLDAPObject(SimpleLDAPObject):
+class ReconnectLDAPObject(LDAPObject):
     """
     In case of server failure (_libldap0.SERVER_DOWN) the implementations
     of all synchronous operation methods (search_s() etc.) are doing
@@ -817,7 +817,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
             retry_max=1, retry_delay=60.0
         ):
         """
-        Parameters like SimpleLDAPObject.__init__() with these
+        Parameters like LDAPObject.__init__() with these
         additional arguments:
 
         retry_max
@@ -828,7 +828,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
         self._uri = uri
         self._options = []
         self._last_bind = None
-        SimpleLDAPObject.__init__(self, uri, trace_level, trace_file, trace_stack_limit)
+        LDAPObject.__init__(self, uri, trace_level, trace_file, trace_stack_limit)
         self._reconnect_lock = ldap0.LDAPLock(desc='reconnect lock within %r' % self)
         self._retry_max = retry_max
         self._retry_delay = retry_delay
@@ -857,7 +857,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
         """
         self.__dict__.update(data)
         self._last_bind = (
-            getattr(SimpleLDAPObject, self._last_bind[0]),
+            getattr(LDAPObject, self._last_bind[0]),
             self._last_bind[1],
             self._last_bind[2],
         )
@@ -876,17 +876,17 @@ class ReconnectLDAPObject(SimpleLDAPObject):
         else:
             # Send explicit anon simple bind request to provoke
             # _libldap0.SERVER_DOWN in method reconnect()
-            SimpleLDAPObject.simple_bind_s(self, '', '')
+            LDAPObject.simple_bind_s(self, '', '')
 
     def _restore_options(self):
         """
         Restore all recorded options
         """
         for key, val in self._options:
-            SimpleLDAPObject.set_option(self, key, val)
+            LDAPObject.set_option(self, key, val)
 
     def passwd_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.passwd_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.passwd_s, *args, **kwargs)
 
     def reconnect(self, uri, retry_max=1, retry_delay=60.0):
         """
@@ -911,7 +911,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
                     self._restore_options()
                     # StartTLS extended operation in case this was called before
                     if self._start_tls:
-                        SimpleLDAPObject.start_tls_s(self)
+                        LDAPObject.start_tls_s(self)
                     # Repeat last simple or SASL bind
                     self._apply_last_bind()
                 except (_libldap0.SERVER_DOWN, _libldap0.TIMEOUT) as ldap_error:
@@ -925,7 +925,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
                     if __debug__ and self._trace_level >= 1:
                         self._trace_file.write('=> delay %s...\n' % (retry_delay))
                     time.sleep(retry_delay)
-                    SimpleLDAPObject.unbind_s(self)
+                    LDAPObject.unbind_s(self)
                 else:
                     if __debug__ and self._trace_level >= 1:
                         self._trace_file.write(
@@ -946,7 +946,7 @@ class ReconnectLDAPObject(SimpleLDAPObject):
         try:
             return func(self, *args, **kwargs)
         except _libldap0.SERVER_DOWN:
-            SimpleLDAPObject.unbind_s(self)
+            LDAPObject.unbind_s(self)
             # Try to reconnect
             self.reconnect(self._uri, retry_max=self._retry_max, retry_delay=self._retry_delay)
             # Re-try last operation
@@ -954,20 +954,20 @@ class ReconnectLDAPObject(SimpleLDAPObject):
 
     def set_option(self, option, invalue):
         self._options.append((option, invalue))
-        return SimpleLDAPObject.set_option(self, option, invalue)
+        return LDAPObject.set_option(self, option, invalue)
 
     def bind_s(self, *args, **kwargs):
-        res = self._apply_method_s(SimpleLDAPObject.bind_s, *args, **kwargs)
-        self._store_last_bind(SimpleLDAPObject.bind_s, *args, **kwargs)
+        res = self._apply_method_s(LDAPObject.bind_s, *args, **kwargs)
+        self._store_last_bind(LDAPObject.bind_s, *args, **kwargs)
         return res
 
     def simple_bind_s(self, *args, **kwargs):
-        res = self._apply_method_s(SimpleLDAPObject.simple_bind_s, *args, **kwargs)
-        self._store_last_bind(SimpleLDAPObject.simple_bind_s, *args, **kwargs)
+        res = self._apply_method_s(LDAPObject.simple_bind_s, *args, **kwargs)
+        self._store_last_bind(LDAPObject.simple_bind_s, *args, **kwargs)
         return res
 
     def start_tls_s(self, *args, **kwargs):
-        res = self._apply_method_s(SimpleLDAPObject.start_tls_s, *args, **kwargs)
+        res = self._apply_method_s(LDAPObject.start_tls_s, *args, **kwargs)
         self._start_tls = 1
         return res
 
@@ -975,38 +975,38 @@ class ReconnectLDAPObject(SimpleLDAPObject):
         """
         sasl_interactive_bind_s(who, auth) -> None
         """
-        res = self._apply_method_s(SimpleLDAPObject.sasl_interactive_bind_s, *args, **kwargs)
-        self._store_last_bind(SimpleLDAPObject.sasl_interactive_bind_s, *args, **kwargs)
+        res = self._apply_method_s(LDAPObject.sasl_interactive_bind_s, *args, **kwargs)
+        self._store_last_bind(LDAPObject.sasl_interactive_bind_s, *args, **kwargs)
         return res
 
     def sasl_bind_s(self, *args, **kwargs):
-        res = self._apply_method_s(SimpleLDAPObject.sasl_bind_s, *args, **kwargs)
-        self._store_last_bind(SimpleLDAPObject.sasl_bind_s, *args, **kwargs)
+        res = self._apply_method_s(LDAPObject.sasl_bind_s, *args, **kwargs)
+        self._store_last_bind(LDAPObject.sasl_bind_s, *args, **kwargs)
         return res
 
     def add_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.add_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.add_s, *args, **kwargs)
 
     def cancel_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.cancel_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.cancel_s, *args, **kwargs)
 
     def compare_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.compare_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.compare_s, *args, **kwargs)
 
     def delete_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.delete_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.delete_s, *args, **kwargs)
 
     def extop_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.extop_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.extop_s, *args, **kwargs)
 
     def modify_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.modify_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.modify_s, *args, **kwargs)
 
     def rename_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.rename_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.rename_s, *args, **kwargs)
 
     def search_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.search_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.search_s, *args, **kwargs)
 
     def whoami_s(self, *args, **kwargs):
-        return self._apply_method_s(SimpleLDAPObject.whoami_s, *args, **kwargs)
+        return self._apply_method_s(LDAPObject.whoami_s, *args, **kwargs)

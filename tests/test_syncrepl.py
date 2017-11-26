@@ -15,7 +15,7 @@ from ldap0.test import SlapdObject, SlapdTestCase
 os.environ['LDAPNOINIT'] = '1'
 
 import ldap0
-from ldap0.ldapobject import SimpleLDAPObject
+from ldap0.ldapobject import LDAPObject
 from ldap0.syncrepl import SyncreplConsumer
 
 # a template string for generating simple slapd.conf file
@@ -116,7 +116,7 @@ class SyncreplProvider(SlapdObject):
     slapd_conf_template = SLAPD_CONF_PROVIDER_TEMPLATE
 
 
-class SyncreplClient(SimpleLDAPObject, SyncreplConsumer):
+class SyncreplClient(LDAPObject, SyncreplConsumer):
     """
     This is a very simple class to start up the syncrepl search
     and handle callbacks that come in.
@@ -146,7 +146,7 @@ class SyncreplClient(SimpleLDAPObject, SyncreplConsumer):
         self.present = []
         self.refresh_done = False
 
-        SimpleLDAPObject.__init__(self, uri)
+        LDAPObject.__init__(self, uri)
         self.simple_bind_s(dn, password)
 
 
@@ -158,7 +158,7 @@ class SyncreplClient(SimpleLDAPObject, SyncreplConsumer):
             self.data.close()
             self.uuid_dn.close()
             self.dn_attrs.close()
-        SimpleLDAPObject.unbind_s(self)
+        LDAPObject.unbind_s(self)
 
 
     def start_search(self, search_base, search_mode):
@@ -177,7 +177,7 @@ class SyncreplClient(SimpleLDAPObject, SyncreplConsumer):
         """
         A simple wrapper to call parent class with syncrepl search ID.
         """
-        SimpleLDAPObject.cancel_s(self, self.search_id)
+        LDAPObject.cancel_s(self, self.search_id)
 
 
     def poll(self, timeout=None, all=0):
@@ -270,7 +270,6 @@ class Test00_Syncrepl(SlapdTestCase):
     """
 
     server_class = SyncreplProvider
-    ldap_object_class = SimpleLDAPObject
 
     @classmethod
     def setUpClass(cls):

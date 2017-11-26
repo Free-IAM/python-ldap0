@@ -10,7 +10,7 @@ from urllib import urlopen
 from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.cidict import cidict
 from ldap0.ldapurl import LDAPUrl
-from ldap0.ldapobject import SimpleLDAPObject
+from ldap0.ldapobject import LDAPObject
 from ldap0.ldif import LDIFRecordList
 from ldap0.schema import SubSchema, SCHEMA_ATTRS, SCHEMA_CLASS_MAPPING
 
@@ -26,7 +26,7 @@ def urlfetch(uri, trace_level=0, check_uniqueness=1):
     uri = uri.strip()
     if uri.startswith('ldap:') or uri.startswith('ldaps:') or uri.startswith('ldapi:'):
         ldap_url = LDAPUrl(uri)
-        ldap_conn = SimpleLDAPObject(ldap_url.initializeUrl(), trace_level)
+        ldap_conn = LDAPObject(ldap_url.initializeUrl(), trace_level)
         ldap_conn.simple_bind_s(ldap_url.who or '', ldap_url.cred or '')
         subschemasubentry_dn = ldap_conn.search_subschemasubentry_s(ldap_url.dn)
         if subschemasubentry_dn is None:

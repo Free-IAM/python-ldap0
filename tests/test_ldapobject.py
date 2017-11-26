@@ -15,7 +15,7 @@ os.environ['LDAPNOINIT'] = '1'
 import ldap0
 from ldap0.sasl import SaslAuth, SaslPasswordAuth
 from ldap0.test import SlapdTestCase
-from ldap0.ldapobject import SimpleLDAPObject, ReconnectLDAPObject
+from ldap0.ldapobject import LDAPObject, ReconnectLDAPObject
 from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
 from ldap0.controls.readentry import PreReadControl, PostReadControl
 from ldap0.controls.pagedresults import SimplePagedResultsControl as SimplePagedResultsControl_pyasn1
@@ -75,17 +75,17 @@ cn: Foo6
 """
 
 
-class Test00_SimpleLDAPObject(SlapdTestCase):
+class Test00_LDAPObject(SlapdTestCase):
     """
     test LDAP search operations
     """
 
-    ldap_object_class = SimpleLDAPObject
+    ldap_object_class = LDAPObject
     maxDiff = None
 
     @classmethod
     def setUpClass(cls):
-        super(Test00_SimpleLDAPObject, cls).setUpClass()
+        super(Test00_LDAPObject, cls).setUpClass()
         # insert some Foo* objects via ldapadd
         cls.server.ldapadd(
             LDIF_TEMPLATE % {
@@ -360,7 +360,7 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
 
 
 
-class Test01_ReconnectLDAPObject(Test00_SimpleLDAPObject):
+class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
     test ReconnectLDAPObject by restarting slapd
     """

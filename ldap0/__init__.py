@@ -24,7 +24,7 @@ assert _libldap0.__version__ == __version__, ImportError(
 
 from .functions import get_option, set_option
 from .functions import escape_str, strf_secs, strp_secs
-from .ldapobject import SimpleLDAPObject, ReconnectLDAPObject, NO_UNIQUE_ENTRY
+from .ldapobject import LDAPObject, ReconnectLDAPObject, NO_UNIQUE_ENTRY
 from .dn import explode_dn, explode_rdn
 
 # call into libldap to initialize it right now
