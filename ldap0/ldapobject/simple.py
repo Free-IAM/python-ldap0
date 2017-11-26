@@ -26,7 +26,7 @@ from ldap0.schema.subentry import SCHEMA_ATTRS
 from ldap0.controls import DecodeControlTuples, RequestControlTuples
 from ldap0.controls.openldap import SearchNoOpControl
 from ldap0.sasl import SaslNoninteractiveAuth
-from ldap0.modlist import addModlist
+from ldap0.modlist import add_modlist
 
 
 __all__ = [
@@ -191,7 +191,7 @@ class SimpleLDAPObject:
 
     def add(self, dn, modlist, serverctrls=None, clientctrls=None):
         if isinstance(modlist, dict):
-            modlist = addModlist(modlist)
+            modlist = add_modlist(modlist)
         return self._ldap_call(
             self._l.add_ext,
             dn,

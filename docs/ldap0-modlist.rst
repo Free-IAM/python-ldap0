@@ -7,7 +7,7 @@
 The :mod:`ldap0.modlist` module defines the following functions:
 
 
-.. function:: addModlist(entry [, ignore_attr_types=[]]) -> list
+.. function:: add_modlist(entry [, ignore_attr_types=[]]) -> list
 
    This function builds a list suitable for passing it directly as argument
    *modlist* to method :py:meth:`ldap0.ldapobject.LDAPObject.add` or
@@ -20,7 +20,7 @@ The :mod:`ldap0.modlist` module defines the following functions:
    in the result at all.
 
 
-.. function:: modifyModlist( old_entry, new_entry [, ignore_attr_types=[] [, ignore_oldexistent=0 [, case_ignore_attr_types=None]]]) -> list
+.. function:: modify_modlist(old_entry, new_entry [, ignore_attr_types=[] [, ignore_oldexistent=0 [, case_ignore_attr_types=None]]]) -> list
 
    This function builds a list suitable for passing it directly as argument
    *modlist* to method :py:meth:`ldap0.ldapobject.LDAPObject.modify` or

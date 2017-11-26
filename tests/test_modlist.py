@@ -9,11 +9,11 @@ import unittest
 
 import ldap0
 
-from ldap0.modlist import addModlist,modifyModlist
+from ldap0.modlist import add_modlist, modify_modlist
 
 class TestModlist(unittest.TestCase):
 
-    addModlist_tests = [
+    add_modlist_tests = [
         (
             {
                 'objectClass':['person','pilotPerson'],
@@ -33,19 +33,19 @@ class TestModlist(unittest.TestCase):
         ),
     ]
 
-    def test_addModlist(self):
-        for entry,test_modlist in self.addModlist_tests:
+    def test_add_modlist(self):
+        for entry,test_modlist in self.add_modlist_tests:
             test_modlist.sort()
-            result_modlist = addModlist(entry)
+            result_modlist = add_modlist(entry)
             result_modlist.sort()
             self.assertEqual(
                 test_modlist, result_modlist,
-                'addModlist(%s) returns\n%s\ninstead of\n%s.' % (
+                'add_modlist(%s) returns\n%s\ninstead of\n%s.' % (
                     repr(entry),repr(result_modlist),repr(test_modlist)
                 )
             )
 
-    modifyModlist_tests = [
+    modify_modlist_tests = [
         (
             {
                 'objectClass':['person','pilotPerson'],
@@ -132,17 +132,17 @@ class TestModlist(unittest.TestCase):
 
     ]
 
-    def test_modifyModlist(self):
-        for old_entry, new_entry, case_ignore_attr_types, test_modlist in self.modifyModlist_tests:
+    def test_modify_modlist(self):
+        for old_entry, new_entry, case_ignore_attr_types, test_modlist in self.modify_modlist_tests:
             test_modlist.sort()
-            result_modlist = modifyModlist(
+            result_modlist = modify_modlist(
                 old_entry, new_entry,
                 case_ignore_attr_types=case_ignore_attr_types)
             result_modlist.sort()
 
             self.assertEqual(
                 test_modlist, result_modlist,
-                'modifyModlist(%s,%s) returns\n%s\ninstead of\n%s.' % (
+                'modify_modlist(%s,%s) returns\n%s\ninstead of\n%s.' % (
                     repr(old_entry),
                     repr(new_entry),
                     repr(result_modlist),

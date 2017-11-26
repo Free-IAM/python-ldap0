@@ -10,7 +10,7 @@ from ldap0.pkginfo import __version__, __author__, __license__
 from _libldap0 import MOD_DELETE, MOD_ADD, MOD_REPLACE
 
 
-def addModlist(entry, ignore_attr_types=None):
+def add_modlist(entry, ignore_attr_types=None):
     """Build modify list for call of method LDAPObject.add()"""
     ignore_attr_types = set(map(str.lower, ignore_attr_types or []))
     modlist = []
@@ -26,10 +26,10 @@ def addModlist(entry, ignore_attr_types=None):
         ]
         if attrvaluelist:
             modlist.append((attrtype, entry[attrtype]))
-    return modlist # addModlist()
+    return modlist # add_modlist()
 
 
-def modifyModlist(
+def modify_modlist(
         old_entry,
         new_entry,
         ignore_attr_types=None,
@@ -110,4 +110,4 @@ def modifyModlist(
                 continue
             attrtype = attrtype_lower_map[a]
             modlist.append((MOD_DELETE, attrtype, None))
-    return modlist # modifyModlist()
+    return modlist # modify_modlist()
