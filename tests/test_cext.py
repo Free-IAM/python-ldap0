@@ -80,7 +80,7 @@ class TestLdapCExtension(SlapdTestCase):
         self.assertEqual(_libldap0.VERSION2, 2)
         self.assertEqual(_libldap0.VERSION3, 3)
 
-        # constants for result4()
+        # constants for result()
         self.assertEqual(_libldap0.RES_BIND, 0x61)
         self.assertEqual(_libldap0.RES_SEARCH_ENTRY, 0x64)
         self.assertEqual(_libldap0.RES_SEARCH_RESULT, 0x65)
@@ -108,7 +108,7 @@ class TestLdapCExtension(SlapdTestCase):
         self.assertNotNone(_libldap0.MOD_INCREMENT)
         self.assertNotNone(_libldap0.MOD_BVALUES)
 
-        # for result4()
+        # for result()
         self.assertNotNone(_libldap0.MSG_ONE)
         self.assertNotNone(_libldap0.MSG_ALL)
         self.assertNotNone(_libldap0.MSG_RECEIVED)
