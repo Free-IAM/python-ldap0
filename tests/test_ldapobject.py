@@ -358,6 +358,21 @@ class Test00_LDAPObject(SlapdTestCase):
             ]
         )
 
+    def test013_search_cache(self):
+        l = self.ldap_object_class(self.server.ldapi_uri, cache_ttl=2.0)
+        l.sasl_external_bind_s()
+        self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
+        new_dn = 'cn=Cache Tester,'+self.server.suffix
+        new_entry = {
+            'objectClass': ['applicationProcess'],
+            'cn': ['Cache Tester'],
+        }
+        l.add_s(new_dn, new_entry)
+        for i in range(5):
+            entry = l.read_s(new_dn)
+            self.assertEqual(entry, new_entry)
+            self.assertEqual(l._cache_misses, 1)
+            self.assertEqual(l._cache_hits, i)
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
