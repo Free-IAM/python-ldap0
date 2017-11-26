@@ -961,7 +961,14 @@ class ReconnectLDAPObject(LDAPObject):
         self._uri = uri
         self._options = []
         self._last_bind = None
-        LDAPObject.__init__(self, uri, trace_level, trace_file, trace_stack_limit)
+        LDAPObject.__init__(
+            self,
+            uri,
+            trace_level=trace_level,
+            trace_file=trace_file,
+            trace_stack_limit=trace_stack_limit,
+            cache_ttl=cache_ttl,
+        )
         self._reconnect_lock = ldap0.LDAPLock(desc='reconnect lock within %r' % self)
         self._retry_max = retry_max
         self._retry_delay = retry_delay
