@@ -177,7 +177,6 @@ setup(
         'ldap0.logger',
         'ldap0.modlist',
         'ldap0.pkginfo',
-        'ldap0.resiter',
         'ldap0.sasl',
         'ldap0.schema',
         'ldap0.schema.models',

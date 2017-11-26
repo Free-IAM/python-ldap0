@@ -5,9 +5,7 @@
 .. py:module:: ldap0.async
    :synopsis: Framework for stream-processing of large search results.
 
-With newer Python versions one might want to consider using
-:py:mod:`ldap0.resiter` instead.
-
+Consider to use method :py:meth:`ldap0.ldapobject.LDAPObject.results()` instead.
 
 Classes
 =======

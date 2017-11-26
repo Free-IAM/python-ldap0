@@ -1109,3 +1109,26 @@ subtree search.
 >>> for dn, entry in r:
 >>>     print 'Processing',repr(dn)
 >>>     handle_ldap_entry(entry)
+
+
+.. _ldap0.LDAPObject.results-example:
+
+This example demonstrates how to use method 
+:py:meth:`ldap0.ldapobject.LDAPObject.results()` for stream-processing of 
+retrieved results formerly requested with 
+:py:meth:`ldap0.ldapobject.LDAPObject.search()` and processing them in a 
+for-loop.
+
+::
+
+  import sys, ldap, ldap0.ldapobject
+
+  l = ldap0.ldapobject.LDAPObject('ldap://localhost')
+
+  # Asynchronous search method
+  msg_id = l.search('dc=stroeder,dc=com', ldap0.SCOPE_SUBTREE, '(objectClass=*)')
+
+  for res_type,res_data,res_msgid,res_controls in l.allresults(msg_id):
+      for dn,entry in res_data:
+          # process dn and entry
+          print dn, entry['objectClass']

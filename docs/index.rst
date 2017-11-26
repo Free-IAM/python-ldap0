@@ -25,7 +25,6 @@ Contents
    ldap0-extop.rst
    ldap0-filter.rst
    ldap0-modlist.rst
-   ldap0-resiter.rst
    ldap0-schema.rst
    ldap0-syncrepl.rst
    ldap0-sasl.rst
