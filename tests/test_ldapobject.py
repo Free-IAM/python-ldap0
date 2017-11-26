@@ -329,6 +329,36 @@ class Test00_SimpleLDAPObject(SlapdTestCase):
         entry = self._ldap_conn.read_s(new_dn, attrlist=new_entry.keys())
         self.assertEqual(entry, new_entry)
 
+    def test012_results(self):
+        msg_id = self._ldap_conn.search(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(cn=Foo*)',
+            attrlist=['*'],
+        )
+        result = []
+        for result_type, result_list, result_msgid, result_serverctrls in self._ldap_conn.results(msg_id):
+            for dn, entry in result_list:
+                result.append((dn, entry))
+        result.sort()
+        self.assertEqual(
+            result,
+            [
+                (
+                    'cn=Foo%d,%s' % (i, self.server.suffix),
+                    {'cn': ['Foo%d' % i], 'objectClass': ['organizationalRole']}
+                )
+                for i in range(1, 4)
+            ] + [
+                (
+                    'cn=Foo%d,ou=Container,%s' % (i, self.server.suffix),
+                    {'cn': ['Foo%d' % i], 'objectClass': ['organizationalRole']}
+                )
+                for i in range(4, 8)
+            ]
+        )
+
+
 
 class Test01_ReconnectLDAPObject(Test00_SimpleLDAPObject):
     """
