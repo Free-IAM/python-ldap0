@@ -170,8 +170,6 @@ setup(
         'ldap0.filter',
         'ldap0.functions',
         'ldap0.ldapobject',
-        'ldap0.ldapobject.reconnect',
-        'ldap0.ldapobject.simple',
         'ldap0.ldapurl',
         'ldap0.ldif',
         'ldap0.logger',
