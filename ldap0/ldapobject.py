@@ -150,6 +150,15 @@ class LDAPObject:
                 name
             ))
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        try:
+            self.unbind_s()
+        except ldap.LDAPError:
+            pass
+
     def set_tls_options(
             self,
             cacert_filename=None,
