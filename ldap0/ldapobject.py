@@ -787,6 +787,9 @@ class LDAPObject:
         return r[0]
 
     def read_rootdse_s(self, filterstr='(objectClass=*)', attrlist=None):
+        """
+        convenience wrapper around read_s() for reading rootDSE
+        """
         ldap_rootdse = self.read_s(
             '',
             filterstr=filterstr,
@@ -798,9 +801,6 @@ class LDAPObject:
         return self.read_rootdse_s(
             attrlist=['namingContexts']
         ).get('namingContexts', [])
-
-
-LDAPObject = LDAPObject
 
 
 class ReconnectLDAPObject(LDAPObject):
