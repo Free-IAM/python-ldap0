@@ -23,6 +23,7 @@ import ldap0.functions
 from ldap0.schema.subentry import SCHEMA_ATTRS
 from ldap0.controls import DecodeControlTuples, RequestControlTuples
 from ldap0.controls.openldap import SearchNoOpControl
+from ldap0.extop.dds import RefreshRequest, RefreshResponse
 from ldap0.sasl import SaslNoninteractiveAuth
 from ldap0.modlist import add_modlist
 
@@ -746,6 +747,19 @@ class LDAPObject:
             return None
         else:
             return subschemasubentry
+
+    def refresh(self, dn, ttl=None):
+        return self.extop(
+            RefreshRequest(entryName=dn, requestTtl=ttl),
+            extop_resp_class=RefreshResponse,
+        )
+
+    def refresh_s(self, dn, ttl=None):
+        res = self.extop_s(
+            RefreshRequest(entryName=dn, requestTtl=ttl),
+            extop_resp_class=RefreshResponse,
+        )
+        return res.responseTtl
 
     def find_unique_entry(
             self,

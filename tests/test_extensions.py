@@ -185,15 +185,16 @@ class TestDDS(ExtensionTestCase):
                 'cn': ['dds-1'],
             },
         )
-        refresh_ttl = 60
         refresh_response = self._ldap_conn.extop_s(
             RefreshRequest(
                 entryName=dds_entry_dn,
-                requestTtl=refresh_ttl,
+                requestTtl=247,
             ),
             extop_resp_class=RefreshResponse,
         )
-        self.assertEqual(refresh_response.responseTtl, refresh_ttl)
+        self.assertEqual(refresh_response.responseTtl, 247)
+        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn, ttl=178), 178)
+        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn, ttl=42), 60)
 
 
 class TestPPolicy(ExtensionTestCase):
