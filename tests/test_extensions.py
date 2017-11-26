@@ -26,6 +26,9 @@ from ldap0.controls.ppolicy import PasswordPolicyControl
 from ldap0.controls.sss import SSSRequestControl, SSSResponseControl
 from ldap0.controls.vlv import VLVRequestControl, VLVResponseControl
 
+from ldap0.extop.dds import RefreshRequest, RefreshResponse
+
+
 LDIF_TEMPLATE = """dn: %(suffix)s
 objectClass: dcObject
 objectClass: organization
@@ -158,6 +161,7 @@ class TestNoopSrch(ExtensionTestCase):
         self.assertEqual(num_entries, LDIF_TEMPLATE.count('dn: '))
         self.assertEqual(num_refs, 0)
 
+
 class TestDDS(ExtensionTestCase):
 
     def test_dds(self):
@@ -169,22 +173,27 @@ class TestDDS(ExtensionTestCase):
             'olcDDSminTtl': ['1m'],
             'olcDDSstate': ['TRUE'],
         })
+        root_dse = self._ldap_conn.read_rootdse_s(attrlist=['dynamicSubtrees'])
+        if 'dynamicSubtrees' not in root_dse:
+            self.skipTest('slapo-dds not enabled in rootDSE')
+        self.assertEqual(root_dse['dynamicSubtrees'][0], self.server.suffix)
         dds_entry_dn = 'cn=dds-1,'+self.server.suffix
-        try:
-            self._ldap_conn.add_s(
-                dds_entry_dn,
-                {
-                    'objectClass': ['applicationProcess', 'dynamicObject'],
-                    'cn': ['dds-1'],
-                },
-            )
-        except _libldap0.SERVER_DOWN as ldap_err:
-            self.skipTest(
-                'adding %s crashed slapd: %s' % (
-                    dds_entry_dn,
-                    ldap_err,
-                )
-            )
+        self._ldap_conn.add_s(
+            dds_entry_dn,
+            {
+                'objectClass': ['applicationProcess', 'dynamicObject'],
+                'cn': ['dds-1'],
+            },
+        )
+        refresh_ttl = 60
+        refresh_response = self._ldap_conn.extop_s(
+            RefreshRequest(
+                entryName=dds_entry_dn,
+                requestTtl=refresh_ttl,
+            ),
+            extop_resp_class=RefreshResponse,
+        )
+        self.assertEqual(refresh_response.responseTtl, refresh_ttl)
 
 
 class TestPPolicy(ExtensionTestCase):
