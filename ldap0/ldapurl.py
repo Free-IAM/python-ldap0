@@ -5,7 +5,7 @@ ldap0.ldapurl - handling of LDAP URLs as described in RFC 4516
 
 from __future__ import absolute_import
 
-__version__ = '2.5.3'
+from ldap0.pkginfo import __version__, __author__, __license__
 
 __all__ = [
     # constants
@@ -240,6 +240,9 @@ class LDAPUrl(object):
     attr2extype = {
         'who': 'bindname',
         'cred': 'X-BINDPW',
+        'trace_level': 'trace',
+        'pwd_filename': 'x-pwdfilename',
+        'sasl_mech': 'x-saslmech',
     }
 
     def __init__(
