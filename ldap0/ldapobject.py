@@ -227,6 +227,7 @@ class LDAPObject:
         return res
 
     def add(self, dn, modlist, serverctrls=None, clientctrls=None):
+        self.uncache(dn)
         if isinstance(modlist, dict):
             modlist = add_modlist(modlist)
         return self._ldap_call(
@@ -253,6 +254,7 @@ class LDAPObject:
             serverctrls=None,
             clientctrls=None
         ):
+        self.flush_cache()
         return self._ldap_call(
             self._l.simple_bind,
             who,
@@ -294,6 +296,7 @@ class LDAPObject:
             clientctrls=None,
             sasl_flags=_libldap0.SASL_QUIET
         ):
+        self.flush_cache()
         return self._ldap_call(
             self._l.sasl_interactive_bind_s,
             who,
@@ -354,6 +357,7 @@ class LDAPObject:
         )
 
     def sasl_bind_s(self, dn, mechanism, cred, serverctrls=None, clientctrls=None):
+        self.flush_cache()
         return self._ldap_call(
             self._l.sasl_bind_s,
             dn,
@@ -389,6 +393,7 @@ class LDAPObject:
         )
 
     def delete(self, dn, serverctrls=None, clientctrls=None):
+        self.uncache(dn)
         return self._ldap_call(
             self._l.delete_ext,
             dn,
@@ -442,6 +447,7 @@ class LDAPObject:
             return res
 
     def modify(self, dn, modlist, serverctrls=None, clientctrls=None):
+        self.uncache(dn)
         return self._ldap_call(
             self._l.modify_ext, dn,
             modlist,
@@ -465,6 +471,7 @@ class LDAPObject:
         return self.rename_s(dn, newrdn, None, delold)
 
     def passwd(self, user, oldpw, newpw, serverctrls=None, clientctrls=None):
+        self.uncache(user)
         return self._ldap_call(
             self._l.passwd,
             user,
@@ -626,7 +633,7 @@ class LDAPObject:
         self._cache_hits = 0
         self._cache = {}
 
-    def uncache_entry(self, entry_dn):
+    def uncache(self, entry_dn):
         """
         remove all cached entries related to dn from internal cache
         """
@@ -864,12 +871,14 @@ class LDAPObject:
             return subschemasubentry
 
     def refresh(self, dn, ttl=None):
+        self.uncache(dn)
         return self.extop(
             RefreshRequest(entryName=dn, requestTtl=ttl),
             extop_resp_class=RefreshResponse,
         )
 
     def refresh_s(self, dn, ttl=None):
+        self.uncache(dn)
         res = self.extop_s(
             RefreshRequest(entryName=dn, requestTtl=ttl),
             extop_resp_class=RefreshResponse,

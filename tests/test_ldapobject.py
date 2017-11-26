@@ -359,7 +359,7 @@ class Test00_LDAPObject(SlapdTestCase):
         )
 
     def test013_search_cache(self):
-        l = self.ldap_object_class(self.server.ldapi_uri, cache_ttl=2.0)
+        l = self.ldap_object_class(self.server.ldapi_uri, cache_ttl=10.0)
         l.sasl_external_bind_s()
         self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
         new_dn = 'cn=Cache Tester,'+self.server.suffix
@@ -369,10 +369,30 @@ class Test00_LDAPObject(SlapdTestCase):
         }
         l.add_s(new_dn, new_entry)
         for i in range(5):
-            entry = l.read_s(new_dn)
+            dn, entry = l.search_s(new_dn, ldap0.SCOPE_BASE)[0]
+            self.assertEqual(dn, new_dn)
             self.assertEqual(entry, new_entry)
             self.assertEqual(l._cache_misses, 1)
             self.assertEqual(l._cache_hits, i)
+            self.assertEqual(len(l._cache), 1)
+        cache_hits = l._cache_hits
+        cache_misses = l._cache_misses
+        l.modify_s(new_dn, [(ldap0.MOD_ADD, 'description', ['test'])])
+        l.modify_s(new_dn, [(ldap0.MOD_DELETE, 'description', ['test'])])
+        self.assertEqual(l._cache_misses, cache_misses)
+        self.assertEqual(l._cache_hits, cache_hits)
+        self.assertEqual(len(l._cache), 0)
+        l.flush_cache()
+        self.assertEqual(l._cache_misses, 0)
+        self.assertEqual(l._cache_hits, 0)
+        self.assertEqual(len(l._cache), 0)
+        for i in range(5):
+            dn, entry = l.search_s(new_dn, ldap0.SCOPE_BASE)[0]
+            self.assertEqual(dn, new_dn)
+            self.assertEqual(entry, new_entry)
+            self.assertEqual(l._cache_misses, 1)
+            self.assertEqual(l._cache_hits, i)
+            self.assertEqual(len(l._cache), 1)
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
