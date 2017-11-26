@@ -707,7 +707,7 @@ and wait for and return with the server's result, or with
 
 .. py:method:: LDAPObject.extop_result(self,msgid=ldap0.RES_ANY,all=1,timeout=None) -> (respoid,respvalue)
 
-   Wrapper method around :py:meth:`result4()` just for retrieving
+   Wrapper method around :py:meth:`LDAPObject.result` just for retrieving
    the result of an extended operation sent before.
 
 

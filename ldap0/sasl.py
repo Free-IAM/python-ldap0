@@ -56,7 +56,8 @@ class SaslAuth:
 
 class SaslPasswordAuth(SaslAuth):
     """
-    This class handles SASL CRAM-MD5 authentication.
+    This class handles password-based SASL authentication mechs
+    like PLAIN, DIGEST-MD5 or CRAM-MD5 etc.
     """
 
     def __init__(self, mech, authc_id, password, authz_id=''):
@@ -73,7 +74,8 @@ class SaslPasswordAuth(SaslAuth):
 
 class SaslNoninteractiveAuth(SaslAuth):
     """
-    This class handles SASL CRAM-MD5 authentication.
+    This class handles non-interactive SASL authentication mechs
+    like EXTERNAL or GSSAPI.
     """
 
     def __init__(self, mech, authz_id=""):

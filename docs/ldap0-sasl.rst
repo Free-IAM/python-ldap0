@@ -29,34 +29,34 @@ Constants
 
 .. py:data:: CB_GETREALM
 
+.. py:data:: SASL_PASSWORD_MECHS
+
+   set of SASL mechanism names of password-based authentication methods
+
+.. py:data:: SASL_NONINTERACTIVE_MECHS
+
+   set of SASL mechanism names of non-interactive authentication methods
+
 
 Classes
 =======
 
 .. autoclass:: ldap0.sasl.SaslAuth
    :members:
-   
+
    This class is used with :py:meth:`ldap0.LDAPObject.sasl_interactive_bind_s()`.
 
 
-.. autoclass:: ldap0.sasl.cram_md5
+.. autoclass:: ldap0.sasl.SaslPasswordAuth
    :members:
 
 
-.. autoclass:: ldap0.sasl.digest_md5
+.. autoclass:: ldap0.sasl.SaslNoninteractiveAuth
    :members:
 
-
-.. autoclass:: ldap0.sasl.gssapi
-   :members:
-
-   You might consider using convenience method :py:meth:`ldap0.LDAPObject.sasl_gssapi_bind_s()`.
-
-
-.. autoclass:: ldap0.sasl.external
-   :members:
-
-   You might consider using convenience method :py:meth:`ldap0.LDAPObject.sasl_external_bind_s()`.
+   Internally used by convenience methods
+   :py:meth:`ldap0.LDAPObject.sasl_gssapi_bind_s()` and
+   :py:meth:`ldap0.LDAPObject.sasl_external_bind_s()`.
 
 
 .. _ldap0.sasl-example:
