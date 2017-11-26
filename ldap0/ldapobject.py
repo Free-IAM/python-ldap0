@@ -147,6 +147,40 @@ class LDAPObject:
                 name
             ))
 
+    def set_tls_options(
+            self,
+            cacert_filename=None,
+            client_cert_filename=None,
+            client_key_filename=None,
+        ):
+        """
+        set TLS options for connection even with checking whether cert/key
+        files are readable
+        """
+        # Force server cert validation
+        ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_DEMAND)
+        # Set path names of TLS related files
+        for tls_option, tls_pathname in (
+                (ldap.OPT_X_TLS_CACERTFILE, cacert_filename),
+                (ldap.OPT_X_TLS_CERTFILE, client_cert_filename),
+                (ldap.OPT_X_TLS_KEYFILE, client_key_filename),
+            ):
+            try:
+                if not tls_pathname:
+                    # get global default
+                    tls_pathname = ldap.get_option(tls_option)
+                if tls_pathname:
+                    # Check whether CA cert file can be read
+                    open(tls_pathname, 'rb')
+                    self._l.set_option(tls_option, tls_pathname)
+            except ValueError, value_error:
+                if sys.platform != 'darwin' and \
+                   str(value_error) != 'ValueError: option error':
+                    raise
+        # this has to be the last option set to let libldap reinitialize TLS context
+        self._l.set_option(ldap.OPT_X_TLS_NEWCTX, 0)
+        return # set_tls_options()
+
     def fileno(self):
         return self.get_option(_libldap0.OPT_DESC)
 
