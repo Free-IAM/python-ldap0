@@ -894,22 +894,6 @@ and wait for and return with the server's result, or with
    *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.sasl_external_bind_s([serverctrls=None [, clientctrls=None [, sasl_flags=ldap0.SASL_QUIET [, authz_id='']]]]) -> None
-
-   This call is used to bind to the directory with a SASL bind request with
-   mechanism EXTERNAL and internally calls :py:meth:`sasl_non_interactive_bind_s()`.
-
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
-
-
-.. py:method:: LDAPObject.sasl_gssapi_bind_s([serverctrls=None [, clientctrls=None [, sasl_flags=ldap0.SASL_QUIET [, authz_id='']]]]) -> None
-
-   This call is used to bind to the directory with a SASL bind request with
-   mechanism GSSAPI and internally calls :py:meth:`sasl_non_interactive_bind_s()`.
-
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
-
-
 .. py:method:: LDAPObject.simple_bind([who='' [, cred='' [, serverctrls=None [, clientctrls=None]]]]) -> int
 
 .. py:method:: LDAPObject.simple_bind_s([who='' [, cred='' [, serverctrls=None [, clientctrls=None]]]]) -> None

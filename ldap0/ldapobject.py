@@ -335,36 +335,6 @@ class LDAPObject:
             sasl_flags
         )
 
-    def sasl_external_bind_s(
-            self,
-            serverctrls=None,
-            clientctrls=None,
-            sasl_flags=_libldap0.SASL_QUIET,
-            authz_id=''
-        ):
-        self.sasl_non_interactive_bind_s(
-            'EXTERNAL',
-            serverctrls,
-            clientctrls,
-            sasl_flags,
-            authz_id
-        )
-
-    def sasl_gssapi_bind_s(
-            self,
-            serverctrls=None,
-            clientctrls=None,
-            sasl_flags=_libldap0.SASL_QUIET,
-            authz_id=''
-        ):
-        self.sasl_non_interactive_bind_s(
-            'GSSAPI',
-            serverctrls,
-            clientctrls,
-            sasl_flags,
-            authz_id
-        )
-
     def sasl_bind_s(self, dn, mechanism, cred, serverctrls=None, clientctrls=None):
         self.flush_cache()
         return self._ldap_call(

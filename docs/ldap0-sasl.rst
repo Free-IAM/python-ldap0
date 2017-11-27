@@ -54,10 +54,6 @@ Classes
 .. autoclass:: ldap0.sasl.SaslNoninteractiveAuth
    :members:
 
-   Internally used by convenience methods
-   :py:meth:`ldap0.LDAPObject.sasl_gssapi_bind_s()` and
-   :py:meth:`ldap0.LDAPObject.sasl_external_bind_s()`.
-
 
 .. _ldap0.sasl-example:
 

@@ -194,13 +194,13 @@ class Test00_LDAPObject(SlapdTestCase):
         else:
             self.fail("expected INVALID_CREDENTIALS, got %r" % r)
 
-    def test006_sasl_external_bind_s(self):
+    def test006_sasl_external(self):
         l = self.ldap_object_class(self.server.ldapi_uri)
-        l.sasl_external_bind_s()
+        l.sasl_non_interactive_bind_s('EXTERNAL')
         self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
         authz_id = 'dn:cn=Foo2,%s' % (self.server.suffix)
         l = self.ldap_object_class(self.server.ldapi_uri)
-        l.sasl_external_bind_s(authz_id=authz_id)
+        l.sasl_non_interactive_bind_s('EXTERNAL', authz_id=authz_id)
         self.assertEqual(l.whoami_s(), authz_id.lower())
 
     def test006_sasl_password_mechs(self):
@@ -364,7 +364,7 @@ class Test00_LDAPObject(SlapdTestCase):
             trace_level=self.trace_level,
             cache_ttl=10.0,
         ) as l:
-            l.sasl_external_bind_s()
+            l.sasl_non_interactive_bind_s('EXTERNAL')
             self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
             new_dn = 'cn=Cache Tester,'+self.server.suffix
             new_entry = {
@@ -408,7 +408,7 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
 
     def test101_reconnect_sasl_external(self):
         l = self.ldap_object_class(self.server.ldapi_uri)
-        l.sasl_external_bind_s()
+        l.sasl_non_interactive_bind_s('EXTERNAL')
         authz_id = l.whoami_s()
         self.assertEqual(authz_id, 'dn:'+self.server.root_dn.lower())
         self.server.restart()
