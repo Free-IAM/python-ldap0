@@ -156,7 +156,7 @@ class LDAPObject:
     def __exit__(self, *args):
         try:
             self.unbind_s()
-        except ldap.LDAPError:
+        except LDAPError:
             pass
 
     def set_tls_options(
@@ -169,18 +169,16 @@ class LDAPObject:
         set TLS options for connection even with checking whether cert/key
         files are readable
         """
-        # Force server cert validation
-        ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_DEMAND)
         # Set path names of TLS related files
         for tls_option, tls_pathname in (
-                (ldap.OPT_X_TLS_CACERTFILE, cacert_filename),
-                (ldap.OPT_X_TLS_CERTFILE, client_cert_filename),
-                (ldap.OPT_X_TLS_KEYFILE, client_key_filename),
+                (_libldap0.OPT_X_TLS_CACERTFILE, cacert_filename),
+                (_libldap0.OPT_X_TLS_CERTFILE, client_cert_filename),
+                (_libldap0.OPT_X_TLS_KEYFILE, client_key_filename),
             ):
             try:
                 if not tls_pathname:
                     # get global default
-                    tls_pathname = ldap.get_option(tls_option)
+                    tls_pathname = _libldap0.get_option(tls_option)
                 if tls_pathname:
                     # Check whether CA cert file can be read
                     open(tls_pathname, 'rb')
@@ -189,8 +187,10 @@ class LDAPObject:
                 if sys.platform != 'darwin' and \
                    str(value_error) != 'ValueError: option error':
                     raise
+        # Force server cert validation
+        self._l.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_DEMAND)
         # this has to be the last option set to let libldap reinitialize TLS context
-        self._l.set_option(ldap.OPT_X_TLS_NEWCTX, 0)
+        self._l.set_option(_libldap0.OPT_X_TLS_NEWCTX, 0)
         return # set_tls_options()
 
     def fileno(self):
@@ -684,8 +684,8 @@ class LDAPObject:
                 tuple(attrlist or []),
                 attrsonly,
                 tuple([
-                  c.encodeControlValue()
-                  for c in serverctrls or []
+                    c.encodeControlValue()
+                    for c in serverctrls or []
                 ]),
                 tuple(clientctrls or []),
                 timeout,
@@ -717,7 +717,11 @@ class LDAPObject:
             timeout,
             sizelimit
         )
-        resp_type, resp_data, resp_msgid, resp_ctrls, _, _  = self.result(msgid, all=1, timeout=timeout, add_ctrls=add_ctrls)
+        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
+            msgid, all=1,
+            timeout=timeout,
+            add_ctrls=add_ctrls
+        )
         if self.cache_ttl > 0:
             # store result in cache if caching is enabled at all
             self._cache[cache_key_args] = (
