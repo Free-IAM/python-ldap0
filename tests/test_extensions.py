@@ -129,6 +129,44 @@ class TestDeRef(ExtensionTestCase):
             'olcOverlay': ['deref'],
             'objectClass': ['olcOverlayConfig'],
         })
+        ldap_result = self._ldap_conn.search_s(
+            'cn=Foo7,ou=Container,%s' % (self.server.suffix),
+            ldap0.SCOPE_BASE,
+            serverctrls=[
+                DereferenceControl(
+                    True,
+                    {'roleOccupant': ['cn', 'uid']},
+                )
+            ],
+            add_ctrls=True,
+        )
+        import pprint
+        dn, entry, crtls = ldap_result[0]
+        self.assertEqual(dn, 'cn=Foo7,ou=Container,%s' % (self.server.suffix))
+        self.assertEqual(
+            entry,
+            {
+                'cn': ['Foo7'],
+                'objectClass': ['organizationalRole'],
+                'roleOccupant': [
+                    'cn=user1,%s' % (self.server.suffix),
+                    'cn=Foo1,%s' % (self.server.suffix),
+                    'cn=Foo6,ou=Container,%s' % (self.server.suffix)
+                ],
+            },
+        )
+        deref_crtl = crtls[0]
+        self.assertEqual(isinstance(deref_crtl, DereferenceControl), True)
+        self.assertEqual(
+            deref_crtl.derefRes,
+            {
+                'roleOccupant': [
+                    ('cn=user1,%s' % (self.server.suffix), {'cn': ['user1']}),
+                    ('cn=Foo1,%s' % (self.server.suffix), {'cn': ['Foo1']}),
+                    ('cn=Foo6,ou=Container,%s' % (self.server.suffix), {'cn': ['Foo6']}),
+                ]
+            }
+        )
 
 
 class TestNoopSrch(ExtensionTestCase):
