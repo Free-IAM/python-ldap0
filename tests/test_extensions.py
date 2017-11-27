@@ -260,6 +260,8 @@ class TestPPolicy(ExtensionTestCase):
             },
         )
 
+class TestSssVlv(ExtensionTestCase):
+
     def test_sssvlv(self):
         self.enable_overlay(
             {
