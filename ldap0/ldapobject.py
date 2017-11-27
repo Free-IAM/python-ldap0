@@ -668,6 +668,7 @@ class LDAPObject:
             timeout=-1,
             sizelimit=0,
             cache_ttl=None,
+            add_ctrls=False,
         ):
         """
         caching variant of LDAPObject.search_ext_s()
@@ -675,7 +676,6 @@ class LDAPObject:
         if cache_ttl is None:
             cache_ttl = self.cache_ttl
         current_time = time.time()
-        result = None
         if cache_ttl > 0:
             cache_key_args = (
                 base,
@@ -689,11 +689,12 @@ class LDAPObject:
                 ]),
                 tuple(clientctrls or []),
                 timeout,
-                sizelimit
+                sizelimit,
+                add_ctrls,
             )
             # first look into cache for non-expired search results
             try:
-                result_cache_time, result = self._cache[cache_key_args]
+                result_cache_time, resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self._cache[cache_key_args]
             except KeyError:
                 pass
             else:
@@ -702,7 +703,7 @@ class LDAPObject:
                     del self._cache[cache_key_args]
                 else:
                     self._cache_hits += 1
-                    return result
+                    return resp_data
         # no cached result
         self._cache_misses += 1
         msgid = self.search(
@@ -716,14 +717,14 @@ class LDAPObject:
             timeout,
             sizelimit
         )
-        result = self.result(msgid, all=1, timeout=timeout)[1]
+        resp_type, resp_data, resp_msgid, resp_ctrls, _, _  = self.result(msgid, all=1, timeout=timeout, add_ctrls=add_ctrls)
         if self.cache_ttl > 0:
             # store result in cache if caching is enabled at all
             self._cache[cache_key_args] = (
                 current_time,
-                result
+                resp_type, resp_data, resp_msgid, resp_ctrls, _, _
             )
-        return result # search_s()
+        return resp_data # search_s()
 
     def noop_search(
             self,
