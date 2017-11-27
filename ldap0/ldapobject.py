@@ -882,10 +882,7 @@ class LDAPObject:
 
     def refresh(self, dn, ttl=None):
         self.uncache(dn)
-        return self.extop(
-            RefreshRequest(entryName=dn, requestTtl=ttl),
-            extop_resp_class=RefreshResponse,
-        )
+        return self.extop(RefreshRequest(entryName=dn, requestTtl=ttl))
 
     def refresh_s(self, dn, ttl=None):
         self.uncache(dn)
