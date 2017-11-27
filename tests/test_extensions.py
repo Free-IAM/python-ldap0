@@ -260,6 +260,7 @@ class TestPPolicy(ExtensionTestCase):
             },
         )
 
+
 class TestSssVlv(ExtensionTestCase):
 
     def test_sssvlv(self):
@@ -271,6 +272,55 @@ class TestSssVlv(ExtensionTestCase):
                 'olcSssVlvMaxKeys': ['5'],
                 'olcSssVlvMaxPerConn': ['5'],
             },
+        )
+        ldap_result = self._ldap_conn.search_s(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(objectClass:=organizationalRole)',
+            attrlist=['cn'],
+            serverctrls=[
+                SSSRequestControl(
+                    criticality=True,
+                    ordering_rules=['-cn:caseExactOrderingMatch']
+                )
+            ],
+        )
+        self.assertEqual(
+            ldap_result,
+            [
+                ('cn=Foo7,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo7']}),
+                ('cn=Foo6,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo6']}),
+                ('cn=Foo5,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo5']}),
+                ('cn=Foo4,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo4']}),
+                ('cn=Foo3,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo3']}),
+                ('cn=Foo2,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo2']}),
+                ('cn=Foo1,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo1']}),
+            ]
+        )
+        msg_id = self._ldap_conn.search(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(objectClass:=organizationalRole)',
+            attrlist=['cn'],
+            serverctrls=[
+                SSSRequestControl(
+                    criticality=True,
+                    ordering_rules=['cn:caseExactOrderingMatch']
+                )
+            ],
+            sizelimit=1,
+        )
+        ldap_result = []
+        try:
+            for _, res_data, _, res_controls in self._ldap_conn.results(msg_id):
+                ldap_result.extend(res_data)
+        except ldap0.SIZELIMIT_EXCEEDED:
+            pass
+        self.assertEqual(
+            ldap_result,
+            [
+                ('cn=Foo1,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo1']}),
+            ]
         )
 
 
