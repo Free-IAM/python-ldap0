@@ -47,17 +47,6 @@ LDAPberval_from_object(PyObject *obj, struct berval *bv)
 }
 
 /*
- * Returns true if the object could be used to initialize a berval structure
- * with LDAPberval_from_object()
- */
-int
-LDAPberval_from_object_check(PyObject *obj)
-{
-    return PyNone_Check(obj) ||
-           PyObject_CheckReadBuffer(obj);
-}
-
-/*
  * Releases memory allocated by LDAPberval_from_object().
  * Has no effect if the berval pointer is NULL or the berval data is NULL.
  */

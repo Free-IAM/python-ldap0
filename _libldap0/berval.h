@@ -7,7 +7,6 @@
 #include "lber.h"
 
 int  LDAPberval_from_object(PyObject *obj, struct berval *bv);
-int  LDAPberval_from_object_check(PyObject *obj);
 void LDAPberval_release(struct berval *bv);
 PyObject *LDAPberval_to_object(const struct berval *bv);
 
