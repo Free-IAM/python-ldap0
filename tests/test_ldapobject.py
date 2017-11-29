@@ -18,8 +18,7 @@ from ldap0.test import SlapdTestCase
 from ldap0.ldapobject import LDAPObject, ReconnectLDAPObject
 from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
 from ldap0.controls.readentry import PreReadControl, PostReadControl
-from ldap0.controls.pagedresults import SimplePagedResultsControl as SimplePagedResultsControl_pyasn1
-from ldap0.controls.libldap import SimplePagedResultsControl as SimplePagedResultsControl_libldap
+from ldap0.controls.pagedresults import SimplePagedResultsControl
 
 
 LDIF_TEMPLATE = """dn: %(suffix)s
@@ -265,10 +264,6 @@ class Test00_LDAPObject(SlapdTestCase):
         self.assertEqual(sorted(resp_ctrls[0].entry.keys()), attr_list)
 
     def test010_pagedresults(self):
-        self.assertEqual(
-            SimplePagedResultsControl_pyasn1.controlType,
-            SimplePagedResultsControl_libldap.controlType,
-        )
         expected_ldap_result = sorted(
             self._ldap_conn.search_s(
                 self.server.suffix,
@@ -281,42 +276,38 @@ class Test00_LDAPObject(SlapdTestCase):
         page_size = 3
         expected_num_pages = expected_num_results / page_size + \
                             (expected_num_results % page_size > 0)
-        for simple_paged_control_class in (
-            SimplePagedResultsControl_libldap,
-            SimplePagedResultsControl_pyasn1,
-        ):
-            paged_results_control = simple_paged_control_class(
-                True,
-                size=page_size,
-                cookie=''
-            )
-            result_pages = 0
-            all_paged_results = []
-            msg_id = self._ldap_conn.search(
-                self.server.suffix,
-                ldap0.SCOPE_SUBTREE,
-                attrlist=['1.1'],
-                serverctrls=[paged_results_control],
-            )
-            while True:
-                rtype, rdata, rmsgid, rctrls, _, _ = self._ldap_conn.result(msg_id)
-                self.assertEqual(rmsgid, msg_id)
-                all_paged_results.extend(rdata)
-                result_pages += 1
-                self.assertEqual(rctrls[0].controlType, simple_paged_control_class.controlType)
-                if rctrls[0].cookie:
-                    # Copy cookie from response control to request control
-                    paged_results_control.cookie = rctrls[0].cookie
-                    msg_id = self._ldap_conn.search(
-                        self.server.suffix,
-                        ldap0.SCOPE_SUBTREE,
-                        attrlist=['1.1'],
-                        serverctrls=[paged_results_control],
-                    )
-                else:
-                    break # no more pages available
-            self.assertEqual(sorted(all_paged_results), expected_ldap_result)
-            self.assertEqual(result_pages, expected_num_pages)
+        paged_results_control = SimplePagedResultsControl(
+            True,
+            size=page_size,
+            cookie=''
+        )
+        result_pages = 0
+        all_paged_results = []
+        msg_id = self._ldap_conn.search(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            attrlist=['1.1'],
+            serverctrls=[paged_results_control],
+        )
+        while True:
+            rtype, rdata, rmsgid, rctrls, _, _ = self._ldap_conn.result(msg_id)
+            self.assertEqual(rmsgid, msg_id)
+            all_paged_results.extend(rdata)
+            result_pages += 1
+            self.assertEqual(rctrls[0].controlType, SimplePagedResultsControl.controlType)
+            if rctrls[0].cookie:
+                # Copy cookie from response control to request control
+                paged_results_control.cookie = rctrls[0].cookie
+                msg_id = self._ldap_conn.search(
+                    self.server.suffix,
+                    ldap0.SCOPE_SUBTREE,
+                    attrlist=['1.1'],
+                    serverctrls=[paged_results_control],
+                )
+            else:
+                break # no more pages available
+        self.assertEqual(sorted(all_paged_results), expected_ldap_result)
+        self.assertEqual(result_pages, expected_num_pages)
 
     def test011_add_dict(self):
         new_dn = 'cn=Kurt Schwitters,'+self.server.suffix

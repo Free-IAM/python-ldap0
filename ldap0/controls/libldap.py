@@ -45,28 +45,3 @@ class MatchedValuesControl(RequestControl):
 
     def encodeControlValue(self):
         return _libldap0.encode_valuesreturnfilter_control(self.filterstr)
-
-
-class SimplePagedResultsControl(LDAPControl):
-    """
-    LDAP Control Extension for Simple Paged Results Manipulation
-
-    size
-      Page size requested (number of entries to be returned)
-    cookie
-      Cookie string received with last page
-    """
-    controlType = _libldap0.CONTROL_PAGEDRESULTS
-
-    def __init__(self, criticality=False, size=None, cookie=None):
-      self.criticality = criticality
-      self.size = size
-      self.cookie = cookie
-
-    def encodeControlValue(self):
-      return _libldap0.encode_page_control(self.size, self.cookie)
-
-    def decodeControlValue(self,encodedControlValue):
-      self.size,self.cookie = _libldap0.decode_page_control(encodedControlValue)
-
-KNOWN_RESPONSE_CONTROLS.reg(SimplePagedResultsControl)

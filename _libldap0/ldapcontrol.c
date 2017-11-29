@@ -223,100 +223,6 @@ endlbl:
 }
 
 static PyObject*
-encode_rfc2696(PyObject *self, PyObject *args)
-{
-    PyObject *res = 0;
-    BerElement *ber = 0;
-    struct berval cookie, *ctrl_val;
-    Py_ssize_t cookie_len;
-    unsigned long size;
-    ber_tag_t tag;
-
-    if (!PyArg_ParseTuple(args, "is#:encode_page_control", &size,
-                          &cookie.bv_val, &cookie_len)) {
-        goto endlbl;
-    }
-    cookie.bv_len = (ber_len_t) cookie_len;
-
-    if (!(ber = ber_alloc_t(LBER_USE_DER))) {
-        LDAPerr(LDAP_NO_MEMORY);
-        goto endlbl;
-    }
-
-    tag = ber_printf(ber, "{i", size);
-    if (tag == LBER_ERROR) {
-        LDAPerr(LDAP_ENCODING_ERROR);
-        goto endlbl;
-    }
-
-    if (!cookie.bv_len)
-        tag = ber_printf(ber, "o", "", 0);
-    else
-        tag = ber_printf(ber, "O", &cookie);
-    if (tag == LBER_ERROR) {
-        LDAPerr(LDAP_ENCODING_ERROR);
-        goto endlbl;
-    }
-
-    tag = ber_printf(ber, /*{ */ "N}");
-    if (tag == LBER_ERROR) {
-        LDAPerr(LDAP_ENCODING_ERROR);
-        goto endlbl;
-    }
-
-    if (-1 == ber_flatten(ber, &ctrl_val)) {
-        LDAPerr(LDAP_NO_MEMORY);
-        goto endlbl;
-    }
-
-    res = LDAPberval_to_object(ctrl_val);
-    ber_bvfree(ctrl_val);
-
- endlbl:
-    if (ber)
-        ber_free(ber, 1);
-    return res;
-}
-
-
-static PyObject*
-decode_rfc2696(PyObject *self, PyObject *args)
-{
-    PyObject *res = 0;
-    BerElement *ber = 0;
-    struct berval ldctl_value;
-    ber_tag_t tag;
-    struct berval *cookiep;
-    unsigned long count;
-    Py_ssize_t ldctl_value_len;
-
-    if (!PyArg_ParseTuple(args, "s#:decode_page_control",
-                          &ldctl_value.bv_val, &ldctl_value_len)) {
-        goto endlbl;
-    }
-    ldctl_value.bv_len = (ber_len_t) ldctl_value_len;
-
-    if (!(ber = ber_init(&ldctl_value))) {
-        LDAPerr(LDAP_NO_MEMORY);
-        goto endlbl;
-    }
-
-    tag = ber_scanf(ber, "{iO", &count, &cookiep);
-    if (tag == LBER_ERROR) {
-        LDAPerr(LDAP_DECODING_ERROR);
-        goto endlbl;
-    }
-
-    res = Py_BuildValue("(lO&)", count, LDAPberval_to_object, cookiep);
-    ber_bvfree(cookiep);
-
- endlbl:
-    if (ber)
-        ber_free(ber, 1);
-    return res;
-}
-
-static PyObject*
 encode_assertion_control(PyObject *self, PyObject *args)
 {
     int err;
@@ -346,8 +252,6 @@ encode_assertion_control(PyObject *self, PyObject *args)
 }
 
 static PyMethodDef methods[] = {
-    {"encode_page_control", encode_rfc2696, METH_VARARGS },
-    {"decode_page_control", decode_rfc2696, METH_VARARGS },
     {"encode_valuesreturnfilter_control", encode_rfc3876, METH_VARARGS },
     {"encode_assertion_control", encode_assertion_control, METH_VARARGS },
     { NULL, NULL }
