@@ -25,7 +25,7 @@ on the local system when building the module:
 - OpenLDAP client libs version 2.4.11 or later: https://www.openldap.org/
   It is not possible and not supported to build with prior versions.
 - OpenSSL (optional): https://www.openssl.org/
-- cyrus-sasl (optional): https://www.cyrusimap.org/sasl/
+- cyrus-sasl 2.x (optional): https://www.cyrusimap.org/sasl/
 - Kerberos libs, MIT or heimdal (optional)
 
 Installation prerequisites

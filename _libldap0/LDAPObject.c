@@ -14,7 +14,7 @@
 #include "options.h"
 
 #ifdef HAVE_SASL
-#include <sasl.h>
+#include <sasl/sasl.h>
 #endif
 
 static void free_attrs(char***, PyObject*);
