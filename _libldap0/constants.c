@@ -28,7 +28,7 @@ LDAPconstant( int val ) {
 void
 LDAPinit_constants( PyObject* d )
 {
-  PyObject *zero, *author,*obj;
+  PyObject *zero, *obj;
 
   reverse = PyDict_New();
   forward = PyDict_New();

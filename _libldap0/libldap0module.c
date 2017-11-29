@@ -46,7 +46,7 @@ static PyMethodDef methods[]  = {
 /* module initialisation */
 
 DL_EXPORT(void)
-init_libldap0()
+init_libldap0(void)
 {
 	PyObject *m, *d;
 

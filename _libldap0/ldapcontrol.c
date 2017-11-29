@@ -4,27 +4,10 @@
 #include "LDAPObject.h"
 #include "ldapcontrol.h"
 #include "berval.h"
+#include "constants.h"
 #include "errors.h"
 
 #include "lber.h"
-
-/* Prints to stdout the contents of an array of LDAPControl objects */
-
-/* XXX: This is a debugging tool, and the printf generates some warnings
- * about pointer types. I left it here in case something breaks and we
- * need to inspect an LDAPControl structure.
-
-static void
-LDAPControl_DumpList( LDAPControl** lcs ) {
-    LDAPControl** lcp;
-    LDAPControl* lc;
-        for ( lcp = lcs; *lcp; lcp++ ) {
-        lc = *lcp;
-        printf("OID: %s\nCriticality: %d\nBER length: %d\nBER value: %x\n",
-            lc->ldctl_oid, lc->ldctl_iscritical, lc->ldctl_value.bv_len,
-            lc->ldctl_value.bv_val);
-    }
-} */
 
 /* Free a single LDAPControl object created by Tuple_to_LDAPControl */
 
