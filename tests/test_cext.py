@@ -554,28 +554,6 @@ class TestLdapCExtension(SlapdTestCase):
         self.assertEqual(pmsg[0][1]['cn'], ['IAmRenamedAgain'])
 
 
-    def test_whoami(self):
-        l = self._open_conn()
-        r = l.whoami_s()
-        self.assertEqual("dn:" + self.server.root_dn, r)
-
-    def test_whoami_unbound(self):
-        l = self._open_conn(bind=False)
-        l.set_option(_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION3)
-        r = l.whoami_s()
-        self.assertEqual("", r)
-
-    def test_whoami_anonymous(self):
-        l = self._open_conn(bind=False)
-        l.set_option(_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION3)
-        # Anonymous bind
-        m = l.simple_bind("", "")
-        result, pmsg, msgid, ctrls = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        self.assertTrue(result, _libldap0.RES_BIND)
-        # check with Who Am I? extended operation
-        r = l.whoami_s()
-        self.assertEqual("", r)
-
     def test_passwd(self):
         l = self._open_conn()
         # first, create a user to change password on

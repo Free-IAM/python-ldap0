@@ -1183,55 +1183,6 @@ l_ldap_search_ext( LDAPObject* self, PyObject* args )
 }
 
 
-/* ldap_whoami_s (available since OpenLDAP 2.1.13) */
-
-static PyObject*
-l_ldap_whoami_s( LDAPObject* self, PyObject* args )
-{
-    PyObject *serverctrls = Py_None;
-    PyObject *clientctrls = Py_None;
-    LDAPControl** server_ldcs = NULL;
-    LDAPControl** client_ldcs = NULL;
-
-    struct berval *bvalue = NULL;
-
-    PyObject *result;
-
-    int ldaperror;
-
-    if (!PyArg_ParseTuple( args, "|OO", &serverctrls, &clientctrls)) return NULL;
-    if (not_valid(self)) return NULL;
-
-    if (!PyNone_Check(serverctrls)) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
-            return NULL;
-    }
-
-    if (!PyNone_Check(clientctrls)) {
-        if (!LDAPControls_from_object(clientctrls, &client_ldcs)) {
-            LDAPControl_List_DEL( server_ldcs );
-            return NULL;
-        }
-    }
-
-    LDAP_BEGIN_ALLOW_THREADS( self );
-    ldaperror = ldap_whoami_s( self->ldap, &bvalue, server_ldcs, client_ldcs );
-    LDAP_END_ALLOW_THREADS( self );
-
-    LDAPControl_List_DEL( server_ldcs );
-    LDAPControl_List_DEL( client_ldcs );
-
-    if ( ldaperror!=LDAP_SUCCESS ) {
-        ber_bvfree(bvalue);
-        return LDAPerror( self->ldap, "ldap_whoami_s" );
-    }
-
-    result = LDAPberval_to_object(bvalue);
-    ber_bvfree(bvalue);
-
-    return result;
-}
-
 #ifdef HAVE_TLS
 /* ldap_start_tls_s */
 
@@ -1416,7 +1367,6 @@ static PyMethodDef methods[] = {
 #ifdef HAVE_TLS
     {"start_tls_s",     (PyCFunction)l_ldap_start_tls_s,        METH_VARARGS },
 #endif
-    {"whoami_s",        (PyCFunction)l_ldap_whoami_s,           METH_VARARGS },
     {"passwd",          (PyCFunction)l_ldap_passwd,             METH_VARARGS },
     {"set_option",      (PyCFunction)l_ldap_set_option,         METH_VARARGS },
     {"get_option",      (PyCFunction)l_ldap_get_option,         METH_VARARGS },

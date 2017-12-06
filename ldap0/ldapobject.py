@@ -24,6 +24,7 @@ from ldap0.schema.subentry import SCHEMA_ATTRS
 from ldap0.controls import DecodeControlTuples, RequestControlTuples
 from ldap0.controls.openldap import SearchNoOpControl
 from ldap0.extop.dds import RefreshRequest, RefreshResponse
+from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
 from ldap0.sasl import SaslNoninteractiveAuth
 from ldap0.modlist import add_modlist
 
@@ -775,7 +776,11 @@ class LDAPObject:
         return result
 
     def whoami_s(self, serverctrls=None, clientctrls=None):
-        return self._ldap_call(self._l.whoami_s, serverctrls, clientctrls)
+        wai = self.extop_s(
+            WhoAmIRequest(),
+            extop_resp_class=WhoAmIResponse,
+        )
+        return wai.responseValue
 
     def get_option(self, option):
         result = self._ldap_call(self._l.get_option, option)
