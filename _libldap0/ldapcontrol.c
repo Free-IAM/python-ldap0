@@ -158,8 +158,9 @@ LDAPControls_to_List(LDAPControl **ldcs)
     if (tmp)
         while (*tmp++) num_ctrls++;
 
-    if (!(res = PyList_New(num_ctrls)))
-        goto endlbl;
+    if ((res = PyList_New(num_ctrls)) == NULL) {
+        return NULL;
+    }
 
     for (i = 0; i < num_ctrls; i++) {
         if (!(pyctrl = Py_BuildValue("sbO&", ldcs[i]->ldctl_oid,
@@ -236,7 +237,9 @@ encode_assertion_control(PyObject *self, PyObject *args)
         goto endlbl;
     }
 
+    Py_BEGIN_ALLOW_THREADS
     err = ldap_create(&ld);
+    Py_END_ALLOW_THREADS
     if (err != LDAP_SUCCESS)
     	return LDAPerror(ld, "ldap_create");
 
@@ -245,7 +248,9 @@ encode_assertion_control(PyObject *self, PyObject *args)
     	return LDAPerror(ld, "ldap_create_assertion_control_value");
 
     res = LDAPberval_to_object(&ctrl_val);
-
+    if (ctrl_val.bv_val != NULL) {
+        ber_memfree(ctrl_val.bv_val);
+    }
     endlbl:
 
     return res;
@@ -262,5 +267,4 @@ LDAPinit_control(PyObject *d)
 {
     LDAPadd_methods(d, methods);
 }
-
 

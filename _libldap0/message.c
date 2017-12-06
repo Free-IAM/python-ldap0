@@ -91,8 +91,9 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
 	      attr = ldap_next_attribute( ld, entry, ber )
 	 ) {
 	     PyObject* valuelist;
-	     struct berval ** bvals =
-	     	ldap_get_values_len( ld, entry, attr );
+	     struct berval **bvals;
+
+	     bvals = ldap_get_values_len( ld, entry, attr );
 
 	     /* Find which list to append to */
 	     if ( PyMapping_HasKeyString( attrdict, attr ) ) {

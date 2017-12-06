@@ -991,7 +991,10 @@ l_ldap_result( LDAPObject* self, PyObject *args )
     PyObject *result_str, *retval, *pmsg, *pyctrls = 0;
     int res_msgid = 0;
     char *retoid = 0;
-    PyObject *valuestr = 0;
+    PyObject *valuestr = NULL;
+    int result = LDAP_SUCCESS;
+    char **refs = NULL;
+    LDAPControl **serverctrls = 0;
 
     if (!PyArg_ParseTuple( args, "|iidiii", &msgid, &all, &timeout, &add_ctrls, &add_intermediates, &add_extop ))
         return NULL;
@@ -1027,9 +1030,6 @@ l_ldap_result( LDAPObject* self, PyObject *args )
     if (msg)
         res_msgid = ldap_msgid(msg);
 
-    int result = LDAP_SUCCESS;
-    char **refs = NULL;
-    LDAPControl **serverctrls = 0;
     if (res_type == LDAP_RES_SEARCH_ENTRY) {
         /* LDAPmessage_to_python will parse entries and read the controls for each entry */
     } else if (res_type == LDAP_RES_SEARCH_REFERENCE) {
@@ -1221,10 +1221,13 @@ l_ldap_whoami_s( LDAPObject* self, PyObject* args )
     LDAPControl_List_DEL( server_ldcs );
     LDAPControl_List_DEL( client_ldcs );
 
-    if ( ldaperror!=LDAP_SUCCESS )
+    if ( ldaperror!=LDAP_SUCCESS ) {
+        ber_bvfree(bvalue);
         return LDAPerror( self->ldap, "ldap_whoami_s" );
+    }
 
     result = LDAPberval_to_object(bvalue);
+    ber_bvfree(bvalue);
 
     return result;
 }
@@ -1264,7 +1267,7 @@ l_ldap_set_option(PyObject* self, PyObject *args)
 
     if (!PyArg_ParseTuple(args, "iO:set_option", &option, &value))
         return NULL;
-    if (LDAP_set_option((LDAPObject *)self, option, value) == -1)
+    if (LDAP_set_option((LDAPObject *)self, option, value) == LDAP_OPT_SUCCESS)
         return NULL;
     Py_INCREF(Py_None);
     return Py_None;
@@ -1444,12 +1447,7 @@ setattr(LDAPObject* self, char* name, PyObject* value)
 /* type entry */
 
 PyTypeObject LDAP_Type = {
-#if defined(MS_WINDOWS) || defined(__CYGWIN__)
-        /* see http://www.python.org/doc/FAQ.html#3.24 */
         PyVarObject_HEAD_INIT(NULL, 0)
-#else /* ! MS_WINDOWS */
-        PyVarObject_HEAD_INIT(&PyType_Type, 0)
-#endif /* MS_WINDOWS */
         "LDAP",                 /*tp_name*/
         sizeof(LDAPObject),     /*tp_basicsize*/
         0,                      /*tp_itemsize*/
