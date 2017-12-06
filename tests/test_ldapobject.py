@@ -20,7 +20,7 @@ from ldap0.ldapobject import LDAPObject, ReconnectLDAPObject
 from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
 from ldap0.controls.readentry import PostReadControl
 from ldap0.controls.pagedresults import SimplePagedResultsControl
-from ldap0.controls.simple import ProxyAuthzControl, RelaxRulesControl
+from ldap0.controls.simple import ProxyAuthzControl, RelaxRulesControl, ManageDSAITControl
 from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
 
 LDIF_TEMPLATE = """dn: %(suffix)s
@@ -488,6 +488,58 @@ class Test00_LDAPObject(SlapdTestCase):
             entry,
             serverctrls=[RelaxRulesControl()],
         )
+
+    def test018_referrals(self):
+        self._ldap_conn.set_option(ldap0.OPT_REFERRALS, ldap0.OPT_OFF)
+        dn = "dc=relax-rules," + self.server.suffix
+        entry = {
+            'objectClass': ['dcObject', 'referral'],
+            'dc': ['relax-rules'],
+            'ref': ['ldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'],
+        }
+        self._ldap_conn.add_s(dn, entry)
+        try:
+            ldap_result = self._ldap_conn.search_s(dn, ldap0.SCOPE_BASE, attrlist=['*', 'ref'])
+        except ldap0.REFERRAL as ldap_ref:
+            self.assertEqual(
+                ldap_ref.args[0]['desc'],
+                'Referral'
+            )
+            self.assertEqual(
+                ldap_ref.args[0]['matched'],
+                'dc=relax-rules,dc=slapd-test,dc=example,dc=org'
+            )
+            self.assertEqual(
+                ldap_ref.args[0]['info'],
+                'Referral:\nldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'
+            )
+        else:
+            self.fail("should have raised ldap0.REFERRAL")
+        ldap_result = self._ldap_conn.search_s(
+            dn,
+            ldap0.SCOPE_BASE,
+            attrlist=['*', 'ref'],
+            serverctrls=[ManageDSAITControl()],
+        )
+        self.assertEqual(ldap_result, [(dn, entry)])
+        ldap_result = self._ldap_conn.search_s(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(dc=relax-rules)',
+            attrlist=['*', 'ref'],
+        )
+        self.assertEqual(
+            ldap_result,
+            [(None, ['ldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'])]
+        )
+        ldap_result = self._ldap_conn.search_s(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(dc=relax-rules)',
+            attrlist=['*', 'ref'],
+            serverctrls=[ManageDSAITControl()],
+        )
+        self.assertEqual(ldap_result, [(dn, entry)])
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
