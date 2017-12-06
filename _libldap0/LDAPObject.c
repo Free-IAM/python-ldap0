@@ -265,7 +265,6 @@ attrs_from_List( PyObject *attrlist, char***attrsp, PyObject** seq) {
     if (attrlist == Py_None) {
         /* None means a NULL attrlist */
     } else if (PyBytes_Check(attrlist)) {
-        /* caught by John Benninghoff <johnb@netscape.com> */
         PyErr_SetObject( PyExc_TypeError, Py_BuildValue("sO",
                   "expected *list* of strings, not a string", attrlist ));
         goto error;
