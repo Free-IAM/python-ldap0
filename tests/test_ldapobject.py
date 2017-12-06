@@ -21,6 +21,7 @@ from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING
 from ldap0.controls.readentry import PostReadControl
 from ldap0.controls.pagedresults import SimplePagedResultsControl
 from ldap0.controls.simple import ProxyAuthzControl, RelaxRulesControl, ManageDSAITControl
+from ldap0.controls.libldap import AssertionControl
 from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
 
 LDIF_TEMPLATE = """dn: %(suffix)s
@@ -490,6 +491,7 @@ class Test00_LDAPObject(SlapdTestCase):
         )
 
     def test018_referrals(self):
+        opt_ref_old = self._ldap_conn.get_option(ldap0.OPT_REFERRALS)
         self._ldap_conn.set_option(ldap0.OPT_REFERRALS, ldap0.OPT_OFF)
         dn = "dc=relax-rules," + self.server.suffix
         entry = {
@@ -540,6 +542,36 @@ class Test00_LDAPObject(SlapdTestCase):
             serverctrls=[ManageDSAITControl()],
         )
         self.assertEqual(ldap_result, [(dn, entry)])
+        self._ldap_conn.set_option(ldap0.OPT_REFERRALS, opt_ref_old)
+
+    def test019_assertion_control(self):
+        dn = "cn=AssertionControl," + self.server.suffix
+        entry = {
+            'objectClass': ['person'],
+            'sn': ['AssertionControl'],
+            'cn': ['AssertionControl'],
+        }
+        self._ldap_conn.add_s(dn, entry)
+        old_entry = self._ldap_conn.read_s(dn, attrlist=['modifyTimestamp', 'entryCSN'])
+        assertion_filter = '(&(modifyTimestamp={0})(entryCSN={1}))'.format(
+            old_entry['modifyTimestamp'][0],
+            old_entry['entryCSN'][0],
+        )
+        self._ldap_conn.modify_s(
+            dn,
+            [(ldap0.MOD_REPLACE, 'description', ['test modification #1'])],
+            serverctrls=[AssertionControl(filterstr=assertion_filter)],            
+        )
+        try:
+            self._ldap_conn.modify_s(
+                dn,
+                [(ldap0.MOD_REPLACE, 'description', ['test modification #2'])],
+                serverctrls=[AssertionControl(filterstr=assertion_filter)],            
+            )
+        except ldap0.ASSERTION_FAILED:
+            pass
+        else:
+            self.fail("should have raised ldap0.ASSERTION_FAILED")
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
