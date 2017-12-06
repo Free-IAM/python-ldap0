@@ -8,8 +8,10 @@
 
 #include "LDAPObject.h"
 
-#define _STR(x)	#x
-#define STR(x)	_STR(x)
+PyMODINIT_FUNC init_libldap0(void);
+
+#define _STR(x) #x
+#define STR(x) _STR(x)
 
 static char version_str[] = STR(LDAPMODULE_VERSION);
 static char author_str[] = STR(LDAPMODULE_AUTHOR);
@@ -34,8 +36,6 @@ LDAPinit_pkginfo( PyObject* d )
 	Py_DECREF(author);
 	Py_DECREF(license);
 }
-
-DL_EXPORT(void) init_libldap0(void);
 
 /* dummy module methods */
 
