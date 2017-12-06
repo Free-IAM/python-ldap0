@@ -10,16 +10,22 @@ from ldap0.pkginfo import __version__, __author__, __license__
 from ldap0.extop import ExtendedRequest, ExtendedResponse
 
 # Imports from pyasn1
-from pyasn1.type import namedtype, univ, tag
+from pyasn1.type import namedtype, univ
 from pyasn1.codec.der import encoder
 from pyasn1_modules.rfc2251 import MessageID
 
 
 class CancelRequest(ExtendedRequest):
+    """
+    Cancel Operation Request
+    """
 
     requestName = '1.3.6.1.1.8'
 
     class CancelRequestValue(univ.Sequence):
+        """
+        Cancel request value
+        """
         componentType = namedtype.NamedTypes(
             namedtype.NamedType(
                 'cancelID',
@@ -41,4 +47,6 @@ class CancelRequest(ExtendedRequest):
 
 
 class CancelResponse(ExtendedResponse):
-    pass
+    """
+    Cancel Operation Response (only dummy)
+    """
