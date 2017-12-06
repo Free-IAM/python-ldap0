@@ -779,6 +779,8 @@ class LDAPObject:
         wai = self.extop_s(
             WhoAmIRequest(),
             extop_resp_class=WhoAmIResponse,
+            serverctrls=serverctrls,
+            clientctrls=clientctrls,
         )
         return wai.responseValue
 

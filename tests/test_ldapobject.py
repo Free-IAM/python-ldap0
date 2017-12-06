@@ -13,12 +13,13 @@ import pickle
 os.environ['LDAPNOINIT'] = '1'
 
 import ldap0
-from ldap0.sasl import SaslAuth, SaslPasswordAuth
+from ldap0.sasl import SaslPasswordAuth
 from ldap0.test import SlapdTestCase
 from ldap0.ldapobject import LDAPObject, ReconnectLDAPObject
 from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
-from ldap0.controls.readentry import PreReadControl, PostReadControl
+from ldap0.controls.readentry import PostReadControl
 from ldap0.controls.pagedresults import SimplePagedResultsControl
+from ldap0.controls.simple import ProxyAuthzControl
 from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
 
 LDIF_TEMPLATE = """dn: %(suffix)s
@@ -205,11 +206,11 @@ class Test00_LDAPObject(SlapdTestCase):
     def test006_sasl_password_mechs(self):
         authz_id = 'dn:cn=user1,%s' % (self.server.suffix)
         for sasl_mech in (
-            'PLAIN',
-            'CRAM-MD5',
-            'DIGEST-MD5',
-            'SCRAM-SHA-1',
-        ):
+                'PLAIN',
+                'CRAM-MD5',
+                'DIGEST-MD5',
+                'SCRAM-SHA-1',
+            ):
             sasl_auth = SaslPasswordAuth(sasl_mech, 'user1', 'user1_pw')
             with self.ldap_object_class(self.server.ldapi_uri) as l:
                 l.sasl_interactive_bind_s('', sasl_auth)
@@ -397,7 +398,17 @@ class Test00_LDAPObject(SlapdTestCase):
             )
             self.assertEqual(wai.responseValue, 'dn:'+self.server.root_dn.lower())
             self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
-            del wai
+        authz_id = 'dn:cn=Foo2,%s' % (self.server.suffix)
+        with self.ldap_object_class(self.server.ldapi_uri) as l:
+            l.sasl_non_interactive_bind_s('EXTERNAL')
+            self.assertEqual(
+                l.whoami_s([ProxyAuthzControl(authzId='')]),
+                '',
+            )
+            self.assertEqual(
+                l.whoami_s([ProxyAuthzControl(authzId=authz_id)]),
+                authz_id.lower(),
+            )
         with self.ldap_object_class(self.server.ldapi_uri) as l:
             l.simple_bind_s('', '')
             wai = l.extop_s(
@@ -406,7 +417,6 @@ class Test00_LDAPObject(SlapdTestCase):
             )
             self.assertEqual(wai.responseValue, '')
             self.assertEqual(l.whoami_s(), '')
-            del wai
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
