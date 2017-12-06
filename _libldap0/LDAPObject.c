@@ -738,52 +738,6 @@ l_ldap_sasl_interactive_bind_s( LDAPObject* self, PyObject* args )
 #endif
 
 
-#ifdef LDAP_API_FEATURE_CANCEL
-
-/* ldap_cancel */
-
-static PyObject*
-l_ldap_cancel( LDAPObject* self, PyObject* args )
-{
-    int msgid;
-    int cancelid;
-    PyObject *serverctrls = Py_None;
-    PyObject *clientctrls = Py_None;
-    LDAPControl** server_ldcs = NULL;
-    LDAPControl** client_ldcs = NULL;
-
-    int ldaperror;
-
-    if (!PyArg_ParseTuple( args, "i|OO", &cancelid, &serverctrls, &clientctrls)) return NULL;
-    if (not_valid(self)) return NULL;
-
-    if (!PyNone_Check(serverctrls)) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
-            return NULL;
-    }
-
-    if (!PyNone_Check(clientctrls)) {
-        if (!LDAPControls_from_object(clientctrls, &client_ldcs)) {
-            LDAPControl_List_DEL( server_ldcs );
-            return NULL;
-        }
-    }
-
-    LDAP_BEGIN_ALLOW_THREADS( self );
-    ldaperror = ldap_cancel( self->ldap, cancelid, server_ldcs, client_ldcs, &msgid );
-    LDAP_END_ALLOW_THREADS( self );
-
-    LDAPControl_List_DEL( server_ldcs );
-    LDAPControl_List_DEL( client_ldcs );
-
-    if ( ldaperror!=LDAP_SUCCESS )
-        return LDAPerror( self->ldap, "ldap_cancel" );
-
-    return PyInt_FromLong( msgid );
-}
-
-#endif
-
 /* ldap_compare_ext */
 
 static PyObject *
@@ -1309,9 +1263,6 @@ static PyMethodDef methods[] = {
 #endif
     {"set_option",      (PyCFunction)l_ldap_set_option,         METH_VARARGS },
     {"get_option",      (PyCFunction)l_ldap_get_option,         METH_VARARGS },
-#ifdef LDAP_API_FEATURE_CANCEL
-    {"cancel",          (PyCFunction)l_ldap_cancel,             METH_VARARGS },
-#endif
     {"extop",           (PyCFunction)l_ldap_extended_operation,         METH_VARARGS },
     { NULL, NULL }
 };

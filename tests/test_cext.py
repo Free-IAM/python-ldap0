@@ -617,11 +617,6 @@ class TestLdapCExtension(SlapdTestCase):
             return
         # TODO
 
-    def test_cancel(self):
-        l = self._open_conn()
-        if not self._require_attr(l, 'cancel'):         # FEATURE_CANCEL
-            return
-
     def test_errno107(self):
         l = _libldap0.initialize('ldap://127.0.0.1:42')
         try:

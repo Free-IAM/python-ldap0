@@ -26,6 +26,7 @@ from ldap0.controls.openldap import SearchNoOpControl
 from ldap0.extop.dds import RefreshRequest, RefreshResponse
 from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
 from ldap0.extop.passmod import PassmodRequest, PassmodResponse
+from ldap0.extop.cancel import CancelRequest, CancelResponse
 from ldap0.sasl import SaslNoninteractiveAuth
 from ldap0.modlist import add_modlist
 
@@ -217,25 +218,18 @@ class LDAPObject:
             serverctrls=None,
             clientctrls=None
         ):
-        return self._ldap_call(
-            self._l.cancel,
-            cancelid,
-            RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
+        return self.extop(
+            CancelRequest(cancelid),
+            serverctrls=serverctrls,
+            clientctrls=clientctrls,
         )
 
-    def cancel_s(
-            self,
-            cancelid,
-            serverctrls=None,
-            clientctrls=None
-        ):
-        msgid = self.cancel(cancelid, serverctrls, clientctrls)
+    def cancel_s(self, cancelid, serverctrls=None, clientctrls=None):
         try:
-            res = self.result(msgid, all=1, timeout=self.timeout)
-        except (_libldap0.CANCELLED, _libldap0.SUCCESS):
-            res = None
-        return res
+            msgid = self.cancel(cancelid, serverctrls=serverctrls, clientctrls=clientctrls)
+            _ = self.result(msgid, all=1, timeout=self.timeout)
+        except (_libldap0.CANCELLED):
+            pass
 
     def add(self, dn, modlist, serverctrls=None, clientctrls=None):
         self.uncache(dn)

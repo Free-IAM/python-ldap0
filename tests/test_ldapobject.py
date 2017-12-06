@@ -8,6 +8,7 @@ from __future__ import absolute_import
 import os
 import unittest
 import pickle
+import time
 
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
@@ -445,6 +446,28 @@ class Test00_LDAPObject(SlapdTestCase):
         new_pwd = self._ldap_conn.passwd_s(dn, 'changed', None)
         with self.ldap_object_class(self.server.ldapi_uri) as l:
             l.simple_bind_s(dn, new_pwd)
+
+    def test016_cancel(self):
+        try:
+            res = self._ldap_conn.cancel_s(999999999)
+        except ldap0.NO_SUCH_OPERATION:
+            pass
+        else:
+            self.fail("expected ldap0.NO_SUCH_OPERATION to be raised")
+        # start a "long-lasting" search
+        msg_id = self._ldap_conn.search(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(objectClass=*)',
+            attrlist=['*', '+'],
+        )
+        time.sleep(1.0)
+        try:
+            res = self._ldap_conn.cancel_s(msg_id)
+        except ldap0.NO_SUCH_OPERATION as ldap_err:
+            pass
+        else:
+            self.fail("expected ldap0.NO_SUCH_OPERATION to be raised")
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
