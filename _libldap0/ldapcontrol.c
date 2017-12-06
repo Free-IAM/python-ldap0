@@ -163,18 +163,16 @@ LDAPControls_to_List(LDAPControl **ldcs)
     }
 
     for (i = 0; i < num_ctrls; i++) {
-        if (!(pyctrl = Py_BuildValue("sbO&", ldcs[i]->ldctl_oid,
-                                     ldcs[i]->ldctl_iscritical,
-                                     LDAPberval_to_object,
-                                     &ldcs[i]->ldctl_value))) {
-            goto endlbl;
+        pyctrl = Py_BuildValue("sbO&",
+                               ldcs[i]->ldctl_oid,
+                               ldcs[i]->ldctl_iscritical,
+                               LDAPberval_to_object, &ldcs[i]->ldctl_value);
+        if (pyctrl == NULL) {
+            Py_DECREF(res);
+            return NULL;
         }
         PyList_SET_ITEM(res, i, pyctrl);
     }
-    Py_INCREF(res);
-
- endlbl:
-    Py_XDECREF(res);
     return res;
 }
 
@@ -244,8 +242,17 @@ encode_assertion_control(PyObject *self, PyObject *args)
     	return LDAPerror(ld, "ldap_create");
 
     err = ldap_create_assertion_control_value(ld,assertion_filterstr,&ctrl_val);
-    if (err != LDAP_SUCCESS)
-    	return LDAPerror(ld, "ldap_create_assertion_control_value");
+
+    if (err != LDAP_SUCCESS) {
+        LDAPerror(ld, "ldap_create_assertion_control_value");
+        Py_BEGIN_ALLOW_THREADS
+        ldap_unbind_ext(ld, NULL, NULL);
+        Py_END_ALLOW_THREADS
+        return NULL;
+    }
+    Py_BEGIN_ALLOW_THREADS
+    ldap_unbind_ext(ld, NULL, NULL);
+    Py_END_ALLOW_THREADS
 
     res = LDAPberval_to_object(&ctrl_val);
     if (ctrl_val.bv_val != NULL) {
