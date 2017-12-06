@@ -20,7 +20,7 @@ from ldap0.ldapobject import LDAPObject, ReconnectLDAPObject
 from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
 from ldap0.controls.readentry import PostReadControl
 from ldap0.controls.pagedresults import SimplePagedResultsControl
-from ldap0.controls.simple import ProxyAuthzControl
+from ldap0.controls.simple import ProxyAuthzControl, RelaxRulesControl
 from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
 
 LDIF_TEMPLATE = """dn: %(suffix)s
@@ -464,10 +464,30 @@ class Test00_LDAPObject(SlapdTestCase):
         time.sleep(1.0)
         try:
             res = self._ldap_conn.cancel_s(msg_id)
-        except ldap0.NO_SUCH_OPERATION as ldap_err:
+        except ldap0.NO_SUCH_OPERATION:
             pass
         else:
             self.fail("expected ldap0.NO_SUCH_OPERATION to be raised")
+
+    def test017_relax_rules(self):
+        dn = "cn=RelaxRules," + self.server.suffix
+        entry = {
+            'objectClass': ['person'],
+            'sn': ['RelaxRules'],
+            'cn': ['RelaxRules'],
+            'createTimestamp': ['19680208115125Z'],
+        }
+        try:
+            self._ldap_conn.add_s(dn, entry)
+        except ldap0.CONSTRAINT_VIOLATION:
+            pass
+        else:
+            self.fail("should have raised ldap0.CONSTRAINT_VIOLATION")
+        self._ldap_conn.add_s(
+            dn,
+            entry,
+            serverctrls=[RelaxRulesControl()],
+        )
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
