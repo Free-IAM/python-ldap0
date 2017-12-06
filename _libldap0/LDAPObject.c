@@ -1238,66 +1238,6 @@ l_ldap_get_option(PyObject* self, PyObject *args)
 }
 
 
-/* ldap_passwd */
-
-static PyObject *
-l_ldap_passwd( LDAPObject* self, PyObject *args )
-{
-    struct berval user;
-    Py_ssize_t user_len;
-    struct berval oldpw;
-    Py_ssize_t oldpw_len;
-    struct berval newpw;
-    Py_ssize_t newpw_len;
-    PyObject *serverctrls = Py_None;
-    PyObject *clientctrls = Py_None;
-    LDAPControl** server_ldcs = NULL;
-    LDAPControl** client_ldcs = NULL;
-
-    int msgid;
-    int ldaperror;
-
-    if (!PyArg_ParseTuple( args, "z#z#z#|OO", &user.bv_val, &user_len, &oldpw.bv_val, &oldpw_len, &newpw.bv_val, &newpw_len, &serverctrls, &clientctrls ))
-        return NULL;
-
-    user.bv_len = (ber_len_t) user_len;
-    oldpw.bv_len = (ber_len_t) oldpw_len;
-    newpw.bv_len = (ber_len_t) newpw_len;
-
-    if (not_valid(self)) return NULL;
-
-    if (!PyNone_Check(serverctrls)) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
-            return NULL;
-    }
-
-    if (!PyNone_Check(clientctrls)) {
-        if (!LDAPControls_from_object(clientctrls, &client_ldcs)) {
-            LDAPControl_List_DEL( server_ldcs );
-            return NULL;
-        }
-    }
-
-    LDAP_BEGIN_ALLOW_THREADS( self );
-    ldaperror = ldap_passwd( self->ldap,
-            user.bv_val != NULL ? &user : NULL,
-            oldpw.bv_val != NULL ? &oldpw : NULL,
-            newpw.bv_val != NULL ? &newpw : NULL,
-            server_ldcs,
-            client_ldcs,
-            &msgid );
-    LDAP_END_ALLOW_THREADS( self );
-
-    LDAPControl_List_DEL( server_ldcs );
-    LDAPControl_List_DEL( client_ldcs );
-
-    if ( ldaperror!=LDAP_SUCCESS )
-        return LDAPerror( self->ldap, "ldap_passwd" );
-
-    return PyInt_FromLong( msgid );
-}
-
-
 /* ldap_extended_operation */
 
 static PyObject *
@@ -1367,7 +1307,6 @@ static PyMethodDef methods[] = {
 #ifdef HAVE_TLS
     {"start_tls_s",     (PyCFunction)l_ldap_start_tls_s,        METH_VARARGS },
 #endif
-    {"passwd",          (PyCFunction)l_ldap_passwd,             METH_VARARGS },
     {"set_option",      (PyCFunction)l_ldap_set_option,         METH_VARARGS },
     {"get_option",      (PyCFunction)l_ldap_get_option,         METH_VARARGS },
 #ifdef LDAP_API_FEATURE_CANCEL

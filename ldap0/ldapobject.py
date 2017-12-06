@@ -25,6 +25,7 @@ from ldap0.controls import DecodeControlTuples, RequestControlTuples
 from ldap0.controls.openldap import SearchNoOpControl
 from ldap0.extop.dds import RefreshRequest, RefreshResponse
 from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
+from ldap0.extop.passmod import PassmodRequest, PassmodResponse
 from ldap0.sasl import SaslNoninteractiveAuth
 from ldap0.modlist import add_modlist
 
@@ -450,20 +451,31 @@ class LDAPObject:
     def modrdn_s(self, dn, newrdn, delold=1):
         return self.rename_s(dn, newrdn, None, delold)
 
-    def passwd(self, user, oldpw, newpw, serverctrls=None, clientctrls=None):
+    def passwd(self, user=None, oldpw=None, newpw=None, serverctrls=None, clientctrls=None):
         self.uncache(user)
-        return self._ldap_call(
-            self._l.passwd,
-            user,
-            oldpw,
-            newpw,
-            RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
+        return self.extop(
+            PassmodRequest(
+                userIdentity=user,
+                oldPasswd=oldpw,
+                newPasswd=newpw,
+            ),
+            serverctrls=serverctrls,
+            clientctrls=clientctrls,
         )
 
-    def passwd_s(self, user, oldpw, newpw, serverctrls=None, clientctrls=None):
-        msgid = self.passwd(user, oldpw, newpw, serverctrls, clientctrls)
-        return self.extop_result(msgid, all=1, timeout=self.timeout)
+    def passwd_s(self, user=None, oldpw=None, newpw=None, serverctrls=None, clientctrls=None):
+        self.uncache(user)
+        res = self.extop_s(
+            PassmodRequest(
+                userIdentity=user,
+                oldPasswd=oldpw,
+                newPasswd=newpw,
+            ),
+            extop_resp_class=PassmodResponse,
+            serverctrls=serverctrls,
+            clientctrls=clientctrls,
+        )
+        return res.genPasswd
 
     def rename(
             self,

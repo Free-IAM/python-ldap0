@@ -418,6 +418,34 @@ class Test00_LDAPObject(SlapdTestCase):
             self.assertEqual(wai.responseValue, '')
             self.assertEqual(l.whoami_s(), '')
 
+    def test015_passwd(self):
+        # first, create a user to change password on
+        dn = "cn=PasswordTest," + self.server.suffix
+        self._ldap_conn.add_s(
+            dn,
+            [
+                ('objectClass', 'person'),
+                ('sn', 'PasswordTest'),
+                ('cn', 'PasswordTest'),
+                ('userPassword', 'initial'),
+            ]
+        )
+        # try changing password with a wrong old-pw
+        try:
+            res = self._ldap_conn.passwd_s(dn, 'bogus', 'ignored')
+        except ldap0.UNWILLING_TO_PERFORM:
+            pass
+        else:
+            self.fail('expected UNWILLING_TO_PERFORM, got %r' % (res))
+        # try changing password with a correct old-pw
+        self._ldap_conn.passwd_s(dn, 'initial', 'changed')
+        with self.ldap_object_class(self.server.ldapi_uri) as l:
+            l.simple_bind_s(dn, 'changed')
+        # let server set new random password
+        new_pwd = self._ldap_conn.passwd_s(dn, 'changed', None)
+        with self.ldap_object_class(self.server.ldapi_uri) as l:
+            l.simple_bind_s(dn, new_pwd)
+
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """

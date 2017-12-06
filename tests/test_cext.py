@@ -553,40 +553,6 @@ class TestLdapCExtension(SlapdTestCase):
         self.assertEqual(pmsg[0][0], dn3)
         self.assertEqual(pmsg[0][1]['cn'], ['IAmRenamedAgain'])
 
-
-    def test_passwd(self):
-        l = self._open_conn()
-        # first, create a user to change password on
-        dn = "cn=PasswordTest," + self.server.suffix
-        m = l.add_ext(
-            dn,
-            [
-                ('objectClass', 'person'),
-                ('sn', 'PasswordTest'),
-                ('cn', 'PasswordTest'),
-                ('userPassword', 'initial'),
-            ]
-        )
-        self.assertEqual(type(m), type(0))
-        result, pmsg, msgid, ctrls = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        self.assertEqual(result, _libldap0.RES_ADD)
-        # try changing password with a wrong old-pw
-        m = l.passwd(dn, "bogus", "ignored")
-        self.assertEqual(type(m), type(0))
-        try:
-            r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.UNWILLING_TO_PERFORM:
-            pass
-        else:
-            self.fail("expected UNWILLING_TO_PERFORM, got %r" % r)
-        # try changing password with a correct old-pw
-        m = l.passwd(dn, "initial", "changed")
-        result, pmsg, msgid, ctrls = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        self.assertEqual(msgid, m)
-        self.assertEqual(pmsg, [])
-        self.assertEqual(result, _libldap0.RES_EXTENDED)
-        self.assertEqual(ctrls, [])
-
     def test_options(self):
         oldval = _libldap0.get_option(_libldap0.OPT_PROTOCOL_VERSION)
         try:
