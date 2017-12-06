@@ -1,5 +1,6 @@
 *.py?
 *.so
+.coverage
 .tox
 dist/*
 build/*
