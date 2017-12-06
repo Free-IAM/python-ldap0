@@ -21,7 +21,7 @@ from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING
 from ldap0.controls.readentry import PostReadControl
 from ldap0.controls.pagedresults import SimplePagedResultsControl
 from ldap0.controls.simple import ProxyAuthzControl, RelaxRulesControl, ManageDSAITControl
-from ldap0.controls.libldap import AssertionControl
+from ldap0.controls.libldap import AssertionControl, MatchedValuesControl
 from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
 
 LDIF_TEMPLATE = """dn: %(suffix)s
@@ -572,6 +572,37 @@ class Test00_LDAPObject(SlapdTestCase):
             pass
         else:
             self.fail("should have raised ldap0.ASSERTION_FAILED")
+
+    def test020_matched_values(self):
+        dn = "sn=MatchedValues," + self.server.suffix
+        entry = {
+            'objectClass': ['person', 'dcObject'],
+            'dc': ['matched-values'],
+            'sn': ['MatchedValues'],
+            'cn': [
+                'MatchedValues0',
+                'MatchedValues1',
+                'MatchedValues2',
+                'MatchedValues3',
+                'MatchedValues4',
+                'MatchedValues5',
+            ],
+        }
+        self._ldap_conn.add_s(dn, entry)
+        for val in entry['cn']:
+            mv_entry = self._ldap_conn.read_s(
+                dn,
+                attrlist=['objectClass', 'cn'],
+                serverctrls=[
+                    MatchedValuesControl(
+                        filterstr='((objectClass=person)(cn={0}))'.format(val)
+                    ),
+                ]
+            )
+            self.assertEqual(
+                mv_entry,
+                {'cn': [val], 'objectClass': ['person']}
+            )
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
