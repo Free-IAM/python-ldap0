@@ -322,6 +322,8 @@ class LDAPObject:
         auth = SaslNoninteractiveAuth(
             sasl_mech,
             authz_id=authz_id,
+            trace_level=self._trace_level,
+            trace_file=self._trace_file,
         )
         self.sasl_interactive_bind_s(
             '',
