@@ -5,33 +5,12 @@ setup.py - Setup package with the help Python's DistUtils
 import sys
 import os
 from ConfigParser import ConfigParser
+from setuptools import setup, Extension
 
 LDAP0_BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
-# Python 2.3.6+ and setuptools are needed to build eggs, so
-# let's handle setuptools' additional  keyword arguments to
-# setup() in a fashion that doesn't break compatibility  to
-# distutils. This still allows 'normal' builds where either
-# Python > 2.3.5 or setuptools (or both ;o) are not available.
-try:
-    from setuptools import setup, Extension
-except ImportError:
-    from distutils.core import setup, Extension
-    setup_kwargs = dict()
-else:
-    setup_kwargs = dict(
-        include_package_data=True,
-        install_requires=[
-            'setuptools',
-            'pyasn1>=0.3.7',
-            'pyasn1_modules>=0.1.5',
-        ],
-        zip_safe=False,
-    )
-
 sys.path.insert(0, os.path.join(LDAP0_BASEDIR, 'ldap0'))
 import pkginfo
-
 
 class OpenLDAP2BuildConfig:
     """
@@ -155,5 +134,11 @@ setup(
     data_files=LDAP_CLASS.extra_files,
     test_suite='tests',
     python_requires = '==2.7.*',
-    **setup_kwargs
+    include_package_data=True,
+    install_requires=[
+        'setuptools',
+        'pyasn1>=0.3.7',
+        'pyasn1_modules>=0.1.5',
+    ],
+    zip_safe=True,
 )
