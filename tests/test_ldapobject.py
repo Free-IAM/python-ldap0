@@ -644,7 +644,7 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
                         (bind_dn, 'user1_pw'),
                         {}
                     ),
-                    '_options': [(17, 3)],
+                    '_options': [(17, 3), (9, 0), (2, 0), (8, 0)],
                     '_reconnects_done': 0,
                     '_retry_delay': 60.0,
                     '_retry_max': 1,

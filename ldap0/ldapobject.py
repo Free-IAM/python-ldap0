@@ -84,6 +84,9 @@ class LDAPObject:
         self.protocol_version = _libldap0.VERSION3
         self.cache_ttl = cache_ttl
         self.flush_cache()
+        self.set_option(_libldap0.OPT_RESTART, _libldap0.OPT_OFF)
+        self.set_option(_libldap0.OPT_DEREF, _libldap0.OPT_OFF)
+        self.set_option(_libldap0.OPT_REFERRALS, _libldap0.OPT_OFF)
 
     def _ldap_lock(self, desc=''):
         if _libldap0.LIBLDAP_R:
@@ -396,7 +399,7 @@ class LDAPObject:
             RequestControlTuples(clientctrls)
         )
 
-    def extop_result(self, msgid=_libldap0.RES_ANY, all=1, timeout=None):
+    def extop_result(self, msgid=_libldap0.RES_ANY, all=1):
         resulttype, msg, msgid, respctrls, respoid, respvalue = self.result(
             msgid,
             all=1,
@@ -409,7 +412,7 @@ class LDAPObject:
 
     def extop_s(self, extreq, serverctrls=None, clientctrls=None, extop_resp_class=None):
         msgid = self.extop(extreq, serverctrls, clientctrls)
-        res = self.extop_result(msgid, all=1, timeout=self.timeout)
+        res = self.extop_result(msgid, all=1)
         if extop_resp_class:
             respoid, respvalue = res
             if extop_resp_class.responseName != respoid:

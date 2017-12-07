@@ -29,6 +29,11 @@ if __debug__:
 
 # call into libldap to initialize it right now
 LIBLDAP_API_INFO = _libldap0.get_option(_libldap0.OPT_API_INFO)
+# set reasonable global defaults for various options
+_libldap0.set_option(_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION3)
+_libldap0.set_option(_libldap0.OPT_RESTART, _libldap0.OPT_OFF)
+_libldap0.set_option(_libldap0.OPT_DEREF, _libldap0.OPT_OFF)
+_libldap0.set_option(_libldap0.OPT_REFERRALS, _libldap0.OPT_OFF)
 
 OPT_NAMES_DICT = {}
 for key, val in vars(_libldap0).items():
