@@ -5,9 +5,9 @@ ldap0.modlist - create add/modify modlist's
 
 from __future__ import absolute_import
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from .pkginfo import __version__, __author__, __license__
 
-from _libldap0 import MOD_DELETE, MOD_ADD, MOD_REPLACE
+from _libldap0 import MOD_DELETE, MOD_ADD
 
 
 def add_modlist(entry, ignore_attr_types=None):
@@ -59,8 +59,8 @@ def modify_modlist(
     case_ignore_attr_types = set(map(str.lower, case_ignore_attr_types or []))
     modlist = []
     attrtype_lower_map = {}
-    for a in old_entry.keys():
-        attrtype_lower_map[str.lower(a)] = a
+    for attr_type in old_entry.keys():
+        attrtype_lower_map[attr_type.lower()] = attr_type
     for attrtype in new_entry.keys():
         attrtype_lower = str.lower(attrtype)
         if attrtype_lower in ignore_attr_types:
@@ -104,10 +104,10 @@ def modify_modlist(
     if not ignore_oldexistent:
         # Remove all attributes of old_entry which are not present
         # in new_entry at all
-        for a in attrtype_lower_map.keys():
-            if a in ignore_attr_types:
+        for atl in attrtype_lower_map.keys():
+            if atl in ignore_attr_types:
                 # This attribute type is ignored
                 continue
-            attrtype = attrtype_lower_map[a]
+            attrtype = attrtype_lower_map[atl]
             modlist.append((MOD_DELETE, attrtype, None))
     return modlist # modify_modlist()
