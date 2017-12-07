@@ -17,18 +17,18 @@ if __debug__:
 import _libldap0
 from _libldap0 import LDAPError
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from .pkginfo import __version__, __author__, __license__
 import ldap0
-import ldap0.functions
-from ldap0.schema.subentry import SCHEMA_ATTRS
-from ldap0.controls import DecodeControlTuples, RequestControlTuples
-from ldap0.controls.openldap import SearchNoOpControl
-from ldap0.extop.dds import RefreshRequest, RefreshResponse
-from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
-from ldap0.extop.passmod import PassmodRequest, PassmodResponse
-from ldap0.extop.cancel import CancelRequest, CancelResponse
-from ldap0.sasl import SaslNoninteractiveAuth
-from ldap0.modlist import add_modlist
+from . import functions
+from .schema.subentry import SCHEMA_ATTRS
+from .controls import DecodeControlTuples, RequestControlTuples
+from .controls.openldap import SearchNoOpControl
+from .extop.dds import RefreshRequest, RefreshResponse
+from .extop.whoami import WhoAmIRequest, WhoAmIResponse
+from .extop.passmod import PassmodRequest, PassmodResponse
+from .extop.cancel import CancelRequest, CancelResponse
+from .sasl import SaslNoninteractiveAuth
+from .modlist import add_modlist
 
 __all__ = [
     'NO_UNIQUE_ENTRY',

@@ -16,12 +16,12 @@ from logging.handlers import SysLogHandler
 import unittest
 import urllib
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from .pkginfo import __version__, __author__, __license__
 import _libldap0
 import ldap0.ldapobject
-from ldap0.filter import escape_filter_chars
+from .filter import escape_filter_chars
 import ldap0.modlist
-from ldap0.ldif import LDIFRecordList
+from .ldif import LDIFRecordList
 
 # a template string for generating simple slapd.conf file
 SLAPD_CONF_TEMPLATE = r"""

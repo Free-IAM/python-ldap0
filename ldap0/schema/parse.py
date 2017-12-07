@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 import re
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from ..pkginfo import __version__, __author__, __license__
 
 TOKENS_FINDALL = re.compile(
     r"(\()"           # opening parenthesis

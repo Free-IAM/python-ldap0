@@ -8,8 +8,7 @@ Each class provides support for a certain control.
 
 from __future__ import absolute_import
 
-from ldap0.pkginfo import __version__, __author__, __license__
-import ldap0
+from ..pkginfo import __version__, __author__, __license__
 
 import _libldap0
 
@@ -170,5 +169,5 @@ def DecodeControlTuples(ldapControlTuples, knownLDAPControls=None):
     return result
 
 # Import the standard sub-modules
-from ldap0.controls.simple import *
-from ldap0.controls.libldap import *
+from .simple import *
+from .libldap import *

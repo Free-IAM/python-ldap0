@@ -15,8 +15,8 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-from ldap0.pkginfo import __version__, __author__, __license__
-from ldap0.dn import is_dn
+from .pkginfo import __version__, __author__, __license__
+from .dn import is_dn
 from _libldap0 import MOD_ADD, MOD_DELETE, MOD_REPLACE, MOD_INCREMENT
 
 __all__ = [

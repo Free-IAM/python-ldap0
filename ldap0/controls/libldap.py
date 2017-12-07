@@ -6,8 +6,8 @@ by OpenLDAP functions
 
 from __future__ import absolute_import
 
-from ldap0.pkginfo import __version__, __author__, __license__
-from ldap0.controls import RequestControl, LDAPControl, KNOWN_RESPONSE_CONTROLS
+from ..pkginfo import __version__, __author__, __license__
+from . import RequestControl, LDAPControl, KNOWN_RESPONSE_CONTROLS
 import _libldap0
 
 

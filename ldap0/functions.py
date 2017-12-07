@@ -23,7 +23,7 @@ import pprint
 import time
 from calendar import timegm
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from .pkginfo import __version__, __author__, __license__
 
 import _libldap0
 assert _libldap0.__version__ == __version__, ImportError(

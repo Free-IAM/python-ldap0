@@ -6,8 +6,8 @@ ldap0.controls.pagedresults - classes for Simple Paged control
 
 from __future__ import absolute_import
 
-from ldap0.pkginfo import __version__, __author__, __license__
-from ldap0.controls import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
+from ..pkginfo import __version__, __author__, __license__
+from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 # Imports from pyasn1
 from pyasn1.type import namedtype, univ

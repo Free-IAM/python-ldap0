@@ -6,8 +6,8 @@ ldap0.extop.dds - Classes for Dynamic Entries extended operations
 
 from __future__ import absolute_import
 
-from ldap0.pkginfo import __version__, __author__, __license__
-from ldap0.extop import ExtendedRequest, ExtendedResponse
+from ..pkginfo import __version__, __author__, __license__
+from . import ExtendedRequest, ExtendedResponse
 
 # Imports from pyasn1
 from pyasn1.type import namedtype, univ, tag

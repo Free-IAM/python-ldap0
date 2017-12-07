@@ -6,9 +6,9 @@ ldap0.controls.deref - classes for
 
 from __future__ import absolute_import
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from ..pkginfo import __version__, __author__, __license__
 
-from ldap0.controls import LDAPControl, KNOWN_RESPONSE_CONTROLS
+from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 
 from pyasn1.type import namedtype, univ, tag
 from pyasn1.codec.ber import encoder, decoder

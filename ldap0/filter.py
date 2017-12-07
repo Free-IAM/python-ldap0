@@ -7,9 +7,9 @@ from __future__ import absolute_import
 
 import time
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from .pkginfo import __version__, __author__, __license__
 
-from ldap0.functions import strf_secs
+from .functions import strf_secs
 
 
 def escape_filter_chars(assertion_value, escape_mode=0):

@@ -6,8 +6,8 @@ ldap0.controls.sessiontrack - class for session tracking control
 
 from __future__ import absolute_import
 
-from ldap0.pkginfo import __version__, __author__, __license__
-from ldap0.controls import RequestControl
+from ..pkginfo import __version__, __author__, __license__
+from . import RequestControl
 
 from pyasn1.type import namedtype, univ
 from pyasn1.codec.ber import encoder

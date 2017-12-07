@@ -11,8 +11,8 @@ from uuid import UUID
 from pyasn1.type import tag, namedtype, namedval, univ, constraint
 from pyasn1.codec.ber import encoder, decoder
 
-from ldap0.pkginfo import __version__, __author__, __license__
-from ldap0.controls import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
+from .pkginfo import __version__, __author__, __license__
+from .controls import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 __all__ = [
     'SyncreplConsumer',

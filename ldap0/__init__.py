@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 import sys
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from .pkginfo import __version__, __author__, __license__
 
 if __debug__:
     # Tracing is only supported in debugging mode

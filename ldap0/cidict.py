@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 from UserDict import IterableUserDict
 
-from ldap0.pkginfo import __version__, __author__, __license__
+from .pkginfo import __version__, __author__, __license__
 
 
 class cidict(IterableUserDict):

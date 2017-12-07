@@ -7,9 +7,9 @@ from __future__ import absolute_import
 
 from UserDict import IterableUserDict
 
-from ldap0.pkginfo import __version__, __author__, __license__
-from ldap0.cidict import cidict
-from ldap0.schema.parse import split_tokens, extract_tokens
+from ..pkginfo import __version__, __author__, __license__
+from ..cidict import cidict
+from .parse import split_tokens, extract_tokens
 
 
 __all__ = [
