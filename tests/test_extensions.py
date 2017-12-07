@@ -233,6 +233,7 @@ class TestDDS(ExtensionTestCase):
         self.assertEqual(refresh_response.responseTtl, 247)
         self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn, ttl=178), 178)
         self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn, ttl=42), 60)
+        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn), 86400)
 
 
 class TestPPolicy(ExtensionTestCase):
