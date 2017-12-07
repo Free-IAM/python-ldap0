@@ -119,8 +119,12 @@ setup(
             define_macros=LDAP_CLASS.define_macros,
         ),
     ],
-    #-- Python "stand alone" modules
-    packages = ['ldap0'],
+    packages = [
+        'ldap0',
+        'ldap0.schema',
+        'ldap0.extop',
+        'ldap0.controls',
+    ],
     package_dir={'': '.'},
     test_suite='tests',
     python_requires = '==2.7.*',
