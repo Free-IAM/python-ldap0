@@ -399,22 +399,16 @@ class LDAPObject:
             RequestControlTuples(clientctrls)
         )
 
-    def extop_result(self, msgid=_libldap0.RES_ANY, all=1):
-        resulttype, msg, msgid, respctrls, respoid, respvalue = self.result(
+    def extop_result(self, msgid=_libldap0.RES_ANY, all=1, extop_resp_class=None):
+        _, _, _, _, respoid, respvalue = self.result(
             msgid,
-            all=1,
+            all=all,
             timeout=self.timeout,
             add_ctrls=1,
             add_intermediates=1,
             add_extop=1
         )
-        return (respoid, respvalue)
-
-    def extop_s(self, extreq, serverctrls=None, clientctrls=None, extop_resp_class=None):
-        msgid = self.extop(extreq, serverctrls, clientctrls)
-        res = self.extop_result(msgid, all=1)
         if extop_resp_class:
-            respoid, respvalue = res
             if extop_resp_class.responseName != respoid:
                 raise _libldap0.PROTOCOL_ERROR(
                     "Wrong OID in extended response! Expected %s, got %s" % (
@@ -423,8 +417,11 @@ class LDAPObject:
                     )
                 )
             return extop_resp_class(extop_resp_class.responseName, respvalue)
-        else:
-            return res
+        return (respoid, respvalue)
+
+    def extop_s(self, extreq, serverctrls=None, clientctrls=None, extop_resp_class=None):
+        msgid = self.extop(extreq, serverctrls, clientctrls)
+        return self.extop_result(msgid, all=1, extop_resp_class=extop_resp_class)
 
     def modify(self, dn, modlist, serverctrls=None, clientctrls=None):
         self.uncache(dn)
