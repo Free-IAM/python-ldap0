@@ -25,19 +25,12 @@ class OpenLDAP2BuildConfig:
         self.extra_objects = []
         self.libs = ['ldap', 'lber']
         self.defines = []
-        self.extra_files = []
         #-- Read the [_libldap0] section of setup.cfg
         cfg = ConfigParser()
         cfg.read(os.path.join(LDAP0_BASEDIR, 'setup.cfg'))
         _ldap_cfg = dict(cfg.items('_libldap0'))
         for name, value in _ldap_cfg.items():
             _ldap_cfg[name] = [ val for val in value.split(' ') if val ]
-        # split values of extra_files
-        if 'extra_files' in _ldap_cfg:
-            for i in range(len(_ldap_cfg['extra_files'])):
-                destdir, origfiles = self.extra_files[i].split(':')
-                origfileslist = origfiles.split(',')
-                _ldap_cfg['extra_files'][i] = (destdir, origfileslist)
         for name, val in _ldap_cfg.items():
             setattr(self, name, val)
         if 'ldap_r' in self.libs or 'oldap_r' in self.libs:
@@ -103,8 +96,8 @@ setup(
     #-- C extension modules
     ext_modules=[
         Extension(
-            '_libldap0',
-            [
+            name='_libldap0',
+            sources=[
                 '_libldap0/LDAPObject.c',
                 '_libldap0/ldapcontrol.c',
                 '_libldap0/common.c',
@@ -127,11 +120,8 @@ setup(
         ),
     ],
     #-- Python "stand alone" modules
-    packages = [
-        'ldap0',
-    ],
+    packages = ['ldap0'],
     package_dir={'': '.'},
-    data_files=LDAP_CLASS.extra_files,
     test_suite='tests',
     python_requires = '==2.7.*',
     include_package_data=True,
