@@ -440,7 +440,8 @@ class Test00_LDAPObject(SlapdTestCase):
         else:
             self.fail('expected UNWILLING_TO_PERFORM, got %r' % (res))
         # try changing password with a correct old-pw
-        self._ldap_conn.passwd_s(dn, 'initial', 'changed')
+        new_pwd = self._ldap_conn.passwd_s(dn, 'initial', 'changed')
+        self.assertEqual(new_pwd, None)
         with self.ldap_object_class(self.server.ldapi_uri) as l:
             l.simple_bind_s(dn, 'changed')
         # let server set new random password
