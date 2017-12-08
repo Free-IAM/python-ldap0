@@ -737,22 +737,6 @@ and wait for and return with the server's result, or with
    generating *modlist*.
 
 
-.. py:method:: LDAPObject.modrdn(dn, newrdn [, delold=1]) -> int
-
-
-.. py:method::  LDAPObject.modrdn_s(dn, newrdn [, delold=1]) -> None
-
-   Perform a ``modify RDN`` operation, (i.e. a renaming operation).
-   These routines take *dn* (the DN of the entry whose RDN is to be changed,
-   and *newrdn*, the new RDN to give to the entry. The optional parameter
-   *delold* is used to specify whether the old RDN should be kept as an
-   attribute of the entry or not.
-   The asynchronous version returns the initiated message id.
-
-   This operation is emulated by :py:meth:`rename()` and :py:meth:`rename_s()` methods
-   since the modrdn2* routines in the C library are deprecated.
-
-
 .. py:method:: LDAPObject.passwd(user, oldpw, newpw [, serverctrls=None [, clientctrls=None]]) -> int
 
 .. py:method:: LDAPObject.passwd_s(user, oldpw, newpw [, serverctrls=None [, clientctrls=None]]) -> None
