@@ -47,16 +47,19 @@ class ExtendedResponse(object):
 
     responseName = None
 
-    def __init__(self, responseName, encodedResponseValue):
-        self.responseName = responseName
-        self.responseValue = self.decodeResponseValue(encodedResponseValue)
+    def __init__(self, responseName=None, encodedResponseValue=None):
+        if responseName is not None:
+            self.responseName = responseName
+        self.responseValue = encodedResponseValue
+        if encodedResponseValue is not None:
+            self.decodeResponseValue(encodedResponseValue)
 
     def __repr__(self):
-        return '%s(%s,%s)' % (self.__class__.__name__, self.responseName, self.responseValue)
+        return '%s(%r, %r)' % (self.__class__.__name__, self.responseName, self.responseValue)
 
     def decodeResponseValue(self, value):
         """
         decodes the BER-encoded ASN.1 extended operation response value and
         sets the appropriate class attributes
         """
-        return value
+        self.responseValue = value

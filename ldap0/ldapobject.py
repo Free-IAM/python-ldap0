@@ -23,6 +23,7 @@ from . import functions
 from .schema.subentry import SCHEMA_ATTRS
 from .controls import DecodeControlTuples, RequestControlTuples
 from .controls.openldap import SearchNoOpControl
+from .extop import ExtendedResponse
 from .extop.dds import RefreshRequest, RefreshResponse
 from .extop.whoami import WhoAmIRequest, WhoAmIResponse
 from .extop.passmod import PassmodRequest, PassmodResponse
@@ -399,16 +400,18 @@ class LDAPObject:
             RequestControlTuples(clientctrls)
         )
 
-    def extop_result(self, msgid=_libldap0.RES_ANY, all=1, extop_resp_class=None):
+    def extop_result(self, msgid=_libldap0.RES_ANY, extop_resp_class=None):
         _, _, _, _, respoid, respvalue = self.result(
             msgid,
-            all=all,
+            all=1,
             timeout=self.timeout,
             add_ctrls=1,
             add_intermediates=1,
             add_extop=1
         )
-        if extop_resp_class:
+        if extop_resp_class is None:
+            extop_response = ExtendedResponse(respoid, respvalue)
+        else:
             if extop_resp_class.responseName != respoid:
                 raise _libldap0.PROTOCOL_ERROR(
                     "Wrong OID in extended response! Expected %s, got %s" % (
@@ -416,12 +419,19 @@ class LDAPObject:
                         respoid
                     )
                 )
-            return extop_resp_class(extop_resp_class.responseName, respvalue)
-        return (respoid, respvalue)
+            extop_response = extop_resp_class(encodedResponseValue=respvalue)
+        if __debug__ and self._trace_level >= 2:
+            self._trace_file.write(
+                '%s.extop_result(): %r' % (
+                    self.__class__.__name__,
+                    extop_response
+                )
+            )
+        return extop_response
 
     def extop_s(self, extreq, serverctrls=None, clientctrls=None, extop_resp_class=None):
         msgid = self.extop(extreq, serverctrls, clientctrls)
-        return self.extop_result(msgid, all=1, extop_resp_class=extop_resp_class)
+        return self.extop_result(msgid, extop_resp_class=extop_resp_class)
 
     def modify(self, dn, modlist, serverctrls=None, clientctrls=None):
         self.uncache(dn)
@@ -460,17 +470,16 @@ class LDAPObject:
         )
 
     def passwd_s(self, user=None, oldpw=None, newpw=None, serverctrls=None, clientctrls=None):
-        self.uncache(user)
-        res = self.extop_s(
-            PassmodRequest(
-                userIdentity=user,
-                oldPasswd=oldpw,
-                newPasswd=newpw,
-            ),
-            extop_resp_class=PassmodResponse,
+        msgid = self.passwd(
+            user=user,
+            oldpw=oldpw,
+            newpw=newpw,
             serverctrls=serverctrls,
-            clientctrls=clientctrls,
+            clientctrls=clientctrls
         )
+        res = self.extop_result(msgid, extop_resp_class=PassmodResponse)
+        if res.responseValue is None:
+            return None
         return res.genPasswd
 
     def rename(
@@ -875,10 +884,8 @@ class LDAPObject:
 
     def refresh_s(self, dn, ttl=None):
         self.uncache(dn)
-        res = self.extop_s(
-            RefreshRequest(entryName=dn, requestTtl=ttl),
-            extop_resp_class=RefreshResponse,
-        )
+        msgid = self.refresh(dn, ttl=ttl)
+        res = self.extop_result(msgid, extop_resp_class=RefreshResponse)
         return res.responseTtl
 
     def find_unique_entry(

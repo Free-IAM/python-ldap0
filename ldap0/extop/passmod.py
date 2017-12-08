@@ -141,4 +141,4 @@ class PassmodResponse(ExtendedResponse):
             gen_passwd = passmod_resp.getComponentByName('genPasswd')
             if gen_passwd is not None:
                 self.genPasswd = bytes(gen_passwd)
-        return self.genPasswd
+        return
