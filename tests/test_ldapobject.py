@@ -105,6 +105,10 @@ class Test00_LDAPObject(SlapdTestCase):
             # open local LDAP connection
             self._ldap_conn = self._open_ldap_conn()
 
+    def test000_basics(self):
+        self.assertEqual(self._ldap_conn.protocol_version, 3)
+        self.assertIsInstance(self._ldap_conn.fileno(), int)
+
     def test001_search_subtree(self):
         result = self._ldap_conn.search_s(
             self.server.suffix,
