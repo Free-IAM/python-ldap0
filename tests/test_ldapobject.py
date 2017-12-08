@@ -630,33 +630,31 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             self.assertEqual(l.whoami_s(), 'dn:'+bind_dn)
 
     def test103_reconnect_get_state(self):
+        bind_dn = 'cn=user1,'+self.server.suffix
+        expected_state = {
+            '_cache': {},
+            '_cache_hits': 0,
+            '_cache_misses': 0,
+            '_last_bind': (
+                'simple_bind_s',
+                (bind_dn, 'user1_pw'),
+                {}
+            ),
+            '_options': [(17, 3), (9, 0), (2, 0), (8, 0)],
+            '_reconnects_done': 0,
+            '_retry_delay': 60.0,
+            '_retry_max': 1,
+            '_start_tls': 0,
+            '_uri': self.server.ldapi_uri,
+            'cache_ttl': 0.0,
+            'timeout': -1,
+            '_trace_level': 0,
+            '_trace_stack_limit': 5,
+        }
         with self.ldap_object_class(self.server.ldapi_uri) as l1:
-            bind_dn = 'cn=user1,'+self.server.suffix
             l1.simple_bind_s(bind_dn, 'user1_pw')
             self.assertEqual(l1.whoami_s(), 'dn:'+bind_dn)
-            self.assertEqual(
-                l1.__getstate__(),
-                {
-                    '_cache': {},
-                    '_cache_hits': 0,
-                    '_cache_misses': 0,
-                    '_last_bind': (
-                        'simple_bind_s',
-                        (bind_dn, 'user1_pw'),
-                        {}
-                    ),
-                    '_options': [(17, 3), (9, 0), (2, 0), (8, 0)],
-                    '_reconnects_done': 0,
-                    '_retry_delay': 60.0,
-                    '_retry_max': 1,
-                    '_start_tls': 0,
-                    '_trace_level': 0,
-                    '_trace_stack_limit': 5,
-                    '_uri': self.server.ldapi_uri,
-                    'cache_ttl': 0.0,
-                    'timeout': -1,
-                },
-            )
+            self.assertEqual(l1.__getstate__(), expected_state)
 
     def test104_reconnect_restore(self):
         with self.ldap_object_class(self.server.ldapi_uri) as l1:

@@ -30,15 +30,24 @@ assert _libldap0.__version__ == __version__, ImportError(
     'ldap %s and _ldap %s version mismatch!' % (__version__, _libldap0.__version__)
 )
 
+from . import LDAPError
+from .lock import LDAPLock
 import ldap0
-from ldap0 import LDAPError
 
 if __debug__:
     # Tracing is only supported in debugging mode
     import traceback
 
 
-def _ldap_function_call(lock, func, *args, **kwargs):
+global _libldap0_module_lock
+_libldap0_module_lock = LDAPLock(
+    desc='Module lock',
+    trace_level=ldap0._trace_level,
+    trace_file=ldap0._trace_file,
+)
+
+
+def _libldap0_function_call(func, *args, **kwargs):
     """
     Wrapper function which locks and logs calls to function
 
@@ -58,8 +67,7 @@ def _ldap_function_call(lock, func, *args, **kwargs):
                 limit=ldap0._trace_stack_limit,
                 file=ldap0._trace_file,
             )
-    if lock:
-        lock.acquire()
+    _libldap0_module_lock.acquire()
     try: # finally
         try: # error / result logging
             result = func(*args, **kwargs)
@@ -71,9 +79,8 @@ def _ldap_function_call(lock, func, *args, **kwargs):
             if __debug__ and ldap0._trace_level >= 2:
                 ldap0._trace_file.write('=> result:\n%s\n' % (pprint.pformat(result)))
     finally:
-        if lock:
-            lock.release()
-    return result # end of _ldap_function_call()
+        _libldap0_module_lock.release()
+    return result # end of _libldap0_function_call()
 
 
 def get_option(option):
@@ -82,7 +89,7 @@ def get_option(option):
 
     Get the value of an LDAP global option.
     """
-    return _ldap_function_call(None, _ldap0.get_option, option)
+    return _libldap0_function_call(_ldap0.get_option, option)
 
 
 def set_option(option, invalue):
@@ -91,7 +98,7 @@ def set_option(option, invalue):
 
     Set the value of an LDAP global option.
     """
-    return _ldap_function_call(None, _ldap0.set_option, option, invalue)
+    return _libldap0_function_call(_ldap0.set_option, option, invalue)
 
 
 def escape_str(escape_func, val, *args):

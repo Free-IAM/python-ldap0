@@ -6,6 +6,7 @@ ldap0.dn - misc stuff for handling distinguished names (see RFC 4514)
 from __future__ import absolute_import
 
 from .pkginfo import __version__, __author__, __license__
+from .functions import _libldap0_function_call
 
 import _libldap0
 assert _libldap0.__version__ == __version__, ImportError(
@@ -48,7 +49,7 @@ def str2dn(dn, flags=0):
     """
     if not dn:
         return []
-    return ldap0.functions._ldap_function_call(None, _libldap0.str2dn, dn, flags)
+    return _libldap0_function_call(_libldap0.str2dn, dn, flags)
 
 
 def dn2str(dn):

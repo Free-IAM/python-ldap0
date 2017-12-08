@@ -19,7 +19,8 @@ from _libldap0 import LDAPError
 
 from .pkginfo import __version__, __author__, __license__
 import ldap0
-from . import functions
+from .lock import LDAPLock
+from .functions import _libldap0_function_call
 from .schema.subentry import SCHEMA_ATTRS
 from .controls import DecodeControlTuples, RequestControlTuples
 from .controls.openldap import SearchNoOpControl
@@ -72,15 +73,14 @@ class LDAPObject:
             cache_ttl=0.0,
         ):
         self._trace_level = trace_level
-        self._trace_file = trace_file or sys.stdout
+        self._trace_file = trace_file or ldap0._trace_file
         self._trace_stack_limit = trace_stack_limit
         self._uri = uri
-        self._ldap_object_lock = self._ldap_lock('opcall')
-        self._l = ldap0.functions._ldap_function_call(
-            ldap0._ldap_module_lock,
-            _libldap0.initialize,
-            self._uri,
+        self._libldap0_lock = LDAPLock(
+            desc='_libldap0_lock within %r' % self,
+            trace_level=trace_level,
         )
+        self._l = _libldap0_function_call(_libldap0.initialize, self._uri)
         self.timeout = -1
         self.protocol_version = _libldap0.VERSION3
         self.cache_ttl = cache_ttl
@@ -89,17 +89,12 @@ class LDAPObject:
         self.set_option(_libldap0.OPT_DEREF, _libldap0.OPT_OFF)
         self.set_option(_libldap0.OPT_REFERRALS, _libldap0.OPT_OFF)
 
-    def _ldap_lock(self, desc=''):
-        if _libldap0.LIBLDAP_R:
-            return ldap0.LDAPLock(desc='%s within %r' % (desc, self))
-        return ldap0._ldap_module_lock
-
     def _ldap_call(self, func, *args, **kwargs):
         """
         Wrapper method mainly for serializing calls into OpenLDAP libs
         and trace logs
         """
-        self._ldap_object_lock.acquire()
+        self._libldap0_lock.acquire()
         if __debug__:
             if self._trace_level >= 1:
                 self._trace_file.write('*** %s %s - %s\n%s\n' % (
@@ -118,7 +113,7 @@ class LDAPObject:
                     if func.__name__ != "unbind_ext":
                         diagnostic_message_success = self._l.get_option(_libldap0.OPT_DIAGNOSTIC_MESSAGE)
             finally:
-                self._ldap_object_lock.release()
+                self._libldap0_lock.release()
         except LDAPError as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             try:
@@ -945,7 +940,7 @@ class ReconnectLDAPObject(LDAPObject):
 
     __transient_attrs__ = set([
         '_l',
-        '_ldap_object_lock',
+        '_libldap0_lock',
         '_trace_file',
         '_reconnect_lock',
         '_last_bind',
@@ -981,7 +976,10 @@ class ReconnectLDAPObject(LDAPObject):
             trace_stack_limit=trace_stack_limit,
             cache_ttl=cache_ttl,
         )
-        self._reconnect_lock = ldap0.LDAPLock(desc='reconnect lock within %r' % self)
+        self._reconnect_lock = LDAPLock(
+            desc='_reconnect_lock within %r' % self,
+            trace_level=trace_level,
+        )
         self._retry_max = retry_max
         self._retry_delay = retry_delay
         self._start_tls = 0
@@ -1013,8 +1011,14 @@ class ReconnectLDAPObject(LDAPObject):
             self._last_bind[1],
             self._last_bind[2],
         )
-        self._ldap_object_lock = self._ldap_lock()
-        self._reconnect_lock = ldap0.LDAPLock(desc='reconnect lock within %r' % (self))
+        self._libldap0_lock = LDAPLock(
+            desc='_libldap0_lock within %r' % self,
+            trace_level=self._trace_level,
+        )
+        self._reconnect_lock = LDAPLock(
+            desc='_reconnect_lock within %r' % self,
+            trace_level=self._trace_level,
+        )
         self._trace_file = sys.stdout
         self.reconnect(self._uri)
 
@@ -1055,11 +1059,7 @@ class ReconnectLDAPObject(LDAPObject):
                     ))
                 try:
                     # Do the connect
-                    self._l = ldap0.functions._ldap_function_call(
-                        ldap0._ldap_module_lock,
-                        _libldap0.initialize,
-                        uri
-                    )
+                    self._l = _libldap0_function_call(_libldap0.initialize, uri)
                     self._restore_options()
                     # StartTLS extended operation in case this was called before
                     if self._start_tls:

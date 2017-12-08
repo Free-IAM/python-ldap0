@@ -90,7 +90,7 @@ following option identifiers are defined as constants:
 .. py:data:: OPT_DEBUG_LEVEL
 
    Sets the debug level within the underlying OpenLDAP C lib (libldap).
-   libldap sends the log messages to stderr.
+   libldap sends the log messages to stdout.
 
 .. py:data:: OPT_DEFBASE
 
