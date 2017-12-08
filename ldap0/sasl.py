@@ -66,8 +66,8 @@ class SaslAuth(object):
         # new sasl mechanisms. So it is left here
         cb_result = self.cb_value_dict.get(cb_id, defresult) or ''
         if __debug__ and self._trace_level >= 1:
-            self._trace_file.write("*** id=%d, challenge=%r, prompt=%r, defresult=%r\n-> %r\n" % (
-                cb_id, challenge, prompt, defresult, self.cb_value_dict.get(cb_result)
+            self._trace_file.write("*** cb_id=%d, challenge=%r, prompt=%r, defresult=%r -> %r\n" % (
+                cb_id, challenge, prompt, defresult, cb_result
             ))
         return cb_result
 

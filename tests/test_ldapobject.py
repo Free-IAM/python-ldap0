@@ -81,7 +81,7 @@ class Test00_LDAPObject(SlapdTestCase):
     """
     test LDAP search operations
     """
-    trace_level = 0
+    trace_level = 2
     ldap_object_class = LDAPObject
     maxDiff = None
 

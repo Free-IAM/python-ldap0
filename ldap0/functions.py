@@ -73,13 +73,15 @@ def _libldap0_function_call(func, *args, **kwargs):
             result = func(*args, **kwargs)
         except LDAPError as err:
             if __debug__ and ldap0._trace_level >= 2:
-                ldap0._trace_file.write('=> LDAPError: %s\n' % (err))
+                result_log_msg = str(err)
             raise
         else:
             if __debug__ and ldap0._trace_level >= 2:
-                ldap0._trace_file.write('=> result:\n%s\n' % (pprint.pformat(result)))
+                result_log_msg = pprint.pformat(result)
     finally:
         _libldap0_module_lock.release()
+    if __debug__ and ldap0._trace_level >= 2:
+        ldap0._trace_file.write('-> %s\n' % (result_log_msg))
     return result # end of _libldap0_function_call()
 
 

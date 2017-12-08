@@ -123,16 +123,16 @@ class LDAPObject:
                 pass
             if __debug__ and self._trace_level >= 2:
                 self._trace_file.write(
-                    '=> LDAPError - %s: %s\n' % (e.__class__.__name__, e)
+                    '-> LDAPError - %s: %s\n' % (e.__class__.__name__, e)
                 )
             raise exc_type, exc_value, exc_traceback
         else:
             if __debug__ and self._trace_level >= 2:
                 if not diagnostic_message_success is None:
                     self._trace_file.write(
-                        '=> diagnosticMessage: %r\n' % (diagnostic_message_success)
+                        '-> diagnosticMessage: %r\n' % (diagnostic_message_success)
                     )
-                self._trace_file.write('=> result:\n%s\n' % (pprint.pformat(result)))
+                self._trace_file.write('-> %s\n' % (pprint.pformat(result)))
         return result
 
     def __setattr__(self, name, value):
