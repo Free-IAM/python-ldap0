@@ -15,7 +15,7 @@ from .pkginfo import __version__, __author__, __license__
 
 # Tracing is only supported in debugging mode
 _trace_level = 0
-_trace_file = sys.stdout
+_trace_file = sys.stderr
 _trace_stack_limit = None
 
 from .functions import get_option, set_option

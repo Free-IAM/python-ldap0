@@ -1019,7 +1019,7 @@ class ReconnectLDAPObject(LDAPObject):
             desc='_reconnect_lock within %r' % self,
             trace_level=self._trace_level,
         )
-        self._trace_file = sys.stdout
+        self._trace_file = sys.stderr
         self.reconnect(self._uri)
 
     def _store_last_bind(self, method, *args, **kwargs):

@@ -90,7 +90,7 @@ following option identifiers are defined as constants:
 .. py:data:: OPT_DEBUG_LEVEL
 
    Sets the debug level within the underlying OpenLDAP C lib (libldap).
-   libldap sends the log messages to stdout.
+   libldap sends the log messages to stderr.
 
 .. py:data:: OPT_DEFBASE
 
@@ -521,7 +521,7 @@ LDAPObject classes
    and :py:func:`open()` (deprecated). The connection is automatically unbound
    and closed when the LDAP object is deleted.
 
-.. py:class:: LDAPObject(uri [, trace_level=0 [, trace_file=sys.stdout [, trace_stack_limit=5]]])
+.. py:class:: LDAPObject(uri [, trace_level=0 [, trace_file=None [, trace_stack_limit=5]]])
 
    Initializes a new connection object for accessing the given LDAP server,
    and return an LDAP object (see :ref:`ldap-objects`) used to perform operations
@@ -556,7 +556,7 @@ LDAPObject classes
       :rfc:`4516` - Lightweight Directory Access Protocol (LDAP): Uniform Resource Locator
 
 
-.. py:class:: ReconnectLDAPObject(uri [, trace_level=0 [, trace_file=sys.stdout [, trace_stack_limit=5] [, retry_max=1 [, retry_delay=60.0]]]])
+.. py:class:: ReconnectLDAPObject(uri [, trace_level=0 [, trace_file=None [, trace_stack_limit=5] [, retry_max=1 [, retry_delay=60.0]]]])
 
    This class is derived from :py:class:`LDAPObject` and used for automatic
    reconnects when using the synchronous request methods (see below). This class
