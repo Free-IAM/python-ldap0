@@ -324,6 +324,7 @@ class Test00_LDAPObject(SlapdTestCase):
         self._ldap_conn.add_s(new_dn, new_entry)
         entry = self._ldap_conn.read_s(new_dn, attrlist=new_entry.keys())
         self.assertEqual(entry, new_entry)
+        self._ldap_conn.delete_s(new_dn)
 
     def test012_results(self):
         msg_id = self._ldap_conn.search(
@@ -382,10 +383,12 @@ class Test00_LDAPObject(SlapdTestCase):
             self.assertEqual(l._cache_misses, cache_misses)
             self.assertEqual(l._cache_hits, cache_hits)
             self.assertEqual(len(l._cache), 0)
+            self.assertEqual(l.cache_hit_ratio(), 80.0)
             l.flush_cache()
             self.assertEqual(l._cache_misses, 0)
             self.assertEqual(l._cache_hits, 0)
             self.assertEqual(len(l._cache), 0)
+            self.assertEqual(l.cache_hit_ratio(), None)
             for i in range(5):
                 dn, entry = l.search_s(new_dn, ldap0.SCOPE_BASE)[0]
                 self.assertEqual(dn, new_dn)
@@ -393,6 +396,25 @@ class Test00_LDAPObject(SlapdTestCase):
                 self.assertEqual(l._cache_misses, 1)
                 self.assertEqual(l._cache_hits, i)
                 self.assertEqual(len(l._cache), 1)
+            _ = l.search_s(
+                self.server.suffix,
+                ldap0.SCOPE_SUBTREE,
+                '(entryDN={0})'.format(new_dn),
+            )
+            self.assertEqual(len(l._cache), 2)
+            l.uncache(new_dn)
+            self.assertEqual(l._cache_misses, 2)
+            self.assertEqual(l._cache_hits, i)
+            self.assertEqual(len(l._cache), 0)
+            l.flush_cache()
+            for i in range(4):
+                dn, entry = l.search_s(new_dn, ldap0.SCOPE_BASE, cache_ttl=0.05)[0]
+                self.assertEqual(dn, new_dn)
+                self.assertEqual(entry, new_entry)
+                self.assertEqual(l._cache_misses, i+1)
+                self.assertEqual(l._cache_hits, 0)
+                self.assertEqual(len(l._cache), 1)
+                time.sleep(0.1)
 
     def test014_extop_whoami(self):
         with self.ldap_object_class(self.server.ldapi_uri) as l:
@@ -607,6 +629,26 @@ class Test00_LDAPObject(SlapdTestCase):
                 mv_entry,
                 {'cn': [val], 'objectClass': ['person']}
             )
+
+    def test021_compare(self):
+        self.assertTrue(
+            self._ldap_conn.compare_s(
+                self.server.root_dn,
+                'userPassword',
+                self.server.root_pw,
+            )
+        )
+        self.assertFalse(
+            self._ldap_conn.compare_s(
+                self.server.root_dn,
+                'userPassword',
+                self.server.root_pw+'1',
+            )
+        )
+        with self.assertRaises(ldap0.NO_SUCH_OBJECT):
+            self._ldap_conn.compare_s('cn=foobar', 'cn', 'foobar')
+        with self.assertRaises(ldap0.UNDEFINED_TYPE):
+            self._ldap_conn.compare_s('cn=foobar', 'foo', 'bar')
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
