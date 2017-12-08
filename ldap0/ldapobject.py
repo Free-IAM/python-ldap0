@@ -282,16 +282,6 @@ class LDAPObject:
         )
         return resp_type, resp_data, resp_msgid, resp_ctrls
 
-    def bind(self, who, cred, method=_libldap0.AUTH_SIMPLE):
-        assert method == _libldap0.AUTH_SIMPLE, ValueError(
-            'Only simple bind method supported, but method was %r' % (method)
-        )
-        return self.simple_bind(who, cred)
-
-    def bind_s(self, who, cred, method=_libldap0.AUTH_SIMPLE):
-        msgid = self.bind(who, cred, method)
-        return self.result(msgid, all=1, timeout=self.timeout)
-
     def sasl_interactive_bind_s(
             self,
             who,
@@ -445,12 +435,6 @@ class LDAPObject:
             timeout=self.timeout
         )
         return resp_type, resp_data, resp_msgid, resp_ctrls
-
-    def modrdn(self, dn, newrdn, delold=1):
-        return self.rename(dn, newrdn, None, delold)
-
-    def modrdn_s(self, dn, newrdn, delold=1):
-        return self.rename_s(dn, newrdn, None, delold)
 
     def passwd(self, user=None, oldpw=None, newpw=None, serverctrls=None, clientctrls=None):
         self.uncache(user)
@@ -634,7 +618,7 @@ class LDAPObject:
             if cache_key_args[0].lower() == entry_dn:
                 del self._cache[cache_key_args]
             else:
-                for cached_dn, _ in cached_results[1]:
+                for cached_dn, _ in cached_results[2]:
                     if not cached_dn is None and cached_dn.lower() == entry_dn:
                         del self._cache[cache_key_args]
                         break # stop looping through results
