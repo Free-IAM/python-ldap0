@@ -392,7 +392,7 @@ class SlapdTestCase(unittest.TestCase):
     server_class = SlapdObject
     ldap_object_class = ldap0.ldapobject.LDAPObject
     server = None
-    trace_level = 0
+    trace_level = int(os.environ.get('PYLDAP_TRACE_LEVEL', '0'))
 
     def _open_ldap_conn(self, who=None, cred=None):
         """
