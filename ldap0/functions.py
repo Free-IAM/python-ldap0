@@ -125,15 +125,16 @@ def strp_secs(dt_str):
     """
     return timegm(time.strptime(dt_str, '%Y%m%d%H%M%SZ'))
 
-def split_attrs(attrs_str):
+def attr_set(attrs_str):
     """
-    Return splitted list of space or comma-separated list of attribute names
+    Splits string with space or comma-separated list of attribute names
+    and returns a set with white-space stripped values
     """
-    return [
+    return set([
         attr2
         for attr2 in [
             attr1.strip()
             for attr1 in (attrs_str or '').strip().replace(' ', ',').split(',')
         ]
         if attr2
-    ]
+    ])
