@@ -179,3 +179,19 @@ class AuthorizationIdentityResponseControl(ResponseControl):
         self.authzId = encodedControlValue
 
 KNOWN_RESPONSE_CONTROLS.reg(AuthorizationIdentityResponseControl)
+
+
+class SubentriesControl(BooleanControl):
+    """
+    Subentries Control (RFC 3672)
+    https://tools.ietf.org/html/rfc3672#section-3
+    """
+    controlType = '1.3.6.1.4.1.4203.1.10.1'
+
+    def __init__(self, criticality=False, booleanValue=False):
+        BooleanControl.__init__(
+            self,
+            controlType=None,
+            criticality=criticality,
+            booleanValue=booleanValue
+        )
