@@ -22,10 +22,10 @@ class TestSyncReplDesc(unittest.TestCase):
         srd_str_list = [
             'rid=042',
             'provider=ldaps://ae-dir-deb-p2.snet1.example.com',
-            'bindmethod=sasl',
+            'bindmethod=Sasl',
             'timeout=5',
             'network-timeout=5',
-            'saslmech=EXTERNAL',
+            'saslmech=external',
             'keepalive=240:10:30',
             'starttls=no',
             'tls_cert="/opt/ae-dir/etc/tls/ae-dir-deb-p1.snet1.example.com.crt"',
