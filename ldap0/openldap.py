@@ -75,8 +75,8 @@ class SyncReplDesc(object):
         'network-timeout': int,
         'sizelimit': int,
         'timelimit': int,
-        'bindmethod': str.lower(),
-        'saslmech': str.upper(),
+        'bindmethod': str.lower,
+        'saslmech': str.upper,
     }
 
     def __init__(self, syncrepl_statement):
