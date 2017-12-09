@@ -75,7 +75,7 @@ class LDAPObject:
         self._trace_level = trace_level
         self._trace_file = trace_file or ldap0._trace_file
         self._trace_stack_limit = trace_stack_limit
-        self._uri = uri
+        self._uri = self.uri = uri
         self._libldap0_lock = LDAPLock(
             desc='_libldap0_lock within %r' % self,
             trace_level=trace_level,
@@ -166,6 +166,7 @@ class LDAPObject:
             cacert_filename=None,
             client_cert_filename=None,
             client_key_filename=None,
+            req_cert=_libldap0.OPT_X_TLS_DEMAND,
         ):
         """
         set TLS options for connection even with checking whether cert/key
@@ -190,7 +191,7 @@ class LDAPObject:
                    str(value_error) != 'ValueError: option error':
                     raise
         # Force server cert validation
-        self._l.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_DEMAND)
+        self._l.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, req_cert)
         # this has to be the last option set to let libldap reinitialize TLS context
         self._l.set_option(_libldap0.OPT_X_TLS_NEWCTX, 0)
         return # set_tls_options()
