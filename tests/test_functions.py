@@ -9,6 +9,7 @@ from __future__ import absolute_import
 import unittest
 
 import ldap0
+from ldap0.functions import split_attrs
 from ldap0.dn import escape_dn_chars
 from ldap0.filter import escape_filter_chars
 
@@ -69,6 +70,24 @@ class TestFunction(unittest.TestCase):
                 '+bar',
             ),
             'uid=foo\\=bar,cn=foo\\+,cn=\\+bar,dc=example,dc=com'
+        )
+
+    def test_split_attrs(self):
+        self.assertEqual(
+            split_attrs('foo bar foobar'),
+            ['foo', 'bar', 'foobar']
+        )
+        self.assertEqual(
+            split_attrs('foo,bar,foobar'),
+            ['foo', 'bar', 'foobar']
+        )
+        self.assertEqual(
+            split_attrs('    foo, bar, foobar'),
+            ['foo', 'bar', 'foobar']
+        )
+        self.assertEqual(
+            split_attrs('    foo, bar, foo bar'),
+            ['foo', 'bar', 'foo', 'bar']
         )
 
 
