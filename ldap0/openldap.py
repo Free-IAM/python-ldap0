@@ -68,13 +68,15 @@ class SyncReplDesc(object):
         'tls_reqcert': set(('never', 'allow', 'try', 'demand')),
         'type': set(('refreshonly', 'refreshandpersist')),
     }
-    func_map = {
+    sanitize_func = {
         'attrs': attr_set,
         'exattrs': attr_set,
         'timeout': int,
         'network-timeout': int,
         'sizelimit': int,
         'timelimit': int,
+        'bindmethod': str.lower(),
+        'saslmech': str.upper(),
     }
 
     def __init__(self, syncrepl_statement):
@@ -104,12 +106,12 @@ class SyncReplDesc(object):
             val = val.strip()
             if val[0] == '"' and val[-1] == '"':
                 val = val[1:-1]
+            if key in self.sanitize_func:
+                val = self.sanitize_func[key](val)
             if key in self.enum_args and val.lower() not in self.enum_args[key]:
                 raise ValueError('%r not in %r, was %r' % (
                     key, self.enum_args[key], val
                 ))
-            if key in self.func_map:
-                val = self.func_map[key](val)
             setattr(self, key.replace('-', '_'), val)
         # transform scope
         if self.scope is not None:
