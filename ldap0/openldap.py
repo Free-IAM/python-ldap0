@@ -1,0 +1,107 @@
+# -*- coding: utf-8 -*-
+"""
+ldap0.openldap -- OpenLDAP-specific stuff
+"""
+
+from __future__ import absolute_import
+
+from .pkginfo import __version__, __author__, __license__
+from .ldapurl import LDAPUrl
+from .ldapurl import SEARCH_SCOPE as LDAPURL_SEARCH_SCOPE
+from ldap0.functions import attr_set
+
+__all__ = [
+    'SyncReplDesc',
+]
+
+
+class SyncReplDesc(object):
+    """
+    Parser class for OpenLDAP syncrepl directives
+    """
+    known_keywords = (
+        'attrs',
+        'attrsonly',
+        'authcid',
+        'authzid',
+        'binddn',
+        'bindmethod',
+        'credentials',
+        'exattrs',
+        'filter',
+        'interval',
+        'keepalive',
+        'logbase',
+        'logfilter',
+        'network-timeout',
+        'provider',
+        'realm',
+        'retry',
+        'rid',
+        'saslmech',
+        'schemachecking',
+        'scope',
+        'searchbase',
+        'secprops',
+        'sizelimit',
+        'starttls',
+        'suffixmassage',
+        'syncdata',
+        'timelimit',
+        'timeout',
+        'tls_cacert',
+        'tls_cacertdir',
+        'tls_cert',
+        'tls_cipher_suite',
+        'tls_crlcheck',
+        'tls_key',
+        'tls_reqcert',
+        'tls_protocol_min',
+        'type',
+    )
+
+    def __init__(self, syncrepl_statement):
+        """
+        syncrepl_statement
+           syncrepl statement without any line breaks
+        """
+        # strip all white spaces from syncrepl statement parameters
+        syncrepl_statement = syncrepl_statement.strip()
+        # Set class attributes for all known keywords
+        for keyword in self.known_keywords:
+            setattr(self, keyword.replace('-', '_'), None)
+        parts = []
+        for keyword in self.known_keywords:
+            k_pos = syncrepl_statement.find(keyword+'=')
+            if k_pos == 0 or (k_pos > 0 and syncrepl_statement[k_pos-1] == ' '):
+                parts.append(k_pos)
+        parts.sort()
+        parts_len = len(parts)
+        for ind in range(parts_len):
+            if ind==parts_len-1:
+                next_pos = len(syncrepl_statement)
+            else:
+                next_pos = parts[ind+1]
+            key, val = syncrepl_statement[parts[ind]:next_pos].split('=', 1)
+            key = key.strip()
+            val = val.strip()
+            if val[0] == '"' and val[-1] == '"':
+                val = val[1:-1]
+            setattr(self, key.replace('-', '_'), val)
+
+    def __repr__(self):
+        return '%s(rid=%s)' % (self.__class__.__name__, self.rid)
+
+    def ldap_url(self):
+        """
+        Return ldapurl.LDAPUrl object representing some syncrepl parameters
+        as close as possible.
+        """
+        ldap_url = LDAPUrl(self.provider)
+        ldap_url.dn = self.searchbase
+        ldap_url.scope = LDAPURL_SEARCH_SCOPE[self.scope]
+        ldap_url.filterstr = self.filter
+        ldap_url.who = self.authcid or self.binddn
+        ldap_url.cred = self.credentials
+        ldap_url.attrs = attr_set(self.attrs) or ['*', '+']
+        return ldap_url
