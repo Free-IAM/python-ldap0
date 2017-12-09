@@ -54,7 +54,7 @@ class SaslAuth(object):
             trace_file=None,
         ):
         self.cb_value_dict = cb_value_dict or {}
-        self.mech = mech
+        self.mech = mech.upper()
         self._trace_level = trace_level
         self._trace_file = trace_file
 
