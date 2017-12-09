@@ -71,6 +71,8 @@ class TestSyncReplDesc(unittest.TestCase):
 
     def test002_syncrepldesc_class(self):
         srd_str_list = [
+            '',
+            '',
             'rid=23',
             'provider=ldap://ldap-23.example.com',
             'bindmethod=simple',
@@ -87,8 +89,10 @@ class TestSyncReplDesc(unittest.TestCase):
             'scope=one',
             'schemachecking=on',
             'type=refreshAndPersist',
+            '',
+            '',
         ]
-        srd = SyncReplDesc(' '.join(srd_str_list))
+        srd = SyncReplDesc('  '.join(srd_str_list))
         self.assertEqual(srd.rid, '23')
         self.assertEqual(srd.provider, 'ldap://ldap-23.example.com')
         self.assertEqual(srd.bindmethod, 'simple')
