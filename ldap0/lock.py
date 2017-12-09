@@ -1,9 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+ldap0.lock -- specific lock class with logging
+"""
+
 from __future__ import absolute_import
 
 import threading
 
-from .pkginfo import __version__, __author__, __license__
 import ldap0
+from .pkginfo import __version__, __author__, __license__
 
 
 class LDAPLock(object):
@@ -38,7 +43,7 @@ class LDAPLock(object):
         """
         if __debug__:
             if self._trace_level >= self._min_trace_level:
-                _trace_file.write('***%s.acquire() %r %s\n' % (
+                self._trace_file.write('***%s.acquire() %r %s\n' % (
                     self.__class__.__name__, self, self._desc
                 ))
         return self._lock.acquire()
@@ -49,7 +54,7 @@ class LDAPLock(object):
         """
         if __debug__:
             if self._trace_level >= self._min_trace_level:
-                _trace_file.write('***%s.release() %r %s\n' % (
+                self._trace_file.write('***%s.release() %r %s\n' % (
                     self.__class__.__name__, self, self._desc
                 ))
         return self._lock.release()
