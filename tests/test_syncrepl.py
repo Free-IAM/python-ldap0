@@ -10,6 +10,7 @@ import unittest
 import shelve
 
 from ldap0.test import SlapdObject, SlapdTestCase
+from ldap0.controls.simple import SubentriesControl
 
 # Switch off processing .ldaprc or ldap.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
@@ -275,30 +276,55 @@ class Test00_Syncrepl(SlapdTestCase):
             self._ldap_conn = self._open_ldap_conn()
 
     def tearDown(self):
-        self.tester.unbind_s()
+        self._ldap_conn.unbind_s()
+
+    def test000_syncrepl_subentry(self):
+        self.assertEqual(
+            self._ldap_conn.search_s(
+                self.server.suffix,
+                ldap0.SCOPE_SUBTREE,
+                ('objectClass=subentry'),
+            ),
+            []
+        )
+        self.assertEqual(
+            self._ldap_conn.search_s(
+                self.server.suffix,
+                ldap0.SCOPE_SUBTREE,
+                ('objectClass=subentry'),
+                serverctrls=[SubentriesControl(True, True)],
+            ),
+            [(
+                'cn=ldapsync,dc=slapd-test,dc=example,dc=org',
+                {
+                    'objectClass': ['top', 'subentry', 'syncProviderSubentry'],
+                    'cn': ['ldapsync'],
+                }
+            )]
+        )
 
     def test_refreshOnly_search(self):
         """
         Test to see if we can initialize a syncrepl search.
         """
-        self.tester = SyncreplClient(
+        self._ldap_conn = SyncreplClient(
             self.server.ldap_uri,
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.start_search(
+        self._ldap_conn.start_search(
             self.server.suffix,
             'refreshOnly'
         )
 
 
     def test_refreshAndPersist_search(self):
-        self.tester = SyncreplClient(
+        self._ldap_conn = SyncreplClient(
             self.server.ldap_uri,
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.start_search(
+        self._ldap_conn.start_search(
             self.server.suffix,
             'refreshAndPersist'
         )
@@ -307,71 +333,71 @@ class Test00_Syncrepl(SlapdTestCase):
         """
         Test doing a full refresh cycle, and check what we got.
         """
-        self.tester = SyncreplClient(
+        self._ldap_conn = SyncreplClient(
             self.server.ldap_uri,
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.start_search(
+        self._ldap_conn.start_search(
             self.server.suffix,
             'refreshOnly'
         )
-        poll_result = self.tester.poll(
+        poll_result = self._ldap_conn.poll(
             all=1,
             timeout=None
         )
         self.assertFalse(poll_result)
-        self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
 
     def test_refreshAndPersist_poll_only(self):
         """
         Test the refresh part of refresh-and-persist, and check what we got.
         """
-        self.tester = SyncreplClient(
+        self._ldap_conn = SyncreplClient(
             self.server.ldap_uri,
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.start_search(
+        self._ldap_conn.start_search(
             self.server.suffix,
             'refreshAndPersist'
         )
         # Make sure to stop the test before going into persist mode.
-        while self.tester.refresh_done is not True:
-            poll_result = self.tester.poll(
+        while self._ldap_conn.refresh_done is not True:
+            poll_result = self._ldap_conn.poll(
                 all=0,
                 timeout=None
             )
             self.assertTrue(poll_result)
-        self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
 
     def test_refreshAndPersist_timeout(self):
         """
         Make sure refreshAndPersist can handle a search with timeouts.
         """
-        self.tester = SyncreplClient(
+        self._ldap_conn = SyncreplClient(
             self.server.ldap_uri,
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.start_search(
+        self._ldap_conn.start_search(
             self.server.suffix,
             'refreshAndPersist'
         )
         # Run a quick refresh, that shouldn't have any changes.
-        while self.tester.refresh_done is not True:
-            poll_result = self.tester.poll(
+        while self._ldap_conn.refresh_done is not True:
+            poll_result = self._ldap_conn.poll(
                 all=0,
                 timeout=None
             )
             self.assertTrue(poll_result)
         # Again, server data should not have changed.
-        self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
         # Run a search with timeout.
         # Nothing is changing the server, so it shoud timeout.
         self.assertRaises(
             ldap0.TIMEOUT,
-            self.tester.poll,
+            self._ldap_conn.poll,
             all=0,
             timeout=1
         )
@@ -380,44 +406,44 @@ class Test00_Syncrepl(SlapdTestCase):
         """
         Make sure refreshAndPersist can handle cancelling a syncrepl search.
         """
-        self.tester = SyncreplClient(
+        self._ldap_conn = SyncreplClient(
             self.server.ldap_uri,
             self.server.root_dn,
             self.server.root_pw
         )
-        self.tester.start_search(
+        self._ldap_conn.start_search(
             self.server.suffix,
             'refreshAndPersist'
         )
         # Run a quick refresh, that shouldn't have any changes.
-        while self.tester.refresh_done is not True:
-            poll_result = self.tester.poll(
+        while self._ldap_conn.refresh_done is not True:
+            poll_result = self._ldap_conn.poll(
                 all=0,
                 timeout=None
             )
             self.assertTrue(poll_result)
         # Again, server data should not have changed.
-        self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
         # Request cancellation.
-        self.tester.cancel_search()
+        self._ldap_conn.cancel_search()
         # Run another poll, without timeout, but which should cancel out.
         self.assertRaises(
             ldap0.CANCELLED,
-            self.tester.poll,
+            self._ldap_conn.poll,
             all=1,
             timeout=None
         )
         # Server data should still be intact.
-        self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
 
-    @unittest.skip('Todo...')
+    @unittest.skip('not yet implemented')
     def test_data_store1(self):
         """
         Make a new client, with a data store, and close.  Then, load a new
         client with the same datastore, and see if the data store loads OK.
         """
 
-    @unittest.skip('Todo...')
+    @unittest.skip('not yet implemented')
     def test_data_store2(self):
         """
         Make a new client, with a data store, and close.  Then, load a new
@@ -425,21 +451,21 @@ class Test00_Syncrepl(SlapdTestCase):
         Start the sync, and everything should sync up OK.
         """
 
-    @unittest.skip('Todo...')
+    @unittest.skip('not yet implemented')
     def test_data_store3(self):
         """
         Load the refreshOnly client, using existing data.  Make a change
         on the server, and the client should pick it up in the refresh phase.
         """
 
-    @unittest.skip('Todo...')
+    @unittest.skip('not yet implemented')
     def test_data_store4(self):
         """
         Load the refreshAndPersist client, using existing data.  Make a change
         on the server, and the client should pick it up in the refresh phase.
         """
 
-    @unittest.skip('Todo...')
+    @unittest.skip('not yet implemented')
     def test_data_store5(self):
         """
         Load the refreshAndPersist client, using existing data.  Let the
