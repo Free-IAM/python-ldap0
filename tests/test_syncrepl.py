@@ -40,6 +40,7 @@ overlay syncprov
 syncprov-checkpoint 100 10
 syncprov-sessionlog 100
 index objectclass,entryCSN,entryUUID eq
+sync_use_subentry
 """
 
 # Define initial data load, both as an LDIF and as a dictionary.
@@ -130,7 +131,6 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
         """
         Set up our object by creating a search client, connecting, and binding.
         """
-
         if storage is not None:
             self.data = shelve.open(storage)
             self.uuid_dn = shelve.open(storage + 'uuid_dn')
@@ -141,14 +141,11 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
             self.uuid_dn = {}
             self.dn_attrs = {}
             self.using_shelve = False
-
         self.data['cookie'] = None
         self.present = []
         self.refresh_done = False
-
         LDAPObject.__init__(self, uri)
         self.simple_bind_s(dn, password)
-
 
     def unbind_s(self):
         """
@@ -159,7 +156,6 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
             self.uuid_dn.close()
             self.dn_attrs.close()
         LDAPObject.unbind_s(self)
-
 
     def start_search(self, search_base, search_mode):
         """
@@ -172,13 +168,11 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
             filterstr='(objectClass=*)'
         )
 
-
     def cancel_search(self):
         """
         A simple wrapper to call parent class with syncrepl search ID.
         """
         LDAPObject.cancel_s(self, self.search_id)
-
 
     def poll(self, timeout=None, all=0):
         """
@@ -190,13 +184,11 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
             all=all
         )
 
-
     def syncrepl_get_cookie(self):
         """
         Pull cookie from storage, if one exists.
         """
         return self.data['cookie']
-
 
     def syncrepl_set_cookie(self, cookie):
         """
@@ -204,13 +196,11 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
         """
         self.data['cookie'] = cookie
 
-
     def syncrepl_refreshdone(self):
         """
         Just update a variable.
         """
         self.refresh_done = True
-
 
     def syncrepl_delete(self, uuids):
         """
@@ -219,7 +209,6 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
         for uuid in uuids:
             del self.dn_attrs[self.uuid_dn[uuid]]
             del self.uuid_dn[uuid]
-
 
     def syncrepl_entry(self, dn, attrs, uuid):
         """
@@ -230,11 +219,9 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
             if dn != self.uuid_dn[uuid]:
                 # Delete data associated with old DN.
                 del self.dn_attrs[self.uuid_dn[uuid]]
-
-        # Update both maps.
+        # Update both maps
         self.uuid_dn[uuid] = dn
         self.dn_attrs[dn] = attrs
-
 
     def syncrepl_present(self, uuids, refreshDeletes=False):
         """
@@ -244,19 +231,15 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
         """
         if (uuids is not None) and (refreshDeletes is False):
             self.present.extend(uuids)
-
         elif (uuids is None) and (refreshDeletes is False):
             deleted_uuids = list()
             for uuid in self.uuid_dn.keys():
                 if uuid not in self.present:
                     deleted_uuids.append(uuid)
-
             if len(deleted_uuids) > 0:
                 self.syncrepl_delete(deleted_uuids)
-
         elif (uuids is not None) and (refreshDeletes is True):
             self.syncrepl_delete(uuids)
-
         elif (uuids is None) and (refreshDeletes is True):
             pass
 
@@ -268,7 +251,6 @@ class Test00_Syncrepl(SlapdTestCase):
     and checking that we got everything that we expected.  We also test that
     timeouts and cancellation are working properly.
     """
-
     server_class = SyncreplProvider
 
     @classmethod
@@ -285,7 +267,6 @@ class Test00_Syncrepl(SlapdTestCase):
             }
         )
 
-
     def setUp(self):
         try:
             self._ldap_conn
@@ -293,15 +274,13 @@ class Test00_Syncrepl(SlapdTestCase):
             # open local LDAP connection
             self._ldap_conn = self._open_ldap_conn()
 
-
     def tearDown(self):
         self.tester.unbind_s()
 
-
     def test_refreshOnly_search(self):
-        '''
+        """
         Test to see if we can initialize a syncrepl search.
-        '''
+        """
         self.tester = SyncreplClient(
             self.server.ldap_uri,
             self.server.root_dn,
@@ -324,7 +303,6 @@ class Test00_Syncrepl(SlapdTestCase):
             'refreshAndPersist'
         )
 
-
     def test_refreshOnly_poll_full(self):
         """
         Test doing a full refresh cycle, and check what we got.
@@ -345,7 +323,6 @@ class Test00_Syncrepl(SlapdTestCase):
         self.assertFalse(poll_result)
         self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
 
-
     def test_refreshAndPersist_poll_only(self):
         """
         Test the refresh part of refresh-and-persist, and check what we got.
@@ -359,7 +336,6 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.suffix,
             'refreshAndPersist'
         )
-
         # Make sure to stop the test before going into persist mode.
         while self.tester.refresh_done is not True:
             poll_result = self.tester.poll(
@@ -367,9 +343,7 @@ class Test00_Syncrepl(SlapdTestCase):
                 timeout=None
             )
             self.assertTrue(poll_result)
-
         self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
-
 
     def test_refreshAndPersist_timeout(self):
         """
@@ -384,7 +358,6 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.suffix,
             'refreshAndPersist'
         )
-
         # Run a quick refresh, that shouldn't have any changes.
         while self.tester.refresh_done is not True:
             poll_result = self.tester.poll(
@@ -392,10 +365,8 @@ class Test00_Syncrepl(SlapdTestCase):
                 timeout=None
             )
             self.assertTrue(poll_result)
-
         # Again, server data should not have changed.
         self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
-
         # Run a search with timeout.
         # Nothing is changing the server, so it shoud timeout.
         self.assertRaises(
@@ -404,7 +375,6 @@ class Test00_Syncrepl(SlapdTestCase):
             all=0,
             timeout=1
         )
-
 
     def test_refreshAndPersist_cancelled(self):
         """
@@ -419,7 +389,6 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.suffix,
             'refreshAndPersist'
         )
-
         # Run a quick refresh, that shouldn't have any changes.
         while self.tester.refresh_done is not True:
             poll_result = self.tester.poll(
@@ -427,13 +396,10 @@ class Test00_Syncrepl(SlapdTestCase):
                 timeout=None
             )
             self.assertTrue(poll_result)
-
         # Again, server data should not have changed.
         self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
-
         # Request cancellation.
         self.tester.cancel_search()
-
         # Run another poll, without timeout, but which should cancel out.
         self.assertRaises(
             ldap0.CANCELLED,
@@ -441,24 +407,45 @@ class Test00_Syncrepl(SlapdTestCase):
             all=1,
             timeout=None
         )
-
         # Server data should still be intact.
         self.assertEqual(self.tester.dn_attrs, LDAP_ENTRIES)
 
+    @unittest.skip('Todo...')
+    def test_data_store1(self):
+        """
+        Make a new client, with a data store, and close.  Then, load a new
+        client with the same datastore, and see if the data store loads OK.
+        """
 
-    # TODO:
-    # * Make a new client, with a data store, and close.  Then, load a new
-    # client with the same datastore, and see if the data store loads OK.
-    # * Make a new client, with a data store, and close.  Then, load a new
-    # client with the same datastore.  Delete an entry, and the cookie.
-    # Start the sync, and everything should sync up OK.
-    # * Load the refreshOnly client, using existing data.  Make a change
-    # on the server, and the client should pick it up in the refresh phase.
-    # * Load the refreshAndPersist client, using existing data.  Make a change
-    # on the server, and the client should pick it up in the refresh phase.
-    # * Load the refreshAndPersist client, using existing data.  Let the
-    # refresh phase complete.  Make a change on the server, and the client
-    # should pick it up during the persist phase.
+    @unittest.skip('Todo...')
+    def test_data_store2(self):
+        """
+        Make a new client, with a data store, and close.  Then, load a new
+        client with the same datastore.  Delete an entry, and the cookie.
+        Start the sync, and everything should sync up OK.
+        """
+
+    @unittest.skip('Todo...')
+    def test_data_store3(self):
+        """
+        Load the refreshOnly client, using existing data.  Make a change
+        on the server, and the client should pick it up in the refresh phase.
+        """
+
+    @unittest.skip('Todo...')
+    def test_data_store4(self):
+        """
+        Load the refreshAndPersist client, using existing data.  Make a change
+        on the server, and the client should pick it up in the refresh phase.
+        """
+
+    @unittest.skip('Todo...')
+    def test_data_store5(self):
+        """
+        Load the refreshAndPersist client, using existing data.  Let the
+        refresh phase complete.  Make a change on the server, and the client
+        should pick it up during the persist phase.
+        """
 
 
 if __name__ == '__main__':
