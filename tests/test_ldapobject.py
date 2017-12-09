@@ -691,6 +691,7 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             '_retry_max': 1,
             '_start_tls': 0,
             '_uri': self.server.ldapi_uri,
+            'uri': self.server.ldapi_uri,
             'cache_ttl': 0.0,
             'timeout': -1,
             '_trace_level': 0,
