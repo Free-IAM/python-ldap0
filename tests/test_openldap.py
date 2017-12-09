@@ -8,6 +8,7 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
+from ldap0 import SCOPE_SUBTREE, SCOPE_ONELEVEL
 from ldap0.openldap import SyncReplDesc
 from ldap0.ldapurl import LDAPUrl
 
@@ -17,7 +18,7 @@ class TestSyncReplDesc(unittest.TestCase):
     test ldap0.openldap.SyncReplDesc
     """
 
-    def test_syncrepldesc_class(self):
+    def test001_syncrepldesc_class(self):
         srd_str_list = [
             'rid=042',
             'provider=ldaps://ae-dir-deb-p2.snet1.example.com',
@@ -41,13 +42,12 @@ class TestSyncReplDesc(unittest.TestCase):
             'type=refreshAndPersist',
             'retry="30 +"'
         ]
-        print '***', repr(' '.join(srd_str_list))
         srd = SyncReplDesc(' '.join(srd_str_list))
         self.assertEqual(srd.rid, '042')
         self.assertEqual(srd.provider, 'ldaps://ae-dir-deb-p2.snet1.example.com')
         self.assertEqual(srd.bindmethod, 'sasl')
-        self.assertEqual(srd.timeout, '5')
-        self.assertEqual(srd.network_timeout, '5')
+        self.assertEqual(srd.timeout, 5)
+        self.assertEqual(srd.network_timeout, 5)
         self.assertEqual(srd.saslmech, 'EXTERNAL')
         self.assertEqual(srd.keepalive, '240:10:30')
         self.assertEqual(srd.starttls, 'no')
@@ -55,12 +55,12 @@ class TestSyncReplDesc(unittest.TestCase):
         self.assertEqual(srd.tls_key, '/opt/ae-dir/etc/tls/ae-dir-deb-p1.snet1.example.com.key')
         self.assertEqual(srd.tls_cacert, '/opt/ae-dir/etc/tls/my-ae-dir-testca-2017-06.pem')
         self.assertEqual(srd.tls_reqcert, 'demand')
-        #self.assertEqual(srd.tls_cipher_suite, 'ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDH-RSA-AES256-GCM-SHA384:!ADH')
+        self.assertEqual(srd.tls_cipher_suite, 'ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-GCM-SHA384:ECDH-RSA-AES256-GCM-SHA384:!ADH')
         self.assertEqual(srd.tls_protocol_min, '3.3')
         self.assertEqual(srd.tls_crlcheck, 'none')
         self.assertEqual(srd.filter, '(objectClass=*)')
         self.assertEqual(srd.searchbase, 'dc=ae-dir,dc=example,dc=org')
-        self.assertEqual(srd.scope, 'sub')
+        self.assertEqual(srd.scope, SCOPE_SUBTREE)
         self.assertEqual(srd.schemachecking, 'on')
         self.assertEqual(srd.type, 'refreshAndPersist')
         self.assertEqual(srd.retry, '30 +')
@@ -68,6 +68,68 @@ class TestSyncReplDesc(unittest.TestCase):
             str(srd.ldap_url()),
             'ldaps://ae-dir-deb-p2.snet1.example.com/dc%3Dae-dir%2Cdc%3Dexample%2Cdc%3Dorg?*,+?sub?%28objectClass%3D%2A%29'
         )
+
+    def test002_syncrepldesc_class(self):
+        srd_str_list = [
+            'rid=23',
+            'provider=ldap://ldap-23.example.com',
+            'bindmethod=simple',
+            'timeout="5"',
+            'network-timeout=5',
+            'saslmech=EXTERNAL',
+            'keepalive=240:10:30',
+            'starttls=critical',
+            'tls_cacert="/etc/ssl/ca-certs.pem"',
+            'tls_reqcert=try',
+            'tls_crlcheck=peer',
+            'filter="(cn=*FooBar*)"',
+            'searchbase="ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f"',
+            'scope=one',
+            'schemachecking=on',
+            'type=refreshAndPersist',
+        ]
+        srd = SyncReplDesc(' '.join(srd_str_list))
+        self.assertEqual(srd.rid, '23')
+        self.assertEqual(srd.provider, 'ldap://ldap-23.example.com')
+        self.assertEqual(srd.bindmethod, 'simple')
+        self.assertEqual(srd.timeout, 5)
+        self.assertEqual(srd.network_timeout, 5)
+        self.assertEqual(srd.saslmech, 'EXTERNAL')
+        self.assertEqual(srd.keepalive, '240:10:30')
+        self.assertEqual(srd.starttls, 'critical')
+        self.assertEqual(srd.tls_cert, None)
+        self.assertEqual(srd.tls_key, None)
+        self.assertEqual(srd.tls_cacert, '/etc/ssl/ca-certs.pem')
+        self.assertEqual(srd.tls_reqcert, 'try')
+        self.assertEqual(srd.tls_protocol_min, None)
+        self.assertEqual(srd.tls_crlcheck, 'peer')
+        self.assertEqual(srd.filter, '(cn=*FooBar*)')
+        self.assertEqual(srd.searchbase, 'ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f')
+        self.assertEqual(srd.scope, SCOPE_ONELEVEL)
+        self.assertEqual(srd.schemachecking, 'on')
+        self.assertEqual(srd.type, 'refreshAndPersist')
+        self.assertEqual(srd.retry, None)
+        srd_url_obj = srd.ldap_url()
+        self.assertEqual(srd_url_obj.dn, 'ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f')
+        self.assertEqual(srd_url_obj.scope, SCOPE_ONELEVEL)
+        self.assertEqual(
+            str(srd_url_obj),
+            'ldap://ldap-23.example.com/ou%3D%C3%A4%C3%B6%C3%BC%C3%84%C3%96%C3%9C%C3%9F?*,+?one?%28cn%3D%2AFooBar%2A%29'
+        )
+
+    def test003_value_error(self):
+        for invalid_val in (
+            'timeout=1x2',
+            'bindmethod=foo',
+            'scope=foo',
+            'starttls=foo',
+        ):
+            try:
+                SyncReplDesc(invalid_val)
+            except ValueError:
+                pass
+            else:
+                self.fail('%r should have raised ValueError' % (invalid_val))
 
 
 if __name__ == '__main__':

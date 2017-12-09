@@ -59,6 +59,23 @@ class SyncReplDesc(object):
         'tls_protocol_min',
         'type',
     )
+    enum_args = {
+        'bindmethod': set(('simple', 'sasl')),
+        'scope': set(('sub', 'one', 'base', 'subord')),
+        'starttls': set(('no', 'demand', 'critical')),
+        'syncdata': set(('default', 'accesslog', 'changelog')),
+        'tls_crlcheck': set(('none', 'peer', 'all')),
+        'tls_reqcert': set(('never', 'allow', 'try', 'demand')),
+        'type': set(('refreshonly', 'refreshandpersist')),
+    }
+    func_map = {
+        'attrs': attr_set,
+        'exattrs': attr_set,
+        'timeout': int,
+        'network-timeout': int,
+        'sizelimit': int,
+        'timelimit': int,
+    }
 
     def __init__(self, syncrepl_statement):
         """
@@ -87,7 +104,19 @@ class SyncReplDesc(object):
             val = val.strip()
             if val[0] == '"' and val[-1] == '"':
                 val = val[1:-1]
+            if key in self.enum_args and val.lower() not in self.enum_args[key]:
+                raise ValueError('%r not in %r, was %r' % (
+                    key, self.enum_args[key], val
+                ))
+            if key in self.func_map:
+                val = self.func_map[key](val)
             setattr(self, key.replace('-', '_'), val)
+        # transform scope
+        if self.scope is not None:
+            try:
+                self.scope = LDAPURL_SEARCH_SCOPE[self.scope]
+            except AttributeError:
+                pass
 
     def __repr__(self):
         return '%s(rid=%s)' % (self.__class__.__name__, self.rid)
@@ -99,9 +128,9 @@ class SyncReplDesc(object):
         """
         ldap_url = LDAPUrl(self.provider)
         ldap_url.dn = self.searchbase
-        ldap_url.scope = LDAPURL_SEARCH_SCOPE[self.scope]
+        ldap_url.scope = self.scope
         ldap_url.filterstr = self.filter
         ldap_url.who = self.authcid or self.binddn
         ldap_url.cred = self.credentials
-        ldap_url.attrs = attr_set(self.attrs) or ['*', '+']
+        ldap_url.attrs = list(self.attrs or ['*', '+'])
         return ldap_url
