@@ -53,8 +53,6 @@ Various sub-modules implement specific LDAPv3 extended controls. The classes
 therein are derived from the base-classes :py:class:`ldap0.controls.RequestControl`,
 :py:class:`ldap0.controls.ResponseControl` or :py:class:`ldap0.controls.LDAPControl`.
 
-Some of them require :py:mod:`pyasn1` and :py:mod:`pyasn1_modules` to be installed:
-
 Usually the names of the method arguments and the class attributes match
 the ASN.1 identifiers used in the specification. So looking at the referenced
 RFC or Internet-Draft is very helpful to understand the API.
