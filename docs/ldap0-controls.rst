@@ -139,14 +139,6 @@ request and response controls into Python classes.
       :rfc:`3876` - Returning Matched Values with the Lightweight Directory Access Protocol version 3 (LDAPv3)
 
 
-.. autoclass:: ldap0.controls.libldap.SimplePagedResultsControl
-   :members:
-
-   .. seealso::
-
-      :rfc:`2696` - LDAP Control Extension for Simple Paged Results Manipulation
-
-
 :py:mod:`ldap0.controls.psearch` LDAP Persistent Search
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -201,4 +193,18 @@ search.
    :members:
 
 .. autoclass:: ldap0.controls.readentry.PostReadControl
+   :members:
+
+
+:py:mod:`ldap0.controls.pagedresults` Simple Paged Results
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. py:module:: ldap0.controls.pagedresults
+   :synopsis: read entryrequest and response controls
+
+.. seealso::
+
+   :rfc:`2696` - LDAP Control Extension for Simple Paged Results Manipulation
+
+.. autoclass:: ldap0.controls.pagedresults.SimplePagedResultsControl
    :members:
