@@ -19,7 +19,6 @@ Contents
 
    installing.rst
    ldap0.rst
-   ldap0-async.rst
    ldap0-controls.rst
    ldap0-dn.rst
    ldap0-extop.rst
