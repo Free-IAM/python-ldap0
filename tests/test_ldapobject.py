@@ -586,13 +586,13 @@ class Test00_LDAPObject(SlapdTestCase):
         self._ldap_conn.modify_s(
             dn,
             [(ldap0.MOD_REPLACE, 'description', ['test modification #1'])],
-            serverctrls=[AssertionControl(filterstr=assertion_filter)],            
+            serverctrls=[AssertionControl(filterstr=assertion_filter)],
         )
         try:
             self._ldap_conn.modify_s(
                 dn,
                 [(ldap0.MOD_REPLACE, 'description', ['test modification #2'])],
-                serverctrls=[AssertionControl(filterstr=assertion_filter)],            
+                serverctrls=[AssertionControl(filterstr=assertion_filter)],
             )
         except ldap0.ASSERTION_FAILED:
             pass
