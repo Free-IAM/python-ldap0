@@ -278,9 +278,9 @@ class TestLdapCExtension(SlapdTestCase):
         m = l.add_ext(
             "cn=Foo," + self.server.suffix,
             [
-                ('objectClass', 'organizationalRole'),
-                ('cn', 'Foo'),
-                ('description', 'testing'),
+                ('objectClass', ['organizationalRole']),
+                ('cn', ['Foo']),
+                ('description', ['testing']),
             ]
         )
         self.assertEqual(type(m), type(0))
@@ -319,10 +319,10 @@ class TestLdapCExtension(SlapdTestCase):
         m = l.add_ext(
             dn,
             [
-                ('objectClass', 'person'),
-                ('sn', 'CompareTest'),
-                ('cn', 'CompareTest'),
-                ('userPassword', 'the_password'),
+                ('objectClass', ['person']),
+                ('sn', ['CompareTest']),
+                ('cn', ['CompareTest']),
+                ('userPassword', ['the_password']),
             ],
         )
         self.assertEqual(type(m), type(0))
@@ -373,8 +373,8 @@ class TestLdapCExtension(SlapdTestCase):
         m = l.add_ext(
             dn,
             [
-                ('objectClass', 'organizationalRole'),
-                ('cn', 'Deleteme'),
+                ('objectClass', ['organizationalRole']),
+                ('cn', ['Deleteme']),
             ]
         )
         self.assertEqual(type(m), type(0))
@@ -434,10 +434,10 @@ class TestLdapCExtension(SlapdTestCase):
         m = l.add_ext(
             dn,
             [
-                ('objectClass', 'person'),
-                ('cn', 'AddToMe'),
-                ('sn', 'Modify'),
-                ('description', 'a description'),
+                ('objectClass', ['person']),
+                ('cn', ['AddToMe']),
+                ('sn', ['Modify']),
+                ('description', ['a description']),
             ]
         )
         self.assertEqual(type(m), type(0))
@@ -474,8 +474,8 @@ class TestLdapCExtension(SlapdTestCase):
         m = l.add_ext(
             dn,
             [
-                ('objectClass', 'organizationalRole'),
-                ('cn', 'RenameMe'),
+                ('objectClass', ['organizationalRole']),
+                ('cn', ['RenameMe']),
             ]
         )
         self.assertEqual(type(m), type(0))
@@ -514,8 +514,8 @@ class TestLdapCExtension(SlapdTestCase):
         m = l.add_ext(
             containerDn,
             [
-                ('objectClass', 'organizationalUnit'),
-                ('ou', 'RenameContainer'),
+                ('objectClass', ['organizationalUnit']),
+                ('ou', ['RenameContainer']),
             ]
         )
         result, pmsg, msgid, ctrls = l.result(m, _libldap0.MSG_ALL, self.timeout)

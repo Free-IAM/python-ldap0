@@ -451,10 +451,10 @@ class Test00_LDAPObject(SlapdTestCase):
         self._ldap_conn.add_s(
             dn,
             [
-                ('objectClass', 'person'),
-                ('sn', 'PasswordTest'),
-                ('cn', 'PasswordTest'),
-                ('userPassword', 'initial'),
+                ('objectClass', ['person']),
+                ('sn', ['PasswordTest']),
+                ('cn', ['PasswordTest']),
+                ('userPassword', ['initial']),
             ]
         )
         # try changing password with a wrong old-pw

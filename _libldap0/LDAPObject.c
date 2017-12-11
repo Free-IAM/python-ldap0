@@ -138,17 +138,6 @@ Tuple_to_LDAPMod( PyObject* tup, int no_op )
 
     if (list == Py_None) {
         /* None indicates a NULL mod_bvals */
-    } else if (PyBytes_Check(list)) {
-        /* Single string is a singleton list */
-        lm->mod_bvalues = PyMem_NEW(struct berval *, 2);
-        if (lm->mod_bvalues == NULL)
-            goto nomem;
-        lm->mod_bvalues[0] = PyMem_NEW(struct berval, 1);
-        if (lm->mod_bvalues[0] == NULL)
-            goto nomem;
-        lm->mod_bvalues[1] = NULL;
-        lm->mod_bvalues[0]->bv_len = PyBytes_Size(list);
-        lm->mod_bvalues[0]->bv_val = PyBytes_AsString(list);
     } else if (PySequence_Check(list)) {
         nstrs = PySequence_Length(list);
         lm->mod_bvalues = PyMem_NEW(struct berval *, nstrs + 1);
