@@ -55,8 +55,7 @@ MOD_OP_STR = {
     MOD_INCREMENT: 'increment',
 }
 
-CHANGE_TYPES = ['add', 'delete', 'modify', 'modrdn']
-VALID_CHANGETYPES = set(CHANGE_TYPES)
+CHANGE_TYPES = {'add', 'delete', 'modify', 'modrdn'}
 
 SAFE_STRING_PATTERN = '(^(\000|\n|\r| |:|<)|[\000\n\r\200-\377]+|[ ]+$)'
 safe_string_re = re.compile(SAFE_STRING_PATTERN)
@@ -488,7 +487,7 @@ class LDIFParser(object):
             changetype = None
             # Consume changetype line of record
             if key == 'changetype':
-                if val not in VALID_CHANGETYPES:
+                if val not in CHANGE_TYPES:
                     raise ValueError('Invalid changetype: %r' % val)
                 changetype = val
                 key, val = next_key_and_value()

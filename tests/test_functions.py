@@ -75,19 +75,19 @@ class TestFunction(unittest.TestCase):
     def test_attr_set(self):
         self.assertEqual(
             attr_set('foo bar foobar'),
-            set(['foobar', 'foo', 'bar'])
+            {'foobar', 'foo', 'bar'}
         )
         self.assertEqual(
             attr_set('foo,bar,foobar'),
-            set(['foobar', 'foo', 'bar'])
+            {'foobar', 'foo', 'bar'}
         )
         self.assertEqual(
             attr_set('    foo, bar, foobar'),
-            set(['foobar', 'foo', 'bar'])
+            {'foobar', 'foo', 'bar'}
         )
         self.assertEqual(
             attr_set('    foo, bar, foo bar'),
-            set(['foo', 'bar'])
+            {'foo', 'bar'}
         )
 
 

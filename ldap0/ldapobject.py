@@ -227,9 +227,11 @@ class LDAPObject:
     def cancel_s(self, cancelid, serverctrls=None, clientctrls=None):
         try:
             msgid = self.cancel(cancelid, serverctrls=serverctrls, clientctrls=clientctrls)
-            _ = self.result(msgid, all=1, timeout=self.timeout)
+            ldap_res = self.result(msgid, all=1, timeout=self.timeout)
         except (_libldap0.CANCELLED):
             pass
+        #else:
+        #    raise _libldap0.PROTOCOL_ERROR('cancel operation returned {0}'.format(ldap_res))
 
     def add(self, dn, modlist, serverctrls=None, clientctrls=None):
         self.uncache(dn)
@@ -923,13 +925,13 @@ class ReconnectLDAPObject(LDAPObject):
     application.
     """
 
-    __transient_attrs__ = set([
+    __transient_attrs__ = {
         '_l',
         '_libldap0_lock',
         '_trace_file',
         '_reconnect_lock',
         '_last_bind',
-    ])
+    }
 
     def __init__(
             self,
@@ -974,11 +976,10 @@ class ReconnectLDAPObject(LDAPObject):
         """
         return data representation for pickled object
         """
-        state = dict([
-            (key, val)
-            for key, val in self.__dict__.items()
-            if key not in self.__transient_attrs__
-        ])
+        state = {}
+        for key, val in self.__dict__.items():
+            if key not in self.__transient_attrs__:
+                state[key] = val
         state['_last_bind'] = (
             self._last_bind[0].__name__,
             self._last_bind[1],

@@ -60,13 +60,13 @@ class SyncReplDesc(object):
         'type',
     )
     enum_args = {
-        'bindmethod': set(('simple', 'sasl')),
-        'scope': set(('sub', 'one', 'base', 'subord')),
-        'starttls': set(('no', 'demand', 'critical')),
-        'syncdata': set(('default', 'accesslog', 'changelog')),
-        'tls_crlcheck': set(('none', 'peer', 'all')),
-        'tls_reqcert': set(('never', 'allow', 'try', 'demand')),
-        'type': set(('refreshonly', 'refreshandpersist')),
+        'bindmethod': {'simple', 'sasl'},
+        'scope': {'sub', 'one', 'base', 'subord'},
+        'starttls': {'no', 'demand', 'critical'},
+        'syncdata': {'default', 'accesslog', 'changelog'},
+        'tls_crlcheck': {'none', 'peer', 'all'},
+        'tls_reqcert': {'never', 'allow', 'try', 'demand'},
+        'type': {'refreshonly', 'refreshandpersist'},
     }
     sanitize_func = {
         'attrs': attr_set,

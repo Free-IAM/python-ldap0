@@ -31,11 +31,11 @@ LDAP_SCOPE_ONELEVEL = 1
 LDAP_SCOPE_SUBTREE = 2
 LDAP_SCOPE_SUBORDINATES = 3
 
-LDAPURL_SCHEMES = set([
+LDAPURL_SCHEMES = {
     'ldap',
     'ldaps',
     'ldapi',
-])
+}
 
 SEARCH_SCOPE_STR = {
     None: '',

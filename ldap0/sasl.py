@@ -24,7 +24,7 @@ CB_NOECHOPROMPT = 0x4006
 CB_GETREALM = 0x4008
 
 # SASL mechs known to only require username and password
-SASL_PASSWORD_MECHS = set((
+SASL_PASSWORD_MECHS = {
     'CRAM-MD5',
     'DIGEST-MD5',
     'LOGIN',
@@ -32,13 +32,13 @@ SASL_PASSWORD_MECHS = set((
     'OTP',
     'PLAIN',
     'SCRAM-SHA-1',
-))
+}
 
 # SASL mechs known to not require application-provided authc information
-SASL_NONINTERACTIVE_MECHS = set((
+SASL_NONINTERACTIVE_MECHS = {
     'EXTERNAL',
     'GSSAPI',
-))
+}
 
 
 class SaslAuth(object):

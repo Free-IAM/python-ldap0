@@ -102,10 +102,9 @@ class DereferenceControl(LDAPControl):
             deref_attr = str(deref_res[0])
             deref_val = str(deref_res[1])
             deref_vals = deref_res[2]
-            deref_attrs = dict([
-                (str(tv[0]), map(str, tv[1]))
-                for tv in deref_vals or []
-            ])
+            deref_attrs = {}
+            for tv in deref_vals or []:
+                deref_attrs[str(tv[0])] = map(str, tv[1])
             try:
                 self.derefRes[deref_attr].append((deref_val, deref_attrs))
             except KeyError:
