@@ -6,13 +6,13 @@ ldap0.controls.psearch - classes for Persistent Search Control
 
 from __future__ import absolute_import
 
-from ..pkginfo import __version__, __author__, __license__
-from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
-
 # Imports from pyasn1
 from pyasn1.type import namedtype, namedval, univ, constraint
 from pyasn1.codec.ber import encoder, decoder
 from pyasn1_modules.rfc2251 import LDAPDN
+
+from ..pkginfo import __version__, __author__, __license__
+from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 __all__ = [
     'PersistentSearchControl',
@@ -31,7 +31,9 @@ CHANGE_TYPES_INT = {
     'modify': 4,
     'modDN': 8,
 }
-CHANGE_TYPES_STR = dict([(v, k) for k, v in CHANGE_TYPES_INT.items()])
+CHANGE_TYPES_STR = {
+    (v, k) for k, v in CHANGE_TYPES_INT.items()
+}
 
 
 class PersistentSearchControl(RequestControl):
@@ -50,6 +52,13 @@ class PersistentSearchControl(RequestControl):
     controlType = "2.16.840.1.113730.3.4.3"
 
     class PersistentSearchControlValue(univ.Sequence):
+        """
+        PersistentSearch ::= SEQUENCE {
+                changeTypes INTEGER,
+                changesOnly BOOLEAN,
+                returnECs BOOLEAN
+        }
+        """
         componentType = namedtype.NamedTypes(
             namedtype.NamedType('changeTypes', univ.Integer()),
             namedtype.NamedType('changesOnly', univ.Boolean()),
@@ -69,20 +78,28 @@ class PersistentSearchControl(RequestControl):
         self.changeTypes = changeTypes or CHANGE_TYPES_INT.values()
 
     def encodeControlValue(self):
-        if type(self.changeTypes) != int:
+        if isinstance(self.changeTypes, int):
             # Assume a sequence type of integers to be OR-ed
             change_types_int = 0
             for chtype in self.changeTypes:
                 change_types_int = change_types_int|CHANGE_TYPES_INT.get(chtype, chtype)
             self.changeTypes = change_types_int
-        p = self.PersistentSearchControlValue()
-        p.setComponentByName('changeTypes', univ.Integer(self.changeTypes))
-        p.setComponentByName('changesOnly', univ.Boolean(self.changesOnly))
-        p.setComponentByName('returnECs', univ.Boolean(self.returnECs))
-        return encoder.encode(p)
+        pval = self.PersistentSearchControlValue()
+        pval.setComponentByName('changeTypes', univ.Integer(self.changeTypes))
+        pval.setComponentByName('changesOnly', univ.Boolean(self.changesOnly))
+        pval.setComponentByName('returnECs', univ.Boolean(self.returnECs))
+        return encoder.encode(pval)
 
 
 class ChangeType(univ.Enumerated):
+    """
+    changeType ENUMERATED {
+        add             (1),
+        delete          (2),
+        modify          (4),
+        modDN           (8)
+    }
+    """
     namedValues = namedval.NamedValues(
         ('add', 1),
         ('delete', 2),
@@ -93,6 +110,13 @@ class ChangeType(univ.Enumerated):
 
 
 class EntryChangeNotificationValue(univ.Sequence):
+    """
+    EntryChangeNotification ::= SEQUENCE {
+        changeType <see ChangeType above>,
+        previousDN   LDAPDN OPTIONAL,     -- modifyDN ops. only
+        changeNumber INTEGER OPTIONAL     -- if supported
+    }
+    """
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('changeType', ChangeType()),
         namedtype.OptionalNamedType('previousDN', LDAPDN()),
