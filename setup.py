@@ -74,6 +74,8 @@ setup(
     """,
     author=pkginfo.__author__,
     author_email='michael@stroeder.com',
+    maintainer=pkginfo.__author__,
+    maintainer_email='michael@stroeder.com',
     url='https://pypi.python.org/pypi/ldap0/',
     download_url='https://pypi.python.org/pypi/ldap0/',
     classifiers=[
