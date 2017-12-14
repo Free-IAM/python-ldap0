@@ -139,6 +139,10 @@ class DNObj(list):
     def fromstring(cls, dn, flags=0, charset='utf-8'):
         return cls(str2dn(dn, flags=flags))
 
+    @classmethod
+    def fromdomain(cls, domain):
+        return cls([[('dc', d, 1)] for d in domain.split('.')])
+
     def __str__(self):
         return dn2str(self)
 

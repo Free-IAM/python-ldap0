@@ -264,6 +264,10 @@ class TestDNObj(unittest.TestCase):
             str(DNObj.fromstring('ou=dept1,  dc=example, dc=com').parent()),
             'dc=example,dc=com'
         )
+        self.assertEqual(
+            str(DNObj.fromdomain('example.com')),
+            'dc=example,dc=com'
+        )
         for dn_str in (
             '',
             'dc=example,dc=com',
