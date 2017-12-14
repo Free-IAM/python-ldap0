@@ -160,3 +160,17 @@ class DNObj(list):
 
     def parent(self):
         return self.__class__(self[1:])
+
+    def domain(self):
+        """convert dc-style DN to DNS domain name (see RFC 2247)"""
+        dns_labels = []
+        for ind in range(len(self)-1, -1, -1):
+            dn_comp = self[ind]
+            if len(dn_comp) != 1:
+                break
+            attr_type, attr_value, _ = dn_comp[0]
+            if attr_type.lower() != 'dc':
+                break
+            dns_labels.append(attr_value.strip())
+        dns_labels.reverse()
+        return '.'.join(dns_labels)
