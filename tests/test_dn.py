@@ -9,11 +9,12 @@ from __future__ import absolute_import
 import unittest
 
 import ldap0.dn
+from ldap0.dn import DNObj
 
 
-class TestDN(unittest.TestCase):
+class TestDNFunctions(unittest.TestCase):
     """
-    test ldap.functions
+    test functions in ldap0.dn
     """
 
     def test_is_dn(self):
@@ -245,6 +246,31 @@ class TestDN(unittest.TestCase):
             ldap0.dn.explode_rdn('cn=\\c3\\a4\\c3\\b6\\c3\\bc\\c3\\84\\c3\\96\\c3\\9c\\c3\\9f', flags=0),
             ['cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f']
         )
+
+
+class TestDNObj(unittest.TestCase):
+    """
+    test class ldap0.dn.DNObj
+    """
+
+    def test_dnobj_class(self):
+        self.assertEqual(list(DNObj.fromstring('')), [])
+        self.assertEqual(list(DNObj.fromstring('').rdn()), [])
+        self.assertEqual(
+            str(DNObj.fromstring('ou=dept1  ,  dc=example, dc=com').rdn()),
+            'ou=dept1'
+        )
+        self.assertEqual(
+            str(DNObj.fromstring('ou=dept1,  dc=example, dc=com').parent()),
+            'dc=example,dc=com'
+        )
+        for dn_str in (
+            '',
+            'dc=example,dc=com',
+            'ou=dept1,dc=example,dc=com',
+            'cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f,ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f',
+        ):
+            self.assertEqual(str(DNObj.fromstring(dn_str, flags=0)), dn_str)
 
 
 if __name__ == '__main__':

@@ -125,3 +125,34 @@ def is_dn(val, flags=0):
         return False
     else:
         return True
+
+
+class DNObj(list):
+    """
+    Class for handling LDAPv3 distinguished name string representations
+    """
+
+    def __init__(self, dn):
+        list.__init__(self, dn)
+
+    @classmethod
+    def fromstring(cls, dn, flags=0, charset='utf-8'):
+        return cls(str2dn(dn, flags=flags))
+
+    def __str__(self):
+        return dn2str(self)
+
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, list.__repr__(self))
+
+    def __getitem__(self, ind):
+        return self.__class__(list.__getitem__(self, ind))
+
+    def __getslice__(self, ind1, ind2):
+        return self.__class__(list.__getslice__(self, ind1, ind2))
+
+    def rdn(self):
+        return self[:1]
+
+    def parent(self):
+        return self.__class__(self[1:])
