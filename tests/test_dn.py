@@ -253,7 +253,7 @@ class TestDNObj(unittest.TestCase):
     test class ldap0.dn.DNObj
     """
 
-    def test_dnobj_class(self):
+    def test_dnobj_simple(self):
         self.assertEqual(list(DNObj.fromstring('')), [])
         self.assertEqual(list(DNObj.fromstring('').rdn()), [])
         self.assertEqual(
@@ -264,10 +264,6 @@ class TestDNObj(unittest.TestCase):
             str(DNObj.fromstring('ou=dept1,  dc=example, dc=com').parent()),
             'dc=example,dc=com'
         )
-        self.assertEqual(
-            str(DNObj.fromdomain('example.com')),
-            'dc=example,dc=com'
-        )
         for dn_str in (
             '',
             'dc=example,dc=com',
@@ -275,6 +271,20 @@ class TestDNObj(unittest.TestCase):
             'cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f,ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f',
         ):
             self.assertEqual(str(DNObj.fromstring(dn_str, flags=0)), dn_str)
+
+    def test_dnobj_domain(self):
+        self.assertEqual(
+            str(DNObj.fromdomain('example.com')),
+            'dc=example,dc=com'
+        )
+        self.assertEqual(
+            DNObj.fromdomain('example.com').domain(),
+            'example.com'
+        )
+        self.assertEqual(
+            DNObj.fromstring('ou=dept1,  dc=example, dc=com').domain(),
+            'example.com'
+        )
 
 
 if __name__ == '__main__':
