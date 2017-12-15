@@ -255,6 +255,8 @@ class TestDNObj(unittest.TestCase):
 
     def test_dnobj_simple(self):
         self.assertEqual(list(DNObj.fromstring('')), [])
+        self.assertEqual(len(DNObj.fromstring('')), 0)
+        self.assertEqual(len(DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')), 3)
         self.assertEqual(list(DNObj.fromstring('').rdn()), [])
         self.assertEqual(
             str(DNObj.fromstring('ou=dept1  ,  dc=example, dc=com').rdn()),
@@ -272,6 +274,20 @@ class TestDNObj(unittest.TestCase):
         ):
             self.assertEqual(str(DNObj.fromstring(dn_str, flags=0)), dn_str)
 
+    def test_dnobj_slicing(self):
+        self.assertEqual(
+            reversed(DNObj.fromstring('ou=dept1,dc=example,dc=com')),
+            DNObj.fromstring('dc=com,dc=example,ou=dept1')
+        )
+        self.assertEqual(
+            DNObj.fromstring('ou=dept1,dc=example,dc=com')[1:],
+            DNObj.fromstring('dc=example,dc=com')
+        )
+        self.assertEqual(
+            DNObj.fromstring('ou=dept1,dc=example,dc=com')[:2],
+            DNObj.fromstring('ou=dept1,dc=example')
+        )
+
     def test_dnobj_domain(self):
         self.assertEqual(
             str(DNObj.fromdomain('example.com')),
@@ -284,6 +300,37 @@ class TestDNObj(unittest.TestCase):
         self.assertEqual(
             DNObj.fromstring('ou=dept1,  dc=example, dc=com').domain(),
             'example.com'
+        )
+
+    def test_dnobj_append_extend(self):
+        dn_obj = DNObj([])
+        dn_obj.append([('dc', 'example', 1)])
+        dn_obj.append([('dc', 'com', 1)])
+        self.assertEqual(dn_obj, DNObj.fromdomain('example.com'))
+        dn_obj = DNObj([])
+        dn_obj.append(DNObj.fromdomain('example')[0])
+        dn_obj.append(DNObj.fromdomain('com')[0])
+        self.assertEqual(dn_obj, DNObj.fromdomain('example.com'))
+        dn_obj = DNObj([])
+        dn_obj.extend(DNObj.fromdomain('example'))
+        dn_obj.extend(DNObj.fromdomain('com'))
+        self.assertEqual(dn_obj, DNObj.fromdomain('example.com'))
+        dn_obj = DNObj([])
+        dn_obj.insert(0, [('dc', 'com', 1)])
+        dn_obj.insert(0, [('dc', 'example', 1)])
+        self.assertEqual(dn_obj, DNObj.fromdomain('example.com'))
+
+    @unittest.expectedFailure
+    def test_dnobj_append_add(self):
+        self.assertEqual(
+            DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com'),
+            DNObj.fromdomain('dept1.example.com'),
+        )
+        self.assertEqual(
+            str(
+                DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com')
+            ),
+            'dept1.example.com',
         )
 
 

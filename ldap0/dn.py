@@ -149,11 +149,14 @@ class DNObj(list):
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, list.__repr__(self))
 
-    def __getitem__(self, ind):
-        return self.__class__(list.__getitem__(self, ind))
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and list.__eq__(self, other)
 
     def __getslice__(self, ind1, ind2):
         return self.__class__(list.__getslice__(self, ind1, ind2))
+
+    def __reversed__(self):
+        return self.__class__(reversed(list(self)))
 
     def rdn(self):
         return self[:1]
