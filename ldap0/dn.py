@@ -9,9 +9,6 @@ from .pkginfo import __version__, __author__, __license__
 from .functions import _libldap0_function_call
 
 import _libldap0
-assert _libldap0.__version__ == __version__, ImportError(
-    'ldap0 %s and _libldap0 %s version mismatch!' % (__version__, _libldap0.__version__)
-)
 
 import ldap0.functions
 
@@ -142,10 +139,14 @@ class DNObj(tuple):
 
     @classmethod
     def fromstring(cls, dn, flags=0, charset='utf-8'):
+        if isinstance(dn, unicode):
+            dn = dn.encode(charset)
         return cls(str2dn(dn, flags=flags))
 
     @classmethod
     def fromdomain(cls, domain):
+        if isinstance(domain, unicode):
+            domain = domain.encode('ascii')
         return cls([[('dc', d, 1)] for d in domain.split('.')])
 
     def __str__(self):
@@ -156,6 +157,9 @@ class DNObj(tuple):
 
     def __eq__(self, other):
         return isinstance(other, self.__class__) and tuple.__eq__(self, other)
+
+    def __add__(self, other):
+        return self.__class__(tuple.__add__(self, other))
 
     def __getslice__(self, ind1, ind2):
         return self.__class__(tuple.__getslice__(self, ind1, ind2))

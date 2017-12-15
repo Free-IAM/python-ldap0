@@ -267,11 +267,11 @@ class TestDNObj(unittest.TestCase):
             'dc=example,dc=com'
         )
         for dn_str in (
-            '',
-            'dc=example,dc=com',
-            'ou=dept1,dc=example,dc=com',
-            'cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f,ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f',
-        ):
+                '',
+                'dc=example,dc=com',
+                'ou=dept1,dc=example,dc=com',
+                'cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f,ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f',
+            ):
             self.assertEqual(str(DNObj.fromstring(dn_str, flags=0)), dn_str)
 
     def test_weird_whitespaces(self):
@@ -340,16 +340,17 @@ class TestDNObj(unittest.TestCase):
             'example.com'
         )
 
-    @unittest.expectedFailure
     def test_dnobj_add(self):
         self.assertEqual(
             DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com'),
             DNObj.fromdomain('dept1.example.com'),
         )
         self.assertEqual(
-            str(
-                DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com')
-            ),
+            str(DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com')),
+            'dc=dept1,dc=example,dc=com',
+        )
+        self.assertEqual(
+            (DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com')).domain(),
             'dept1.example.com',
         )
 
