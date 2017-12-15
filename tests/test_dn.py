@@ -50,124 +50,124 @@ class TestDNFunctions(unittest.TestCase):
         """
         test function str2dn()
         """
-        self.assertEqual(ldap0.dn.str2dn(''), [])
+        self.assertEqual(ldap0.dn.str2dn(''), ())
         self.assertEqual(
             ldap0.dn.str2dn('uid=test42,ou=Testing,dc=example,dc=com'),
-            [
-                [('uid', 'test42', 1)],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]
+            (
+                (('uid', 'test42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )
         )
         self.assertEqual(
             ldap0.dn.str2dn('uid=test42+uidNumber=42,ou=Testing,dc=example,dc=com'),
-            [
-                [('uid', 'test42', 1), ('uidNumber', '42', 1) ],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]
+            (
+                (('uid', 'test42', 1), ('uidNumber', '42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )
         )
         self.assertEqual(
             ldap0.dn.str2dn('uid=test42,ou=Testing,dc=example,dc=com', flags=0),
-            [
-                [('uid', 'test42', 1)],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]
+            (
+                (('uid', 'test42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )
         )
         self.assertEqual(
             ldap0.dn.str2dn('uid=test42; ou=Testing; dc=example; dc=com', flags=ldap0.DN_FORMAT_LDAPV2),
-            [
-                [('uid', 'test42', 1)],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]
+            (
+                (('uid', 'test42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )
         )
         self.assertEqual(
             ldap0.dn.str2dn('uid=test\\, 42,ou=Testing,dc=example,dc=com', flags=0),
-            [
-                [('uid', 'test, 42', 1)],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]
+            (
+                (('uid', 'test, 42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )
         )
         self.assertEqual(
             ldap0.dn.str2dn('cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f,dc=example,dc=com', flags=0),
-            [
-                [('cn', '\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 4)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]
+            (
+                (('cn', '\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 4),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )
         )
         self.assertEqual(
             ldap0.dn.str2dn('cn=\\c3\\a4\\c3\\b6\\c3\\bc\\c3\\84\\c3\\96\\c3\\9c\\c3\\9f,dc=example,dc=com', flags=0),
-            [
-                [('cn', '\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 4)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]
+            (
+                (('cn', '\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 4),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )
         )
 
     def test_dn2str(self):
         """
         test function dn2str()
         """
-        self.assertEqual(ldap0.dn.str2dn(''), [])
+        self.assertEqual(ldap0.dn.str2dn(''), ())
         self.assertEqual(
-            ldap0.dn.dn2str([
-                [('uid', 'test42', 1)],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]),
+            ldap0.dn.dn2str((
+                (('uid', 'test42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )),
             'uid=test42,ou=Testing,dc=example,dc=com',
         )
         self.assertEqual(
-            ldap0.dn.dn2str([
-                [('uid', 'test42', 1)],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]),
+            ldap0.dn.dn2str((
+                (('uid', 'test42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            )),
             'uid=test42,ou=Testing,dc=example,dc=com'
         )
         self.assertEqual(
-            ldap0.dn.dn2str([
-                [('uid', 'test42', 1), ('uidNumber', '42', 1)],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]),
+            ldap0.dn.dn2str((
+                (('uid', 'test42', 1), ('uidNumber', '42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),),
+            )),
             'uid=test42+uidNumber=42,ou=Testing,dc=example,dc=com'
         )
         self.assertEqual(
-            ldap0.dn.dn2str([
-                [('uid', 'test, 42', 1)],
-                [('ou', 'Testing', 1)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]),
+            ldap0.dn.dn2str((
+                (('uid', 'test, 42', 1),),
+                (('ou', 'Testing', 1),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),),
+            )),
             'uid=test\\, 42,ou=Testing,dc=example,dc=com'
         )
         self.assertEqual(
-            ldap0.dn.dn2str([
-                [('cn', '\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 4)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]),
+            ldap0.dn.dn2str((
+                (('cn', '\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 4),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),),
+            )),
             'cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f,dc=example,dc=com'
         )
         self.assertEqual(
-            ldap0.dn.dn2str([
-                [('cn', '\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 4)],
-                [('dc', 'example', 1)],
-                [('dc', 'com', 1)]
-            ]),
+            ldap0.dn.dn2str((
+                (('cn', '\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 4),),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),),
+            )),
             'cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f,dc=example,dc=com'
         )
 
@@ -178,73 +178,73 @@ class TestDNFunctions(unittest.TestCase):
         self.assertEqual(ldap0.dn.explode_dn(''), [])
         self.assertEqual(
             ldap0.dn.explode_dn('uid=test42,ou=Testing,dc=example,dc=com'),
-            ['uid=test42', 'ou=Testing', 'dc=example', 'dc=com']
+            ('uid=test42', 'ou=Testing', 'dc=example', 'dc=com')
         )
         self.assertEqual(
             ldap0.dn.explode_dn('uid=test42,ou=Testing,dc=example,dc=com', flags=0),
-            ['uid=test42', 'ou=Testing', 'dc=example', 'dc=com']
+            ('uid=test42', 'ou=Testing', 'dc=example', 'dc=com')
         )
         self.assertEqual(
             ldap0.dn.explode_dn('uid=test42; ou=Testing; dc=example; dc=com', flags=ldap0.DN_FORMAT_LDAPV2),
-            ['uid=test42', 'ou=Testing', 'dc=example', 'dc=com']
+            ('uid=test42', 'ou=Testing', 'dc=example', 'dc=com')
         )
         self.assertEqual(
             ldap0.dn.explode_dn('uid=test42,ou=Testing,dc=example,dc=com', notypes=True),
-            ['test42', 'Testing', 'example', 'com']
+            ('test42', 'Testing', 'example', 'com')
         )
         self.assertEqual(
             ldap0.dn.explode_dn('uid=test\\, 42,ou=Testing,dc=example,dc=com', flags=0),
-            ['uid=test\\, 42', 'ou=Testing', 'dc=example', 'dc=com']
+            ('uid=test\\, 42', 'ou=Testing', 'dc=example', 'dc=com')
         )
         self.assertEqual(
             ldap0.dn.explode_dn('cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f,dc=example,dc=com', flags=0),
-            ['cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 'dc=example', 'dc=com']
+            ('cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 'dc=example', 'dc=com')
         )
         self.assertEqual(
             ldap0.dn.explode_dn('cn=\\c3\\a4\\c3\\b6\\c3\\bc\\c3\\84\\c3\\96\\c3\\9c\\c3\\9f,dc=example,dc=com', flags=0),
-            ['cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 'dc=example', 'dc=com']
+            ('cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 'dc=example', 'dc=com')
         )
 
     def test_explode_rdn(self):
         """
         test function explode_rdn()
         """
-        self.assertEqual(ldap0.dn.explode_rdn(''), [])
+        self.assertEqual(ldap0.dn.explode_rdn(''), ())
         self.assertEqual(
-            ldap0.dn.explode_rdn('uid=test42'),
-            ['uid=test42']
+            ldap0.dn.explode_rdn('uid=test42',),
+            ('uid=test42',)
         )
         self.assertEqual(
             ldap0.dn.explode_rdn('uid=test42', notypes=False, flags=0),
-            ['uid=test42']
+            ('uid=test42',)
         )
         self.assertEqual(
             ldap0.dn.explode_rdn('uid=test42', notypes=0, flags=0),
-            ['uid=test42']
+            ('uid=test42',)
         )
         self.assertEqual(
             ldap0.dn.explode_rdn('uid=test42+uidNumber=42', flags=0),
-            ['uid=test42', 'uidNumber=42']
+            ('uid=test42', 'uidNumber=42')
         )
         self.assertEqual(
             ldap0.dn.explode_rdn('uid=test42', notypes=True),
-            ['test42']
+            ('test42',)
         )
         self.assertEqual(
             ldap0.dn.explode_rdn('uid=test42', notypes=1),
-            ['test42']
+            ('test42',)
         )
         self.assertEqual(
             ldap0.dn.explode_rdn('uid=test\\+ 42', flags=0),
-            ['uid=test\\+ 42']
+            ('uid=test\\+ 42',)
         )
         self.assertEqual(
             ldap0.dn.explode_rdn('cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', flags=0),
-            ['cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f']
+            ('cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f',)
         )
         self.assertEqual(
             ldap0.dn.explode_rdn('cn=\\c3\\a4\\c3\\b6\\c3\\bc\\c3\\84\\c3\\96\\c3\\9c\\c3\\9f', flags=0),
-            ['cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f']
+            ('cn=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f',)
         )
 
 
@@ -274,6 +274,31 @@ class TestDNObj(unittest.TestCase):
         ):
             self.assertEqual(str(DNObj.fromstring(dn_str, flags=0)), dn_str)
 
+    def test_weird_whitespaces(self):
+        self.assertEqual(
+            DNObj.fromstring('uid = test42 + uidNumber = 42, dc = example , dc = com'),
+            DNObj((
+                (
+                    ('uid', 'test42', 1),
+                    ('uidNumber', '42', 1)
+                ),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            ))
+        )
+
+    def test_hashable(self):
+        dn = DNObj((
+            (
+                ('uid', 'test42', 1),
+                ('uidNumber', '42', 1)
+            ),
+            (('dc', 'example', 1),),
+            (('dc', 'com', 1),)
+        ))
+        data = {dn: 'foo'}
+        self.assertEqual(data[dn], 'foo')
+
     def test_dnobj_slicing(self):
         self.assertEqual(
             reversed(DNObj.fromstring('ou=dept1,dc=example,dc=com')),
@@ -302,26 +327,8 @@ class TestDNObj(unittest.TestCase):
             'example.com'
         )
 
-    def test_dnobj_append_extend(self):
-        dn_obj = DNObj([])
-        dn_obj.append([('dc', 'example', 1)])
-        dn_obj.append([('dc', 'com', 1)])
-        self.assertEqual(dn_obj, DNObj.fromdomain('example.com'))
-        dn_obj = DNObj([])
-        dn_obj.append(DNObj.fromdomain('example')[0])
-        dn_obj.append(DNObj.fromdomain('com')[0])
-        self.assertEqual(dn_obj, DNObj.fromdomain('example.com'))
-        dn_obj = DNObj([])
-        dn_obj.extend(DNObj.fromdomain('example'))
-        dn_obj.extend(DNObj.fromdomain('com'))
-        self.assertEqual(dn_obj, DNObj.fromdomain('example.com'))
-        dn_obj = DNObj([])
-        dn_obj.insert(0, [('dc', 'com', 1)])
-        dn_obj.insert(0, [('dc', 'example', 1)])
-        self.assertEqual(dn_obj, DNObj.fromdomain('example.com'))
-
     @unittest.expectedFailure
-    def test_dnobj_append_add(self):
+    def test_dnobj_add(self):
         self.assertEqual(
             DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com'),
             DNObj.fromdomain('dept1.example.com'),

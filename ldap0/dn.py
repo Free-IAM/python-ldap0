@@ -48,8 +48,12 @@ def str2dn(dn, flags=0):
     See also the OpenLDAP man-page ldap_str2dn(3)
     """
     if not dn:
-        return []
-    return _libldap0_function_call(_libldap0.str2dn, dn, flags)
+        return ()
+    dn_list = [
+        tuple(item)
+        for item in _libldap0_function_call(_libldap0.str2dn, dn, flags)
+    ]
+    return tuple(dn_list)
 
 
 def dn2str(dn):
@@ -61,7 +65,8 @@ def dn2str(dn):
     return ','.join([
         '+'.join([
             '='.join((atype, escape_dn_chars(avalue or '')))
-            for atype, avalue, _ in rdn])
+            for atype, avalue, _ in rdn
+        ])
         for rdn in dn
     ])
 
@@ -88,7 +93,7 @@ def explode_dn(dn, notypes=False, flags=0):
                 '='.join((atype, escape_dn_chars(avalue or '')))
                 for atype, avalue, _ in rdn
             ]))
-    return rdn_list
+    return tuple(rdn_list)
 
 
 def explode_rdn(rdn, notypes=False, flags=0):
@@ -101,17 +106,17 @@ def explode_rdn(rdn, notypes=False, flags=0):
     attribute values be returned and not the attribute types.
     """
     if not rdn:
-        return []
+        return ()
     rdn_decomp = str2dn(rdn, flags)[0]
     if notypes:
-        return [
+        return tuple([
             avalue or ''
             for atype, avalue, _ in rdn_decomp
-        ]
-    return [
+        ])
+    return tuple([
         '='.join((atype, escape_dn_chars(avalue or '')))
         for atype, avalue, _ in rdn_decomp
-    ]
+    ])
 
 
 def is_dn(val, flags=0):
@@ -127,13 +132,13 @@ def is_dn(val, flags=0):
         return True
 
 
-class DNObj(list):
+class DNObj(tuple):
     """
     Class for handling LDAPv3 distinguished name string representations
     """
 
     def __init__(self, dn):
-        list.__init__(self, dn)
+        tuple.__init__(self, dn)
 
     @classmethod
     def fromstring(cls, dn, flags=0, charset='utf-8'):
@@ -147,16 +152,16 @@ class DNObj(list):
         return dn2str(self)
 
     def __repr__(self):
-        return '%s(%s)' % (self.__class__.__name__, list.__repr__(self))
+        return '%s(%s)' % (self.__class__.__name__, tuple.__repr__(self))
 
     def __eq__(self, other):
-        return isinstance(other, self.__class__) and list.__eq__(self, other)
+        return isinstance(other, self.__class__) and tuple.__eq__(self, other)
 
     def __getslice__(self, ind1, ind2):
-        return self.__class__(list.__getslice__(self, ind1, ind2))
+        return self.__class__(tuple.__getslice__(self, ind1, ind2))
 
     def __reversed__(self):
-        return self.__class__(reversed(list(self)))
+        return self.__class__(reversed(tuple(self)))
 
     def rdn(self):
         return self[:1]
