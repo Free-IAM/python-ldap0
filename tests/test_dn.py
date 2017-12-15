@@ -287,6 +287,19 @@ class TestDNObj(unittest.TestCase):
             ))
         )
 
+    def test_repr(self):
+        self.assertEqual(
+            repr(DNObj((
+                (
+                    ('uid', 'test42', 1),
+                    ('uidNumber', '42', 1)
+                ),
+                (('dc', 'example', 1),),
+                (('dc', 'com', 1),)
+            ))),
+            "DNObj(((('uid', 'test42', 1), ('uidNumber', '42', 1)), (('dc', 'example', 1),), (('dc', 'com', 1),)))"
+        )
+
     def test_hashable(self):
         dn = DNObj((
             (
