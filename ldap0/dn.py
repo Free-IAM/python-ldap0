@@ -136,12 +136,18 @@ class DNObj(tuple):
 
     @classmethod
     def fromstring(cls, dn, flags=0, charset='utf-8'):
+        """
+        create a new DNObj instance from DN string representation
+        """
         if isinstance(dn, unicode):
             dn = dn.encode(charset)
         return cls(str2dn(dn, flags=flags))
 
     @classmethod
     def fromdomain(cls, domain):
+        """
+        create a new DNObj instance from dot-separated DNS domain name
+        """
         if isinstance(domain, unicode):
             domain = domain.encode('ascii')
         return cls([(('dc', d, 1),) for d in domain.split('.')])
@@ -165,13 +171,21 @@ class DNObj(tuple):
         return self.__class__(reversed(tuple(self)))
 
     def rdn(self):
+        """
+        returns the RDN as DNObj instance
+        """
         return self[:1]
 
     def parent(self):
+        """
+        returns the parent's DN as DNObj instance
+        """
         return self.__class__(self[1:])
 
     def domain(self, only_dc=True):
-        """convert dc-style DN to DNS domain name (see RFC 2247)"""
+        """
+        Convert dc-style DN to DNS domain name (see RFC 2247)
+        """
         dns_labels = []
         for ind in range(len(self)-1, -1, -1):
             dn_comp = self[ind]
