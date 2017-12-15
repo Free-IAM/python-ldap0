@@ -350,9 +350,20 @@ class TestDNObj(unittest.TestCase):
             'example.com'
         )
         self.assertEqual(
-            DNObj.fromstring('ou=dept1,  dc=example, dc=com').domain(),
+            DNObj.fromstring('ou=dept1,  dc=example, dc=com').domain(only_dc=False),
             'example.com'
         )
+        with self.assertRaises(ValueError):
+            self.assertEqual(
+                DNObj.fromstring('ou=dept1,  dc=example, dc=com').domain(only_dc=True),
+                'example.com'
+            )
+        with self.assertRaises(ValueError):
+            self.assertEqual(
+                DNObj.fromstring('ou=dept1,  dc=example, dc=com+dc=net').domain(),
+                'example.com'
+            )
+        
 
     def test_dnobj_add(self):
         self.assertEqual(

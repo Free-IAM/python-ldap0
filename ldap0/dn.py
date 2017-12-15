@@ -5,12 +5,10 @@ ldap0.dn - misc stuff for handling distinguished names (see RFC 4514)
 
 from __future__ import absolute_import
 
-from .pkginfo import __version__, __author__, __license__
-from .functions import _libldap0_function_call
-
 import _libldap0
 
-import ldap0.functions
+from .pkginfo import __version__, __author__, __license__
+from .functions import _libldap0_function_call
 
 
 def escape_dn_chars(val):
@@ -172,16 +170,19 @@ class DNObj(tuple):
     def parent(self):
         return self.__class__(self[1:])
 
-    def domain(self):
+    def domain(self, only_dc=True):
         """convert dc-style DN to DNS domain name (see RFC 2247)"""
         dns_labels = []
         for ind in range(len(self)-1, -1, -1):
             dn_comp = self[ind]
             if len(dn_comp) != 1:
-                break
+                raise ValueError('multi-valued RDN not allowed for domain, was %s' % repr(dn_comp))
             attr_type, attr_value, _ = dn_comp[0]
             if attr_type.lower() != 'dc':
-                break
+                if only_dc:
+                    raise ValueError('Only dc allowed as RDN attribute, was %s' % repr(attr_type))
+                else:
+                    break
             dns_labels.append(attr_value.strip())
         dns_labels.reverse()
         return '.'.join(dns_labels)
