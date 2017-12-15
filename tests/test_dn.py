@@ -313,6 +313,13 @@ class TestDNObj(unittest.TestCase):
         self.assertEqual(data[dn], 'foo')
 
     def test_dnobj_slicing(self):
+        dn = DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')
+        self.assertEqual(dn[0], (('ou', 'dept1', 1),))
+        self.assertEqual(dn[1], (('dc', 'example', 1),))
+        self.assertEqual(dn[2], (('dc', 'com', 1),))
+        self.assertEqual(dn[:], dn)
+        with self.assertRaises(IndexError):
+            self.assertEqual(dn[3], ())
         self.assertEqual(
             reversed(DNObj.fromstring('ou=dept1,dc=example,dc=com')),
             DNObj.fromstring('dc=com,dc=example,ou=dept1')
@@ -325,6 +332,13 @@ class TestDNObj(unittest.TestCase):
             DNObj.fromstring('ou=dept1,dc=example,dc=com')[:2],
             DNObj.fromstring('ou=dept1,dc=example')
         )
+        domain = 'sub3.sub2.sub1.example.com'
+        dns_labels = domain.split('.')
+        dno = DNObj.fromdomain(domain)
+        for i, dn_comp in enumerate(dno):
+            self.assertEqual(dn_comp[0][0], 'dc')
+            self.assertEqual(dn_comp[0][1], dns_labels[i])
+            self.assertEqual(dno[i], dn_comp)
 
     def test_dnobj_domain(self):
         self.assertEqual(

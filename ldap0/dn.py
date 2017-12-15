@@ -46,11 +46,10 @@ def str2dn(dn, flags=0):
     """
     if not dn:
         return ()
-    dn_list = [
+    return tuple([
         tuple(item)
         for item in _libldap0_function_call(_libldap0.str2dn, dn, flags)
-    ]
-    return tuple(dn_list)
+    ])
 
 
 def dn2str(dn):
@@ -147,7 +146,7 @@ class DNObj(tuple):
     def fromdomain(cls, domain):
         if isinstance(domain, unicode):
             domain = domain.encode('ascii')
-        return cls([[('dc', d, 1)] for d in domain.split('.')])
+        return cls([(('dc', d, 1),) for d in domain.split('.')])
 
     def __str__(self):
         return dn2str(self)
