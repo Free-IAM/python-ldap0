@@ -11,9 +11,9 @@ import unittest
 from ldap0.filter import escape_filter_chars
 
 
-class TestDN(unittest.TestCase):
+class TestFilter(unittest.TestCase):
     """
-    test ldap.functions
+    test ldap.filter
     """
 
     def test_escape_filter_chars_mode0(self):
