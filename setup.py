@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 setup.py - Setup package with the help Python's DistUtils
 """
@@ -7,9 +8,10 @@ import os
 from ConfigParser import ConfigParser
 from setuptools import setup, Extension
 
-LDAP0_BASEDIR = os.path.dirname(os.path.realpath(__file__))
+PKG_NAME = 'ldap0'
+BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
-sys.path.insert(0, os.path.join(LDAP0_BASEDIR, 'ldap0'))
+sys.path.insert(0, os.path.join(BASEDIR, PKG_NAME))
 import pkginfo
 
 class OpenLDAP2BuildConfig:
@@ -27,7 +29,7 @@ class OpenLDAP2BuildConfig:
         self.defines = []
         #-- Read the [_libldap0] section of setup.cfg
         cfg = ConfigParser()
-        cfg.read(os.path.join(LDAP0_BASEDIR, 'setup.cfg'))
+        cfg.read(os.path.join(BASEDIR, 'setup.cfg'))
         _ldap_cfg = dict(cfg.items('_libldap0'))
         for name, value in _ldap_cfg.items():
             _ldap_cfg[name] = [ val for val in value.split(' ') if val ]
@@ -58,10 +60,8 @@ LDAP_CLASS = OpenLDAP2BuildConfig(
 )
 
 
-#-- Let distutils/setuptools do the rest
-
 setup(
-    name='ldap0',
+    name=PKG_NAME,
     license=pkginfo.__license__,
     version=pkginfo.__version__,
     description='Python modules for implementing LDAP clients',
@@ -77,7 +77,11 @@ setup(
     maintainer=pkginfo.__author__,
     maintainer_email='michael@stroeder.com',
     url='https://pypi.python.org/pypi/ldap0/',
-    download_url='https://pypi.python.org/pypi/ldap0/',
+    download_url='https://pypi.python.org/pypi/%s/' % (PKG_NAME),
+    keywords=[
+        'LDAP',
+        'OpenLDAP',
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
@@ -122,14 +126,14 @@ setup(
         ),
     ],
     packages = [
-        'ldap0',
-        'ldap0.schema',
-        'ldap0.extop',
-        'ldap0.controls',
+        PKG_NAME,
+        PKG_NAME+'.schema',
+        PKG_NAME+'.extop',
+        PKG_NAME+'.controls',
     ],
     package_dir={'': '.'},
     test_suite='tests',
-    python_requires = '==2.7.*',
+    python_requires='==2.7.*',
     include_package_data=True,
     install_requires=[
         'setuptools',
