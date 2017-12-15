@@ -91,7 +91,7 @@ def get_option(option):
 
     Get the value of an LDAP global option.
     """
-    return _libldap0_function_call(_ldap0.get_option, option)
+    return _libldap0_function_call(_libldap0.get_option, option)
 
 
 def set_option(option, invalue):
@@ -100,7 +100,7 @@ def set_option(option, invalue):
 
     Set the value of an LDAP global option.
     """
-    return _libldap0_function_call(_ldap0.set_option, option, invalue)
+    return _libldap0_function_call(_libldap0.set_option, option, invalue)
 
 
 def escape_str(escape_func, val, *args):
