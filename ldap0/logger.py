@@ -9,15 +9,39 @@ import logging
 
 from .pkginfo import __version__, __author__, __license__
 
-class logging_file_class(object):
+__all__ = [
+    'LoggerFileObj',
+]
 
-    def __init__(self, logging_level):
+
+class LoggerFileObj(object):
+    """
+    file-like helper class which sends log lines to a logging instance
+    """
+
+    def __init__(self, logger=None, logging_level=logging.DEBUG):
+        self._logger = logger
         self._logging_level = logging_level
+        self.log_lines = 0
 
     def write(self, msg):
-        logging.log(self._logging_level, msg[:-1])
+        """
+        write msg to log
+        """
+        if self._logger is not None:
+            self._logger.log(self._logging_level, msg[:-1])
+        else:
+            logging.log(self._logging_level, msg[:-1])
+        self.log_lines += 1
+
+    def read(self, size=None):
+        """
+        dummy read() method which raises IOError
+        """
+        raise IOError('File object of class %s is write-only' % (self.__class__.__name__))
 
     def flush(self):
         return
 
-logging_file_obj = logging_file_class(logging.DEBUG)
+
+LOGGING_FILE_OBJ = LoggerFileObj()
