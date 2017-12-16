@@ -5,6 +5,7 @@ setup.py - Setup package with the help Python's DistUtils
 
 import sys
 import os
+import textwrap
 from ConfigParser import ConfigParser
 from setuptools import setup, Extension
 
@@ -64,14 +65,21 @@ setup(
     name=PKG_NAME,
     license=pkginfo.__license__,
     version=pkginfo.__version__,
-    description='Python modules for implementing LDAP clients',
-    long_description="""ldap0 is a fork of python-ldap in separate module name-space:
-    ldap0 provides an object-oriented API to access LDAP directory servers
-    from Python programs. Mainly it wraps the OpenLDAP 2.x libs for that purpose.
-    Additionally the package contains modules for other LDAP-related stuff
-    (e.g. processing LDIF, LDAPURLs, LDAPv3 schema, LDAPv3 extended operations
-    and controls, etc.).
-    """,
+    description='{0} -- Python module package for implementing LDAP clients'.format(PKG_NAME),
+    long_description=textwrap.dedent(
+        """
+        {0} provides an object-oriented API to access LDAP directory servers
+        from Python programs. Mainly it wraps the OpenLDAP 2.x libs for that purpose.
+        Additionally the package contains Python modules:
+        - parsing and producing LDIF
+        - handle LDAPURLs
+        - parse and handle LDAPv3 subschema
+        - LDAPv3 extended operations and controls
+        - automatic tests with OpenLDAP server
+        This package is a non-compatible fork of python-ldap and
+        therefore uses the separate module name-space '{0}'.
+        """.format(PKG_NAME)
+    ).lstrip(),
     author=pkginfo.__author__,
     author_email='michael@stroeder.com',
     maintainer=pkginfo.__author__,
