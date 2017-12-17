@@ -85,6 +85,32 @@ def compose_filter(operand, filter_parts):
         ''.join(filter_parts),
     )
 
+def dict_filter(
+        entry,
+        iop='&',
+        oop='&',
+        escape_mode=0
+    ):
+    """
+    returns a filter compose from an entry dictionary
+    
+    iop
+       inner operand used for attribute value list
+    oop
+       outer operand used for all attributes
+    """
+    filter_parts = []
+    for attr_type, attr_values in entry.items():
+        filter_parts.append(
+            compose_filter(
+                iop,
+                map_filter_parts(attr_type, attr_values, escape_mode=escape_mode)
+            )
+        )
+    if len(filter_parts) == 1:
+        return filter_parts[0]
+    return compose_filter(oop, filter_parts)
+
 
 def filter_format(filter_template, assertion_values):
     """

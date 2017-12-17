@@ -12,7 +12,8 @@ from ldap0.filter import \
     escape_filter_chars, \
     negate_filter, \
     map_filter_parts, \
-    compose_filter
+    compose_filter, \
+    dict_filter
 
 
 class TestFilter(unittest.TestCase):
@@ -85,10 +86,11 @@ class TestFilter(unittest.TestCase):
         self.assertEqual(compose_filter('&', []), '')
         self.assertEqual(compose_filter('|', []), '')
         self.assertEqual(
-            compose_filter(
-                '|',
-                map_filter_parts('foo', ['1', '2'])
-            ),
+            compose_filter('|', map_filter_parts('foo', ['1'])),
+            '(foo=1)'
+        )
+        self.assertEqual(
+            compose_filter('|', map_filter_parts('foo', ['1', '2'])),
             '(|(foo=1)(foo=2))'
         )
         self.assertEqual(
@@ -97,6 +99,25 @@ class TestFilter(unittest.TestCase):
                 map_filter_parts('foo', ['1', '2'], escape_mode=2)
             ),
             '(|(foo=\\31)(foo=\\32))'
+        )
+
+    def test_dict_filter(self):
+        self.assertEqual(dict_filter({}), '')
+        self.assertEqual(dict_filter({'foo': ['bar']}), '(foo=bar)')
+        self.assertEqual(
+            dict_filter({'foo': ['bar1', 'bar2']}),
+            '(&(foo=bar1)(foo=bar2))'
+        )
+        self.assertEqual(
+            dict_filter({'foo': ['bar1', 'bar2']}, iop='|'), '(|(foo=bar1)(foo=bar2))'
+        )
+        self.assertEqual(
+            dict_filter({'foo1': ['bar1', 'bar2'], 'foo2': ['bar1', 'bar2']}, iop='|'),
+            '(&(|(foo1=bar1)(foo1=bar2))(|(foo2=bar1)(foo2=bar2)))'
+        )
+        self.assertEqual(
+            dict_filter({'foo1': ['bar1', 'bar2'], 'foo2': ['bar1', 'bar2']}, oop='|'),
+            '(|(&(foo1=bar1)(foo1=bar2))(&(foo2=bar1)(foo2=bar2)))'
         )
 
 
