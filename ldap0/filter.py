@@ -59,6 +59,33 @@ def negate_filter(flt):
     return '(!%s)' % flt
 
 
+def map_filter_parts(assertion_type, assertion_values, escape_mode=0):
+    """
+    returns filter parts all with same asserton type but different values
+    """
+    return [
+        '(%s=%s)' % (
+            assertion_type,
+            escape_filter_chars(av, escape_mode=escape_mode),
+        )
+        for av in assertion_values
+    ]
+
+
+def compose_filter(operand, filter_parts):
+    """
+    returns filter string composed by operand and list of sub-filters
+    """
+    if not filter_parts:
+        return ''
+    elif len(filter_parts) == 1:
+        return filter_parts[0]
+    return '(%s%s)' % (
+        operand,
+        ''.join(filter_parts),
+    )
+
+
 def filter_format(filter_template, assertion_values):
     """
     filter_template

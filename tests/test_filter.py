@@ -8,7 +8,11 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
-from ldap0.filter import escape_filter_chars, negate_filter
+from ldap0.filter import \
+    escape_filter_chars, \
+    negate_filter, \
+    map_filter_parts, \
+    compose_filter
 
 
 class TestFilter(unittest.TestCase):
@@ -64,6 +68,36 @@ class TestFilter(unittest.TestCase):
         self.assertEqual(negate_filter('(objectClass=*)'), '(!(objectClass=*))')
         self.assertEqual(negate_filter('(!(objectClass=*))'), '(objectClass=*)')
         self.assertEqual(negate_filter('(!(!(objectClass=*)))'), '(!(objectClass=*))')
+
+    def test_map_filter_parts(self):
+        self.assertEqual(map_filter_parts('foo', []), [])
+        self.assertEqual(
+            map_filter_parts('foo', ['1', '2']),
+            ['(foo=1)', '(foo=2)']
+        )
+        self.assertEqual(
+            map_filter_parts('foo', ['1', '2'], escape_mode=2),
+            ['(foo=\\31)', '(foo=\\32)']
+        )
+
+    def test_compose_filter(self):
+        self.assertEqual(compose_filter('', []), '')
+        self.assertEqual(compose_filter('&', []), '')
+        self.assertEqual(compose_filter('|', []), '')
+        self.assertEqual(
+            compose_filter(
+                '|',
+                map_filter_parts('foo', ['1', '2'])
+            ),
+            '(|(foo=1)(foo=2))'
+        )
+        self.assertEqual(
+            compose_filter(
+                '|',
+                map_filter_parts('foo', ['1', '2'], escape_mode=2)
+            ),
+            '(|(foo=\\31)(foo=\\32))'
+        )
 
 
 if __name__ == '__main__':
