@@ -8,7 +8,7 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
-from ldap0.filter import escape_filter_chars
+from ldap0.filter import escape_filter_chars, negate_filter
 
 
 class TestFilter(unittest.TestCase):
@@ -59,6 +59,11 @@ class TestFilter(unittest.TestCase):
             ),
             r'\66\6f\6f\62\61\72'
         )
+
+    def test_negate_filter(self):
+        self.assertEqual(negate_filter('(objectClass=*)'), '(!(objectClass=*))')
+        self.assertEqual(negate_filter('(!(objectClass=*))'), '(objectClass=*)')
+        self.assertEqual(negate_filter('(!(!(objectClass=*)))'), '(!(objectClass=*))')
 
 
 if __name__ == '__main__':

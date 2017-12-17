@@ -50,6 +50,15 @@ def escape_filter_chars(assertion_value, escape_mode=0):
     return val
 
 
+def negate_filter(flt):
+    """
+    Returns the simple negation of flt
+    """
+    if flt.startswith('(!') and flt.endswith(')'):
+        return flt[2:-1]
+    return '(!%s)' % flt
+
+
 def filter_format(filter_template, assertion_values):
     """
     filter_template
