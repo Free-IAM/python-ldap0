@@ -2,6 +2,6 @@
 """
 meta attributes for packaging which does not import any dependencies
 """
-__version__ = '0.0.41'
+__version__ = '0.0.42.1'
 __author__ = u'Michael Stroeder'
 __license__ = 'Python style'
