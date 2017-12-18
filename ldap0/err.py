@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-ldap0.cidict - custom dictionary class with keys being strings handled case-insensitive
+ldap0.err - error classes
 """
 
 from __future__ import absolute_import
