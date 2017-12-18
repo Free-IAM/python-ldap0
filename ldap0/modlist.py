@@ -64,7 +64,7 @@ def modify_modlist(
     for attr_type in old_entry:
         attrtype_lower_map[attr_type.lower()] = attr_type
     for attrtype in new_entry:
-        attrtype_lower = str.lower(attrtype)
+        attrtype_lower = attrtype.lower()
         if attrtype_lower in ignore_attr_types:
             # This attribute type is ignored
             continue
