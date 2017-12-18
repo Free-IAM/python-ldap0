@@ -588,11 +588,6 @@ decoding LDAPv3 controls.
   might differ depending on the type of LDAP request or controls might not
   be applicable with certain LDAP requests at all.
 
-*clientctrls*
-  is a list of :py:class:`ldap0.controls.LDAPControl` instances passed to the
-  client API and alter the behaviour of the client when processing the
-  request.
-
 
 Sending LDAP requests
 ---------------------
@@ -608,7 +603,7 @@ and wait for and return with the server's result, or with
 
 :class:`LDAPObject` instances have the following methods:
 
-.. py:method:: LDAPObject.abandon(msgid [, serverctrls=None [, clientctrls=None]]) -> None
+.. py:method:: LDAPObject.abandon(msgid [, serverctrls=None]) -> None
 
    Abandons an LDAP operation in progress without waiting for a LDAP response.
    The *msgid* argument should be the message ID of an outstanding LDAP
@@ -616,12 +611,12 @@ and wait for and return with the server's result, or with
    The caller can expect that the result of an abandoned operation will not be
    returned from a future call to :py:meth:`result()`.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.add(dn, modlist [, serverctrls=None [, clientctrls=None]]) -> int
+.. py:method:: LDAPObject.add(dn, modlist [, serverctrls=None]) -> int
 
-.. py:method:: LDAPObject.add_s(dn, modlist [, serverctrls=None [, clientctrls=None]]) -> None
+.. py:method:: LDAPObject.add_s(dn, modlist [, serverctrls=None]) -> None
 
    Performs an LDAP add operation. The *dn* argument is the distinguished
    name (DN) of the entry to add, and *modlist* is a list of attributes to be
@@ -632,14 +627,14 @@ and wait for and return with the server's result, or with
    The asynchronous method :py:meth:`add()` returns the message ID of the 
    initiated request.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
 
 .. py:method:: LDAPObject.bind(who, cred, method) -> int
 
 .. py:method:: LDAPObject.bind_s(who, cred, method) -> None
 
-.. py:method:: LDAPObject.cancel( cancelid, [, serverctrls=None [, clientctrls=None]]) -> None
+.. py:method:: LDAPObject.cancel( cancelid, [, serverctrls=None]) -> None
 
    Send cancels extended operation for an LDAP operation specified by *cancelid*.
    The *cancelid* should be the message id of an outstanding LDAP operation as returned
@@ -649,14 +644,14 @@ and wait for and return with the server's result, or with
    In opposite to :py:meth:`abandon()` this extended operation gets an result from
    the server and thus should be preferred if the server supports it.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
    :rfc:`3909` - Lightweight Directory Access Protocol (LDAP): Cancel Operation
 
 
-.. py:method:: LDAPObject.compare(dn, attr, value [, serverctrls=None [, clientctrls=None]]) -> int
+.. py:method:: LDAPObject.compare(dn, attr, value [, serverctrls=None]) -> int
 
-.. py:method:: LDAPObject.compare_s(dn, attr, value [, serverctrls=None [, clientctrls=None]]) -> tuple
+.. py:method:: LDAPObject.compare_s(dn, attr, value [, serverctrls=None]) -> tuple
 
    Perform an LDAP comparison between the attribute named *attr* of
    entry *dn*, and the value *value*. The synchronous forms
@@ -669,7 +664,7 @@ and wait for and return with the server's result, or with
    by raising the exception objects :py:exc:`ldap0.COMPARE_TRUE` or
    :py:exc:`ldap0.COMPARE_FALSE`.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
    .. note::
 
@@ -677,20 +672,20 @@ and wait for and return with the server's result, or with
       from containing *NULL* characters.
 
 
-.. py:method:: LDAPObject.delete(dn [, serverctrls=None [, clientctrls=None]]) -> int
+.. py:method:: LDAPObject.delete(dn [, serverctrls=None]) -> int
 
-.. py:method:: LDAPObject.delete_s(dn [, serverctrls=None [, clientctrls=None]]) -> None
+.. py:method:: LDAPObject.delete_s(dn [, serverctrls=None]) -> None
 
    Performs an LDAP delete operation on *dn*. The asynchronous form
    returns the message id of the initiated request, and the result can be obtained
    from a subsequent call to :py:meth:`result()`.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.extop(extreq[,serverctrls=None[,clientctrls=None]]]) -> int
+.. py:method:: LDAPObject.extop(extreq[, serverctrls=None]]) -> int
 
-.. py:method:: LDAPObject.extop_s(extreq[,serverctrls=None[,clientctrls=None[,extop_resp_class=None]]]]) -> (respoid,respvalue)
+.. py:method:: LDAPObject.extop_s(extreq[,serverctrls=None[, extop_resp_class=None]]]) -> (respoid,respvalue)
 
    Performs an LDAP extended operation. The asynchronous
    form returns the message id of the initiated request, and the
@@ -699,7 +694,7 @@ and wait for and return with the server's result, or with
    The *extreq* is an instance of class :py:class:`ldap0.extop.ExtendedRequest`
    containing the parameters for the extended operation request.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
    If argument *extop_resp_class* is set to a sub-class of
    :py:class:`ldap0.extop.ExtendedResponse` this class is used to return an
@@ -711,9 +706,9 @@ and wait for and return with the server's result, or with
    the result of an extended operation sent before.
 
 
-.. py:method:: LDAPObject.modify(dn, modlist [, serverctrls=None [, clientctrls=None]]) -> int
+.. py:method:: LDAPObject.modify(dn, modlist [, serverctrls=None]) -> int
 
-.. py:method:: LDAPObject.modify_s(dn, modlist [, serverctrls=None [, clientctrls=None]]) -> None
+.. py:method:: LDAPObject.modify_s(dn, modlist [, serverctrls=None]) -> None
 
    Performs an LDAP modify operation on an entry's attributes.
    The *dn* argument is the distinguished name (DN) of the entry to modify,
@@ -728,7 +723,7 @@ and wait for and return with the server's result, or with
    delete or replace respectively.  For the delete operation, *mod_vals*
    may be :py:const:`None` indicating that all attributes are to be deleted.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
    The asynchronous method :py:meth:`modify()` returns the message ID of 
    the initiated request.
@@ -737,9 +732,9 @@ and wait for and return with the server's result, or with
    generating *modlist*.
 
 
-.. py:method:: LDAPObject.passwd(user, oldpw, newpw [, serverctrls=None [, clientctrls=None]]) -> int
+.. py:method:: LDAPObject.passwd(user, oldpw, newpw [, serverctrls=None]) -> int
 
-.. py:method:: LDAPObject.passwd_s(user, oldpw, newpw [, serverctrls=None [, clientctrls=None]]) -> None
+.. py:method:: LDAPObject.passwd_s(user, oldpw, newpw [, serverctrls=None]) -> None
 
    Perform a ``LDAP Password Modify Extended Operation`` operation
    on the entry specified by *user*.
@@ -750,7 +745,7 @@ and wait for and return with the server's result, or with
    of the specified *user* which is sometimes used when a user changes
    his own password.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
    The asynchronous version returns the initiated message id.
 
@@ -760,9 +755,9 @@ and wait for and return with the server's result, or with
 
 
 
-.. py:method:: LDAPObject.rename(dn, newrdn [, newsuperior=None [, delold=1 [, serverctrls=None [, clientctrls=None]]]]) -> int
+.. py:method:: LDAPObject.rename(dn, newrdn [, newsuperior=None [, delold=1 [, serverctrls=None]]]) -> int
 
-.. py:method:: LDAPObject.rename_s(dn, newrdn [, newsuperior=None [, delold=1 [, serverctrls=None [, clientctrls=None]]]]) -> None
+.. py:method:: LDAPObject.rename_s(dn, newrdn [, newsuperior=None [, delold=1 [, serverctrls=None]]]) -> None
 
    Perform a ``Rename`` operation, (i.e. a renaming operation).
    These routines take *dn* (the DN of the entry whose RDN is to be changed,
@@ -773,7 +768,7 @@ and wait for and return with the server's result, or with
    The optional parameter *delold* is used to specify
    whether the old RDN should be kept as an attribute of the entry or not.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
 
 .. py:method:: LDAPObject.result([msgid=RES_ANY [, all=1 [, timeout=None [, add_ctrls=0 [, add_intermediates=0 [, add_extop=0 [, resp_ctrl_classes=None]]]]]]]) -> 6-tuple
@@ -860,27 +855,27 @@ and wait for and return with the server's result, or with
    If :py:const:`None` the global dictionary :py:data:`ldap0.controls.KNOWN_RESPONSE_CONTROLS`
    is used instead.
 
-.. py:method:: LDAPObject.sasl_interactive_bind_s(who, auth[, serverctrls=None [, clientctrls=None [, sasl_flags=ldap0.SASL_QUIET]]]) -> None
+.. py:method:: LDAPObject.sasl_interactive_bind_s(who, auth[, serverctrls=None [, sasl_flags=ldap0.SASL_QUIET]]) -> None
 
    This call is used to bind to the directory with a SASL bind request.
 
    *auth* is an :py:class:`ldap0.sasl.sasl()` instance.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.sasl_non_interactive_bind_s(sasl_mech[, serverctrls=None [, clientctrls=None [, sasl_flags=ldap0.SASL_QUIET [, authz_id='']]]]) -> None
+.. py:method:: LDAPObject.sasl_non_interactive_bind_s(sasl_mech[, serverctrls=None [, sasl_flags=ldap0.SASL_QUIET [, authz_id='']]]) -> None
 
    This call is used to bind to the directory with a SASL bind request with
    non-interactive SASL mechanism defined with argument *sasl_mech* and
    internally calls :py:meth:`sasl_interactive_bind_s()`.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.simple_bind([who='' [, cred='' [, serverctrls=None [, clientctrls=None]]]]) -> int
+.. py:method:: LDAPObject.simple_bind([who='' [, cred='' [, serverctrls=None]]]) -> int
 
-.. py:method:: LDAPObject.simple_bind_s([who='' [, cred='' [, serverctrls=None [, clientctrls=None]]]]) -> None
+.. py:method:: LDAPObject.simple_bind_s([who='' [, cred='' [, serverctrls=None]]]) -> None
 
    After an LDAP object is created, and before any other operations can be
    attempted over the connection, a bind operation must be performed.
@@ -891,12 +886,12 @@ and wait for and return with the server's result, or with
    takes a third parameter, *method* which can currently solely
    be :py:const:`AUTH_SIMPLE`.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
 
-.. py:method:: LDAPObject.search(base, scope [,filterstr='(objectClass=*)' [, attrlist=None [, attrsonly=0 [, serverctrls=None [, clientctrls=None [, timeout=-1 [, sizelimit=0]]]]]]]) -> int
+.. py:method:: LDAPObject.search(base, scope [,filterstr='(objectClass=*)' [, attrlist=None [, attrsonly=0 [, serverctrls=None[, timeout=-1 [, sizelimit=0]]]]]]) -> int
 
-.. py:method:: LDAPObject.search_s(base, scope [,filterstr='(objectClass=*)' [, attrlist=None [, attrsonly=0 [, serverctrls=None [, clientctrls=None [, timeout=-1 [, sizelimit=0]]]]]]]) -> list|None
+.. py:method:: LDAPObject.search_s(base, scope [,filterstr='(objectClass=*)' [, attrlist=None [, attrsonly=0 [, serverctrls=None[, timeout=-1 [, sizelimit=0]]]]]]) -> list|None
 
    Perform an LDAP search operation, with *base* as the DN of the entry
    at which to start the search, *scope* being one of
@@ -928,7 +923,7 @@ and wait for and return with the server's result, or with
    The retrieved attributes can be limited with the *attrlist* parameter.
    If *attrlist* is :py:const:`None`, all the attributes of each entry are returned.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
    The synchronous form with timeout, :py:meth:`searchs()`,
    will block for at most *timeout* seconds (or indefinitely if *timeout*
@@ -951,16 +946,16 @@ and wait for and return with the server's result, or with
     :rfc:`2830` - Lightweight Directory Access Protocol (v3): Extension for Transport Layer Security
 
 
-.. py:method:: LDAPObject.unbind([, serverctrls=None [, clientctrls=None]]) -> int
+.. py:method:: LDAPObject.unbind([, serverctrls=None]) -> int
 
-.. py:method:: LDAPObject.unbind_s([, serverctrls=None [, clientctrls=None]]) -> None
+.. py:method:: LDAPObject.unbind_s([, serverctrls=None]) -> None
 
    This call is used to unbind from the directory, terminate the
    current association, and free resources. Once called, the connection to the
    LDAP server is closed and the LDAP object is marked invalid.
    Further invocation of methods on the object will yield exceptions.
 
-   *serverctrls* and *clientctrls* like described in section :ref:`ldap-controls`.
+   *serverctrls* like described in section :ref:`ldap-controls`.
 
    These methods are all synchronous in nature.
 

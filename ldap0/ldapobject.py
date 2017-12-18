@@ -199,41 +199,29 @@ class LDAPObject:
     def fileno(self):
         return self.get_option(_libldap0.OPT_DESC)
 
-    def abandon(
-            self,
-            msgid,
-            serverctrls=None,
-            clientctrls=None
-        ):
+    def abandon(self, msgid, serverctrls=None):
         return self._ldap_call(
             self._l.abandon_ext,
             msgid,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
         )
 
-    def cancel(
-            self,
-            cancelid,
-            serverctrls=None,
-            clientctrls=None
-        ):
+    def cancel(self, cancelid, serverctrls=None):
         return self.extop(
             CancelRequest(cancelid),
             serverctrls=serverctrls,
-            clientctrls=clientctrls,
         )
 
-    def cancel_s(self, cancelid, serverctrls=None, clientctrls=None):
+    def cancel_s(self, cancelid, serverctrls=None):
         try:
-            msgid = self.cancel(cancelid, serverctrls=serverctrls, clientctrls=clientctrls)
+            msgid = self.cancel(cancelid, serverctrls=serverctrls)
             ldap_res = self.result(msgid, all=1, timeout=self.timeout)
         except (_libldap0.CANCELLED):
             pass
         #else:
         #    raise _libldap0.PROTOCOL_ERROR('cancel operation returned {0}'.format(ldap_res))
 
-    def add(self, dn, modlist, serverctrls=None, clientctrls=None):
+    def add(self, dn, modlist, serverctrls=None):
         self.uncache(dn)
         if isinstance(modlist, dict):
             modlist = add_modlist(modlist)
@@ -242,11 +230,10 @@ class LDAPObject:
             dn,
             modlist,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
         )
 
-    def add_s(self, dn, modlist, serverctrls=None, clientctrls=None):
-        msgid = self.add(dn, modlist, serverctrls, clientctrls)
+    def add_s(self, dn, modlist, serverctrls=None):
+        msgid = self.add(dn, modlist, serverctrls)
         resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
@@ -254,30 +241,17 @@ class LDAPObject:
         )
         return resp_type, resp_data, resp_msgid, resp_ctrls
 
-    def simple_bind(
-            self,
-            who='',
-            cred='',
-            serverctrls=None,
-            clientctrls=None
-        ):
+    def simple_bind(self, who='', cred='', serverctrls=None):
         self.flush_cache()
         return self._ldap_call(
             self._l.simple_bind,
             who,
             cred,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
         )
 
-    def simple_bind_s(
-            self,
-            who='',
-            cred='',
-            serverctrls=None,
-            clientctrls=None
-        ):
-        msgid = self.simple_bind(who, cred, serverctrls, clientctrls)
+    def simple_bind_s(self, who='', cred='', serverctrls=None):
+        msgid = self.simple_bind(who, cred, serverctrls)
         resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
@@ -290,7 +264,6 @@ class LDAPObject:
             who,
             auth,
             serverctrls=None,
-            clientctrls=None,
             sasl_flags=_libldap0.SASL_QUIET
         ):
         self.flush_cache()
@@ -299,7 +272,6 @@ class LDAPObject:
             who,
             auth,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls),
             sasl_flags
         )
 
@@ -307,7 +279,6 @@ class LDAPObject:
             self,
             sasl_mech,
             serverctrls=None,
-            clientctrls=None,
             sasl_flags=_libldap0.SASL_QUIET,
             authz_id=''
         ):
@@ -321,11 +292,10 @@ class LDAPObject:
             '',
             auth,
             serverctrls,
-            clientctrls,
             sasl_flags
         )
 
-    def sasl_bind_s(self, dn, mechanism, cred, serverctrls=None, clientctrls=None):
+    def sasl_bind_s(self, dn, mechanism, cred, serverctrls=None):
         self.flush_cache()
         return self._ldap_call(
             self._l.sasl_bind_s,
@@ -333,20 +303,18 @@ class LDAPObject:
             mechanism,
             cred,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
         )
 
-    def compare(self, dn, attr, value, serverctrls=None, clientctrls=None):
+    def compare(self, dn, attr, value, serverctrls=None):
         return self._ldap_call(
             self._l.compare_ext, dn,
             attr,
             value,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls),
         )
 
-    def compare_s(self, dn, attr, value, serverctrls=None, clientctrls=None):
-        msgid = self.compare(dn, attr, value, serverctrls, clientctrls)
+    def compare_s(self, dn, attr, value, serverctrls=None):
+        msgid = self.compare(dn, attr, value, serverctrls)
         try:
             ldap_res = self.result(
                 msgid,
@@ -361,17 +329,16 @@ class LDAPObject:
             'Compare operation returned wrong result: %r' % (ldap_res)
         )
 
-    def delete(self, dn, serverctrls=None, clientctrls=None):
+    def delete(self, dn, serverctrls=None):
         self.uncache(dn)
         return self._ldap_call(
             self._l.delete_ext,
             dn,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
         )
 
-    def delete_s(self, dn, serverctrls=None, clientctrls=None):
-        msgid = self.delete(dn, serverctrls, clientctrls)
+    def delete_s(self, dn, serverctrls=None):
+        msgid = self.delete(dn, serverctrls)
         resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
@@ -379,13 +346,12 @@ class LDAPObject:
         )
         return resp_type, resp_data, resp_msgid, resp_ctrls
 
-    def extop(self, extreq, serverctrls=None, clientctrls=None):
+    def extop(self, extreq, serverctrls=None):
         return self._ldap_call(
             self._l.extop,
             extreq.requestName,
             extreq.encodedRequestValue(),
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
         )
 
     def extop_result(self, msgid=_libldap0.RES_ANY, extop_resp_class=None):
@@ -417,21 +383,20 @@ class LDAPObject:
             )
         return extop_response
 
-    def extop_s(self, extreq, serverctrls=None, clientctrls=None, extop_resp_class=None):
-        msgid = self.extop(extreq, serverctrls, clientctrls)
+    def extop_s(self, extreq, serverctrls=None, extop_resp_class=None):
+        msgid = self.extop(extreq, serverctrls)
         return self.extop_result(msgid, extop_resp_class=extop_resp_class)
 
-    def modify(self, dn, modlist, serverctrls=None, clientctrls=None):
+    def modify(self, dn, modlist, serverctrls=None):
         self.uncache(dn)
         return self._ldap_call(
             self._l.modify_ext, dn,
             modlist,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
         )
 
-    def modify_s(self, dn, modlist, serverctrls=None, clientctrls=None):
-        msgid = self.modify(dn, modlist, serverctrls, clientctrls)
+    def modify_s(self, dn, modlist, serverctrls=None):
+        msgid = self.modify(dn, modlist, serverctrls)
         resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
@@ -439,7 +404,7 @@ class LDAPObject:
         )
         return resp_type, resp_data, resp_msgid, resp_ctrls
 
-    def passwd(self, user=None, oldpw=None, newpw=None, serverctrls=None, clientctrls=None):
+    def passwd(self, user=None, oldpw=None, newpw=None, serverctrls=None):
         self.uncache(user)
         return self.extop(
             PassmodRequest(
@@ -448,16 +413,14 @@ class LDAPObject:
                 newPasswd=newpw,
             ),
             serverctrls=serverctrls,
-            clientctrls=clientctrls,
         )
 
-    def passwd_s(self, user=None, oldpw=None, newpw=None, serverctrls=None, clientctrls=None):
+    def passwd_s(self, user=None, oldpw=None, newpw=None, serverctrls=None):
         msgid = self.passwd(
             user=user,
             oldpw=oldpw,
             newpw=newpw,
             serverctrls=serverctrls,
-            clientctrls=clientctrls
         )
         res = self.extop_result(msgid, extop_resp_class=PassmodResponse)
         if res.responseValue is None:
@@ -471,7 +434,6 @@ class LDAPObject:
             newsuperior=None,
             delold=1,
             serverctrls=None,
-            clientctrls=None
         ):
         return self._ldap_call(
             self._l.rename,
@@ -480,7 +442,6 @@ class LDAPObject:
             newsuperior,
             delold,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls)
         )
 
     def rename_s(
@@ -490,9 +451,8 @@ class LDAPObject:
             newsuperior=None,
             delold=1,
             serverctrls=None,
-            clientctrls=None
         ):
-        msgid = self.rename(dn, newrdn, newsuperior, delold, serverctrls, clientctrls)
+        msgid = self.rename(dn, newrdn, newsuperior, delold, serverctrls)
         resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
             msgid,
             all=1,
@@ -575,7 +535,6 @@ class LDAPObject:
             attrlist=None,
             attrsonly=0,
             serverctrls=None,
-            clientctrls=None,
             timeout=-1,
             sizelimit=0
         ):
@@ -587,7 +546,6 @@ class LDAPObject:
             attrlist,
             attrsonly,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls),
             timeout,
             sizelimit,
         )
@@ -634,7 +592,6 @@ class LDAPObject:
             attrlist=None,
             attrsonly=0,
             serverctrls=None,
-            clientctrls=None,
             timeout=-1,
             sizelimit=0,
             cache_ttl=None,
@@ -657,7 +614,6 @@ class LDAPObject:
                     c.encodeControlValue()
                     for c in serverctrls or []
                 ]),
-                tuple(clientctrls or []),
                 timeout,
                 sizelimit,
                 add_ctrls,
@@ -683,7 +639,6 @@ class LDAPObject:
             attrlist,
             attrsonly,
             serverctrls,
-            clientctrls,
             timeout,
             sizelimit
         )
@@ -706,7 +661,6 @@ class LDAPObject:
             scope=_libldap0.SCOPE_SUBTREE,
             filterstr='(objectClass=*)',
             serverctrls=None,
-            clientctrls=None,
             timeout=-1,
             sizelimit=0,
         ):
@@ -719,7 +673,6 @@ class LDAPObject:
                 filterstr=filterstr,
                 attrlist=['1.1'],
                 serverctrls=serverctrls,
-                clientctrls=clientctrls,
                 timeout=timeout,
                 sizelimit=sizelimit,
             )
@@ -749,11 +702,10 @@ class LDAPObject:
     def start_tls_s(self):
         return self._ldap_call(self._l.start_tls_s)
 
-    def unbind(self, serverctrls=None, clientctrls=None):
+    def unbind(self, serverctrls=None):
         res = self._ldap_call(
             self._l.unbind_ext,
             RequestControlTuples(serverctrls),
-            RequestControlTuples(clientctrls),
         )
         try:
             del self._l
@@ -761,8 +713,8 @@ class LDAPObject:
             pass
         return res
 
-    def unbind_s(self, serverctrls=None, clientctrls=None):
-        msgid = self.unbind(serverctrls, clientctrls)
+    def unbind_s(self, serverctrls=None):
+        msgid = self.unbind(serverctrls)
         if msgid != None:
             result = self.result(msgid, all=1, timeout=self.timeout)
         else:
@@ -774,12 +726,11 @@ class LDAPObject:
                 pass
         return result
 
-    def whoami_s(self, serverctrls=None, clientctrls=None):
+    def whoami_s(self, serverctrls=None):
         wai = self.extop_s(
             WhoAmIRequest(),
             extop_resp_class=WhoAmIResponse,
             serverctrls=serverctrls,
-            clientctrls=clientctrls,
         )
         return wai.responseValue
 
@@ -831,7 +782,6 @@ class LDAPObject:
             filterstr=None,
             attrlist=None,
             serverctrls=None,
-            clientctrls=None,
             timeout=-1,
             cache_ttl=None,
         ):
@@ -841,7 +791,6 @@ class LDAPObject:
             filterstr or '(objectClass=*)',
             attrlist=attrlist,
             serverctrls=serverctrls,
-            clientctrls=clientctrls,
             timeout=timeout,
             cache_ttl=cache_ttl,
         )
@@ -879,7 +828,6 @@ class LDAPObject:
             attrlist=None,
             attrsonly=0,
             serverctrls=None,
-            clientctrls=None,
             timeout=-1
         ):
         r = self.search_s(
@@ -889,7 +837,6 @@ class LDAPObject:
             attrlist=attrlist or ['*'],
             attrsonly=attrsonly,
             serverctrls=serverctrls,
-            clientctrls=clientctrls,
             timeout=timeout,
             sizelimit=2,
         )
