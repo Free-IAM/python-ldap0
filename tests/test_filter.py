@@ -7,6 +7,7 @@ from __future__ import absolute_import
 
 # from Python's standard lib
 import unittest
+from collections import OrderedDict
 
 from ldap0.filter import \
     escape_filter_chars, \
@@ -112,11 +113,17 @@ class TestFilter(unittest.TestCase):
             dict_filter({'foo': ['bar1', 'bar2']}, iop='|'), '(|(foo=bar1)(foo=bar2))'
         )
         self.assertEqual(
-            dict_filter({'foo1': ['bar1', 'bar2'], 'foo2': ['bar1', 'bar2']}, iop='|'),
+            dict_filter(
+                OrderedDict([('foo1', ['bar1', 'bar2']), ('foo2', ['bar1', 'bar2'])]),
+                iop='|'
+            ),
             '(&(|(foo1=bar1)(foo1=bar2))(|(foo2=bar1)(foo2=bar2)))'
         )
         self.assertEqual(
-            dict_filter({'foo1': ['bar1', 'bar2'], 'foo2': ['bar1', 'bar2']}, oop='|'),
+            dict_filter(
+                OrderedDict([('foo1', ['bar1', 'bar2']), ('foo2', ['bar1', 'bar2'])]),
+                oop='|'
+            ),
             '(|(&(foo1=bar1)(foo1=bar2))(&(foo2=bar1)(foo2=bar2)))'
         )
 
