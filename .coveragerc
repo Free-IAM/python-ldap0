@@ -1,0 +1,22 @@
+[run]
+branch = True
+source =
+    ldap0/
+omit =
+
+[paths]
+source =
+    ldap0/
+    .tox/*/lib/python*/site-packages/
+
+[report]
+ignore_errors = False
+precision = 1
+exclude_lines =
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+
+[html]
+directory = build/htmlcov
+title = python-ldap coverage report
