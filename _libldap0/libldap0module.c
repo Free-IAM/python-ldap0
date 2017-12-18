@@ -8,8 +8,6 @@
 
 #include "LDAPObject.h"
 
-PyMODINIT_FUNC init_libldap0(void);
-
 #define _STR(x) #x
 #define STR(x) _STR(x)
 
@@ -38,15 +36,13 @@ LDAPinit_pkginfo( PyObject* d )
 }
 
 /* dummy module methods */
-
 static PyMethodDef methods[]  = {
 	{ NULL, NULL }
 };
 
 /* module initialisation */
 
-DL_EXPORT(void)
-init_libldap0(void)
+PyObject* init_libldap0(void)
 {
 	PyObject *m, *d;
 
@@ -56,6 +52,10 @@ init_libldap0(void)
 
 	/* Create the module and add the functions */
 	m = Py_InitModule("_libldap0", methods);
+    if (PyType_Ready(&LDAP_Type) < 0) {
+		Py_DECREF(m);
+		return NULL;
+	}
 
 	/* Add some symbolic constants to the module */
 	d = PyModule_GetDict(m);
@@ -69,4 +69,10 @@ init_libldap0(void)
 	/* Check for errors */
 	if (PyErr_Occurred())
 		Py_FatalError("can't initialize module _libldap0");
+
+        return m;
+}
+
+PyMODINIT_FUNC init__libldap0() {
+    init_libldap0();
 }
