@@ -692,7 +692,7 @@ class LDAPObject:
             timeout=timeout,
             add_ctrls=add_ctrls
         )
-        if self.cache_ttl > 0:
+        if cache_ttl > 0:
             # store result in cache if caching is enabled at all
             self._cache[cache_key_args] = (
                 current_time,
@@ -832,7 +832,8 @@ class LDAPObject:
             attrlist=None,
             serverctrls=None,
             clientctrls=None,
-            timeout=-1
+            timeout=-1,
+            cache_ttl=None,
         ):
         r = self.search_s(
             dn,
@@ -842,6 +843,7 @@ class LDAPObject:
             serverctrls=serverctrls,
             clientctrls=clientctrls,
             timeout=timeout,
+            cache_ttl=cache_ttl,
         )
         if r:
             return r[0][1]
