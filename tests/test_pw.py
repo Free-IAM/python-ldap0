@@ -8,7 +8,17 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
+import ldap0.pw
 from ldap0.pw import PWD_LENGTH, random_string, unicode_pwd
+
+
+class TestBasics(unittest.TestCase):
+
+    def test_constants(self):
+        self.assertEqual(
+            ldap0.pw.PWD_OCTETS_ALPHABET,
+            ''.join([ chr(i) for i in range(256)])
+        )
 
 
 class TestPasswordFunctions(unittest.TestCase):
