@@ -14,7 +14,6 @@ from ldap0.test import SlapdTestCase
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
 
-import _libldap0
 import ldap0
 from ldap0 import LDAPError
 from ldap0.ldapobject import LDAPObject
