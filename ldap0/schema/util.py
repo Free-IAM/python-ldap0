@@ -15,13 +15,17 @@ from ..ldif import LDIFRecordList
 from ..schema import SubSchema, SCHEMA_ATTRS, SCHEMA_CLASS_MAPPING
 
 
-def urlfetch(uri, trace_level=0, check_uniqueness=1):
+def urlfetch(uri, trace_level=0, check_uniqueness=True):
     """
     Fetches a parsed schema entry by uri.
 
-    If uri is a LDAP URL the LDAP server is queried directly.
-    Otherwise uri is assumed to point to a LDIF file which
+    If :uri: is a LDAP URL the LDAP server is queried directly.
+    Otherwise :uri: is assumed to point to a LDIF file which
     is loaded with urllib.
+    
+    :trace_level: is passed to class LDAPObject for debugging.
+    
+    :check_uniqueness: is passed to class SubSchema.
     """
     uri = uri.strip()
     if uri.startswith('ldap:') or uri.startswith('ldaps:') or uri.startswith('ldapi:'):

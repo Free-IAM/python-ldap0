@@ -76,7 +76,7 @@ class SubSchema(object):
       List of NAMEs used at least twice in the subschema for the same schema element
     """
 
-    def __init__(self, sub_schema_sub_entry, check_uniqueness=1):
+    def __init__(self, sub_schema_sub_entry, check_uniqueness=True):
 
         # Initialize all dictionaries
         self.name2oid = {}

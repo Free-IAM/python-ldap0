@@ -23,7 +23,7 @@ class TestSubschemaLDIF(unittest.TestCase):
 
     def test_subschema_file(self):
         for test_file in TEST_SUBSCHEMA_FILES:
-            _, sub_schema = urlfetch(test_file, check_uniqueness=1)
+            _, sub_schema = urlfetch(test_file, check_uniqueness=True)
             self.assertEqual(
                 len(SCHEMA_CLASS_MAPPING),
                 len(sub_schema.name2oid),
