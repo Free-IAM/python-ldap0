@@ -24,3 +24,10 @@ class WhoAmIResponse(ExtendedResponse):
     """
 
     responseName = None
+
+    @classmethod
+    def check_resp_name(cls, name):
+        """
+        work around MS AD returning obscure OID as responseName
+        """
+        return name == cls.responseName or name == '1.3.6.1.4.1.4203.1.11'

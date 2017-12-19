@@ -57,6 +57,13 @@ class ExtendedResponse(object):
     def __repr__(self):
         return '%s(%r, %r)' % (self.__class__.__name__, self.responseName, self.responseValue)
 
+    @classmethod
+    def check_resp_name(cls, name):
+        """
+        returns True if :name: is the correct expected responseName
+        """
+        return name == cls.responseName
+
     def decodeResponseValue(self, value):
         """
         decodes the BER-encoded ASN.1 extended operation response value and
