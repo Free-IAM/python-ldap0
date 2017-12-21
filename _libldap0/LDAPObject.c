@@ -460,7 +460,7 @@ l_ldap_simple_bind( LDAPObject* self, PyObject* args )
 
    * The sasl_mechanism argument is an instance of a class that
      implements a callback interface. For convenience, it should be
-     derived from the sasl class (which lives in the ldap.sasl module).
+     derived from the sasl class (which lives in the ldap0.sasl module).
      See the module documentation for more information.
 
      Check your /usr/lib/sasl/ directory for locally installed SASL
