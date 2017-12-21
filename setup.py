@@ -7,7 +7,6 @@ import sys
 import os
 import textwrap
 from ConfigParser import ConfigParser
-from setuptools import setup, Extension
 
 PKG_NAME = 'ldap0'
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
@@ -122,6 +121,17 @@ setup(
                 '_libldap0/message.c',
                 '_libldap0/options.c',
                 '_libldap0/berval.c',
+            ],
+            depends = [
+                '_libldap0/LDAPObject.h',
+                '_libldap0/berval.h',
+                '_libldap0/common.h',
+                '_libldap0/constants_generated.h',
+                '_libldap0/constants.h',
+                '_libldap0/functions.h',
+                '_libldap0/ldapcontrol.h',
+                '_libldap0/message.h',
+                '_libldap0/options.h',
             ],
             libraries=LDAP_CLASS.libs,
             include_dirs=LDAP_CLASS.include_dirs,
