@@ -115,17 +115,16 @@ class LDAPObject:
             finally:
                 self._libldap0_lock.release()
         except LDAPError as e:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            try:
-                if 'info' not in e.args[0] and 'errno' in e.args[0]:
-                    e.args[0]['info'] = strerror(e.args[0]['errno'])
-            except IndexError:
-                pass
+            if hasattr(e, 'args') \
+               and e.args \
+               and 'info' not in e.args[0] \
+               and 'errno' in e.args[0]:
+                e.args[0]['info'] = strerror(e.args[0]['errno'])
             if __debug__ and self._trace_level >= 2:
                 self._trace_file.write(
                     '-> LDAPError - %s: %s\n' % (e.__class__.__name__, e)
                 )
-            raise exc_type, exc_value, exc_traceback
+            raise e
         else:
             if __debug__ and self._trace_level >= 2:
                 if not diagnostic_message_success is None:
@@ -186,7 +185,7 @@ class LDAPObject:
                     # Check whether CA cert file can be read
                     open(tls_pathname, 'rb')
                     self._l.set_option(tls_option, tls_pathname)
-            except ValueError, value_error:
+            except ValueError as value_error:
                 if sys.platform != 'darwin' and \
                    str(value_error) != 'ValueError: option error':
                     raise
@@ -216,7 +215,7 @@ class LDAPObject:
         try:
             msgid = self.cancel(cancelid, serverctrls=serverctrls)
             ldap_res = self.result(msgid, all=1, timeout=self.timeout)
-        except (_libldap0.CANCELLED):
+        except _libldap0.CANCELLED:
             pass
         #else:
         #    raise _libldap0.PROTOCOL_ERROR('cancel operation returned {0}'.format(ldap_res))
