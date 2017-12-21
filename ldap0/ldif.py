@@ -5,23 +5,23 @@ ldap0.ldif - generate and parse LDIF data (see RFC 2849)
 
 from __future__ import absolute_import
 
-import urlparse
-import urllib
 import re
 from base64 import b64encode, b64decode
+
+from urllib import urlopen
+from urlparse import urlparse
 
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
 
-from .pkginfo import __version__, __author__, __license__
-from .dn import is_dn
 from _libldap0 import MOD_ADD, MOD_DELETE, MOD_REPLACE, MOD_INCREMENT
 
+from .pkginfo import __version__, __author__, __license__
+from .dn import is_dn
+
 __all__ = [
-    # constants
-    'ldif_pattern',
     # functions
     'CreateLDIF',
     'ParseLDIF',
@@ -31,15 +31,6 @@ __all__ = [
     'LDIFRecordList',
     'LDIFCopy',
 ]
-
-attrtype_pattern = r'[\w;.-]+(;[\w_-]+)*'
-attrvalue_pattern = r'(([^,]|\\,)+|".*?")'
-attrtypeandvalue_pattern = attrtype_pattern + r'[ ]*=[ ]*' + attrvalue_pattern
-rdn_pattern = attrtypeandvalue_pattern + r'([ ]*\+[ ]*' + attrtypeandvalue_pattern + r')*[ ]*'
-dn_pattern = rdn_pattern + r'([ ]*,[ ]*' + rdn_pattern + r')*[ ]*'
-dn_regex = re.compile('^%s$' % dn_pattern)
-
-ldif_pattern = '^((dn(:|::) %(dn_pattern)s)|(%(attrtype_pattern)s(:|::) .*)$)+' % vars()
 
 MOD_OP_INTEGER = {
     'add': MOD_ADD,
@@ -58,7 +49,7 @@ MOD_OP_STR = {
 CHANGE_TYPES = {'add', 'delete', 'modify', 'modrdn'}
 
 SAFE_STRING_PATTERN = '(^(\000|\n|\r| |:|<)|[\000\n\r\200-\377]+|[ ]+$)'
-safe_string_re = re.compile(SAFE_STRING_PATTERN)
+SAFE_STRING_RE = re.compile(SAFE_STRING_PATTERN)
 
 
 class LDIFWriter(object):
@@ -114,7 +105,7 @@ class LDIFWriter(object):
         of special chars or because attr_type is in self._base64_attrs
         """
         return attr_type.lower() in self._base64_attrs or \
-               safe_string_re.search(attr_value) is not None
+               SAFE_STRING_RE.search(attr_value) is not None
 
     def _unparse_attr_type_and_value(self, attr_type, attr_value):
         """
@@ -256,8 +247,8 @@ class LDIFParser(object):
         """
         self._input_file = input_file
         self._max_entries = max_entries
-        self._process_url_schemes = set([s.lower() for s in (process_url_schemes or [])])
-        self._ignored_attr_types = set([a.lower() for a in (ignored_attr_types or [])])
+        self._process_url_schemes = set([s.lower() for s in process_url_schemes or []])
+        self._ignored_attr_types = set([a.lower() for a in ignored_attr_types or []])
         self._last_line_sep = line_sep
         self.version = None
         # Initialize counters
@@ -340,8 +331,8 @@ class LDIFParser(object):
             url = unfolded_line[colon_pos+2:].strip()
             attr_value = None
             if self._process_url_schemes:
-                if urlparse.urlparse(url)[0] in self._process_url_schemes:
-                    attr_value = urllib.urlopen(url).read()
+                if urlparse(url)[0] in self._process_url_schemes:
+                    attr_value = urlopen(url).read()
         else:
             attr_value = unfolded_line[colon_pos+1:]
         return attr_type, attr_value
