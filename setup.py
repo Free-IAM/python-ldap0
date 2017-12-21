@@ -7,6 +7,7 @@ import sys
 import os
 import textwrap
 from ConfigParser import ConfigParser
+from setuptools import setup, Extension
 
 PKG_NAME = 'ldap0'
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
