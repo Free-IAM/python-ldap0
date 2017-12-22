@@ -183,7 +183,8 @@ class LDAPObject:
                     tls_pathname = _libldap0.get_option(tls_option)
                 if tls_pathname:
                     # Check whether CA cert file can be read
-                    open(tls_pathname, 'rb')
+                    with open(tls_pathname, 'rb') as tls_fileobj:
+                        pass
                     self._l.set_option(tls_option, tls_pathname)
             except ValueError as value_error:
                 if sys.platform != 'darwin' and \
