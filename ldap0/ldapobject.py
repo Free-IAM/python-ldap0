@@ -824,7 +824,8 @@ class LDAPObject:
     def find_unique_entry(
             self,
             base,
-            scope=_libldap0.SCOPE_SUBTREE, filterstr='(objectClass=*)',
+            scope=_libldap0.SCOPE_SUBTREE,
+            filterstr='(objectClass=*)',
             attrlist=None,
             attrsonly=0,
             serverctrls=None,
