@@ -19,4 +19,4 @@ exclude_lines =
 
 [html]
 directory = build/htmlcov
-title = python-ldap coverage report
+title = ldap0 coverage report
