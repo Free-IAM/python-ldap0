@@ -47,5 +47,20 @@ class TestCidict(unittest.TestCase):
         self.assertEqual(cix.has_key("abcdef"), False)
 
 
+class TestSingleValueDict(unittest.TestCase):
+    """
+    test ldap0.cidict.SingleValueDict
+    """
+
+    def test001_getitem(self):
+        data = {
+            'foo':['bar1', 'bar2', 'bar3'],
+        }
+        svd = ldap0.cidict.SingleValueDict(data)
+        self.assertEqual(svd['foo'], 'bar1')
+        self.assertEqual(svd.values(), ['bar1'])
+        self.assertEqual(svd.items(), [('foo', 'bar1')])
+
+
 if __name__ == '__main__':
     unittest.main()

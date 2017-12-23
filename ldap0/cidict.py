@@ -51,3 +51,13 @@ class cidict(IterableUserDict):
         for k in self._keys.values():
             result.append((k, self[k]))
         return result
+
+
+class SingleValueDict(cidict):
+    """
+    dictionary for reading only the 1st attribute value
+    (strictly relational data model)
+    """
+
+    def __setitem__(self, key, val):
+        return cidict.__setitem__(self, key, val[0])
