@@ -15,6 +15,7 @@ except ImportError:
     from io import StringIO
 
 import ldap0.ldif
+from ldap0.ldif import LDIFParser, LDIFWriter, MOD_OP_INTEGER
 
 
 class TestLDIFParser(unittest.TestCase):
@@ -31,28 +32,23 @@ class TestLDIFParser(unittest.TestCase):
         """
         Parse LDIF data in `ldif_string' into list of records
         """
-        ldif_file = StringIO(ldif_string)
-        ldif_parser = ldap0.ldif.LDIFRecordList(
-            ldif_file,
+        ldif_parser = LDIFParser.fromstring(
+            ldif_string,
             ignored_attr_types=ignored_attr_types,
             max_entries=max_entries,
         )
         parser_method = getattr(
             ldif_parser,
-            'parse_%s_records' % self.record_type
+            'list_%s_records' % self.record_type
         )
-        parser_method()
-        if self.record_type == 'entry':
-            return ldif_parser.all_records
-        elif self.record_type == 'change':
-            return ldif_parser.all_modify_changes
+        return parser_method()
 
     def _unparse_records(self, records):
         """
         Returns LDIF string with entry records from list `records'
         """
         ldif_file = StringIO()
-        ldif_writer = ldap0.ldif.LDIFWriter(ldif_file)
+        ldif_writer = LDIFWriter(ldif_file)
         if self.record_type == 'entry':
             for dn, entry in records:
                 ldif_writer.unparse(dn, entry)
@@ -93,6 +89,27 @@ class TestEntryRecords(TestLDIFParser):
     Various LDIF test cases
     """
     record_type='entry'
+
+    def test_yield(self):
+        ldif_string = \
+            """
+            # comment #1
+             with line-folding
+            dn: cn=x1,cn=y1,cn=z1
+            b1: value_b1
+            c1: value_c1
+            a1: value_a1
+
+            # comment #2.1
+            # comment #2.2
+            dn: cn=x2,cn=y2,cn=z2
+            b2: value_b2
+            c2: value_c2
+            a2: value_a2
+
+            """
+        ldif_string = textwrap.dedent(ldif_string).lstrip()
+        result = LDIFParser.fromstring(ldif_string).list_entry_records()
 
     def test_empty(self):
         self.check_records(
@@ -546,12 +563,12 @@ class TestChangeRecords(TestLDIFParser):
                 (
                     'cn=x,cn=y,cn=z',
                     [
-                        (ldap0.ldif.MOD_OP_INTEGER['replace'], 'attrib', [b'value', b'value2']),
-                        (ldap0.ldif.MOD_OP_INTEGER['add'], 'attrib2', [b'value', b'value2']),
-                        (ldap0.ldif.MOD_OP_INTEGER['delete'], 'attrib3', [b'value']),
-                        (ldap0.ldif.MOD_OP_INTEGER['delete'], 'attrib4', None),
+                        (MOD_OP_INTEGER['replace'], 'attrib', [b'value', b'value2']),
+                        (MOD_OP_INTEGER['add'], 'attrib2', [b'value', b'value2']),
+                        (MOD_OP_INTEGER['delete'], 'attrib3', [b'value']),
+                        (MOD_OP_INTEGER['delete'], 'attrib4', None),
                     ],
-                    None,
+                    [],
                 ),
             ],
         )
@@ -600,22 +617,22 @@ class TestChangeRecords(TestLDIFParser):
                 (
                     'cn=x,cn=y,cn=z',
                     [
-                        (ldap0.ldif.MOD_OP_INTEGER['replace'], 'attrib', [b'value', b'value2']),
-                        (ldap0.ldif.MOD_OP_INTEGER['add'], 'attrib2', [b'value', b'value2']),
-                        (ldap0.ldif.MOD_OP_INTEGER['delete'], 'attrib3', [b'value']),
-                        (ldap0.ldif.MOD_OP_INTEGER['delete'], 'attrib4', None),
+                        (MOD_OP_INTEGER['replace'], 'attrib', [b'value', b'value2']),
+                        (MOD_OP_INTEGER['add'], 'attrib2', [b'value', b'value2']),
+                        (MOD_OP_INTEGER['delete'], 'attrib3', [b'value']),
+                        (MOD_OP_INTEGER['delete'], 'attrib4', None),
                     ],
-                    None,
+                    [],
                 ),
                 (
                     'cn=foo,cn=bar',
                     [
-                        (ldap0.ldif.MOD_OP_INTEGER['replace'], 'attrib', [b'value', b'value2']),
-                        (ldap0.ldif.MOD_OP_INTEGER['add'], 'attrib2', [b'value', b'value2']),
-                        (ldap0.ldif.MOD_OP_INTEGER['delete'], 'attrib3', [b'value']),
-                        (ldap0.ldif.MOD_OP_INTEGER['delete'], 'attrib4', None),
+                        (MOD_OP_INTEGER['replace'], 'attrib', [b'value', b'value2']),
+                        (MOD_OP_INTEGER['add'], 'attrib2', [b'value', b'value2']),
+                        (MOD_OP_INTEGER['delete'], 'attrib3', [b'value']),
+                        (MOD_OP_INTEGER['delete'], 'attrib4', None),
                     ],
-                    None,
+                    [],
                 ),
             ],
         )
@@ -640,10 +657,10 @@ class TestChangeRecords(TestLDIFParser):
                 (
                     'cn=x,cn=y,cn=z',
                     [
-                        (ldap0.ldif.MOD_OP_INTEGER['replace'], 'attrib', [b'value', b'value2']),
-                        (ldap0.ldif.MOD_OP_INTEGER['add'], 'attrib2', [b'value', b'value2']),
+                        (MOD_OP_INTEGER['replace'], 'attrib', [b'value', b'value2']),
+                        (MOD_OP_INTEGER['add'], 'attrib2', [b'value', b'value2']),
                     ],
-                    None,
+                    [],
                 ),
             ],
         )
@@ -682,9 +699,9 @@ class TestChangeRecords(TestLDIFParser):
                 (
                     'cn=x,cn=y,cn=z',
                     [
-                        (ldap0.ldif.MOD_OP_INTEGER['increment'], 'gidNumber', [b'1']),
+                        (MOD_OP_INTEGER['increment'], 'gidNumber', [b'1']),
                     ],
-                    None,
+                    [],
                 ),
             ],
         )

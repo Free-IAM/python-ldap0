@@ -186,27 +186,14 @@ class LDIFWriter(object):
         return # unparse()
 
 
-def CreateLDIF(dn, record, base64_attrs=None, cols=76):
+def CreateLDIF(dn, record, **kwargs):
     """
-    Create LDIF single formatted record including trailing empty line.
-    This is a compability function. Use is deprecated!
-
-    dn
-          string-representation of distinguished name
-    record
-          Either a dictionary holding the LDAP entry {attrtype:record}
-          or a list with a modify list like for LDAPObject.modify().
-    base64_attrs
-          list of attribute types to be base64-encoded in any case
-    cols
-          Specifies how many columns a line may have before it's
-          folded into many lines.
+    convenience function
     """
-    fileobj = StringIO()
-    ldif_writer = LDIFWriter(fileobj, base64_attrs, cols, '\n')
-    ldif_writer.unparse(dn, record)
-    res = fileobj.getvalue()
-    fileobj.close()
+    with StringIO() as fileobj:
+        ldif_writer = LDIFWriter(fileobj, **kwargs)
+        ldif_writer.unparse(dn, record)
+        res = fileobj.getvalue()
     return res
 
 
@@ -264,12 +251,9 @@ class LDIFParser(object):
         except EOFError:
             self._last_line = ''
 
-    def handle(self, dn, entry):
-        """
-        Process a single content LDIF record. This method should be
-        implemented by applications using LDIFParser.
-        """
-        pass
+    @classmethod
+    def fromstring(cls, ldif_str, **kwargs):
+        return cls(StringIO(ldif_str), **kwargs)
 
     def _readline(self):
         line = self._input_file.readline()
@@ -410,7 +394,7 @@ class LDIFParser(object):
                     key, val = None, None
 
             # handle record
-            self.handle(dn, entry)
+            yield (dn, entry)
             self.records_read = self.records_read + 1
             # Consume empty separator line(s)
             key, val = self._consume_empty_lines()
@@ -421,13 +405,6 @@ class LDIFParser(object):
         Invokes LDIFParser.parse_entry_records() for backward compability
         """
         return self.parse_entry_records()
-
-    def handle_modify(self, dn, modops, controls=None):
-        """
-        Process a single LDIF record representing a single modify operation.
-        This method should be implemented by applications using LDIFParser.
-        """
-        pass
 
     def parse_change_records(self):
         """
@@ -518,7 +495,7 @@ class LDIFParser(object):
                     key, val = None, None
                 if modops:
                     # append entry to result list
-                    self.handle_modify(dn, modops, controls)
+                    yield (dn, modops, controls)
             else:
                 # Consume the unhandled change record
                 while key != None:
@@ -536,98 +513,17 @@ class LDIFParser(object):
 
         return # parse_change_records()
 
+    def list_entry_records(self):
+        return list(self.parse_entry_records())
 
-class LDIFRecordList(LDIFParser):
+    def list_change_records(self):
+        return list(self.parse_change_records())
+
+
+def ParseLDIF(fileobj, **kwargs):
     """
-    Collect all records of LDIF input into a single list.
-    of 2-tuples (dn,entry). It can be a memory hog!
-    """
-
-    def __init__(
-            self,
-            input_file,
-            ignored_attr_types=None,
-            max_entries=0,
-            process_url_schemes=None,
-        ):
-        """
-        See LDIFParser.__init__()
-
-        Additional Parameters:
-        all_records
-            List instance for storing parsed records
-        """
-        LDIFParser.__init__(
-            self,
-            input_file,
-            ignored_attr_types,
-            max_entries,
-            process_url_schemes,
-        )
-        self.all_records = []
-        self.all_modify_changes = []
-
-    def handle(self, dn, entry):
-        """
-        Append single record to dictionary of all records.
-        """
-        self.all_records.append((dn, entry))
-
-    def handle_modify(self, dn, modops, controls=None):
-        """
-        Process a single LDIF record representing a single modify operation.
-        This method should be implemented by applications using LDIFParser.
-        """
-        controls = [] or None
-        self.all_modify_changes.append((dn, modops, controls))
-
-
-class LDIFCopy(LDIFParser):
-    """
-    Copy LDIF input to LDIF output containing all data retrieved
-    via URLs
-    """
-
-    def __init__(
-            self,
-            input_file,
-            output_file,
-            ignored_attr_types=None,
-            max_entries=0,
-            process_url_schemes=None,
-            base64_attrs=None,
-            cols=76,
-            line_sep='\n',
-        ):
-        """
-        See LDIFParser.__init__() and LDIFWriter.__init__()
-        """
-        LDIFParser.__init__(
-            self,
-            input_file,
-            ignored_attr_types,
-            max_entries,
-            process_url_schemes,
-        )
-        self._output_ldif = LDIFWriter(output_file, base64_attrs, cols, line_sep)
-
-    def handle(self, dn, entry):
-        """
-        Write single LDIF record to output file.
-        """
-        self._output_ldif.unparse(dn, entry)
-
-
-def ParseLDIF(fileobj, ignore_attrs=None, maxentries=0):
-    """
-    Parse LDIF records read from file.
+    Parse LDIF records read from file object.
     This is a compability function. Use is deprecated!
     """
-    ldif_parser = LDIFRecordList(
-        fileobj,
-        ignored_attr_types=ignore_attrs,
-        max_entries=maxentries,
-        process_url_schemes=0,
-    )
-    ldif_parser.parse()
-    return ldif_parser.all_records
+    ldif_parser = LDIFParser(fileobj, **kwargs)
+    return ldif_parser.list_entry_records()

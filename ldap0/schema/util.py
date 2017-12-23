@@ -11,7 +11,7 @@ from ..pkginfo import __version__, __author__, __license__
 from ..cidict import cidict
 from ..ldapurl import LDAPUrl
 from ..ldapobject import LDAPObject
-from ..ldif import LDIFRecordList
+from ..ldif import LDIFParser
 from ..schema import SubSchema, SCHEMA_ATTRS, SCHEMA_CLASS_MAPPING
 
 
@@ -48,9 +48,9 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True):
         del ldap_conn
     else:
         ldif_file = urlopen(uri)
-        ldif_parser = LDIFRecordList(ldif_file, max_entries=1)
-        ldif_parser.parse()
-        subschemasubentry_dn, s_temp = ldif_parser.all_records[0]
+        ldif_parser = LDIFParser(ldif_file, max_entries=1)
+        ldif_res = ldif_parser.list_entry_records()
+        subschemasubentry_dn, s_temp = ldif_res[0]
     # Work-around for mixed-cased attribute names
     subschemasubentry_entry = cidict()
     s_temp = s_temp or {}

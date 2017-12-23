@@ -21,7 +21,7 @@ import _libldap0
 import ldap0.ldapobject
 from .filter import escape_filter_chars
 import ldap0.modlist
-from .ldif import LDIFRecordList
+from .ldif import LDIFParser
 
 # a template string for generating simple slapd.conf file
 SLAPD_CONF_TEMPLATE = r"""
@@ -432,9 +432,8 @@ class SlapdTestCase(unittest.TestCase):
         schema_entries = []
         for schema_filename in schema_files or []:
             with open(os.path.join(self.server.SCHEMADIR, schema_filename), 'rb') as schema_file:
-                ldif_parser = LDIFRecordList(schema_file)
-                ldif_parser.parse()
-            schema_entries.extend(ldif_parser.all_records)
+                ldif_parser = LDIFParser(schema_file)
+                schema_entries.extend(ldif_parser.parse())
         try:
             for dn, entry in schema_entries:
                 self._ldap_conn.add_s(dn, entry)
