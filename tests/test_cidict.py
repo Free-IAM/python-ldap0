@@ -31,6 +31,9 @@ class TestCidict(unittest.TestCase):
         cix["xYZ"] = 987
         self.assertEqual(cix["XyZ"], 987)
         self.assertEqual(cix.get("xyz", None), 987)
+        self.assertEqual(cix.has_key("xyz"), True)
+        self.assertEqual(cix.has_key("Xyz"), True)
+        self.assertEqual("xyz" in cix, True)
         cix_keys = cix.keys()
         cix_keys.sort()
         self.assertEqual(cix_keys, ['AbCDeF','xYZ'])
@@ -40,6 +43,7 @@ class TestCidict(unittest.TestCase):
         del cix["abcdEF"]
         self.assertEqual("abcdef" in cix, False)
         self.assertEqual("AbCDef" in cix._keys, False)
+        self.assertEqual("abcdef" in cix, False)
         self.assertEqual(cix.has_key("abcdef"), False)
 
 
