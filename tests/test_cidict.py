@@ -8,7 +8,7 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
-import ldap0, ldap0.cidict
+import ldap0.cidict
 
 
 class TestCidict(unittest.TestCase):
@@ -17,9 +17,6 @@ class TestCidict(unittest.TestCase):
     """
 
     def test_cidict(self):
-        """
-        test function is_dn()
-        """
         data = {
             'AbCDeF':123,
         }
@@ -36,10 +33,10 @@ class TestCidict(unittest.TestCase):
         self.assertEqual("xyz" in cix, True)
         cix_keys = cix.keys()
         cix_keys.sort()
-        self.assertEqual(cix_keys, ['AbCDeF','xYZ'])
+        self.assertEqual(cix_keys, ['AbCDeF', 'xYZ'])
         cix_items = cix.items()
         cix_items.sort()
-        self.assertEqual(cix_items, [('AbCDeF',123), ('xYZ',987)])
+        self.assertEqual(cix_items, [('AbCDeF', 123), ('xYZ', 987)])
         del cix["abcdEF"]
         self.assertEqual("abcdef" in cix, False)
         self.assertEqual("AbCDef" in cix._keys, False)
