@@ -10,24 +10,28 @@ class TemplateEntry(object):
     """
     Base class typically not directly used
     """
-    dn_template = ''
-    entry_template = {'objectClass': ['top']}
+    t_dn = None
+    t_entry = None
 
-    def __init__(self, data):
+    def __init__(self, t_dn=None, t_entry=None):
         # Strip out empty values
-        self.data = data
+        if t_dn is not None:
+            self.t_dn = t_dn
+        if t_entry is not None:
+            self.t_entry = t_entry
 
-    def ldap_entry(self):
+    def ldap_entry(self, data_dict):
         """
-        returns LDAP entry derived from data as 2-tuple (dn, entry)
+        returns 2-tuple (dn, entry) derived from
+        string-keyed, single-valued :data_dict:
         """
         ldap_entry = {}
-        for attr_type in self.entry_template:
+        for attr_type in self.t_entry:
             attr_values = []
             attr_value_set = set()
-            for av_template in self.entry_template[attr_type]:
+            for av_template in self.t_entry[attr_type]:
                 try:
-                    attr_value = av_template.format(**self.data)
+                    attr_value = av_template.format(**data_dict)
                 except KeyError:
                     continue
                 if attr_value and attr_value not in attr_value_set:
@@ -35,5 +39,5 @@ class TemplateEntry(object):
                     attr_value_set.add(attr_value)
             if attr_values:
                 ldap_entry[attr_type] = attr_values
-        ldap_dn = self.dn_template.format(**self.data)
+        ldap_dn = self.t_dn.format(**data_dict)
         return (ldap_dn, ldap_entry) # end of ldap_entry()
