@@ -195,7 +195,7 @@ class LDIFParser(object):
             self,
             input_file,
             ignored_attr_types=None,
-            max_entries=0,
+            max_entries=None,
             process_url_schemes=None,
             line_sep='\n'
         ):
@@ -322,12 +322,14 @@ class LDIFParser(object):
             key, val = None, None
         return key, val
 
-    def parse_entry_records(self):
+    def parse_entry_records(self, max_entries=None):
         """
-        Continously read and parse LDIF entry records
+        parse LDIF entry records
         """
         # Local symbol for better performance
         next_key_and_value = self._next_key_and_value
+        if max_entries is None:
+            max_entries = self._max_entries
 
         try:
             # Consume empty lines
@@ -341,7 +343,7 @@ class LDIFParser(object):
 
         # Loop for processing whole records
         while key != None and \
-              (not self._max_entries or self.records_read < self._max_entries):
+              (max_entries is None or self.records_read < max_entries):
             # Consume first line which must start with "dn: "
             if key != 'dn':
                 raise ValueError(
@@ -383,18 +385,21 @@ class LDIFParser(object):
             key, val = self._consume_empty_lines()
         return # parse_entry_records()
 
-    def parse(self):
+    def parse(self, max_entries=None):
         """
         Invokes LDIFParser.parse_entry_records() for backward compability
         """
-        return self.parse_entry_records()
+        return self.parse_entry_records(max_entries=max_entries)
 
-    def parse_change_records(self):
+    def parse_change_records(self, max_entries=None):
         """
         parse LDIF change records
         """
         # Local symbol for better performance
         next_key_and_value = self._next_key_and_value
+        if max_entries is None:
+            max_entries = self._max_entries
+
         # Consume empty lines
         key, val = self._consume_empty_lines()
         # Consume 'version' line
@@ -404,7 +409,7 @@ class LDIFParser(object):
 
         # Loop for processing whole records
         while key != None and \
-              (not self._max_entries or self.records_read < self._max_entries):
+              (max_entries is None or self.records_read < max_entries):
             # Consume first line which must start with "dn: "
             if key != 'dn':
                 raise ValueError(

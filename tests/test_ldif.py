@@ -27,7 +27,7 @@ class TestLDIFParser(unittest.TestCase):
             self,
             ldif_string,
             ignored_attr_types=None,
-            max_entries=0,
+            max_entries=None,
         ):
         """
         Parse LDIF data in `ldif_string' into list of records
@@ -62,7 +62,7 @@ class TestLDIFParser(unittest.TestCase):
             ldif_string,
             records,
             ignored_attr_types=None,
-            max_entries=0
+            max_entries=None,
     ):
         """
         Checks whether entry records in `ldif_string' gets correctly parsed
