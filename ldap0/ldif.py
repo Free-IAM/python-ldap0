@@ -22,14 +22,8 @@ from .pkginfo import __version__, __author__, __license__
 from .dn import is_dn
 
 __all__ = [
-    # functions
-    'CreateLDIF',
-    'ParseLDIF',
-    # classes
     'LDIFWriter',
     'LDIFParser',
-    'LDIFRecordList',
-    'LDIFCopy',
 ]
 
 MOD_OP_INTEGER = {
@@ -184,17 +178,6 @@ class LDIFWriter(object):
         # Count records written
         self.records_written = self.records_written+1
         return # unparse()
-
-
-def CreateLDIF(dn, record, **kwargs):
-    """
-    convenience function
-    """
-    with StringIO() as fileobj:
-        ldif_writer = LDIFWriter(fileobj, **kwargs)
-        ldif_writer.unparse(dn, record)
-        res = fileobj.getvalue()
-    return res
 
 
 class LDIFParser(object):
@@ -518,12 +501,3 @@ class LDIFParser(object):
 
     def list_change_records(self):
         return list(self.parse_change_records())
-
-
-def ParseLDIF(fileobj, **kwargs):
-    """
-    Parse LDIF records read from file object.
-    This is a compability function. Use is deprecated!
-    """
-    ldif_parser = LDIFParser(fileobj, **kwargs)
-    return ldif_parser.list_entry_records()

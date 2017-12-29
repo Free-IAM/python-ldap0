@@ -13,14 +13,6 @@ This module parses and generates LDAP data in the format LDIF.
    :rfc:`2849` - The LDAP Data Interchange Format (LDIF) - Technical Specification
 
 
-Functions
-^^^^^^^^^
-
-.. autofunction:: ldap0.ldif.CreateLDIF
-
-.. autofunction:: ldap0.ldif.ParseLDIF
-
-
 Classes
 ^^^^^^^
 
@@ -28,12 +20,6 @@ Classes
    :members:
 
 .. autoclass:: ldap0.ldif.LDIFParser
-   :members:
-
-.. autoclass:: LDIFRecordList
-   :members:
-
-.. autoclass:: LDIFCopy
    :members:
 
 
@@ -63,19 +49,6 @@ with :mod:`ldif` module, skip some entries and write the result to stdout. ::
    import sys
    from ldap0.ldif import LDIFParser, LDIFWriter
 
-   SKIP_DN = ["uid=foo,ou=People,dc=example,dc=com",
-      "uid=bar,ou=People,dc=example,dc=com"]
-
-   class MyLDIF(LDIFParser):
-      def __init__(self,input,output):
-         LDIFParser.__init__(self,input)
-         self.writer = LDIFWriter(output)
-
-      def handle(self,dn,entry):
-         if dn in SKIP_DN:
-           return
-         self.writer.unparse(dn,entry)
-
-   parser = MyLDIF(open("input.ldif", 'rb'), sys.stdout)
-   parser.parse()
-
+   parser = LDIFParser(open("input.ldif", 'rb'), sys.stdout)
+   for dn, entry in parser.parse_entry_records():
+       print dn, entry
