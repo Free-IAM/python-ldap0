@@ -10,7 +10,7 @@ import unittest
 import ldap0.ldif
 from ldap0.schema import SubSchema
 from ldap0.schema.util import urlfetch
-from ldap0.schema.subentry import SCHEMA_CLASS_MAPPING
+from ldap0.schema.subentry import SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING
 
 TEST_SUBSCHEMA_FILES = (
     'file:tests/ldif/subschema-openldap-all.ldif',
@@ -24,6 +24,8 @@ class TestSubschemaLDIF(unittest.TestCase):
     def test_subschema_file(self):
         for test_file in TEST_SUBSCHEMA_FILES:
             _, sub_schema = urlfetch(test_file, check_uniqueness=True)
+            self.assertEqual(len(SCHEMA_ATTR_MAPPING), 8)
+            self.assertEqual(len(SCHEMA_CLASS_MAPPING), 8)
             self.assertEqual(
                 len(SCHEMA_CLASS_MAPPING),
                 len(sub_schema.name2oid),

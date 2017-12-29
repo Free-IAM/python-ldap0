@@ -6,19 +6,29 @@ ldap0.schema.subentry -  subschema subentry handling
 from __future__ import absolute_import
 
 from ..pkginfo import __version__, __author__, __license__
-from .models import AttributeType, ObjectClass, DITContentRule
+from .models import AttributeType, DITContentRule, DITStructureRule, LDAPSyntax, MatchingRule, MatchingRuleUse, NameForm, ObjectClass
 from ..cidict import cidict
 
-SCHEMA_CLASS_MAPPING = cidict()
-SCHEMA_ATTR_MAPPING = {}
-
-for _name in dir():
-    o = eval(_name)
-    if hasattr(o, 'schema_attribute'):
-        SCHEMA_CLASS_MAPPING[o.schema_attribute] = o
-        SCHEMA_ATTR_MAPPING[o] = o.schema_attribute
-
-
+SCHEMA_ATTR_MAPPING = {
+    AttributeType: AttributeType.schema_attribute,
+    DITContentRule: DITContentRule.schema_attribute,
+    DITStructureRule: DITStructureRule.schema_attribute,
+    LDAPSyntax: LDAPSyntax.schema_attribute,
+    MatchingRule: MatchingRule.schema_attribute,
+    MatchingRuleUse: MatchingRuleUse.schema_attribute,
+    NameForm: NameForm.schema_attribute,
+    ObjectClass: ObjectClass.schema_attribute,
+}
+SCHEMA_CLASS_MAPPING = cidict({
+    AttributeType.schema_attribute: AttributeType,
+    DITContentRule.schema_attribute: DITContentRule,
+    DITStructureRule.schema_attribute: DITStructureRule,
+    LDAPSyntax.schema_attribute: LDAPSyntax,
+    MatchingRule.schema_attribute: MatchingRule,
+    MatchingRuleUse.schema_attribute: MatchingRuleUse,
+    NameForm.schema_attribute: NameForm,
+    ObjectClass.schema_attribute: ObjectClass,
+})
 SCHEMA_ATTRS = SCHEMA_CLASS_MAPPING.keys()
 
 
