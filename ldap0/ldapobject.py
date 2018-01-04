@@ -282,13 +282,17 @@ class LDAPObject:
             sasl_flags=_libldap0.SASL_QUIET,
             authz_id=''
         ):
+        if not authz_id:
+            # short-cut allows really non-interactive SASL bind
+            # without the flaky C call-backs
+            return self.sasl_bind_s(None, 'EXTERNAL', '')
         auth = SaslNoninteractiveAuth(
             sasl_mech,
             authz_id=authz_id,
             trace_level=self._trace_level,
             trace_file=self._trace_file,
         )
-        self.sasl_interactive_bind_s(
+        return self.sasl_interactive_bind_s(
             '',
             auth,
             serverctrls,
