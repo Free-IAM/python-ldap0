@@ -62,7 +62,6 @@ LOCALHOST = '127.0.0.1'
 def combined_logger(
         log_name,
         log_level=logging.WARN,
-        sys_log_format='%(levelname)s %(message)s',
         console_log_format='%(asctime)s %(levelname)s %(message)s',
     ):
     """
@@ -77,15 +76,6 @@ def combined_logger(
             pass
     # for writing to syslog
     new_logger = logging.getLogger(log_name)
-    if sys_log_format:
-        my_syslog_formatter = logging.Formatter(
-            fmt=' '.join((log_name, sys_log_format)))
-        my_syslog_handler = logging.handlers.SysLogHandler(
-            address='/dev/log',
-            facility=SysLogHandler.LOG_DAEMON,
-        )
-        my_syslog_handler.setFormatter(my_syslog_formatter)
-        new_logger.addHandler(my_syslog_handler)
     if console_log_format:
         my_stream_formatter = logging.Formatter(fmt=console_log_format)
         my_stream_handler = logging.StreamHandler()
