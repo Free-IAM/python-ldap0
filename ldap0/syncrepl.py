@@ -11,7 +11,7 @@ from uuid import UUID
 from pyasn1.type import tag, namedtype, namedval, univ, constraint
 from pyasn1.codec.ber import encoder, decoder
 
-from .pkginfo import __version__, __author__, __license__
+from .__about__ import __version__, __author__, __license__
 from .controls import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 __all__ = [

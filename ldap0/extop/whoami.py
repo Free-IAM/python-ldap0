@@ -6,7 +6,7 @@ ldap0.extop.whoami - Classes for "Who am I?" extended operation
 
 from __future__ import absolute_import
 
-from ..pkginfo import __version__, __author__, __license__
+from ..__about__ import __version__, __author__, __license__
 from . import ExtendedRequest, ExtendedResponse
 
 

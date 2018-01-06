@@ -8,6 +8,8 @@ from __future__ import absolute_import
 import string
 from random import SystemRandom
 
+from .__about__ import __version__, __author__, __license__
+
 __all__ = [
     'random_string',
     'unicode_pwd',

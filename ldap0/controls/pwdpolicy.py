@@ -6,7 +6,7 @@ ldap0.controls.pwdpolicy - classes for Password Policy controls
 
 from __future__ import absolute_import
 
-from ..pkginfo import __version__, __author__, __license__
+from ..__about__ import __version__, __author__, __license__
 from . import ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 __all__ = [

@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 from urllib import urlopen
 
-from ..pkginfo import __version__, __author__, __license__
+from ..__about__ import __version__, __author__, __license__
 from ..cidict import cidict
 from ..ldapurl import LDAPUrl
 from ..ldapobject import LDAPObject

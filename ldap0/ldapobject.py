@@ -17,7 +17,7 @@ if __debug__:
 import _libldap0
 from _libldap0 import LDAPError
 
-from .pkginfo import __version__, __author__, __license__
+from .__about__ import __version__, __author__, __license__
 import ldap0
 from .lock import LDAPLock
 from .functions import _libldap0_function_call

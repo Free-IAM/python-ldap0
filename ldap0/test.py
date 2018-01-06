@@ -16,7 +16,7 @@ from logging.handlers import SysLogHandler
 import unittest
 import urllib
 
-from .pkginfo import __version__, __author__, __license__
+from .__about__ import __version__, __author__, __license__
 import _libldap0
 import ldap0.ldapobject
 from .filter import escape_filter_chars

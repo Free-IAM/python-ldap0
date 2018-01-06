@@ -6,7 +6,7 @@ ldap0.controls.vlv - classes for Virtual List View
 
 from __future__ import absolute_import
 
-from ..pkginfo import __version__, __author__, __license__
+from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 from pyasn1.type import univ, namedtype, tag, namedval

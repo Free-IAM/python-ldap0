@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 from _libldap0 import MOD_DELETE, MOD_ADD
 
-from .pkginfo import __version__, __author__, __license__
+from .__about__ import __version__, __author__, __license__
 from .schema import subentry as schema_subentry
 from .schema import models as schema_models
 

@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 import _libldap0
 
-from .pkginfo import __version__, __author__, __license__
+from .__about__ import __version__, __author__, __license__
 from .functions import _libldap0_function_call
 
 

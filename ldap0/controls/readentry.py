@@ -6,7 +6,7 @@ ldap0.controls.readentry - classes for the Read Entry controls
 
 from __future__ import absolute_import
 
-from ..pkginfo import __version__, __author__, __license__
+from ..__about__ import __version__, __author__, __license__
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 import _libldap0
 

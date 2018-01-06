@@ -5,7 +5,7 @@ ldap0.ldapurl - handling of LDAP URLs as described in RFC 4516
 
 from __future__ import absolute_import
 
-from .pkginfo import __version__, __author__, __license__
+from .__about__ import __version__, __author__, __license__
 
 __all__ = [
     # constants

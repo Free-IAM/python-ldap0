@@ -11,10 +11,6 @@
 #define _STR(x) #x
 #define STR(x) _STR(x)
 
-static char version_str[] = STR(LDAPMODULE_VERSION);
-static char author_str[] = STR(LDAPMODULE_AUTHOR);
-static char license_str[] = STR(LDAPMODULE_LICENSE);
-
 void
 LDAPinit_pkginfo( PyObject* d )
 {
@@ -22,9 +18,9 @@ LDAPinit_pkginfo( PyObject* d )
 	PyObject *author;
 	PyObject *license;
 
-	version = PyBytes_FromString(version_str);
-	author = PyBytes_FromString(author_str);
-	license = PyBytes_FromString(license_str);
+	version = PyBytes_FromString(STR(LDAP0_MODULE_VERSION));
+	author = PyBytes_FromString(STR(LDAP0_MODULE_AUTHOR));
+	license = PyBytes_FromString(STR(LDAP0_MODULE_LICENSE));
 
 	PyDict_SetItemString( d, "__version__", version );
 	PyDict_SetItemString(d, "__author__", author);

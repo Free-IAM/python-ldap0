@@ -5,7 +5,7 @@ ldap0.schema.subentry -  subschema subentry handling
 
 from __future__ import absolute_import
 
-from ..pkginfo import __version__, __author__, __license__
+from ..__about__ import __version__, __author__, __license__
 from .models import AttributeType, DITContentRule, DITStructureRule, LDAPSyntax, MatchingRule, MatchingRuleUse, NameForm, ObjectClass
 from ..cidict import cidict
 

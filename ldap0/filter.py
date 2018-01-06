@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 import time
 
-from .pkginfo import __version__, __author__, __license__
+from .__about__ import __version__, __author__, __license__
 
 from .functions import strf_secs
 

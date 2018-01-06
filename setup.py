@@ -13,7 +13,7 @@ PKG_NAME = 'ldap0'
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
 sys.path.insert(0, os.path.join(BASEDIR, PKG_NAME))
-import pkginfo
+import __about__
 
 class OpenLDAP2BuildConfig:
     """
@@ -54,17 +54,17 @@ class OpenLDAP2BuildConfig:
 
 LDAP_CLASS = OpenLDAP2BuildConfig(
     [
-        ('LDAPMODULE_VERSION', pkginfo.__version__),
-        ('LDAPMODULE_AUTHOR', pkginfo.__author__),
-        ('LDAPMODULE_LICENSE', pkginfo.__license__),
+        ('LDAP0_MODULE_VERSION', __about__.__version__),
+        ('LDAP0_MODULE_AUTHOR', __about__.__author__),
+        ('LDAP0_MODULE_LICENSE', __about__.__license__),
     ],
 )
 
 
 setup(
     name=PKG_NAME,
-    license=pkginfo.__license__,
-    version=pkginfo.__version__,
+    license=__about__.__license__,
+    version=__about__.__version__,
     description='{0} -- Python module package for implementing LDAP clients'.format(PKG_NAME),
     long_description=textwrap.dedent(
         """
@@ -80,9 +80,9 @@ setup(
         therefore uses the separate module name-space '{0}'.
         """.format(PKG_NAME)
     ).lstrip(),
-    author=pkginfo.__author__,
+    author=__about__.__author__,
     author_email='michael@stroeder.com',
-    maintainer=pkginfo.__author__,
+    maintainer=__about__.__author__,
     maintainer_email='michael@stroeder.com',
     url='https://pypi.python.org/pypi/ldap0/',
     download_url='https://pypi.python.org/pypi/%s/' % (PKG_NAME),

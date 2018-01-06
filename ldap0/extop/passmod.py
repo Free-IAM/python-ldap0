@@ -6,7 +6,7 @@ ldap0.extop.passmod - Classes for Password Modify extended operation
 
 from __future__ import absolute_import
 
-from ..pkginfo import __version__, __author__, __license__
+from ..__about__ import __version__, __author__, __license__
 from . import ExtendedRequest, ExtendedResponse
 
 # Imports from pyasn1

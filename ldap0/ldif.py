@@ -18,7 +18,7 @@ except ImportError:
 
 from _libldap0 import MOD_ADD, MOD_DELETE, MOD_REPLACE, MOD_INCREMENT
 
-from .pkginfo import __version__, __author__, __license__
+from .__about__ import __version__, __author__, __license__
 from .dn import is_dn
 
 __all__ = [
