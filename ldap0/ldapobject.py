@@ -31,6 +31,7 @@ from .extop.passmod import PassmodRequest, PassmodResponse
 from .extop.cancel import CancelRequest, CancelResponse
 from .sasl import SaslNoninteractiveAuth
 from .modlist import add_modlist
+from .ldapurl import LDAPUrl
 
 __all__ = [
     'NO_UNIQUE_ENTRY',
@@ -75,12 +76,19 @@ class LDAPObject:
         self._trace_level = trace_level
         self._trace_file = trace_file or ldap0._trace_file
         self._trace_stack_limit = trace_stack_limit
-        self._uri = self.uri = uri
+        if isinstance(uri, str):
+            ldap_url = LDAPUrl(uri)
+        elif isinstance(uri, LDAPUrl):
+            ldap_url = uri
+        else:
+            raise TypeError('Expected uri to be of type LDAPUrl or str, got %r' % (uri))
         self._libldap0_lock = LDAPLock(
             desc='_libldap0_lock within %r' % self,
             trace_level=trace_level,
         )
-        self._l = _libldap0_function_call(_libldap0.initialize, self._uri)
+        conn_uri = ldap_url.connect_uri()
+        self._l = _libldap0_function_call(_libldap0.initialize, conn_uri)
+        self._uri = self.uri = conn_uri
         self.timeout = -1
         self.protocol_version = _libldap0.VERSION3
         self.cache_ttl = cache_ttl

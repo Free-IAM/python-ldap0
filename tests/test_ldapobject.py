@@ -14,6 +14,7 @@ import time
 os.environ['LDAPNOINIT'] = '1'
 
 import ldap0
+from ldap0.ldapurl import LDAPUrl
 from ldap0.sasl import SaslPasswordAuth
 from ldap0.test import SlapdTestCase
 from ldap0.ldapobject import LDAPObject, ReconnectLDAPObject
@@ -108,6 +109,12 @@ class Test00_LDAPObject(SlapdTestCase):
     def test000_basics(self):
         self.assertEqual(self._ldap_conn.protocol_version, 3)
         self.assertIsInstance(self._ldap_conn.fileno(), int)
+        with self.assertRaises(TypeError):
+            self.ldap_object_class(0)
+        with self.assertRaises(ValueError):
+            self.ldap_object_class('ldap.example.com')
+        with self.ldap_object_class(LDAPUrl(self.server.ldap_uri)) as l:
+            self.assertEqual(l.uri, LDAPUrl(self.server.ldap_uri).connect_uri())
 
     def test001_search_subtree(self):
         result = self._ldap_conn.search_s(
