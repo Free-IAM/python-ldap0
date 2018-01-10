@@ -417,5 +417,21 @@ class TestLDAPUrl(unittest.TestCase):
         if failed_urls:
           self.fail("These LDAP URLs should have raised ValueError: %r" % failed_urls)
 
+    def test_connect_uri(self):
+        for url, uri in (
+            ('ldap:///o=University%20of%20Michigan,c=US', 'ldap://'),
+            ('ldap://ldap.itd.umich.edu/o=University%20of%20Michigan,c=US', 'ldap://ldap.itd.umich.edu'),
+            ('ldap://host.com:6666/o=University%20of%20Michigan,', 'ldap://host.com:6666'),
+            ('ldap://ldap.nameflow.net:1389/c%3dDE', 'ldap://ldap.nameflow.net:1389'),
+            ('ldap://root.openldap.org/dc=openldap,dc=org', 'ldap://root.openldap.org'),
+            ('ldap://x500.mh.se/o=Mitthogskolan,c=se????1.2.752.58.10.2=T.61', 'ldap://x500.mh.se'),
+            ('ldap://localhost:1389/ou%3DUnstructured%20testing%20tree??one', 'ldap://localhost:1389'),
+            ('ldapi:///dc=stroeder,dc=de????x-saslmech=EXTERNAL', 'ldapi://'),
+            ('ldapi://%2Fopt%2Fae-dir%2Frun%2Fslapd%2Fldapi/ou=ae-dir????bindname=aead', 'ldapi://%2Fopt%2Fae-dir%2Frun%2Fslapd%2Fldapi'),
+        ):
+            self.assertEqual(LDAPUrl(url).connect_uri(), uri)
+            self.assertEqual(LDAPUrl(url).initializeUrl(), uri)
+
+
 if __name__ == '__main__':
     unittest.main()

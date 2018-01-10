@@ -342,21 +342,10 @@ class LDAPUrl(object):
                 self.extensions = None
         return
 
-    def applyDefaults(self, defaults):
+    def connect_uri(self):
         """
-        Apply defaults to all class attributes which are None.
-
-        defaults
-            Dictionary containing a mapping from class attributes
-            to default values
-        """
-        for key in defaults.keys():
-            if getattr(self, key) is None:
-                setattr(self, key, defaults[key])
-
-    def initializeUrl(self):
-        """
-        Returns LDAP URL suitable to be passed to ldap.initialize()
+        Returns LDAP URL suitable to be passed to
+        ldap0.ldapobject.LDAPObject()
         """
         if self.urlscheme == 'ldapi':
             # hostport part might contain slashes when ldapi:// is used
@@ -364,6 +353,12 @@ class LDAPUrl(object):
         else:
             hostport = self.hostport
         return '%s://%s' % (self.urlscheme, hostport)
+
+    def initializeUrl(self):
+        """
+        backward-compatible wrapper for LDAPUrl.connect_uri()
+        """
+        return self.connect_uri()
 
     def unparse(self):
         """
