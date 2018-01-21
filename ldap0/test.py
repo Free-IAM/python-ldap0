@@ -12,7 +12,6 @@ import socket
 import time
 import subprocess
 import logging
-from logging.handlers import SysLogHandler
 import unittest
 import urllib
 
@@ -65,8 +64,7 @@ def combined_logger(
         console_log_format='%(asctime)s %(levelname)s %(message)s',
     ):
     """
-    Returns a combined SysLogHandler/StreamHandler logging instance
-    with formatters
+    Returns a StreamHandler logging instance with formatters
     """
     if 'LOGLEVEL' in os.environ:
         log_level = os.environ['LOGLEVEL']
