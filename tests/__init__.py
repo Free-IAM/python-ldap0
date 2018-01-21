@@ -5,6 +5,7 @@ Automatic tests for ldap0
 
 from __future__ import absolute_import
 
+from . import test_about
 from . import test_cext
 from . import test_cidict
 from . import test_dn
