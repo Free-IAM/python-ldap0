@@ -13,6 +13,7 @@ import time
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
 
+import _libldap0
 import ldap0
 from ldap0.ldapurl import LDAPUrl
 from ldap0.sasl import SaslPasswordAuth
@@ -692,7 +693,14 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
                 (bind_dn, 'user1_pw'),
                 {}
             ),
-            '_options': [(17, 3), (9, 0), (2, 0), (8, 0)],
+            '_options': [
+                # default options set in LDAPObject.__init__()
+                (_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION3),
+                (_libldap0.OPT_RESTART, _libldap0.OPT_OFF),
+                (_libldap0.OPT_DEREF, _libldap0.OPT_OFF),
+                (_libldap0.OPT_REFERRALS, _libldap0.OPT_OFF),
+                (_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_HARD),
+            ],
             '_reconnects_done': 0,
             '_retry_delay': 60.0,
             '_retry_max': 1,
