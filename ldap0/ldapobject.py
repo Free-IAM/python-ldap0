@@ -96,6 +96,7 @@ class LDAPObject:
         self.set_option(_libldap0.OPT_RESTART, _libldap0.OPT_OFF)
         self.set_option(_libldap0.OPT_DEREF, _libldap0.OPT_OFF)
         self.set_option(_libldap0.OPT_REFERRALS, _libldap0.OPT_OFF)
+        self.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_HARD)
 
     def _ldap_call(self, func, *args, **kwargs):
         """
