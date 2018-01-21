@@ -25,7 +25,6 @@
 	( (*(a)==*(b)) && 0==strcmp(a,b) )
 
 void LDAPadd_methods( PyObject*d, PyMethodDef*methods );
-#define PyNone_Check(o) ((o) == Py_None)
 
 #if PY_MAJOR_VERSION >= 3
 #define PyInt_FromLong PyLong_FromLong

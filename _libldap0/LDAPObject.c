@@ -324,7 +324,7 @@ l_ldap_unbind_ext( LDAPObject* self, PyObject* args )
     if (!PyArg_ParseTuple( args, "|O", &serverctrls)) return NULL;
     if (not_valid(self)) return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
@@ -357,7 +357,7 @@ l_ldap_abandon_ext( LDAPObject* self, PyObject* args )
     if (!PyArg_ParseTuple( args, "i|O", &msgid, &serverctrls)) return NULL;
     if (not_valid(self)) return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
@@ -396,7 +396,7 @@ l_ldap_add_ext( LDAPObject* self, PyObject *args )
     if (mods == NULL)
         return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs)) {
             LDAPMods_DEL( mods );
             return NULL;
@@ -433,7 +433,7 @@ l_ldap_simple_bind( LDAPObject* self, PyObject* args )
 
     if (not_valid(self)) return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
@@ -575,7 +575,7 @@ l_ldap_sasl_bind_s( LDAPObject* self, PyObject* args )
 
     cred.bv_len = cred_len;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
@@ -620,7 +620,7 @@ l_ldap_sasl_interactive_bind_s( LDAPObject* self, PyObject* args )
 
     if (not_valid(self)) return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
@@ -674,7 +674,7 @@ l_ldap_compare_ext( LDAPObject* self, PyObject *args )
 
     if (not_valid(self)) return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
@@ -707,7 +707,7 @@ l_ldap_delete_ext( LDAPObject* self, PyObject *args )
     if (!PyArg_ParseTuple( args, "s|O", &dn, &serverctrls)) return NULL;
     if (not_valid(self)) return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
@@ -746,7 +746,7 @@ l_ldap_modify_ext( LDAPObject* self, PyObject *args )
     if (mods == NULL)
         return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs)) {
             LDAPMods_DEL( mods );
             return NULL;
@@ -785,7 +785,7 @@ l_ldap_rename( LDAPObject* self, PyObject *args )
         return NULL;
     if (not_valid(self)) return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
@@ -980,7 +980,7 @@ l_ldap_search_ext( LDAPObject* self, PyObject* args )
         tvp = NULL;
     }
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs)) {
             free_attrs( &attrs,  attrs_seq);
             return NULL;
@@ -1075,7 +1075,7 @@ l_ldap_extended_operation( LDAPObject* self, PyObject *args )
 
     if (not_valid(self)) return NULL;
 
-    if (!PyNone_Check(serverctrls)) {
+    if (serverctrls != Py_None) {
         if (!LDAPControls_from_object(serverctrls, &server_ldcs))
             return NULL;
     }
