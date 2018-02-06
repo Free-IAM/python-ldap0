@@ -1,7 +1,6 @@
 /*
  * errors that arise from ldap use
- * Most errors become their own exception
- * See https://www.python-ldap.org/ for details. */
+ * Most errors become their own exception */
 
 #include "common.h"
 #include "errors.h"
@@ -130,7 +129,7 @@ void
 LDAPinit_errors( PyObject*d ) {
 
         /* create the base exception class */
-        LDAPexception_class = PyErr_NewException("ldap.LDAPError",
+        LDAPexception_class = PyErr_NewException("ldap0.LDAPError",
                                                   NULL,
                                                   NULL);
         PyDict_SetItemString( d, "LDAPError", LDAPexception_class );
@@ -145,7 +144,7 @@ LDAPinit_errors( PyObject*d ) {
 
 
 # define seterrobj(n) { \
-    PyObject *e = PyErr_NewException("ldap." #n,    \
+    PyObject *e = PyErr_NewException("ldap0." #n,    \
     LDAPexception_class, NULL);   \
     seterrobj2(n, e);         \
     Py_INCREF(e);           \
