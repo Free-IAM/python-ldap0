@@ -158,7 +158,7 @@ def modify_modlist2(
     modlist = []
 
     # Sanitize new_entry
-    for attr_type in new_entry:
+    for attr_type in new_entry.keys():
         # Filter away list items which are empty strings or None
         new_entry[attr_type] = filter(None, new_entry[attr_type])
         # Check for attributes with empty value lists
@@ -166,8 +166,8 @@ def modify_modlist2(
             # Remove the empty attribute
             del new_entry[attr_type]
 
-    for attrtype in new_entry:
-        if sub_schema.getoid(at_class, attrtype) in ignore_attr_types:
+    for attr_type in new_entry.keys():
+        if sub_schema.getoid(at_class, attr_type) in ignore_attr_types:
             # This attribute type is ignored
             continue
 
@@ -176,7 +176,7 @@ def modify_modlist2(
         try:
             at_eq_mr = sub_schema.get_inheritedattr(
                 at_class,
-                attrtype,
+                attr_type,
                 'equality',
             )
         except KeyError:
@@ -188,8 +188,8 @@ def modify_modlist2(
                 mr_obj = None
 
         # Filter away list items which are empty strings or None
-        new_value = new_entry[attrtype]
-        old_value = filter(None, old_entry.get(attrtype, []))
+        new_value = new_entry[attr_type]
+        old_value = filter(None, old_entry.get(attr_type, []))
 
         # We have to check if attribute value lists differs
         old_value_set = set(old_value)
@@ -203,32 +203,32 @@ def modify_modlist2(
                 del_values = [v for v in old_value if not v in new_value_set]
                 add_values = [v for v in new_value if not v in old_value_set]
                 if old_value and del_values:
-                    modlist.append((MOD_DELETE, attrtype, del_values))
+                    modlist.append((MOD_DELETE, attr_type, del_values))
                 if new_value and add_values:
-                    modlist.append((MOD_ADD, attrtype, add_values))
+                    modlist.append((MOD_ADD, attr_type, add_values))
             else:
                 # for few values be order-preserving
                 if new_value and old_value != new_value:
                     if old_value:
-                        modlist.append((MOD_DELETE, attrtype, old_value))
-                    modlist.append((MOD_ADD, attrtype, new_value))
+                        modlist.append((MOD_DELETE, attr_type, old_value))
+                    modlist.append((MOD_ADD, attr_type, new_value))
         elif new_value and old_value != new_value:
             if old_value:
-                modlist.append((MOD_DELETE, attrtype, None))
-            modlist.append((MOD_ADD, attrtype, new_value))
+                modlist.append((MOD_DELETE, attr_type, None))
+            modlist.append((MOD_ADD, attr_type, new_value))
 
     # Remove all attributes of old_entry which are not present
     # in new_entry at all
     if not ignore_oldexistent:
-        for attrtype, old_values in old_entry.items():
+        for attr_type, old_values in old_entry.items():
             if old_values and \
                old_values != [''] and \
-               not attrtype in new_entry and \
-               not sub_schema.getoid(at_class, attrtype) in ignore_attr_types:
+               not attr_type in new_entry and \
+               not sub_schema.getoid(at_class, attr_type) in ignore_attr_types:
                 try:
                     at_eq_mr = sub_schema.get_inheritedattr(
                         at_class,
-                        attrtype,
+                        attr_type,
                         'equality',
                     )
                 except KeyError:
@@ -236,10 +236,10 @@ def modify_modlist2(
                 if at_eq_mr:
                     mr_obj = sub_schema.get_obj(mr_class, at_eq_mr)
                     if mr_obj:
-                        modlist.append((MOD_DELETE, attrtype, old_values))
+                        modlist.append((MOD_DELETE, attr_type, old_values))
                     else:
-                        modlist.append((MOD_DELETE, attrtype, None))
+                        modlist.append((MOD_DELETE, attr_type, None))
                 else:
-                    modlist.append((MOD_DELETE, attrtype, None))
+                    modlist.append((MOD_DELETE, attr_type, None))
 
     return modlist # modify_modlist2()
