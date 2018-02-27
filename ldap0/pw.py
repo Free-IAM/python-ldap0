@@ -13,6 +13,8 @@ from .__about__ import __version__, __author__, __license__
 __all__ = [
     'random_string',
     'unicode_pwd',
+    'PWD_ALPHABET',
+    'PWD_OCTETS_ALPHABET',
 ]
 
 # default length for generated passwords
@@ -20,6 +22,9 @@ PWD_LENGTH = 40
 
 # alphabet used for generated passwords
 PWD_ALPHABET = string.ascii_letters + string.digits
+
+# Alphabet for encrypted passwords (see module crypt)
+PWD_UNIX_CRYPT_ALPHABET = './0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 # alphabet used for generating completely random byte strings
 PWD_OCTETS_ALPHABET = (
