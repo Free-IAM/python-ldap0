@@ -10,8 +10,24 @@ from ..__about__ import __version__, __author__, __license__
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 import _libldap0
 
+from pyasn1.type import namedtype, univ
 from pyasn1.codec.ber import encoder, decoder
+from pyasn1.error import PyAsn1Error
+
 from pyasn1_modules.rfc2251 import AttributeDescriptionList, SearchResultEntry
+from pyasn1_modules.rfc2251 import LDAPDN, PartialAttributeList
+
+
+class OpenLDAPITS6899SearchResultEntry(univ.Sequence):
+    """
+    This is an ASN.1 description of SearchResultEntry not compliant to LDAPv3
+    which implements a work-around for OpenLDAP's ITS#6899
+    """
+    tagSet = univ.Sequence.tagSet # work-around: instead of implicit tagging
+    componentType = namedtype.NamedTypes(
+        namedtype.NamedType('objectName', LDAPDN()),
+        namedtype.NamedType('attributes', PartialAttributeList())
+    )
 
 
 class ReadEntryControl(LDAPControl):
@@ -41,10 +57,16 @@ class ReadEntryControl(LDAPControl):
         return encoder.encode(attributeSelection)
 
     def decodeControlValue(self, encodedControlValue):
-        decodedEntry, _ = decoder.decode(
-            encodedControlValue,
-            asn1Spec=SearchResultEntry(),
-        )
+        try:
+            decodedEntry,_ = decoder.decode(
+                encodedControlValue,
+                asn1Spec=SearchResultEntry(),
+            )
+        except PyAsn1Error:
+            decodedEntry,_ = decoder.decode(
+                encodedControlValue,
+                asn1Spec=OpenLDAPITS6899SearchResultEntry(),
+            )
         self.dn = str(decodedEntry[0])
         self.entry = {}
         for attr in decodedEntry[1]:
