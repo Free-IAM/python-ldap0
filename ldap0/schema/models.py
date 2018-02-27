@@ -5,6 +5,7 @@ ldap0.schema.models - support for subSchemaSubEntry information
 
 from __future__ import absolute_import
 
+import collections
 from UserDict import IterableUserDict
 
 from ..__about__ import __version__, __author__, __license__
@@ -23,6 +24,7 @@ __all__ = [
     'NameForm',
     'ObjectClass',
     'SchemaElement',
+    'SchemaElementOIDSet',
     'NOT_HUMAN_READABLE_LDAP_SYNTAXES',
 ]
 
@@ -636,6 +638,87 @@ class NameForm(SchemaElement):
         return '( %s )' % ''.join(result)
 
 
+class SchemaElementOIDSet(collections.MutableSet):
+    """
+    set-like class which handles OIDs and NAMEs of schema elements
+    """
+
+    def __init__(self, schema, se_class, nameoroids):
+        self._schema = schema
+        self._se_class = se_class
+        self._nameoroid_dict = {}
+        self._nameoroid_list = []
+        nameoroids = filter(None, [nameoroid.strip() for nameoroid in nameoroids])
+        for nameoroid in nameoroids:
+            self.add(nameoroid)
+
+    def __iter__(self):
+        return self._nameoroid_list.__iter__()
+
+    def __len__(self):
+        return len(self._nameoroid_dict)
+
+    def discard(self, nameoroid):
+        oid = self._schema.getoid(self._se_class, nameoroid, raise_keyerror=0).lower()
+        try:
+            del self._nameoroid_dict[oid]
+        except KeyError:
+            pass
+        else:
+            self._nameoroid_list.remove(oid)
+
+    def __contains__(self, nameoroid):
+        oid = self._schema.getoid(self._se_class, nameoroid, raise_keyerror=0).lower()
+        return oid in self._nameoroid_dict
+
+    def intersection(self, s):
+        return SchemaElementOIDSet(
+            self._schema,
+            self._se_class,
+            [
+                i
+                for i in s
+                if i in self
+            ]
+        )
+
+    def add(self, se_name):
+        se_name = se_name.strip()
+        if se_name[0] == '@':
+            assert self._se_class == AttributeType, ValueError('@-form only possible with AttributeType')
+            must_attr, may_attr = self._schema.attribute_types(
+                (se_name[1:],),
+                attr_type_filter=None,
+                raise_keyerror=0,
+                ignore_dit_content_rule=1
+            )
+            at_list = [
+                (at_oid, (at_obj.names or [at_oid])[0])
+                for at_oid, at_obj in must_attr.items()+may_attr.items()
+            ]
+        else:
+            at_list = [
+                (
+                    self._schema.getoid(self._se_class, se_name, raise_keyerror=0).lower(),
+                    se_name
+                )
+            ]
+        for at_oid, at_name in at_list:
+            if not at_oid in self._nameoroid_dict:
+                self._nameoroid_dict[at_oid] = at_name
+                self._nameoroid_list.append(at_oid)
+
+    def update(self, seq):
+        for item in seq:
+            self.add(item)
+
+    def names(self):
+        return [
+            self._nameoroid_dict[se_oid]
+            for se_oid in self._nameoroid_list
+        ]
+
+
 class Entry(IterableUserDict):
     """
     Schema-aware implementation of an LDAP entry class.
@@ -677,7 +760,13 @@ class Entry(IterableUserDict):
         return self._at2key(nameoroid) in self.data
 
     def __getitem__(self, nameoroid):
-        return self.data[self._at2key(nameoroid)]
+        try:
+            return self.data[self._at2key(nameoroid)]
+        except KeyError as err:
+            if self.dn != None and nameoroid.lower() in ('entrydn', '1.3.6.1.1.20'):
+                return [self.dn]
+            else:
+                raise err
 
     def __setitem__(self, nameoroid, attr_values):
         k = self._at2key(nameoroid)
@@ -718,3 +807,36 @@ class Entry(IterableUserDict):
             attr_type_filter,
             raise_keyerror,
         )
+
+    def object_class_oid_set(self):
+        try:
+            object_classes = self.__getitem__('objectClass')
+        except KeyError:
+            object_classes = []
+        return SchemaElementOIDSet(self._s, ObjectClass, object_classes)
+
+    def get_structural_oc(self):
+        try:
+            structural_object_class_oid = self._s.getoid(
+                ObjectClass,
+                self.__getitem__('structuralObjectClass')[-1]
+            )
+        except (KeyError, IndexError):
+            try:
+                structural_object_class_oid = self._s.get_structural_oc(
+                    self.__getitem__('objectClass')
+                )
+            except KeyError:
+                return None
+        return structural_object_class_oid
+
+    def get_possible_dit_structure_rules(self, dn):
+        try:
+            structural_oc = self.get_structural_oc()
+        except KeyError:
+            return None
+        else:
+            return self._s.get_possible_dit_structure_rules(dn, structural_oc)
+
+    def get_rdn_templates(self):
+        return self._s.get_rdn_templates(self.get_structural_oc())
