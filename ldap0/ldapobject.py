@@ -592,7 +592,8 @@ class LDAPObject:
             if cache_key_args[0].lower() == entry_dn:
                 del self._cache[cache_key_args]
             else:
-                for cached_dn, _ in cached_results[2]:
+                for cached_res in cached_results[2]:
+                    cached_dn = cached_res[0]
                     if not cached_dn is None and cached_dn.lower() == entry_dn:
                         del self._cache[cache_key_args]
                         break # stop looping through results
