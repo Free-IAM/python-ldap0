@@ -30,4 +30,4 @@ class WhoAmIResponse(ExtendedResponse):
         """
         work around MS AD returning obscure OID as responseName
         """
-        return name == cls.responseName or name == '1.3.6.1.4.1.4203.1.11'
+        return name == cls.responseName or name == WhoAmIRequest.requestName
