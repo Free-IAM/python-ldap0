@@ -70,4 +70,4 @@ def unicode_pwd(password=None, alphabet=PWD_ALPHABET, length=PWD_LENGTH):
     """
     if password is None:
         password = random_string(alphabet=alphabet, length=length)
-    return '"{}"'.format(password.decode('utf-8').encode('utf-16-le'))
+    return u'"{}"'.format(password.decode('utf-8')).encode('utf-16-le')

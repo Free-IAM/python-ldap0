@@ -31,8 +31,8 @@ class TestPasswordFunctions(unittest.TestCase):
         self.assertEqual(random_string('1', 4), 4*'1')
 
     def test_unicode_pwd(self):
-        self.assertEqual(len(unicode_pwd()), (PWD_LENGTH+1)*2)
-        self.assertEqual(len(unicode_pwd(length=10)), (10+1)*2)
+        self.assertEqual(len(unicode_pwd()), (PWD_LENGTH+2)*2)
+        self.assertEqual(len(unicode_pwd(length=10)), (10+2)*2)
         for pw in (
                 'foo',
                 'bar',
@@ -40,7 +40,7 @@ class TestPasswordFunctions(unittest.TestCase):
             ):
             self.assertEqual(
                 unicode_pwd(pw),
-                '"{}"'.format(pw.decode('utf-8').encode('utf-16-le'))
+                u'"{}"'.format(pw.decode('utf-8')).encode('utf-16-le')
             )
 
 
