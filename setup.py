@@ -84,7 +84,7 @@ setup(
     author_email='michael@stroeder.com',
     maintainer=__about__.__author__,
     maintainer_email='michael@stroeder.com',
-    url='https://pypi.python.org/pypi/ldap0/',
+    url='https://pypi.org/project/ldap0/',
     download_url='https://pypi.python.org/pypi/%s/' % (PKG_NAME),
     keywords=[
         'LDAP',
