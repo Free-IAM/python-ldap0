@@ -26,3 +26,6 @@ class TestVersionInfo(unittest.TestCase):
             ldap0.__about__.__version_info__,
         )
 
+
+if __name__ == '__main__':
+    unittest.main()
