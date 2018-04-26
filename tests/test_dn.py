@@ -363,7 +363,7 @@ class TestDNObj(unittest.TestCase):
                 DNObj.fromstring('ou=dept1,  dc=example, dc=com+dc=net').domain(),
                 'example.com'
             )
-        
+
 
     def test_dnobj_add(self):
         self.assertEqual(

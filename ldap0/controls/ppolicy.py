@@ -100,5 +100,4 @@ class PasswordPolicyControl(ValueLessRequestControl, ResponseControl):
         else:
             self.error = None
 
-
 KNOWN_RESPONSE_CONTROLS.reg(PasswordPolicyControl)

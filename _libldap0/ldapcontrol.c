@@ -274,4 +274,3 @@ LDAPinit_control(PyObject *d)
 {
     LDAPadd_methods(d, methods);
 }
-

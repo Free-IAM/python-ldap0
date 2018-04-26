@@ -48,4 +48,3 @@ extern LDAPObject *newLDAPObject( LDAP* );
 	}
 
 #endif /* __h_LDAPObject */
-

@@ -93,7 +93,7 @@ def dict_filter(
     ):
     """
     returns a filter compose from an entry dictionary
-    
+
     iop
        inner operand used for attribute value list
     oop
