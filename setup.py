@@ -7,7 +7,7 @@ import sys
 import os
 import textwrap
 from ConfigParser import ConfigParser
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 
 PKG_NAME = 'ldap0'
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
@@ -65,7 +65,7 @@ setup(
     name=PKG_NAME,
     license=__about__.__license__,
     version=__about__.__version__,
-    description='{0} -- Python module package for implementing LDAP clients'.format(PKG_NAME),
+    description='Module package for implementing LDAP clients'.format(PKG_NAME),
     long_description=textwrap.dedent(
         """
         {0} provides an object-oriented API to access LDAP directory servers
@@ -144,12 +144,7 @@ setup(
             define_macros=LDAP_CLASS.define_macros,
         ),
     ],
-    packages = [
-        PKG_NAME,
-        PKG_NAME+'.schema',
-        PKG_NAME+'.extop',
-        PKG_NAME+'.controls',
-    ],
+    packages=find_packages(exclude=['tests']),
     package_dir={'': '.'},
     test_suite='tests',
     python_requires='==2.7.*',

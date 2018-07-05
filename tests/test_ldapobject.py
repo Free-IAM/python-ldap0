@@ -658,6 +658,28 @@ class Test00_LDAPObject(SlapdTestCase):
         with self.assertRaises(ldap0.UNDEFINED_TYPE):
             self._ldap_conn.compare_s('cn=foobar', 'foo', 'bar')
 
+    def test022_get_whoami_dn(self):
+        self.assertEqual(
+            self._ldap_conn.get_whoami_dn(),
+            self.server.root_dn,
+        )
+        # repeated (cached)
+        self.assertEqual(
+            self._ldap_conn.get_whoami_dn(),
+            self.server.root_dn,
+        )
+        with self.ldap_object_class(self.server.ldapi_uri) as l:
+            self.assertEqual(l._whoami_dn, None)
+            l.simple_bind_s('', '')
+            self.assertEqual(l.whoami_s(),'')
+            self.assertEqual(l.get_whoami_dn(),'')
+            bind_dn = 'cn=user1,'+self.server.suffix
+            l.simple_bind_s(bind_dn, 'user1_pw')
+            self.assertEqual(
+                l.get_whoami_dn(),
+                bind_dn,
+            )
+
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
@@ -711,10 +733,12 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             'timeout': -1,
             '_trace_level': 0,
             '_trace_stack_limit': 5,
+            '_whoami_dn': bind_dn,
         }
         with self.ldap_object_class(self.server.ldapi_uri) as l1:
             l1.simple_bind_s(bind_dn, 'user1_pw')
             self.assertEqual(l1.whoami_s(), 'dn:'+bind_dn)
+            self.assertEqual(l1.get_whoami_dn(), bind_dn)
             self.assertEqual(l1.__getstate__(), expected_state)
 
     def test104_reconnect_restore(self):

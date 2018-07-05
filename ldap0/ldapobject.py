@@ -579,6 +579,7 @@ class LDAPObject:
         """
         reset/flush the internal cache
         """
+        self._whoami_dn = None
         self._cache_misses = 0
         self._cache_hits = 0
         self._cache = {}
@@ -746,6 +747,9 @@ class LDAPObject:
             extop_resp_class=WhoAmIResponse,
             serverctrls=serverctrls,
         )
+        if wai.responseValue and wai.responseValue.lower().startswith('dn:'):
+            # cache this for later calls to get_whoami_dn()
+            self._whoami_dn = wai.responseValue[3:]
         return wai.responseValue
 
     def get_option(self, option):
@@ -874,6 +878,18 @@ class LDAPObject:
         return self.read_rootdse_s(
             attrlist=['namingContexts']
         ).get('namingContexts', [])
+
+    def get_whoami_dn(self):
+        if self._whoami_dn is None:
+            wai = self.whoami_s()
+            if not wai:
+                self._whoami_dn = wai
+            elif wai.lower().startswith('dn:'):
+                self._whoami_dn = wai[3:]
+            else:
+                self._whoami_dn = None
+                raise ValueError('Expected dn: form of Who Am I? result, got %r' % wai)
+        return self._whoami_dn
 
 
 class ReconnectLDAPObject(LDAPObject):
