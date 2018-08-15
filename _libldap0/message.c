@@ -97,7 +97,10 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
 
 	     /* Find which list to append to */
 	     if ( PyMapping_HasKeyString( attrdict, attr ) ) {
-		 valuelist = PyMapping_GetItemString( attrdict, attr );
+          valuelist = PyMapping_GetItemString( attrdict, attr );
+          if (valuelist != NULL)
+              /* own the ref from here */
+              Py_INCREF(valuelist);
 	     } else {
 		 valuelist = PyList_New(0);
 		 if (valuelist != NULL && PyMapping_SetItemString(attrdict,
