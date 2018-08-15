@@ -9,6 +9,7 @@ import os
 import unittest
 import pickle
 import time
+from errno import ENOTCONN
 
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
@@ -187,12 +188,12 @@ class Test00_LDAPObject(SlapdTestCase):
                 m = l.simple_bind_s("", "")
                 r = l.result(m, ldap0.MSG_ALL, 1.0)
             except ldap0.SERVER_DOWN as ldap_err:
-                errno = ldap_err.args[0]['errno']
-                if errno != 107:
-                    self.fail("expected errno=107, got %d" % errno)
+                err_no = ldap_err.args[0]['errno']
+                if err_no != ENOTCONN:
+                    self.fail("expected err_no=%d, got %d" % (ENOTCONN, err_no))
                 info = ldap_err.args[0]['info']
-                if info != os.strerror(107):
-                    self.fail("expected info=%r, got %d" % (os.strerror(107), info))
+                if info != os.strerror(ENOTCONN):
+                    self.fail("expected info=%r, got %d" % (os.strerror(ENOTCONN), info))
             else:
                 self.fail("expected SERVER_DOWN, got %r" % r)
 

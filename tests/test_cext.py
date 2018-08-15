@@ -7,6 +7,8 @@ from __future__ import absolute_import
 
 import os
 import unittest
+from errno import ENOTCONN
+
 from ldap0.test import SlapdTestCase
 
 # Switch off processing .ldaprc or ldap.conf before importing _ldap
@@ -617,15 +619,15 @@ class TestLdapCExtension(SlapdTestCase):
             return
         # TODO
 
-    def test_errno107(self):
+    def test_enotconn(self):
         l = _libldap0.initialize('ldap://127.0.0.1:42')
         try:
             m = l.simple_bind("", "")
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
         except _libldap0.SERVER_DOWN as ldap_err:
-            errno = ldap_err.args[0]['errno']
-            if errno != 107:
-                self.fail("expected errno=107, got %d" % errno)
+            err_no = ldap_err.args[0]['errno']
+            if err_no != ENOTCONN:
+                self.fail("expected err_no=%d, got %d" % (ENOTCONN, err_no))
         else:
             self.fail("expected SERVER_DOWN, got %r" % r)
 
