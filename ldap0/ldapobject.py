@@ -1071,8 +1071,9 @@ class ReconnectLDAPObject(LDAPObject):
             return func(self, *args, **kwargs)
 
     def set_option(self, option, invalue):
+        res = LDAPObject.set_option(self, option, invalue)
         self._options.append((option, invalue))
-        return LDAPObject.set_option(self, option, invalue)
+        return res
 
     def bind_s(self, *args, **kwargs):
         res = self._apply_method_s(LDAPObject.bind_s, *args, **kwargs)
