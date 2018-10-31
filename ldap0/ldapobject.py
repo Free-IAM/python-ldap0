@@ -1075,11 +1075,6 @@ class ReconnectLDAPObject(LDAPObject):
         self._options.append((option, invalue))
         return res
 
-    def bind_s(self, *args, **kwargs):
-        res = self._apply_method_s(LDAPObject.bind_s, *args, **kwargs)
-        self._store_last_bind(LDAPObject.bind_s, *args, **kwargs)
-        return res
-
     def simple_bind_s(self, *args, **kwargs):
         res = self._apply_method_s(LDAPObject.simple_bind_s, *args, **kwargs)
         self._store_last_bind(LDAPObject.simple_bind_s, *args, **kwargs)
