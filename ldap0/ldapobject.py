@@ -1064,6 +1064,8 @@ class ReconnectLDAPObject(LDAPObject):
         try:
             return func(self, *args, **kwargs)
         except _libldap0.SERVER_DOWN:
+            if self._retry_max <= 0:
+                raise
             LDAPObject.unbind_s(self)
             # Try to reconnect
             self.reconnect(self._uri, retry_max=self._retry_max, retry_delay=self._retry_delay)
