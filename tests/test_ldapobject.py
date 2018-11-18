@@ -232,6 +232,26 @@ class Test00_LDAPObject(SlapdTestCase):
                 )
                 self.assertEqual(l.whoami_s(), authz_id.lower())
 
+    def test006_sasl_password_mechs_bad(self):
+        for sasl_mech in (
+                'PLAIN',
+                'CRAM-MD5',
+                'DIGEST-MD5',
+#                'SCRAM-SHA-1',
+            ):
+            with self.ldap_object_class(self.server.ldapi_uri) as l:
+                try:
+                    l.sasl_interactive_bind_s(
+                        '',
+                        SaslPasswordAuth(sasl_mech, 'user1', 'badpassword'),
+                    )
+                except ldap0.INVALID_CREDENTIALS:
+                    pass
+                except Exception, err:
+                    self.fail('Expected SASL/%s bind with wrong password to raise ldap0.INVALID_CREDENTIALS, got: %s' % (sasl_mech, err))
+                else:
+                    self.fail('Expected SASL/%s bind with wrong password to raise ldap0.INVALID_CREDENTIALS' % (sasl_mech))
+
     def test007_timeout(self):
         with self.ldap_object_class(self.server.ldap_uri) as l:
             m = l.search(self.server.suffix, ldap0.SCOPE_SUBTREE, '(objectClass=*)')
