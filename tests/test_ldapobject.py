@@ -225,9 +225,11 @@ class Test00_LDAPObject(SlapdTestCase):
                 'DIGEST-MD5',
                 'SCRAM-SHA-1',
             ):
-            sasl_auth = SaslPasswordAuth(sasl_mech, 'user1', 'user1_pw')
             with self.ldap_object_class(self.server.ldapi_uri) as l:
-                l.sasl_interactive_bind_s('', sasl_auth)
+                l.sasl_interactive_bind_s(
+                    '',
+                    SaslPasswordAuth(sasl_mech, 'user1', 'user1_pw'),
+                )
                 self.assertEqual(l.whoami_s(), authz_id.lower())
 
     def test007_timeout(self):
