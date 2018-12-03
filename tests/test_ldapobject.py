@@ -703,6 +703,25 @@ class Test00_LDAPObject(SlapdTestCase):
                 bind_dn,
             )
 
+    def test023_find_unique_entry(self):
+        res = self._ldap_conn.find_unique_entry(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(cn=user1)',
+        )
+        with self.assertRaises(ldap0.NO_UNIQUE_ENTRY):
+            self._ldap_conn.find_unique_entry(
+                self.server.suffix,
+                ldap0.SCOPE_SUBTREE,
+                '(objectClass=foobar)',
+            )
+        with self.assertRaises(ldap0.NO_UNIQUE_ENTRY):
+            self._ldap_conn.find_unique_entry(
+                self.server.suffix,
+                ldap0.SCOPE_SUBTREE,
+                '(objectClass=*)',
+            )
+
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
