@@ -764,6 +764,29 @@ class Test00_LDAPObject(SlapdTestCase):
                 )
             ]
         )
+        self.assertTrue(
+            self._ldap_conn.compare_s(
+                'ou=äöüÄÖUß,ou=Container,%s' % (self.server.suffix),
+                'ou',
+                'äöüÄÖUß',
+            )
+        )
+        add_dn = 'ou=ßÜÖÄüöä,ou=Container,%s' % (self.server.suffix)
+        self._ldap_conn.add_s(
+            add_dn,
+            {
+                'objectClass': ['organizationalUnit'],
+                'ou': ['ßÜÖÄüöä'],
+            },
+        )
+        self.assertTrue(
+            self._ldap_conn.compare_s(
+                add_dn,
+                'ou',
+                'ßÜÖÄüöä',
+            )
+        )
+        self._ldap_conn.delete_s(add_dn)
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
