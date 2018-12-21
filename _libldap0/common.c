@@ -1,5 +1,4 @@
-/* Miscellaneous common routines
- * See https://www.python-ldap.org/ for details. */
+/* Miscellaneous common routines */
 
 #include "common.h"
 

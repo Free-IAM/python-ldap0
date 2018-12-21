@@ -1,5 +1,4 @@
-/* common utility macros
- * See https://www.python-ldap.org/ for details. */
+/* common utility macros */
 
 #ifndef __h_common
 #define __h_common
@@ -21,8 +20,7 @@
 #endif
 
 #include <string.h>
-#define streq( a, b ) \
-	( (*(a)==*(b)) && 0==strcmp(a,b) )
+#define streq( a, b ) ( (*(a)==*(b)) && 0==strcmp(a,b) )
 
 void LDAPadd_methods( PyObject*d, PyMethodDef*methods );
 

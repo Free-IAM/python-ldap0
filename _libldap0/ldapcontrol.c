@@ -1,5 +1,3 @@
-/* See https://www.python-ldap.org/ for details. */
-
 #include "common.h"
 #include "LDAPObject.h"
 #include "ldapcontrol.h"
@@ -55,9 +53,8 @@ Tuple_to_LDAPControl( PyObject* tup )
     Py_ssize_t len;
 
     if (!PyTuple_Check(tup)) {
-	PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO",
-	   "expected a tuple", tup));
-	return NULL;
+        PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO", "expected a tuple", tup));
+        return NULL;
     }
 
     if (!PyArg_ParseTuple( tup, "sbO", &oid, &iscritical, &bytes ))
@@ -90,8 +87,7 @@ Tuple_to_LDAPControl( PyObject* tup )
         berbytes.bv_val = PyBytes_AsString(bytes);
     }
     else {
-	PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO",
-            "expected a byte-string", bytes));
+        PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO", "expected a byte-string", bytes));
         LDAPControl_DEL(lc);
         return NULL;
     }
@@ -113,9 +109,8 @@ LDAPControls_from_object(PyObject* list, LDAPControl ***controls_ret)
     PyObject* item;
 
     if (!PySequence_Check(list)) {
-	PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO",
-	   "expected a list", list));
-	return 0;
+        PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO", "expected a list", list));
+        return 0;
     }
 
     len = PySequence_Length(list);
@@ -126,21 +121,21 @@ LDAPControls_from_object(PyObject* list, LDAPControl ***controls_ret)
     }
 
     for (i = 0; i < len; i++) {
-      item = PySequence_GetItem(list, i);
-      if (item == NULL) {
-          PyMem_DEL(ldcs);
-          return 0;
-      }
+        item = PySequence_GetItem(list, i);
+        if (item == NULL) {
+            PyMem_DEL(ldcs);
+            return 0;
+        }
 
-      ldc = Tuple_to_LDAPControl(item);
-      if (ldc == NULL) {
-          Py_DECREF(item);
-          PyMem_DEL(ldcs);
-          return 0;
-      }
+        ldc = Tuple_to_LDAPControl(item);
+        if (ldc == NULL) {
+            Py_DECREF(item);
+            PyMem_DEL(ldcs);
+            return 0;
+        }
 
-      ldcs[i] = ldc;
-      Py_DECREF(item);
+        ldcs[i] = ldc;
+        Py_DECREF(item);
     }
 
     ldcs[len] = NULL;
@@ -163,10 +158,11 @@ LDAPControls_to_List(LDAPControl **ldcs)
     }
 
     for (i = 0; i < num_ctrls; i++) {
-        pyctrl = Py_BuildValue("sbO&",
-                               ldcs[i]->ldctl_oid,
-                               ldcs[i]->ldctl_iscritical,
-                               LDAPberval_to_object, &ldcs[i]->ldctl_value);
+        pyctrl = Py_BuildValue(
+            "sbO&",
+            ldcs[i]->ldctl_oid,
+            ldcs[i]->ldctl_iscritical,
+            LDAPberval_to_object, &ldcs[i]->ldctl_value);
         if (pyctrl == NULL) {
             Py_DECREF(res);
             return NULL;
@@ -184,41 +180,41 @@ LDAPControls_to_List(LDAPControl **ldcs)
 static PyObject*
 encode_rfc3876(PyObject *self, PyObject *args)
 {
-	PyObject *res = 0;
-	int err;
-	BerElement *vrber = 0;
-	char *vrFilter;
-	struct berval *ctrl_val;
+    PyObject *res = 0;
+    int err;
+    BerElement *vrber = 0;
+    char *vrFilter;
+    struct berval *ctrl_val;
 
-	if (!PyArg_ParseTuple(args, "s:encode_valuesreturnfilter_control", &vrFilter)) {
-		goto endlbl;
-	}
+    if (!PyArg_ParseTuple(args, "s:encode_valuesreturnfilter_control", &vrFilter)) {
+        goto endlbl;
+    }
 
-	if (!(vrber = ber_alloc_t(LBER_USE_DER))) {
-		LDAPerr(LDAP_NO_MEMORY);
-		goto endlbl;
-	}
+    if (!(vrber = ber_alloc_t(LBER_USE_DER))) {
+        LDAPerr(LDAP_NO_MEMORY);
+        goto endlbl;
+    }
 
-	err = ldap_put_vrFilter(vrber, vrFilter);
-	if (err == -1) {
-		LDAPerr(LDAP_FILTER_ERROR);
-		goto endlbl;
-	}
+    err = ldap_put_vrFilter(vrber, vrFilter);
+    if (err == -1) {
+        LDAPerr(LDAP_FILTER_ERROR);
+        goto endlbl;
+    }
 
-	err = ber_flatten(vrber, &ctrl_val);
-	if (err == -1) {
-		LDAPerr(LDAP_NO_MEMORY);
-		goto endlbl;
-	}
+    err = ber_flatten(vrber, &ctrl_val);
+    if (err == -1) {
+        LDAPerr(LDAP_NO_MEMORY);
+        goto endlbl;
+    }
 
-	res = LDAPberval_to_object(ctrl_val);
-	ber_bvfree(ctrl_val);
+    res = LDAPberval_to_object(ctrl_val);
+    ber_bvfree(ctrl_val);
 
 endlbl:
-	if (vrber)
-		ber_free(vrber, 1);
+    if (vrber)
+        ber_free(vrber, 1);
 
-	return res;
+    return res;
 }
 
 static PyObject*
@@ -230,8 +226,7 @@ encode_assertion_control(PyObject *self, PyObject *args)
     struct berval ctrl_val;
     LDAP *ld = NULL;
 
-    if (!PyArg_ParseTuple(args, "s:encode_assertion_control",
-                          &assertion_filterstr)) {
+    if (!PyArg_ParseTuple(args, "s:encode_assertion_control", &assertion_filterstr)) {
         goto endlbl;
     }
 
@@ -239,7 +234,7 @@ encode_assertion_control(PyObject *self, PyObject *args)
     err = ldap_create(&ld);
     Py_END_ALLOW_THREADS
     if (err != LDAP_SUCCESS)
-    	return LDAPerror(ld, "ldap_create");
+        return LDAPerror(ld, "ldap_create");
 
     err = ldap_create_assertion_control_value(ld,assertion_filterstr,&ctrl_val);
 
@@ -264,8 +259,16 @@ encode_assertion_control(PyObject *self, PyObject *args)
 }
 
 static PyMethodDef methods[] = {
-    {"encode_valuesreturnfilter_control", encode_rfc3876, METH_VARARGS },
-    {"encode_assertion_control", encode_assertion_control, METH_VARARGS },
+    {
+        "encode_valuesreturnfilter_control",
+        encode_rfc3876,
+        METH_VARARGS
+    },
+    {
+        "encode_assertion_control",
+        encode_assertion_control,
+        METH_VARARGS
+    },
     { NULL, NULL }
 };
 

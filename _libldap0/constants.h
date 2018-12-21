@@ -1,5 +1,3 @@
-/* See https://www.python-ldap.org/ for details. */
-
 #ifndef __h_constants_
 #define __h_constants_
 
