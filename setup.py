@@ -76,8 +76,6 @@ setup(
         - parse and handle LDAPv3 subschema
         - LDAPv3 extended operations and controls
         - automatic tests with OpenLDAP server
-        This package is a non-compatible fork of python-ldap and
-        therefore uses the separate module name-space '{0}'.
         """.format(PKG_NAME)
     ).lstrip(),
     author=__about__.__author__,
