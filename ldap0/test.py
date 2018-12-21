@@ -13,7 +13,8 @@ import time
 import subprocess
 import logging
 import unittest
-import urllib
+
+from urllib import quote_plus as url_quote_plus
 
 from .__about__ import __version__, __author__, __license__
 import _libldap0
@@ -135,7 +136,7 @@ class SlapdObject(object):
         self._db_directory = os.path.join(self.testrundir, "openldap-data")
         self.ldap_uri = "ldap://%s:%d/" % (LOCALHOST, self._port)
         ldapi_path = os.path.join(self.testrundir, 'ldapi')
-        self.ldapi_uri = "ldapi://%s" % urllib.quote_plus(ldapi_path)
+        self.ldapi_uri = "ldapi://%s" % url_quote_plus(ldapi_path)
 
     def setup_rundir(self):
         """
@@ -379,7 +380,7 @@ class SlapdTestCase(unittest.TestCase):
     server_class = SlapdObject
     ldap_object_class = ldap0.ldapobject.LDAPObject
     server = None
-    trace_level = int(os.environ.get('PYLDAP_TRACE_LEVEL', '0'))
+    trace_level = int(os.environ.get('LDAP0_TRACE_LEVEL', '0'))
 
     def _open_ldap_conn(self, who=None, cred=None):
         """
