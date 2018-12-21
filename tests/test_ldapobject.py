@@ -704,11 +704,29 @@ class Test00_LDAPObject(SlapdTestCase):
             )
 
     def test023_find_unique_entry(self):
-        res = self._ldap_conn.find_unique_entry(
+        dn, entry = self._ldap_conn.find_unique_entry(
             self.server.suffix,
             ldap0.SCOPE_SUBTREE,
             '(cn=user1)',
         )
+        self.assertEqual(dn, 'cn=user1,dc=slapd-test,dc=example,dc=org')
+        self.assertEqual(entry, {'cn': ['user1'], 'userPassword': ['user1_pw'], 'objectClass': ['applicationProcess', 'simpleSecurityObject']})
+        dn, entry = self._ldap_conn.find_unique_entry(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(cn=user1)',
+            attrlist=['1.1'],
+        )
+        self.assertEqual(dn, 'cn=user1,dc=slapd-test,dc=example,dc=org')
+        self.assertEqual(entry, {})
+        dn, entry = self._ldap_conn.find_unique_entry(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(cn=user1)',
+            attrlist=['cn', 'userPassword'],
+        )
+        self.assertEqual(dn, 'cn=user1,dc=slapd-test,dc=example,dc=org')
+        self.assertEqual(entry, {'cn': ['user1'], 'userPassword': ['user1_pw']})
         with self.assertRaises(ldap0.NO_UNIQUE_ENTRY):
             self._ldap_conn.find_unique_entry(
                 self.server.suffix,
