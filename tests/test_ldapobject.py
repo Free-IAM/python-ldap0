@@ -77,6 +77,10 @@ dn: cn=Foo6,ou=Container,%(suffix)s
 objectClass: organizationalRole
 cn: Foo6
 
+dn: ou=äöüÄÖUß,ou=Container,%(suffix)s
+objectClass: organizationalUnit
+ou: äöüÄÖUß
+
 """
 
 
@@ -600,6 +604,10 @@ class Test00_LDAPObject(SlapdTestCase):
         )
         self.assertEqual(ldap_result, [(dn, entry)])
         self._ldap_conn.set_option(ldap0.OPT_REFERRALS, opt_ref_old)
+        self._ldap_conn.delete_s(
+            dn,
+            serverctrls=[ManageDSAITControl()],
+        )
 
     def test019_assertion_control(self):
         dn = "cn=AssertionControl," + self.server.suffix
@@ -739,6 +747,23 @@ class Test00_LDAPObject(SlapdTestCase):
                 ldap0.SCOPE_SUBTREE,
                 '(objectClass=*)',
             )
+
+    def test024_umlauts(self):
+        result = self._ldap_conn.search_s(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            '(ou=*ö*)',
+            attrlist=['ou'],
+        )
+        self.assertEqual(
+            result,
+            [
+                (
+                    'ou=äöüÄÖUß,ou=Container,%s' % (self.server.suffix),
+                    {'ou': ['äöüÄÖUß']}
+                )
+            ]
+        )
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
