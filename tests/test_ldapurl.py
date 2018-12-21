@@ -373,37 +373,21 @@ class TestLDAPUrl(unittest.TestCase):
         self.assertEqual(len(u.extensions), 1)
         self.assertIsNone(u.who)
 
-    @unittest.expectedFailure
-    def test_bad_urls(self):
+    def test_bad_urls1(self):
         failed_urls = []
         for bad in (
-                "",
-                "ldap:",
-                "ldap:/",
-                ":///",
-                "://",
-                "///",
-                "//",
-                "/",
-                "ldap:///?????",       # extension can't start with '?'
-                "LDAP://",
-                "invalid://",
-                "ldap:///??invalid",
-                #XXX-- the following should raise exceptions!
-                "ldap://:389/",         # [host [COLON port]]
-                "ldap://a:/",           # [host [COLON port]]
-                r"ldap://%%%/",          # invalid URL encoding
-                "ldap:///?,",           # attrdesc *(COMMA attrdesc)
-                "ldap:///?a,",          # attrdesc *(COMMA attrdesc)
-                "ldap:///?,a",          # attrdesc *(COMMA attrdesc)
-                "ldap:///?a,,b",        # attrdesc *(COMMA attrdesc)
-                r"ldap://%00/",         # RFC4516 2.1
-                r"ldap:///%00",         # RFC4516 2.1
-                r"ldap:///?%00",        # RFC4516 2.1
-                r"ldap:///??%00",       # RFC4516 2.1
-                "ldap:///????0=0",      # extype must start with Alpha
-                "ldap:///????a_b=0",    # extype contains only [-a-zA-Z0-9]
-                "ldap:///????!!a=0",    # only one exclamation allowed
+                '',
+                'ldap:',
+                'ldap:/',
+                ':///',
+                '://',
+                '///',
+                '//',
+                '/',
+                'LDAP://',
+                'invalid://',
+                'ldap:///??invalid_scope',
+                r'ldap:///??%00',       # RFC4516 2.1
         ):
             try:
                 LDAPUrl(bad)
@@ -412,7 +396,36 @@ class TestLDAPUrl(unittest.TestCase):
             else:
                 failed_urls.append(bad)
         if failed_urls:
-          self.fail("These LDAP URLs should have raised ValueError: %r" % failed_urls)
+            self.fail("These LDAP URLs should have raised ValueError: %r" % failed_urls)
+
+    @unittest.expectedFailure
+    def test_bad_urls2(self):
+        failed_urls = []
+        for bad in (
+                #XXX-- the following should raise exceptions!
+                'ldap:///?????',       # extension can't start with '?'
+                'ldap://:389/',         # [host [COLON port]]
+                'ldap://a:/',           # [host [COLON port]]
+                r'ldap://%%%/',          # invalid URL encoding
+                'ldap:///?,',           # attrdesc *(COMMA attrdesc)
+                'ldap:///?a,',          # attrdesc *(COMMA attrdesc)
+                'ldap:///?,a',          # attrdesc *(COMMA attrdesc)
+                'ldap:///?a,,b',        # attrdesc *(COMMA attrdesc)
+                r'ldap://%00/',         # RFC4516 2.1
+                r'ldap:///%00',         # RFC4516 2.1
+                r'ldap:///?%00',        # RFC4516 2.1
+                'ldap:///????0=0',      # extype must start with Alpha
+                'ldap:///????a_b=0',    # extype contains only [-a-zA-Z0-9]
+                'ldap:///????!!a=0',    # only one exclamation allowed
+            ):
+            try:
+                LDAPUrl(bad)
+            except ValueError:
+                pass
+            else:
+                failed_urls.append(bad)
+        if failed_urls:
+            self.fail("These LDAP URLs should have raised ValueError: %r" % failed_urls)
 
     def test_connect_uri(self):
         for url, uri in (
