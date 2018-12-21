@@ -849,19 +849,27 @@ class LDAPObject:
             serverctrls=None,
             timeout=-1
         ):
-        r = self.search_s(
-            base,
-            scope,
-            filterstr,
-            attrlist=attrlist or ['*'],
-            attrsonly=attrsonly,
-            serverctrls=serverctrls,
-            timeout=timeout,
-            sizelimit=2,
-        )
-        if len(r) != 1:
-            raise NO_UNIQUE_ENTRY('No or non-unique search result for %r' % (filterstr))
-        return r[0]
+        try:
+            ldap_res = self.search_s(
+                base,
+                scope,
+                filterstr,
+                attrlist=attrlist or ['*'],
+                attrsonly=attrsonly,
+                serverctrls=serverctrls,
+                timeout=timeout,
+                sizelimit=2,
+            )
+        except _libldap0.SIZELIMIT_EXCEEDED:
+            raise NO_UNIQUE_ENTRY('Size limit exceeded for %r ()' % (filterstr))
+        # strip search continuations
+        ldap_res = [ res for res in ldap_res if res[0] is not None ]
+        # now check again for length
+        if not ldap_res:
+            raise NO_UNIQUE_ENTRY('No search result for %r' % (filterstr))
+        elif len(ldap_res) > 1:
+            raise NO_UNIQUE_ENTRY('Non-unique search results (%d) for %r' % (len(ldap_res), filterstr))
+        return ldap_res[0]
 
     def read_rootdse_s(self, filterstr='(objectClass=*)', attrlist=None):
         """
