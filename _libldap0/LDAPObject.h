@@ -9,11 +9,7 @@
 #error Module _libldap0 requires OpenLDAP 2.4.x
 #endif
 
-#if PYTHON_API_VERSION < 1007
-typedef PyObject* _threadstate;
-#else
 typedef PyThreadState* _threadstate;
-#endif
 
 typedef struct {
     PyObject_HEAD
