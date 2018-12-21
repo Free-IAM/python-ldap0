@@ -42,10 +42,6 @@ PyObject* init_libldap0(void)
 {
     PyObject *m, *d;
 
-#if defined(MS_WINDOWS) || defined(__CYGWIN__)
-    LDAP_Type.ob_type = &PyType_Type;
-#endif
-
     /* Create the module and add the functions */
     m = Py_InitModule("_libldap0", methods);
     if (PyType_Ready(&LDAP_Type) < 0) {
