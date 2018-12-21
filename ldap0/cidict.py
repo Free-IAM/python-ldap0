@@ -5,19 +5,19 @@ ldap0.cidict - custom dictionary class with keys being strings handled case-inse
 
 from __future__ import absolute_import
 
-from UserDict import IterableUserDict
+from UserDict import IterableUserDict as User_Dict
 
 from .__about__ import __version__, __author__, __license__
 
 
-class cidict(IterableUserDict):
+class cidict(User_Dict):
     """
     Case-insensitive but case-respecting dictionary.
     """
 
     def __init__(self, default=None):
         self._keys = {}
-        IterableUserDict.__init__(self, {})
+        User_Dict.__init__(self, {})
         self.update(default or {})
 
     def __getitem__(self, key):
@@ -41,7 +41,7 @@ class cidict(IterableUserDict):
         return key in self
 
     def __contains__(self, key):
-        return IterableUserDict.__contains__(self, key.lower())
+        return User_Dict.__contains__(self, key.lower())
 
     def keys(self):
         return self._keys.values()

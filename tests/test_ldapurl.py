@@ -6,7 +6,7 @@ Automatic tests for module ldap0.ldapurl
 from __future__ import absolute_import
 
 import unittest
-import urllib
+from urllib import quote as url_quote
 
 import ldap0
 import ldap0.ldapurl
@@ -183,9 +183,9 @@ class TestLDAPUrl(unittest.TestCase):
             "ldap://127.0.0.1:1234/dc=example,dc=com"
             + "?attr1,attr2,attr3"
             + "?sub"
-            + "?" + urllib.quote("(objectClass=*)")
-            + "?bindname=" + urllib.quote("cn=d,c=au")
-            + ",X-BINDPW=" + urllib.quote("???")
+            + "?" + url_quote("(objectClass=*)")
+            + "?bindname=" + url_quote("cn=d,c=au")
+            + ",X-BINDPW=" + url_quote("???")
             + ",trace=8"
         )
         self.assertEqual(u.urlscheme, "ldap")

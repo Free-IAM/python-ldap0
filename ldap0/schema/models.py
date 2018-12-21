@@ -6,7 +6,7 @@ ldap0.schema.models - support for subSchemaSubEntry information
 from __future__ import absolute_import
 
 import collections
-from UserDict import IterableUserDict
+from UserDict import IterableUserDict as User_Dict
 
 from ..__about__ import __version__, __author__, __license__
 from ..cidict import cidict
@@ -719,7 +719,7 @@ class SchemaElementOIDSet(collections.MutableSet):
         ]
 
 
-class Entry(IterableUserDict):
+class Entry(User_Dict):
     """
     Schema-aware implementation of an LDAP entry class.
 
@@ -732,7 +732,7 @@ class Entry(IterableUserDict):
         self._attrtype2keytuple = {}
         self._s = schema
         self.dn = dn
-        IterableUserDict.__init__(self, {})
+        User_Dict.__init__(self, {})
         self.update(entry)
 
     def _at2key(self, nameoroid):
