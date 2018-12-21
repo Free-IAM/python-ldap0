@@ -35,91 +35,90 @@ static PyObject* errobjects[ LDAP_ERROR_MAX-LDAP_ERROR_MIN+1 ];
 PyObject*
 LDAPerr(int errnum)
 {
-  if (errnum >= LDAP_ERROR_MIN && errnum <= LDAP_ERROR_MAX)
-    PyErr_SetNone(errobjects[errnum+LDAP_ERROR_OFFSET]);
-  else
-    PyErr_SetObject(LDAPexception_class,
-    Py_BuildValue("{s:i}", "errnum", errnum));
-  return NULL;
+    if (errnum >= LDAP_ERROR_MIN && errnum <= LDAP_ERROR_MAX)
+        PyErr_SetNone(errobjects[errnum+LDAP_ERROR_OFFSET]);
+    else
+        PyErr_SetObject(LDAPexception_class,
+        Py_BuildValue("{s:i}", "errnum", errnum));
+    return NULL;
 }
 
 /* Convert an LDAP error into an informative python exception */
 PyObject*
 LDAPerror( LDAP *l, char *msg )
 {
-  if (l == NULL) {
-    PyErr_SetFromErrno( LDAPexception_class );
-    return NULL;
-  }
-  else {
-    int myerrno, errnum, opt_errnum;
-    PyObject *errobj;
-    PyObject *info;
-    PyObject *str;
-    PyObject *pyerrno;
+    if (l == NULL) {
+        PyErr_SetFromErrno( LDAPexception_class );
+        return NULL;
+    } else {
 
-    /* at first save errno for later use before it gets overwritten by another call */
-    myerrno = errno;
+        int myerrno, errnum, opt_errnum;
+        PyObject *errobj;
+        PyObject *info;
+        PyObject *str;
+        PyObject *pyerrno;
 
-    char *matched, *error;
+        /* at first save errno for later use before it gets overwritten by another call */
+        myerrno = errno;
 
-    opt_errnum = ldap_get_option(l, LDAP_OPT_ERROR_NUMBER, &errnum);
-    if (opt_errnum != LDAP_OPT_SUCCESS)
-      errnum = opt_errnum;
+        char *matched, *error;
 
-    if (errnum == LDAP_NO_MEMORY)
-      return PyErr_NoMemory();
+        opt_errnum = ldap_get_option(l, LDAP_OPT_ERROR_NUMBER, &errnum);
+        if (opt_errnum != LDAP_OPT_SUCCESS)
+            errnum = opt_errnum;
 
-    if (errnum >= LDAP_ERROR_MIN && errnum <= LDAP_ERROR_MAX)
-      errobj = errobjects[errnum+LDAP_ERROR_OFFSET];
-    else
-      errobj = LDAPexception_class;
+        if (errnum == LDAP_NO_MEMORY)
+            return PyErr_NoMemory();
 
-    info = PyDict_New();
-    if (info == NULL)
-      return NULL;
+        if (errnum >= LDAP_ERROR_MIN && errnum <= LDAP_ERROR_MAX)
+            errobj = errobjects[errnum+LDAP_ERROR_OFFSET];
+        else
+            errobj = LDAPexception_class;
 
-    str = PyBytes_FromString(ldap_err2string(errnum));
-    if (str)
-      PyDict_SetItemString( info, "desc", str );
-    Py_XDECREF(str);
+        info = PyDict_New();
+        if (info == NULL)
+            return NULL;
 
-    if (myerrno != 0) {
-        pyerrno = PyInt_FromLong(myerrno);
-        if (pyerrno)
-            PyDict_SetItemString( info, "errno", pyerrno );
-        Py_XDECREF(pyerrno);
-    }
-
-    if (ldap_get_option(l, LDAP_OPT_MATCHED_DN, &matched) >= 0
-      && matched != NULL) {
-        if (*matched != '\0') {
-      str = PyBytes_FromString(matched);
-      if (str)
-          PyDict_SetItemString( info, "matched", str );
-      Py_XDECREF(str);
-        }
-        ldap_memfree(matched);
-    }
-
-    if (errnum == LDAP_REFERRAL) {
-        str = PyBytes_FromString(msg);
+        str = PyBytes_FromString(ldap_err2string(errnum));
         if (str)
-      PyDict_SetItemString( info, "info", str );
+            PyDict_SetItemString( info, "desc", str );
         Py_XDECREF(str);
-    } else if (ldap_get_option(l, LDAP_OPT_ERROR_STRING, &error) >= 0) {
-        if (error != NULL && *error != '\0') {
-            str = PyBytes_FromString(error);
+
+        if (myerrno != 0) {
+            pyerrno = PyInt_FromLong(myerrno);
+            if (pyerrno)
+                PyDict_SetItemString( info, "errno", pyerrno );
+            Py_XDECREF(pyerrno);
+        }
+
+        if (ldap_get_option(l, LDAP_OPT_MATCHED_DN, &matched) >= 0 && matched != NULL) {
+            if (*matched != '\0') {
+                str = PyBytes_FromString(matched);
+                if (str)
+                    PyDict_SetItemString( info, "matched", str );
+                Py_XDECREF(str);
+            }
+            ldap_memfree(matched);
+        }
+
+        if (errnum == LDAP_REFERRAL) {
+            str = PyBytes_FromString(msg);
             if (str)
                 PyDict_SetItemString( info, "info", str );
             Py_XDECREF(str);
+        } else if (ldap_get_option(l, LDAP_OPT_ERROR_STRING, &error) >= 0) {
+            if (error != NULL && *error != '\0') {
+                str = PyBytes_FromString(error);
+                if (str)
+                    PyDict_SetItemString( info, "info", str );
+                Py_XDECREF(str);
+            }
+            ldap_memfree(error);
         }
-        ldap_memfree(error);
+        PyErr_SetObject( errobj, info );
+        Py_DECREF(info);
+        return NULL;
     }
-    PyErr_SetObject( errobj, info );
-    Py_DECREF(info);
-    return NULL;
-  }
 }
 
 
@@ -128,105 +127,103 @@ LDAPerror( LDAP *l, char *msg )
 void
 LDAPinit_errors( PyObject*d ) {
 
-        /* create the base exception class */
-        LDAPexception_class = PyErr_NewException("ldap0.LDAPError",
-                                                  NULL,
-                                                  NULL);
-        PyDict_SetItemString( d, "LDAPError", LDAPexception_class );
+    /* create the base exception class */
+    LDAPexception_class = PyErr_NewException("ldap0.LDAPError", NULL, NULL);
+    PyDict_SetItemString( d, "LDAPError", LDAPexception_class );
 
-  /* XXX - backward compatibility with pre-1.8 */
-  PyDict_SetItemString( d, "error", LDAPexception_class );
+    /* XXX - backward compatibility with pre-1.8 */
+    PyDict_SetItemString( d, "error", LDAPexception_class );
 
-  /* create each LDAP error object */
+    /* create each LDAP error object */
 
 # define seterrobj2(n,o) \
-    PyDict_SetItemString( d, #n, (errobjects[LDAP_##n+LDAP_ERROR_OFFSET] = o) )
+    PyDict_SetItemString(d, #n, (errobjects[LDAP_##n+LDAP_ERROR_OFFSET] = o))
 
 
 # define seterrobj(n) { \
-    PyObject *e = PyErr_NewException("ldap0." #n,    \
-    LDAPexception_class, NULL);   \
-    seterrobj2(n, e);         \
-    Py_INCREF(e);           \
-  }
+        PyObject *e = PyErr_NewException("ldap0." #n, \
+        LDAPexception_class, NULL); \
+        seterrobj2(n, e); \
+        Py_INCREF(e); \
+    }
 
-  seterrobj(ADMINLIMIT_EXCEEDED);
-  seterrobj(AFFECTS_MULTIPLE_DSAS);
-  seterrobj(ALIAS_DEREF_PROBLEM);
-  seterrobj(ALIAS_PROBLEM);
-  seterrobj(ALREADY_EXISTS);
-  seterrobj(AUTH_METHOD_NOT_SUPPORTED);
-  seterrobj(AUTH_UNKNOWN);
-  seterrobj(BUSY);
-  seterrobj(CLIENT_LOOP);
-  seterrobj(COMPARE_FALSE);
-  seterrobj(COMPARE_TRUE);
-  seterrobj(CONFIDENTIALITY_REQUIRED);
-  seterrobj(CONNECT_ERROR);
-  seterrobj(CONSTRAINT_VIOLATION);
-  seterrobj(CONTROL_NOT_FOUND);
-  seterrobj(DECODING_ERROR);
-  seterrobj(ENCODING_ERROR);
-  seterrobj(FILTER_ERROR);
-  seterrobj(INAPPROPRIATE_AUTH);
-  seterrobj(INAPPROPRIATE_MATCHING);
-  seterrobj(INSUFFICIENT_ACCESS);
-  seterrobj(INVALID_CREDENTIALS);
-  seterrobj(INVALID_DN_SYNTAX);
-  seterrobj(INVALID_SYNTAX);
-  seterrobj(IS_LEAF);
-  seterrobj(LOCAL_ERROR);
-  seterrobj(LOOP_DETECT);
-  seterrobj(MORE_RESULTS_TO_RETURN);
-  seterrobj(NAMING_VIOLATION);
-  seterrobj(NO_MEMORY);
-  seterrobj(NO_OBJECT_CLASS_MODS);
-  seterrobj(NO_OBJECT_CLASS_MODS);
-  seterrobj(NO_RESULTS_RETURNED);
-  seterrobj(NO_SUCH_ATTRIBUTE);
-  seterrobj(NO_SUCH_OBJECT);
-  seterrobj(NOT_ALLOWED_ON_NONLEAF);
-  seterrobj(NOT_ALLOWED_ON_RDN);
-  seterrobj(NOT_SUPPORTED);
-  seterrobj(OBJECT_CLASS_VIOLATION);
-  seterrobj(OPERATIONS_ERROR);
-  seterrobj(OTHER);
-  seterrobj(PARAM_ERROR);
-  seterrobj(PARTIAL_RESULTS);
-  seterrobj(PROTOCOL_ERROR);
-  seterrobj(REFERRAL);
-  seterrobj(REFERRAL_LIMIT_EXCEEDED);
-  seterrobj(RESULTS_TOO_LARGE);
-  seterrobj(SASL_BIND_IN_PROGRESS);
-  seterrobj(SERVER_DOWN);
-  seterrobj(SIZELIMIT_EXCEEDED);
-  seterrobj(STRONG_AUTH_NOT_SUPPORTED);
-  seterrobj(STRONG_AUTH_REQUIRED);
-  seterrobj(SUCCESS);
-  seterrobj(TIMELIMIT_EXCEEDED);
-  seterrobj(TIMEOUT);
-  seterrobj(TYPE_OR_VALUE_EXISTS);
-  seterrobj(UNAVAILABLE);
-  seterrobj(UNAVAILABLE_CRITICAL_EXTENSION);
-  seterrobj(UNDEFINED_TYPE);
-  seterrobj(UNWILLING_TO_PERFORM);
-  seterrobj(USER_CANCELLED);
-  seterrobj(VLV_ERROR);
-  seterrobj(X_PROXY_AUTHZ_FAILURE);
+    seterrobj(ADMINLIMIT_EXCEEDED);
+    seterrobj(AFFECTS_MULTIPLE_DSAS);
+    seterrobj(ALIAS_DEREF_PROBLEM);
+    seterrobj(ALIAS_PROBLEM);
+    seterrobj(ALREADY_EXISTS);
+    seterrobj(AUTH_METHOD_NOT_SUPPORTED);
+    seterrobj(AUTH_UNKNOWN);
+    seterrobj(BUSY);
+    seterrobj(CLIENT_LOOP);
+    seterrobj(COMPARE_FALSE);
+    seterrobj(COMPARE_TRUE);
+    seterrobj(CONFIDENTIALITY_REQUIRED);
+    seterrobj(CONNECT_ERROR);
+    seterrobj(CONSTRAINT_VIOLATION);
+    seterrobj(CONTROL_NOT_FOUND);
+    seterrobj(DECODING_ERROR);
+    seterrobj(ENCODING_ERROR);
+    seterrobj(FILTER_ERROR);
+    seterrobj(INAPPROPRIATE_AUTH);
+    seterrobj(INAPPROPRIATE_MATCHING);
+    seterrobj(INSUFFICIENT_ACCESS);
+    seterrobj(INVALID_CREDENTIALS);
+    seterrobj(INVALID_DN_SYNTAX);
+    seterrobj(INVALID_SYNTAX);
+    seterrobj(IS_LEAF);
+    seterrobj(LOCAL_ERROR);
+    seterrobj(LOOP_DETECT);
+    seterrobj(MORE_RESULTS_TO_RETURN);
+    seterrobj(NAMING_VIOLATION);
+    seterrobj(NO_MEMORY);
+    seterrobj(NO_OBJECT_CLASS_MODS);
+    seterrobj(NO_OBJECT_CLASS_MODS);
+    seterrobj(NO_RESULTS_RETURNED);
+    seterrobj(NO_SUCH_ATTRIBUTE);
+    seterrobj(NO_SUCH_OBJECT);
+    seterrobj(NOT_ALLOWED_ON_NONLEAF);
+    seterrobj(NOT_ALLOWED_ON_RDN);
+    seterrobj(NOT_SUPPORTED);
+    seterrobj(OBJECT_CLASS_VIOLATION);
+    seterrobj(OPERATIONS_ERROR);
+    seterrobj(OTHER);
+    seterrobj(PARAM_ERROR);
+    seterrobj(PARTIAL_RESULTS);
+    seterrobj(PROTOCOL_ERROR);
+    seterrobj(REFERRAL);
+    seterrobj(REFERRAL_LIMIT_EXCEEDED);
+    seterrobj(RESULTS_TOO_LARGE);
+    seterrobj(SASL_BIND_IN_PROGRESS);
+    seterrobj(SERVER_DOWN);
+    seterrobj(SIZELIMIT_EXCEEDED);
+    seterrobj(STRONG_AUTH_NOT_SUPPORTED);
+    seterrobj(STRONG_AUTH_REQUIRED);
+    seterrobj(SUCCESS);
+    seterrobj(TIMELIMIT_EXCEEDED);
+    seterrobj(TIMEOUT);
+    seterrobj(TYPE_OR_VALUE_EXISTS);
+    seterrobj(UNAVAILABLE);
+    seterrobj(UNAVAILABLE_CRITICAL_EXTENSION);
+    seterrobj(UNDEFINED_TYPE);
+    seterrobj(UNWILLING_TO_PERFORM);
+    seterrobj(USER_CANCELLED);
+    seterrobj(VLV_ERROR);
+    seterrobj(X_PROXY_AUTHZ_FAILURE);
 
 #ifdef LDAP_API_FEATURE_CANCEL
-  seterrobj(CANCELLED);
-  seterrobj(NO_SUCH_OPERATION);
-  seterrobj(TOO_LATE);
-  seterrobj(CANNOT_CANCEL);
+    seterrobj(CANCELLED);
+    seterrobj(NO_SUCH_OPERATION);
+    seterrobj(TOO_LATE);
+    seterrobj(CANNOT_CANCEL);
 #endif
 
 #ifdef LDAP_ASSERTION_FAILED
-  seterrobj(ASSERTION_FAILED);
+    seterrobj(ASSERTION_FAILED);
 #endif
 
 #ifdef LDAP_PROXIED_AUTHORIZATION_DENIED
-  seterrobj(PROXIED_AUTHORIZATION_DENIED);
+    seterrobj(PROXIED_AUTHORIZATION_DENIED);
 #endif
 
 }
