@@ -1,5 +1,3 @@
-/* See https://www.python-ldap.org/ for details. */
-
 #ifndef __h_errors_
 #define __h_errors_
 
