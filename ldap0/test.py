@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-slapdtest - module for spawning test instances of OpenLDAP's slapd server
-
-See https://www.python-ldap.org/ for details.
+ldap0.test - module for spawning test instances of OpenLDAP's slapd server
 """
 
 from __future__ import absolute_import
