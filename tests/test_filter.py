@@ -19,7 +19,7 @@ from ldap0.filter import \
 
 class TestFilter(unittest.TestCase):
     """
-    test ldap.filter
+    test ldap0.filter
     """
 
     def test_escape_filter_chars_mode0(self):

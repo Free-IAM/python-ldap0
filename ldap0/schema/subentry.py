@@ -192,7 +192,7 @@ class SubSchema(object):
 
     def tree(self, schema_element_class, schema_element_filters=None):
         """
-        Returns a ldap.cidict.cidict dictionary representing the
+        Returns a ldap0.cidict.cidict dictionary representing the
         tree structure of the schema elements.
         """
         assert schema_element_class in [ObjectClass, AttributeType]
@@ -276,7 +276,7 @@ class SubSchema(object):
         except KeyError:
             if raise_keyerror:
                 raise KeyError(
-                    'No ldap.schema.%s instance with nameoroid %r and se_oid %r' % (
+                    'No ldap0.schema.%s instance with nameoroid %r and se_oid %r' % (
                         se_class.__name__,
                         nameoroid,
                         se_oid
@@ -367,7 +367,7 @@ class SubSchema(object):
         all inherited attributes of superior object classes
         by walking up classes along the SUP attribute.
 
-        The attributes are stored in a ldap.cidict.cidict dictionary.
+        The attributes are stored in a ldap0.cidict.cidict dictionary.
 
         object_class_list
             list of strings specifying object class names or OIDs

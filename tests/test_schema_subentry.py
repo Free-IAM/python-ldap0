@@ -18,7 +18,7 @@ TEST_SUBSCHEMA_FILES = (
 
 class TestSubschemaLDIF(unittest.TestCase):
     """
-    test ldap.schema.SubSchema with subschema subentries read from LDIF files
+    test ldap0.schema.SubSchema with subschema subentries read from LDIF files
     """
 
     def test_subschema_file(self):

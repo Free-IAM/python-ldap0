@@ -386,7 +386,7 @@ class SlapdTestCase(unittest.TestCase):
         """
         ldap_conn = self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level)
         ldap_conn.protocol_version = 3
-        #ldap_conn.set_option(ldap.OPT_REFERRALS, 0)
+        #ldap_conn.set_option(ldap0.OPT_REFERRALS, 0)
         ldap_conn.simple_bind_s(who or self.server.root_dn, cred or self.server.root_pw)
         return ldap_conn
 

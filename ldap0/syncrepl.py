@@ -392,7 +392,7 @@ class SyncreplConsumer:
         Returns False when operation finishes, True if it is in progress, or
         raises an exception on error.
 
-        If timeout is specified, raises ldap.TIMEOUT in the event of a timeout.
+        If timeout is specified, raises ldap0.TIMEOUT in the event of a timeout.
 
         If all is set to a nonzero value, poll() will return only when finished
         or when an exception is raised.

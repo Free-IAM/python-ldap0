@@ -223,12 +223,17 @@ class Test00_LDAPObject(SlapdTestCase):
 
     def test006_sasl_password_mechs(self):
         authz_id = 'dn:cn=user1,%s' % (self.server.suffix)
+#        supported_sasl_mechs = set(self._ldap_conn.read_s('', attrlist=['supportedSASLMechanisms'])['supportedSASLMechanisms'])
+#        skipped_sasl_mechs = []
         for sasl_mech in (
                 'PLAIN',
                 'CRAM-MD5',
                 'DIGEST-MD5',
                 'SCRAM-SHA-1',
             ):
+#            if sasl_mech not in supported_sasl_mechs:
+#                skipped_sasl_mechs.append(sasl_mech)
+#                continue
             with self.ldap_object_class(self.server.ldapi_uri) as l:
                 l.sasl_interactive_bind_s(
                     '',
@@ -237,12 +242,17 @@ class Test00_LDAPObject(SlapdTestCase):
                 self.assertEqual(l.whoami_s(), authz_id.lower())
 
     def test006_sasl_password_mechs_bad(self):
+#        supported_sasl_mechs = set(self._ldap_conn.read_s('', attrlist=['supportedSASLMechanisms'])['supportedSASLMechanisms'])
+#        skipped_sasl_mechs = []
         for sasl_mech in (
                 'PLAIN',
                 'CRAM-MD5',
                 'DIGEST-MD5',
 #                'SCRAM-SHA-1',
             ):
+#            if sasl_mech not in supported_sasl_mechs:
+#                skipped_sasl_mechs.append(sasl_mech)
+#                continue
             with self.ldap_object_class(self.server.ldapi_uri) as l:
                 try:
                     l.sasl_interactive_bind_s(

@@ -2,7 +2,7 @@
 """
 ldap0.controls - support classes for LDAP controls
 
-The ldap.controls module provides LDAPControl classes.
+The ldap0.controls module provides LDAPControl classes.
 Each class provides support for a certain control.
 """
 
@@ -140,12 +140,12 @@ def DecodeControlTuples(ldapControlTuples, knownLDAPControls=None):
     Returns list of readily decoded ResponseControl objects
 
     ldapControlTuples
-        Sequence-type of 3-tuples returned by _ldap.result() containing
+        Sequence-type of 3-tuples returned by _libldap0.result() containing
         the encoded ASN.1 control values of response controls.
     knownLDAPControls
         Dictionary mapping extended control's OID to ResponseControl class
         of response controls known by the application. If None
-        ldap.controls.KNOWN_RESPONSE_CONTROLS is used here.
+        ldap0.controls.KNOWN_RESPONSE_CONTROLS is used here.
     """
     if knownLDAPControls is None:
         knownLDAPControls = KNOWN_RESPONSE_CONTROLS
