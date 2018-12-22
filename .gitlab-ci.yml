@@ -57,8 +57,7 @@ test:debian:
   - wget -O - https://ltb-project.org/lib/RPM-GPG-KEY-LTB-project | apt-key add -
   - apt-get update
   - apt-get install -y openldap-ltb openldap-ltb-contrib-overlays openldap-ltb-mdb-utils openldap-ltb-ppm libldap2-dev libsasl2-dev python-setuptools python-setuptools-git python-setuptools-scm gcc python-dev python-pip
-  - mkdir /etc/sasl2
-  - 'echo "mech_list: PLAIN GSSAPI DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
+  - 'echo "mech_list: PLAIN GSSAPI DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /usr/lib/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd 
   - export SCHEMA=/usr/local/openldap/etc/openldap/schema 
   - export BIN=/usr/local/openldap/bin/ 
