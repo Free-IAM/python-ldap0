@@ -18,50 +18,190 @@ from ldap0.schema.models import DITStructureRule
 from ldap0.schema.models import NameForm
 
 
-class TestSchemaDescriptionClasses(unittest.TestCase):
+# class attribute names of ObjectClass instances
+OC_CLASS_ATTRS = ()
+
+
+class SchemaDescriptionTest(unittest.TestCase):
     """
-    test classes in ldap0.schema.models used for parsing and unparsing schema description
+    Base class for testing parsing and unparsing of schema description classes
     """
+    schema_class = None
+    class_attrs = ()
+    test_cases = ()
 
-    def test_attribute_type(self):
-        """
-        Test class AttributeType
-        """
+    def test_parse(self):
+        for schema_desc_str, res in self.test_cases:
+            at = self.schema_class(schema_desc_str)
+            for class_attr in self.class_attrs:
+                self.assertEqual(getattr(at, class_attr), res.get(class_attr, None))
 
-    def test_object_class(self):
-        """
-        Test class ObjectClass
-        """
 
-    def test_ldap_syntax(self):
-        """
-        Test class LDAPSyntax
-        """
+class TestAttributeType(SchemaDescriptionTest):
+    """
+    test ldap0.schema.models.AttributeType
+    """
+    schema_class = AttributeType
+    class_attrs = (
+        'oid',
+        'names',
+        'desc',
+        'obsolete',
+        'sup',
+        'equality',
+        'ordering',
+        'substr',
+        'x_origin',
+        'x_ordered',
+        'syntax',
+        'syntax_len',
+        'single_value',
+        'collective',
+        'no_user_mod',
+        'usage',
+    )
+    test_cases = (
+        (
+            "( 2.5.4.3 NAME ( 'cn' 'commonName' ) DESC 'RFC4519: common name(s) for which the entity is known by' SUP name )",
+            {
+                'oid': '2.5.4.3',
+                'names': ('cn', 'commonName'),
+                'desc': 'RFC4519: common name(s) for which the entity is known by',
+                'obsolete': False,
+                'sup': ('name',),
+                'single_value': False,
+                'collective': False,
+                'no_user_mod': False,
+                'usage': 0,
+            },
+        ),
+        (
+            "( 1.3.6.1.1.1.1.0 NAME 'uidNumber' DESC 'RFC2307: An integer uniquely identifying a user in an administrative domain' EQUALITY integerMatch ORDERING integerOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )",
+            {
+                'oid': '1.3.6.1.1.1.1.0',
+                'names': ('uidNumber',),
+                'desc': 'RFC2307: An integer uniquely identifying a user in an administrative domain',
+                'obsolete': False,
+                'sup': (),
+                'equality': 'integerMatch',
+                'ordering': 'integerOrderingMatch',
+                'syntax': '1.3.6.1.4.1.1466.115.121.1.27',
+                'single_value': True,
+                'collective': False,
+                'no_user_mod': False,
+                'usage': 0,
+            },
+        ),
+        (
+            "( 1.3.6.1.4.1.4203.1.12.2.3.2.3.2 NAME 'olcDbACLAuthcDn' DESC 'Remote ACL administrative identity' OBSOLETE SYNTAX 1.3.6.1.4.1.1466.115.121.1.12 SINGLE-VALUE )",
+            {
+                'oid': '1.3.6.1.4.1.4203.1.12.2.3.2.3.2',
+                'names': ('olcDbACLAuthcDn',),
+                'desc': 'Remote ACL administrative identity',
+                'obsolete': True,
+                'sup': (),
+                'syntax': '1.3.6.1.4.1.1466.115.121.1.12',
+                'single_value': True,
+                'collective': False,
+                'no_user_mod': False,
+                'usage': 0,
+            },
+        ),
+        (
+            "( 2.5.18.1 NAME 'createTimestamp' DESC 'RFC4512: time which object was created' EQUALITY generalizedTimeMatch ORDERING generalizedTimeOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 SINGLE-VALUE NO-USER-MODIFICATION USAGE directoryOperation )",
+            {
+                'oid': '2.5.18.1',
+                'names': ('createTimestamp',),
+                'desc': 'RFC4512: time which object was created',
+                'obsolete': False,
+                'sup': (),
+                'equality': 'generalizedTimeMatch',
+                'ordering': 'generalizedTimeOrderingMatch',
+                'syntax': '1.3.6.1.4.1.1466.115.121.1.24',
+                'single_value': True,
+                'collective': False,
+                'no_user_mod': True,
+                'usage': 1,
+            },
+        ),
+    )
+                
 
-    def test_matching_rule(self):
-        """
-        Test class MatchingRule
-        """
+class TestObjectClass(SchemaDescriptionTest):
+    """
+    test ldap0.schema.models.ObjectClass
+    """
+    schema_class = ObjectClass
+    class_attrs = (
+    )
+    test_cases = (
+    )
+                
 
-    def test_matching_rule_use(self):
-        """
-        Test class MatchingRuleUse
-        """
+class TestLDAPSyntax(SchemaDescriptionTest):
+    """
+    test ldap0.schema.models.LDAPSyntax
+    """
+    schema_class = LDAPSyntax
+    class_attrs = (
+    )
+    test_cases = (
+    )
+                
 
-    def test_dit_content_rule(self):
-        """
-        Test class DITContentRule
-        """
+class TestMatchingRule(SchemaDescriptionTest):
+    """
+    test ldap0.schema.models.MatchingRule
+    """
+    schema_class = MatchingRule
+    class_attrs = (
+    )
+    test_cases = (
+    )
+                
 
-    def test_dit_structure_rule(self):
-        """
-        Test class DITStructureRule
-        """
+class TestMatchingRuleUse(SchemaDescriptionTest):
+    """
+    test ldap0.schema.models.MatchingRuleUse
+    """
+    schema_class = MatchingRuleUse
+    class_attrs = (
+    )
+    test_cases = (
+    )
+                
 
-    def test_name_form(self):
-        """
-        Test class NameForm
-        """
+class TestDITContentRule(SchemaDescriptionTest):
+    """
+    test ldap0.schema.models.DITContentRule
+    """
+    schema_class = DITContentRule
+    class_attrs = (
+    )
+    test_cases = (
+    )
+                
+
+class TestDITStructureRule(SchemaDescriptionTest):
+    """
+    test ldap0.schema.models.DITStructureRule
+    """
+    schema_class = DITStructureRule
+    class_attrs = (
+    )
+    test_cases = (
+    )
+                
+
+class TestNameForm(SchemaDescriptionTest):
+    """
+    test ldap0.schema.models.NameForm
+    """
+    schema_class = NameForm
+    class_attrs = (
+    )
+    test_cases = (
+    )
 
 
 if __name__ == '__main__':
