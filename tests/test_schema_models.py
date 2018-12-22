@@ -8,6 +8,7 @@ from __future__ import absolute_import
 import unittest
 
 import ldap0.ldif
+from ldap0.schema.models import SchemaElement
 from ldap0.schema.models import AttributeType
 from ldap0.schema.models import ObjectClass
 from ldap0.schema.models import LDAPSyntax
@@ -26,9 +27,20 @@ class SchemaDescriptionTest(unittest.TestCase):
     """
     Base class for testing parsing and unparsing of schema description classes
     """
-    schema_class = None
-    class_attrs = ()
-    test_cases = ()
+    schema_class = SchemaElement
+    class_attrs = (
+        'oid',
+        'desc',
+    )
+    test_cases = (
+        (
+            "( 1.2.3.4.5.6.7.8 DESC 'something weird: äöüÄÖÜß' )",
+            {
+                'oid': '1.2.3.4.5.6.7.8',
+                'desc': 'something weird: äöüÄÖÜß',
+            },
+        ),
+    )
 
     def test_parse(self):
         for schema_desc_str, res in self.test_cases:
@@ -292,6 +304,11 @@ class TestMatchingRule(SchemaDescriptionTest):
         'syntax',
     )
     test_cases = (
+        (
+            "",
+            {
+            },
+        ),
     )
 
 
@@ -308,6 +325,16 @@ class TestMatchingRuleUse(SchemaDescriptionTest):
         'applies',
     )
     test_cases = (
+        (
+            "( 1.3.6.1.4.1.4203.666.11.2.5 NAME 'CSNSIDMatch' APPLIES ( entryCSN $ namingCSN $ contextCSN ) )",
+            {
+                'oid': '1.3.6.1.4.1.4203.666.11.2.5',
+                'names': ('CSNSIDMatch', ),
+                'desc': None,
+                'obsolete': False,
+                'applies': ('entryCSN', 'namingCSN', 'contextCSN'),
+            },
+        ),
     )
 
 
@@ -370,6 +397,28 @@ class TestDITStructureRule(SchemaDescriptionTest):
         'sup',
     )
     test_cases = (
+        (
+            "( 104 NAME 'aeRoot-top-SR-o' FORM aeRoot-top-NF-o )",
+            {
+                'ruleid': '104',
+                'names': ('aeRoot-top-SR-o', ),
+                'desc': None,
+                'obsolete': False,
+                'form': 'aeRoot-top-NF-o',
+                'sup': (),
+            },
+        ),
+        (
+            "( 999 NAME ( rule999 $ ruleName ) DESC 'äöüÄÖÜß' FORM 'foobar' SUP ( 1 2 3 4 ) )",
+            {
+                'ruleid': '999',
+                'names': ('rule999', 'ruleName'),
+                'desc': 'äöüÄÖÜß',
+                'obsolete': False,
+                'form': 'foobar',
+                'sup': ('1', '2', '3', '4'),
+            },
+        ),
     )
 
 
@@ -388,6 +437,18 @@ class TestNameForm(SchemaDescriptionTest):
         'may',
     )
     test_cases = (
+        (
+            "( 1.3.6.1.4.1.5427.1.389.42.15.103 NAME 'aeRoot-top-NF-o' OC aeRoot MUST ( o ) )",
+            {
+                'oid': '1.3.6.1.4.1.5427.1.389.42.15.103',
+                'names': ('aeRoot-top-NF-o', ),
+                'desc': None,
+                'obsolete': False,
+                'oc': 'aeRoot',
+                'must': ('o',),
+                'may': (),
+            },
+        ),
     )
 
 
