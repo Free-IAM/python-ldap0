@@ -21,7 +21,7 @@ test:tumbleweed:
   image: opensuse/tumbleweed
   before_script:
   - zypper update 
-  - zypper install -l -y cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip python2-Jinja2 python2-tox git openldap2-back-sock openldap2-contrib openldap2-client openldap2-ppolicy-check-password
+  - zypper install -l -y cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip openldap2-back-sock openldap2-contrib openldap2-client
   - 'echo "mech_list: PLAIN GSSAPI DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
 
 test:leap:
@@ -29,7 +29,8 @@ test:leap:
   image: opensuse/leap
   before_script:
   - zypper update 
-  - zypper install -l -y openldap2 python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip python2-Jinja2 python2-tox git openldap2-back-sock openldap2-contrib openldap2-client openldap2-ppolicy-check-password
+  - zypper install -l -y cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip openldap2-back-sock openldap2-contrib openldap2-client
+  - 'echo "mech_list: PLAIN GSSAPI DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
 
 test:centos:
   extends: .tests
@@ -39,7 +40,8 @@ test:centos:
   - rpm --import https://ltb-project.org/lib/RPM-GPG-KEY-LTB-project
   - yum install epel-release -y
   - *script-1
-  - yum install -y openldap-ltb openldap-ltb-contrib-overlays openldap-ltb-mdb-utils openldap-ltb-ppm openldap-ltb-check-password cracklib openldap-devel python-setuptools gcc python-devel cyrus-sasl-devel python-pip python-jinja2 python-tox git
+  - yum install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram openldap-ltb openldap-ltb-contrib-overlays openldap-ltb-mdb-utils openldap-ltb-ppm openldap-devel python-setuptools gcc python-devel cyrus-sasl-devel python-pip
+  - 'echo "mech_list: PLAIN GSSAPI DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd 
   - export SCHEMA=/usr/local/openldap/etc/openldap/schema 
   - export BIN=/usr/local/openldap/bin/ 
@@ -54,7 +56,8 @@ test:debian:
   - echo "deb [arch=amd64] https://ltb-project.org/debian/stretch stretch main" > /etc/apt/sources.list.d/ltb-project.list
   - wget -O - https://ltb-project.org/lib/RPM-GPG-KEY-LTB-project | apt-key add -
   - apt-get update
-  - apt-get install -y openldap-ltb openldap-ltb-contrib-overlays openldap-ltb-mdb-utils openldap-ltb-ppm openldap-ltb-check-password cracklib-runtime libldap2-dev libsasl2-dev python-setuptools python-setuptools-git python-setuptools-scm gcc python-dev python-pip python-jinja2 python-tox git
+  - apt-get install -y openldap-ltb openldap-ltb-contrib-overlays openldap-ltb-mdb-utils openldap-ltb-ppm libldap2-dev libsasl2-dev python-setuptools python-setuptools-git python-setuptools-scm gcc python-dev python-pip
+  - 'echo "mech_list: PLAIN GSSAPI DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd 
   - export SCHEMA=/usr/local/openldap/etc/openldap/schema 
   - export BIN=/usr/local/openldap/bin/ 
