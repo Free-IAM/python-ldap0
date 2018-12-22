@@ -156,7 +156,7 @@ class TestAttributeType(SchemaDescriptionTest):
             },
         ),
     )
-                
+
 
 class TestObjectClass(SchemaDescriptionTest):
     """
@@ -165,8 +165,8 @@ class TestObjectClass(SchemaDescriptionTest):
     schema_class = ObjectClass
     class_attrs = (
         'oid',
-        'obsolete',
         'names',
+        'obsolete',
         'desc',
         'must',
         'may',
@@ -174,8 +174,56 @@ class TestObjectClass(SchemaDescriptionTest):
         'sup',
     )
     test_cases = (
+        (
+            "( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPerson' DESC 'RFC2798: Internet Organizational Person' SUP organizationalPerson STRUCTURAL MAY ( audio $ businessCategory $ carLicense $ departmentNumber $ displayName $ employeeNumber $ employeeType $ givenName $ homePhone $ homePostalAddress $ initials $ jpegPhoto $ labeledURI $ mail $ manager $ mobile $ o $ pager $ photo $ roomNumber $ secretary $ uid $ userCertificate $ x500uniqueIdentifier$ preferredLanguage $ userSMIMECertificate $ userPKCS12 ) )",
+            {
+                'oid': '2.16.840.1.113730.3.2.2',
+                'names': ('inetOrgPerson', ),
+                'obsolete': False,
+                'desc': 'RFC2798: Internet Organizational Person',
+                'must': (),
+                'may': (
+                    'audio', 'businessCategory', 'carLicense',
+                    'departmentNumber', 'displayName', 'employeeNumber',
+                    'employeeType', 'givenName', 'homePhone',
+                    'homePostalAddress', 'initials', 'jpegPhoto',
+                    'labeledURI', 'mail', 'manager', 'mobile', 'o',
+                    'pager', 'photo', 'roomNumber', 'secretary', 'uid',
+                    'userCertificate', 'x500uniqueIdentifier',
+                    'preferredLanguage', 'userSMIMECertificate',
+                    'userPKCS12',
+                ),
+                'kind': 0,
+                'sup': ('organizationalPerson',),
+            },
+        ),
+        (
+            "( 1.2.3.4 NAME ( foo $ bar ) DESC 'äöüÄÖÜß' ABSTRACT OBSOLETE )",
+            {
+                'oid': '1.2.3.4',
+                'names': ('foo', 'bar'),
+                'obsolete': True,
+                'desc': 'äöüÄÖÜß',
+                'must': (),
+                'may': (),
+                'kind': 1,
+                'sup': (),
+            },
+        ),
+        (
+            "( 1.2.3.4 NAME ( foobar ) AUXILIARY OBSOLETE )",
+            {
+                'oid': '1.2.3.4',
+                'names': ('foobar', ),
+                'obsolete': True,
+                'must': (),
+                'may': (),
+                'kind': 2,
+                'sup': (),
+            },
+        ),
     )
-                
+
 
 class TestLDAPSyntax(SchemaDescriptionTest):
     """
@@ -245,7 +293,7 @@ class TestMatchingRule(SchemaDescriptionTest):
     )
     test_cases = (
     )
-                
+
 
 class TestMatchingRuleUse(SchemaDescriptionTest):
     """
@@ -261,7 +309,7 @@ class TestMatchingRuleUse(SchemaDescriptionTest):
     )
     test_cases = (
     )
-                
+
 
 class TestDITContentRule(SchemaDescriptionTest):
     """
@@ -279,8 +327,34 @@ class TestDITContentRule(SchemaDescriptionTest):
         'nots',
     )
     test_cases = (
+        (
+            "( 2.16.840.1.113730.3.2.2 NAME 'inetOrgPerson-dcr' DESC 'content of inetOrgPerson entries' AUX ( pkiUser $ posixAccount $ inetLocalMailRecipient $ shadowAccount$ simpleSecurityObject ) NOT x121Address )",
+            {
+                'oid': '2.16.840.1.113730.3.2.2',
+                'names': ('inetOrgPerson-dcr', ),
+                'desc': 'content of inetOrgPerson entries',
+                'obsolete': False,
+                'aux': ('pkiUser', 'posixAccount', 'inetLocalMailRecipient', 'shadowAccount', 'simpleSecurityObject'),
+                'must': (),
+                'may': (),
+                'nots': ('x121Address',),
+            },
+        ),
+        (
+            "( 1.2.3.4 NAME 'weird-oc-dcr' DESC 'äöüÄÖÜß' OBSOLETE MUST ( a $ b ) MAY ( c $ d ) )",
+            {
+                'oid': '1.2.3.4',
+                'names': ('weird-oc-dcr', ),
+                'desc': 'äöüÄÖÜß',
+                'obsolete': True,
+                'aux': (),
+                'must': ('a', 'b'),
+                'may': ('c', 'd'),
+                'nots': (),
+            },
+        ),
     )
-                
+
 
 class TestDITStructureRule(SchemaDescriptionTest):
     """
@@ -297,7 +371,7 @@ class TestDITStructureRule(SchemaDescriptionTest):
     )
     test_cases = (
     )
-                
+
 
 class TestNameForm(SchemaDescriptionTest):
     """
