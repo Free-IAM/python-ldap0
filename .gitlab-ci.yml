@@ -21,7 +21,7 @@ test:tumbleweed:
   image: opensuse/tumbleweed
   before_script:
   - zypper update 
-  - zypper install -l -y cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip openldap2-back-sock openldap2-contrib openldap2-client
+  - zypper install -l -y cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python2-pyasn1-modules python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip openldap2-back-sock openldap2-contrib openldap2-client
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
 
 test:leap:
@@ -29,7 +29,7 @@ test:leap:
   image: opensuse/leap
   before_script:
   - zypper update 
-  - zypper install -l -y cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip openldap2-back-sock openldap2-contrib openldap2-client
+  - zypper install -l -y cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python2-pyasn1-modules python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip openldap2-back-sock openldap2-contrib openldap2-client
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
 
 test:centos:
