@@ -34,6 +34,57 @@ class TestSubschemaLDIF(unittest.TestCase):
                 len(SCHEMA_CLASS_MAPPING),
                 len(sub_schema.sed),
             )
+            # check the attribute type 'cn' alias 'commonName'
+            oid = sub_schema.name2oid[ldap0.schema.models.AttributeType]['cn']
+            self.assertEqual(oid, '2.5.4.3')
+            self.assertEqual(oid, sub_schema.name2oid[ldap0.schema.models.AttributeType]['commonName'])
+            cn_at = sub_schema.sed[ldap0.schema.models.AttributeType][oid]
+            self.assertEqual(
+                cn_at.names,
+                ('cn', 'commonName'),
+            )
+            self.assertEqual(
+                cn_at.desc,
+                'RFC4519: common name(s) for which the entity is known by',
+            )
+            self.assertEqual(
+                cn_at.sup,
+                ('name',),
+            )
+            # check the object class 'inetOrgPerson'
+            oid = sub_schema.name2oid[ldap0.schema.models.ObjectClass]['inetOrgPerson']
+            self.assertEqual(oid, '2.16.840.1.113730.3.2.2')
+            inop_oc = sub_schema.sed[ldap0.schema.models.ObjectClass][oid]
+            self.assertEqual(
+                inop_oc.names,
+                ('inetOrgPerson',),
+            )
+            self.assertEqual(
+                inop_oc.desc,
+                'RFC2798: Internet Organizational Person',
+            )
+            self.assertEqual(
+                inop_oc.sup,
+                ('organizationalPerson',),
+            )
+            self.assertEqual(
+                inop_oc.must,
+                (),
+            )
+            self.assertEqual(
+                inop_oc.may,
+                (
+                    'audio', 'businessCategory', 'carLicense',
+                    'departmentNumber', 'displayName', 'employeeNumber',
+                    'employeeType', 'givenName', 'homePhone',
+                    'homePostalAddress', 'initials', 'jpegPhoto',
+                    'labeledURI', 'mail', 'manager', 'mobile', 'o',
+                    'pager', 'photo', 'roomNumber', 'secretary', 'uid',
+                    'userCertificate', 'x500uniqueIdentifier',
+                    'preferredLanguage', 'userSMIMECertificate',
+                    'userPKCS12'
+                ),
+            )
 
 
 if __name__ == '__main__':
