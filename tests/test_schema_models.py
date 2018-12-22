@@ -36,6 +36,16 @@ class SchemaDescriptionTest(unittest.TestCase):
             for class_attr in self.class_attrs:
                 self.assertEqual(getattr(at, class_attr), res.get(class_attr, None))
 
+    def test_unparse(self):
+        for schema_desc_str, res in self.test_cases:
+            at1 = self.schema_class(schema_desc_str)
+            at2 = self.schema_class(str(at1))
+            for class_attr in self.class_attrs:
+                self.assertEqual(
+                    getattr(at1, class_attr),
+                    getattr(at2, class_attr),
+                )
+
 
 class TestAttributeType(SchemaDescriptionTest):
     """
