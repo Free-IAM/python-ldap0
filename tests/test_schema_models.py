@@ -164,6 +164,14 @@ class TestObjectClass(SchemaDescriptionTest):
     """
     schema_class = ObjectClass
     class_attrs = (
+        'oid',
+        'obsolete',
+        'names',
+        'desc',
+        'must',
+        'may',
+        'kind',
+        'sup',
     )
     test_cases = (
     )
@@ -229,6 +237,11 @@ class TestMatchingRule(SchemaDescriptionTest):
     """
     schema_class = MatchingRule
     class_attrs = (
+        'oid',
+        'names',
+        'desc',
+        'obsolete',
+        'syntax',
     )
     test_cases = (
     )
@@ -240,6 +253,11 @@ class TestMatchingRuleUse(SchemaDescriptionTest):
     """
     schema_class = MatchingRuleUse
     class_attrs = (
+        'oid',
+        'names',
+        'desc',
+        'obsolete',
+        'applies',
     )
     test_cases = (
     )
@@ -251,6 +269,14 @@ class TestDITContentRule(SchemaDescriptionTest):
     """
     schema_class = DITContentRule
     class_attrs = (
+        'oid',
+        'names',
+        'desc',
+        'obsolete',
+        'aux',
+        'must',
+        'may',
+        'nots',
     )
     test_cases = (
     )
@@ -262,6 +288,12 @@ class TestDITStructureRule(SchemaDescriptionTest):
     """
     schema_class = DITStructureRule
     class_attrs = (
+        'ruleid',
+        'names',
+        'desc',
+        'obsolete',
+        'form',
+        'sup',
     )
     test_cases = (
     )
@@ -273,6 +305,13 @@ class TestNameForm(SchemaDescriptionTest):
     """
     schema_class = NameForm
     class_attrs = (
+        'oid',
+        'names',
+        'desc',
+        'obsolete',
+        'oc',
+        'must',
+        'may',
     )
     test_cases = (
     )
