@@ -22,7 +22,7 @@ test:tumbleweed:
   before_script:
   - zypper update 
   - zypper install -l -y cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python2-setuptools python2-setuptools-git python2-setuptools_scm gcc python-devel openldap2-devel cyrus-sasl-devel python2-pip python2-Jinja2 python2-tox git openldap2-back-sock openldap2-contrib openldap2-client openldap2-ppolicy-check-password
-  - echo "mech_list: PLAIN GSSAPI DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf
+  - 'echo "mech_list: PLAIN GSSAPI DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
 
 test:leap:
   extends: .tests
