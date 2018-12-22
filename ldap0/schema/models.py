@@ -360,6 +360,9 @@ class LDAPSyntax(SchemaElement):
         result.append(
             {0:'', 1:" X-NOT-HUMAN-READABLE 'TRUE'"}[self.not_human_readable]
         )
+        result.append(
+            {0:'', 1:" X-BINARY-TRANSFER-REQUIRED 'TRUE'"}[self.x_binary_transfer_required]
+        )
         return '( %s )' % ''.join(result)
 
 
