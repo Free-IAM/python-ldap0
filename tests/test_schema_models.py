@@ -32,18 +32,39 @@ class SchemaDescriptionTest(unittest.TestCase):
 
     def test_parse(self):
         for schema_desc_str, res in self.test_cases:
+            if not schema_desc_str:
+                # skip empty strings
+                continue
             at = self.schema_class(schema_desc_str)
             for class_attr in self.class_attrs:
-                self.assertEqual(getattr(at, class_attr), res.get(class_attr, None))
+                self.assertEqual(
+                    getattr(at, class_attr),
+                    res.get(class_attr, None),
+                    'Test-case %r class attribute %r: %r != %r' % (
+                        schema_desc_str,
+                        class_attr,
+                        getattr(at, class_attr),
+                        res.get(class_attr, None),
+                    ),
+                )
 
     def test_unparse(self):
         for schema_desc_str, res in self.test_cases:
+            if not schema_desc_str:
+                # skip empty strings
+                continue
             at1 = self.schema_class(schema_desc_str)
             at2 = self.schema_class(str(at1))
             for class_attr in self.class_attrs:
                 self.assertEqual(
                     getattr(at1, class_attr),
                     getattr(at2, class_attr),
+                    'Test-case %r class attribute %r: %r != %r' % (
+                        schema_desc_str,
+                        class_attr,
+                        getattr(at1, class_attr),
+                        getattr(at2, class_attr),
+                    ),
                 )
 
 
@@ -154,10 +175,53 @@ class TestLDAPSyntax(SchemaDescriptionTest):
     """
     schema_class = LDAPSyntax
     class_attrs = (
+        'oid',
+        'desc',
+        'x_subst',
+        'not_human_readable',
+        'x_binary_transfer_required',
     )
     test_cases = (
+        (
+            "( 1.3.6.1.4.1.1466.115.121.1.4 DESC 'Audio' X-NOT-HUMAN-READABLE 'TRUE' )",
+            {
+                'oid': '1.3.6.1.4.1.1466.115.121.1.4',
+                'desc': 'Audio',
+                'not_human_readable': True,
+                'x_binary_transfer_required': False,
+            },
+        ),
+        (
+            "( 1.3.6.1.4.1.1466.115.121.1.6 DESC 'Bit String' )",
+            {
+                'oid': '1.3.6.1.4.1.1466.115.121.1.6',
+                'desc': 'Bit String',
+                'not_human_readable': False,
+                'x_binary_transfer_required': False,
+            },
+        ),
+        (
+            "( 1.3.6.1.4.1.1466.115.121.1.8 DESC 'Certificate' X-BINARY-TRANSFER-REQUIRED 'TRUE' X-NOT-HUMAN-READABLE 'TRUE' )",
+            {
+                'oid': '1.3.6.1.4.1.1466.115.121.1.8',
+                'desc': 'Certificate',
+                'x_subst': None,
+                'not_human_readable': True,
+                'x_binary_transfer_required': True,
+            },
+        ),
+        (
+            "( 1.2.3.4 DESC 'Weirdest test äöüÄÖÜß' X-SUBST blurbBlabber X-BINARY-TRANSFER-REQUIRED 'FALSE' X-NOT-HUMAN-READABLE 'FALSE' )",
+            {
+                'oid': '1.2.3.4',
+                'desc': 'Weirdest test äöüÄÖÜß',
+                'x_subst': 'blurbBlabber',
+                'not_human_readable': False,
+                'x_binary_transfer_required': False,
+            },
+        ),
     )
-                
+
 
 class TestMatchingRule(SchemaDescriptionTest):
     """
