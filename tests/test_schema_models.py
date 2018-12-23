@@ -449,6 +449,18 @@ class TestNameForm(SchemaDescriptionTest):
                 'may': (),
             },
         ),
+        (
+            "( 1.2.3.4.5.6 NAME 'testNameForm' OC testObjectClass DESC 'äöüÄÖÜß' OBSOLETE MUST ( cn ) MAY ( mail $ uniqueIdentifier ) )",
+            {
+                'oid': '1.2.3.4.5.6',
+                'names': ('testNameForm', ),
+                'desc': 'äöüÄÖÜß',
+                'obsolete': True,
+                'oc': 'testObjectClass',
+                'must': ('cn',),
+                'may': ('mail', 'uniqueIdentifier'),
+            },
+        ),
     )
 
 
