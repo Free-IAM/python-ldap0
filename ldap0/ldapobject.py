@@ -368,13 +368,14 @@ class LDAPObject:
         )
 
     def extop_result(self, msgid=_libldap0.RES_ANY, extop_resp_class=None):
-        _, _, _, _, respoid, respvalue = self.result(
+        _, _, _, _, respoid, respvalue = self._ldap_call(
+            self._l.result,
             msgid,
-            all=1,
-            timeout=self.timeout,
-            add_ctrls=1,
-            add_intermediates=1,
-            add_extop=1
+            1,
+            self.timeout,
+            True,
+            True,
+            True,
         )
         if extop_resp_class is None:
             extop_response = ExtendedResponse(respoid, respvalue)
@@ -474,12 +475,12 @@ class LDAPObject:
         return resp_type, resp_data, resp_msgid, resp_ctrls
 
     def result(
-            self, msgid=_libldap0.RES_ANY,
+            self,
+            msgid=_libldap0.RES_ANY,
             all=1,
             timeout=None,
             add_ctrls=0,
             add_intermediates=0,
-            add_extop=0,
             resp_ctrl_classes=None
         ):
         if timeout is None:
@@ -489,55 +490,70 @@ class LDAPObject:
             msgid,
             all,
             timeout,
-            add_ctrls,
+            True,
             add_intermediates,
-            add_extop
         )
         if ldap_result is None:
             resp_type, resp_data, resp_msgid, resp_ctrls, resp_name, resp_value = (
                 None, None, None, None, None, None
             )
         else:
-            if len(ldap_result) == 4:
-                resp_type, resp_data, resp_msgid, resp_ctrls = ldap_result
-                resp_name, resp_value = None, None
-            else:
-                resp_type, resp_data, resp_msgid, resp_ctrls, resp_name, resp_value = ldap_result
+            resp_type, resp_data, resp_msgid, resp_ctrls = ldap_result
             if add_ctrls:
                 resp_data = [
                     (t, r, DecodeControlTuples(c, resp_ctrl_classes))
                     for t, r, c in resp_data
                 ]
+            else:
+                resp_data = [
+                    (t, r)
+                    for t, r, c in resp_data
+                ]
         decoded_resp_ctrls = DecodeControlTuples(resp_ctrls, resp_ctrl_classes)
-        return resp_type, resp_data, resp_msgid, decoded_resp_ctrls, resp_name, resp_value
+        return resp_type, resp_data, resp_msgid, decoded_resp_ctrls, None, None
 
-    def results(self, msgid, timeout=-1, add_ctrls=False):
+    def results(self, msgid, timeout=-1, add_ctrls=False, add_intermediates=False):
         """
         Generator method which returns an iterator for processing all LDAP
         operation results of the given msgid like retrieved with
         LDAPObject.result()
         """
-        result_type, result_list, result_msgid, result_serverctrls, _, _ = \
-            self.result(
-                msgid,
-                0,
-                timeout,
-                add_ctrls=add_ctrls
-            )
-        while result_type and result_list:
+        ldap_result = self._ldap_call(
+            self._l.result,
+            msgid,
+            0,
+            timeout,
+            True,
+            add_intermediates,
+            False
+        )
+        while ldap_result and ldap_result[1]:
+            result_type, result_list, result_msgid, result_serverctrls = ldap_result
+            if add_ctrls:
+                result_list = [
+                    (t, r, DecodeControlTuples(c, resp_ctrl_classes))
+                    for t, r, c in result_list
+                ]
+            else:
+                result_list = [
+                    (t, r)
+                    for t, r, c in result_list
+                ]
             yield (
                 result_type,
                 result_list,
                 result_msgid,
                 result_serverctrls
             )
-            result_type, result_list, result_msgid, result_serverctrls, _, _ = \
-                self.result(
-                    msgid,
-                    0,
-                    timeout,
-                    add_ctrls=add_ctrls
-                )
+            ldap_result = self._ldap_call(
+                self._l.result,
+                msgid,
+                0,
+                timeout,
+                True,
+                add_intermediates,
+                False
+            )
         return # results()
 
     def search(
