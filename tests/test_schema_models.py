@@ -305,8 +305,21 @@ class TestMatchingRule(SchemaDescriptionTest):
     )
     test_cases = (
         (
-            "",
+            "( 1.3.6.1.1.16.3 NAME 'UUIDOrderingMatch' SYNTAX 1.3.6.1.1.16.1 )",
             {
+                'oid': '1.3.6.1.1.16.3',
+                'names': ('UUIDOrderingMatch', ),
+                'obsolete': False,
+                'syntax': '1.3.6.1.1.16.1',
+            },
+        ),
+        (
+            "( 12.34.56.78.90 NAME ( fooBarMatch $ barFooMatch ) OBSOLETE SYNTAX 1.2.3.4.5.6.7.8.9 )",
+            {
+                'oid': '12.34.56.78.90',
+                'names': ('fooBarMatch', 'barFooMatch'),
+                'obsolete': True,
+                'syntax': '1.2.3.4.5.6.7.8.9',
             },
         ),
     )
