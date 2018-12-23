@@ -399,7 +399,7 @@ class SyncreplConsumer:
 
         """
         while True:
-            type, msg, mid, ctrls, n, v = self.result(
+            type, msg, mid, ctrls = self.result(
                 msgid=msgid,
                 timeout=timeout,
                 add_intermediates=1,

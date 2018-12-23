@@ -336,7 +336,7 @@ class Test00_LDAPObject(SlapdTestCase):
             serverctrls=[paged_results_control],
         )
         while True:
-            rtype, rdata, rmsgid, rctrls, _, _ = self._ldap_conn.result(msg_id)
+            rtype, rdata, rmsgid, rctrls = self._ldap_conn.result(msg_id)
             self.assertEqual(rmsgid, msg_id)
             all_paged_results.extend(rdata)
             result_pages += 1

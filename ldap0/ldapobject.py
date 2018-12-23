@@ -243,7 +243,7 @@ class LDAPObject:
 
     def add_s(self, dn, modlist, serverctrls=None):
         msgid = self.add(dn, modlist, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
+        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -261,7 +261,7 @@ class LDAPObject:
 
     def simple_bind_s(self, who='', cred='', serverctrls=None):
         msgid = self.simple_bind(who, cred, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
+        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -352,7 +352,7 @@ class LDAPObject:
 
     def delete_s(self, dn, serverctrls=None):
         msgid = self.delete(dn, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
+        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -411,7 +411,7 @@ class LDAPObject:
 
     def modify_s(self, dn, modlist, serverctrls=None):
         msgid = self.modify(dn, modlist, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
+        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -467,7 +467,7 @@ class LDAPObject:
             serverctrls=None,
         ):
         msgid = self.rename(dn, newrdn, newsuperior, delold, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
+        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
             msgid,
             all=1,
             timeout=self.timeout
@@ -510,7 +510,7 @@ class LDAPObject:
                     for t, r, c in resp_data
                 ]
         decoded_resp_ctrls = DecodeControlTuples(resp_ctrls, resp_ctrl_classes)
-        return resp_type, resp_data, resp_msgid, decoded_resp_ctrls, None, None
+        return resp_type, resp_data, resp_msgid, decoded_resp_ctrls
 
     def results(self, msgid, timeout=-1, add_ctrls=False, add_intermediates=False):
         """
@@ -651,7 +651,7 @@ class LDAPObject:
             )
             # first look into cache for non-expired search results
             try:
-                result_cache_time, resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self._cache[cache_key_args]
+                result_cache_time, resp_type, resp_data, resp_msgid, resp_ctrls = self._cache[cache_key_args]
             except KeyError:
                 pass
             else:
@@ -673,7 +673,7 @@ class LDAPObject:
             timeout,
             sizelimit
         )
-        resp_type, resp_data, resp_msgid, resp_ctrls, _, _ = self.result(
+        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
             msgid, all=1,
             timeout=timeout,
             add_ctrls=add_ctrls
@@ -682,7 +682,7 @@ class LDAPObject:
             # store result in cache if caching is enabled at all
             self._cache[cache_key_args] = (
                 current_time,
-                resp_type, resp_data, resp_msgid, resp_ctrls, _, _
+                resp_type, resp_data, resp_msgid, resp_ctrls
             )
         return resp_data # search_s()
 
@@ -707,7 +707,7 @@ class LDAPObject:
                 timeout=timeout,
                 sizelimit=sizelimit,
             )
-            _, _, _, search_response_ctrls, _, _ = self.result(
+            _, _, _, search_response_ctrls = self.result(
                 msg_id,
                 all=1,
                 timeout=timeout,
