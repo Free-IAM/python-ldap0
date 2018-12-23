@@ -22,7 +22,7 @@ from ldap0.sasl import SaslPasswordAuth
 from ldap0.test import SlapdTestCase
 from ldap0.ldapobject import LDAPObject, ReconnectLDAPObject
 from ldap0.controls.sessiontrack import SessionTrackingControl, SESSION_TRACKING_FORMAT_OID_USERNAME
-from ldap0.controls.readentry import PostReadControl
+from ldap0.controls.readentry import PreReadControl, PostReadControl
 from ldap0.controls.pagedresults import SimplePagedResultsControl
 from ldap0.controls.simple import ProxyAuthzControl, RelaxRulesControl, ManageDSAITControl
 from ldap0.controls.libldap import AssertionControl, MatchedValuesControl
@@ -291,7 +291,8 @@ class Test00_LDAPObject(SlapdTestCase):
             'modifyTimestamp',
         ])
         new_dn = 'cn=Anna Blume,'+self.server.suffix
-        _, _, _, resp_ctrls = self._ldap_conn.add_s(
+        # add a new entry and return operational attributes with post-read control
+        _, _, _, add_resp_ctrls = self._ldap_conn.add_s(
             new_dn,
             [
                 ('objectClass', ['applicationProcess']),
@@ -304,10 +305,24 @@ class Test00_LDAPObject(SlapdTestCase):
                 )
             ],
         )
-        self.assertEqual(resp_ctrls[0].dn, new_dn)
-        self.assertEqual(resp_ctrls[0].entry['entryDN'], [new_dn])
-        self.assertEqual(len(resp_ctrls[0].entry), len(attr_list))
-        self.assertEqual(sorted(resp_ctrls[0].entry.keys()), attr_list)
+        self.assertEqual(add_resp_ctrls[0].dn, new_dn)
+        self.assertEqual(add_resp_ctrls[0].entry['entryDN'], [new_dn])
+        self.assertEqual(len(add_resp_ctrls[0].entry), len(attr_list))
+        self.assertEqual(sorted(add_resp_ctrls[0].entry.keys()), attr_list)
+        # modify existing entry and return old operational attributes with pre-read control
+        _, _, _, mod_resp_ctrls = self._ldap_conn.modify_s(
+            new_dn,
+            [
+                (ldap0.MOD_ADD, 'description', ['testing...']),
+            ],
+            serverctrls=[
+                PreReadControl(
+                    criticality=True,
+                    attrList=attr_list,
+                )
+            ],
+        )
+        self.assertEqual(add_resp_ctrls[0].entry, mod_resp_ctrls[0].entry)
 
     def test010_pagedresults(self):
         expected_ldap_result = sorted(
