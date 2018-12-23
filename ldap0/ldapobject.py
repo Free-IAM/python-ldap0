@@ -512,7 +512,14 @@ class LDAPObject:
         decoded_resp_ctrls = DecodeControlTuples(resp_ctrls, resp_ctrl_classes)
         return resp_type, resp_data, resp_msgid, decoded_resp_ctrls
 
-    def results(self, msgid, timeout=-1, add_ctrls=False, add_intermediates=False):
+    def results(
+            self,
+            msgid,
+            timeout=-1,
+            add_ctrls=False,
+            add_intermediates=False,
+            resp_ctrl_classes=None,
+        ):
         """
         Generator method which returns an iterator for processing all LDAP
         operation results of the given msgid like retrieved with
