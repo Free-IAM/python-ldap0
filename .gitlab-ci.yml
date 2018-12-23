@@ -1,5 +1,5 @@
 .tests:
-  script: pushd /var/tmp && popd && pip install -e . && python2 setup.py test
+  script: pushd /var/tmp && popd && pip2 install -e . && python2 setup.py test
   stage: test
   only:
     refs:
