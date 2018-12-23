@@ -30,13 +30,15 @@ include "%(schema_prefix)s/core.schema"
 serverID %(serverid)s
 loglevel %(loglevel)s
 allow bind_v2
+sasl-secprops none
+security ssf=0 simple_bind=0 sasl=0 transport=0
 
 authz-regexp
   "gidnumber=%(root_gid)s\\+uidnumber=%(root_uid)s,cn=peercred,cn=external,cn=auth"
   "%(rootdn)s"
 
 authz-regexp
-  "uid=([a-zA-Z0-9_-]+),cn=(DIGEST-MD5|CRAM-MD5|NTLM|PLAIN|LOGIN|SCRAM-SHA-1|GSSAPI),cn=auth"
+  "uid=([a-zA-Z0-9_-]+),cn=(DIGEST-MD5|CRAM-MD5|PLAIN|SCRAM-SHA-1),cn=auth"
   "ldap:///%(suffix)s??sub?(cn=$1)"
 
 database config
