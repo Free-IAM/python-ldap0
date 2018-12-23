@@ -52,7 +52,8 @@ test:debian:
   image: debian:latest
   before_script:
   - apt-get update
-  - apt-get install -o 'DPkg::Options::=--force-confdef' -y slapd ldap-utils libldap2-dev libsasl2-dev python-setuptools python-setuptools-git python-setuptools-scm gcc python-dev python-pip
+  - export DEBIAN_FRONTEND=noninteractive
+  - apt-get install --yes --quiet --no-install-recommends --option 'DPkg::Options=--force-confold' --option 'DPkg::Options=--force-confdef' slapd ldap-utils libldap2-dev libsasl2-dev python-setuptools python-setuptools-git python-setuptools-scm gcc python-dev python-pip
   - mkdir /etc/sasl2
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/sbin/slapd
