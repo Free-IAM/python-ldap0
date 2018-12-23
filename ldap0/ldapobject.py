@@ -494,9 +494,7 @@ class LDAPObject:
             add_intermediates,
         )
         if ldap_result is None:
-            resp_type, resp_data, resp_msgid, resp_ctrls, resp_name, resp_value = (
-                None, None, None, None, None, None
-            )
+            resp_type = resp_data = resp_msgid = resp_ctrls = None
         else:
             resp_type, resp_data, resp_msgid, resp_ctrls = ldap_result
             if add_ctrls:
