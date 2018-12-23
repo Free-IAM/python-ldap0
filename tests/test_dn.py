@@ -45,6 +45,9 @@ class TestDNFunctions(unittest.TestCase):
         self.assertEqual(ldap0.dn.escape_dn_chars('#foobar'), '\\#foobar')
         self.assertEqual(ldap0.dn.escape_dn_chars('foo bar'), 'foo bar')
         self.assertEqual(ldap0.dn.escape_dn_chars(' foobar'), '\\ foobar')
+        self.assertEqual(ldap0.dn.escape_dn_chars('  foobar'), '\\  foobar')
+        self.assertEqual(ldap0.dn.escape_dn_chars('foobar  '), 'foobar \\ ')
+        self.assertEqual(ldap0.dn.escape_dn_chars(' '), '\\ ')
 
     def test_str2dn(self):
         """
