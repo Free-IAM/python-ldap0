@@ -19,6 +19,7 @@ from _libldap0 import LDAPError
 
 from .__about__ import __version__, __author__, __license__
 import ldap0
+from .base import LDAPResult
 from .lock import LDAPLock
 from .functions import _libldap0_function_call
 from .schema.subentry import SCHEMA_ATTRS
@@ -243,12 +244,12 @@ class LDAPObject:
 
     def add_s(self, dn, modlist, serverctrls=None):
         msgid = self.add(dn, modlist, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
+        res = self.result(
             msgid,
             all=1,
             timeout=self.timeout
         )
-        return resp_type, resp_data, resp_msgid, resp_ctrls
+        return LDAPResult(res)
 
     def simple_bind(self, who='', cred='', serverctrls=None):
         self.flush_cache()
@@ -261,12 +262,12 @@ class LDAPObject:
 
     def simple_bind_s(self, who='', cred='', serverctrls=None):
         msgid = self.simple_bind(who, cred, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
+        res = self.result(
             msgid,
             all=1,
             timeout=self.timeout
         )
-        return resp_type, resp_data, resp_msgid, resp_ctrls
+        return LDAPResult(res)
 
     def sasl_interactive_bind_s(
             self,
@@ -352,12 +353,12 @@ class LDAPObject:
 
     def delete_s(self, dn, serverctrls=None):
         msgid = self.delete(dn, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
+        res = self.result(
             msgid,
             all=1,
             timeout=self.timeout
         )
-        return resp_type, resp_data, resp_msgid, resp_ctrls
+        return LDAPResult(res)
 
     def extop(self, extreq, serverctrls=None):
         return self._ldap_call(
@@ -411,12 +412,12 @@ class LDAPObject:
 
     def modify_s(self, dn, modlist, serverctrls=None):
         msgid = self.modify(dn, modlist, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
+        res = self.result(
             msgid,
             all=1,
             timeout=self.timeout
         )
-        return resp_type, resp_data, resp_msgid, resp_ctrls
+        return LDAPResult(res)
 
     def passwd(self, user=None, oldpw=None, newpw=None, serverctrls=None):
         self.uncache(user)
@@ -467,12 +468,12 @@ class LDAPObject:
             serverctrls=None,
         ):
         msgid = self.rename(dn, newrdn, newsuperior, delold, serverctrls)
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
+        res = self.result(
             msgid,
             all=1,
             timeout=self.timeout
         )
-        return resp_type, resp_data, resp_msgid, resp_ctrls
+        return LDAPResult(res)
 
     def result(
             self,
@@ -508,7 +509,7 @@ class LDAPObject:
                     for t, r, c in resp_data
                 ]
         decoded_resp_ctrls = DecodeControlTuples(resp_ctrls, resp_ctrl_classes)
-        return resp_type, resp_data, resp_msgid, decoded_resp_ctrls
+        return LDAPResult((resp_type, resp_data, resp_msgid, decoded_resp_ctrls))
 
     def results(
             self,
@@ -544,12 +545,12 @@ class LDAPObject:
                     (t, r)
                     for t, r, c in result_list
                 ]
-            yield (
+            yield LDAPResult((
                 result_type,
                 result_list,
                 result_msgid,
                 result_serverctrls
-            )
+            ))
             ldap_result = self._ldap_call(
                 self._l.result,
                 msgid,
@@ -614,7 +615,7 @@ class LDAPObject:
             if cache_key_args[0].lower() == entry_dn:
                 del self._cache[cache_key_args]
             else:
-                for cached_res in cached_results[2]:
+                for cached_res in cached_results[1].data:
                     cached_dn = cached_res[0]
                     if not cached_dn is None and cached_dn.lower() == entry_dn:
                         del self._cache[cache_key_args]
@@ -656,7 +657,7 @@ class LDAPObject:
             )
             # first look into cache for non-expired search results
             try:
-                result_cache_time, resp_type, resp_data, resp_msgid, resp_ctrls = self._cache[cache_key_args]
+                result_cache_time, res = self._cache[cache_key_args]
             except KeyError:
                 pass
             else:
@@ -665,7 +666,7 @@ class LDAPObject:
                     del self._cache[cache_key_args]
                 else:
                     self._cache_hits += 1
-                    return resp_data
+                    return res.data
         # no cached result
         self._cache_misses += 1
         msgid = self.search(
@@ -678,7 +679,7 @@ class LDAPObject:
             timeout,
             sizelimit
         )
-        resp_type, resp_data, resp_msgid, resp_ctrls = self.result(
+        res = self.result(
             msgid, all=1,
             timeout=timeout,
             add_ctrls=add_ctrls
@@ -687,9 +688,9 @@ class LDAPObject:
             # store result in cache if caching is enabled at all
             self._cache[cache_key_args] = (
                 current_time,
-                resp_type, resp_data, resp_msgid, resp_ctrls
+                res
             )
-        return resp_data # search_s()
+        return res.data # search_s()
 
     def noop_search(
             self,
