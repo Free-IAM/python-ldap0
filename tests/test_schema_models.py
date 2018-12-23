@@ -335,6 +335,16 @@ class TestMatchingRuleUse(SchemaDescriptionTest):
                 'applies': ('entryCSN', 'namingCSN', 'contextCSN'),
             },
         ),
+        (
+            "( 1.3.6.1.4.1.4203.666.11.2.5 NAME 'CSNSIDMatch' DESC 'äöüÄÖÜß' OBSOLETE )",
+            {
+                'oid': '1.3.6.1.4.1.4203.666.11.2.5',
+                'names': ('CSNSIDMatch', ),
+                'desc': 'äöüÄÖÜß',
+                'obsolete': True,
+                'applies': (),
+            },
+        ),
     )
 
 
