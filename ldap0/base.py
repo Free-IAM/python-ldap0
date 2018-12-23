@@ -14,6 +14,9 @@ class LDAPResult(tuple):
     def __init__(self, res):
         tuple.__init__(self, res)
 
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, tuple.__repr__(self))
+
     @property
     def rtype(self):
         return self[0]

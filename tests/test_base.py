@@ -32,6 +32,12 @@ class TestLDAPResult(unittest.TestCase):
         i1, i2, i3, i4 = r
         self.assertEqual((i1, i2, i3, i4), (None, [], None, []))
 
+    def test_repr(self):
+        self.assertEqual(
+            repr(ldap0.base.LDAPResult((None, [], None, []))),
+            'LDAPResult((None, [], None, []))',
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
