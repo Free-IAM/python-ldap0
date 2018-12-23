@@ -41,7 +41,6 @@ test:centos:
   - yum install epel-release -y
   - *script-1
   - yum install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram openldap-ltb openldap-ltb-contrib-overlays openldap-ltb-mdb-utils openldap-ltb-ppm openldap-devel python-setuptools gcc python-devel cyrus-sasl-devel python-pip
-  - mkdir /etc/sasl2
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd
   - export SCHEMA=/usr/local/openldap/etc/openldap/schema
