@@ -249,7 +249,7 @@ class LDAPObject:
             all=1,
             timeout=self.timeout
         )
-        return LDAPResult(res)
+        return res
 
     def simple_bind(self, who='', cred='', serverctrls=None):
         self.flush_cache()
@@ -267,7 +267,7 @@ class LDAPObject:
             all=1,
             timeout=self.timeout
         )
-        return LDAPResult(res)
+        return res
 
     def sasl_interactive_bind_s(
             self,
@@ -358,7 +358,7 @@ class LDAPObject:
             all=1,
             timeout=self.timeout
         )
-        return LDAPResult(res)
+        return res
 
     def extop(self, extreq, serverctrls=None):
         return self._ldap_call(
@@ -417,7 +417,7 @@ class LDAPObject:
             all=1,
             timeout=self.timeout
         )
-        return LDAPResult(res)
+        return res
 
     def passwd(self, user=None, oldpw=None, newpw=None, serverctrls=None):
         self.uncache(user)
@@ -473,7 +473,7 @@ class LDAPObject:
             all=1,
             timeout=self.timeout
         )
-        return LDAPResult(res)
+        return res
 
     def result(
             self,
@@ -509,7 +509,7 @@ class LDAPObject:
                     for t, r, c in resp_data
                 ]
         decoded_resp_ctrls = DecodeControlTuples(resp_ctrls, resp_ctrl_classes)
-        return LDAPResult((resp_type, resp_data, resp_msgid, decoded_resp_ctrls))
+        return LDAPResult(resp_type, resp_data, resp_msgid, decoded_resp_ctrls)
 
     def results(
             self,
@@ -534,23 +534,18 @@ class LDAPObject:
             False
         )
         while ldap_result and ldap_result[1]:
-            result_type, result_list, result_msgid, result_serverctrls = ldap_result
+            res_type, res_data, res_msgid, res_ctrls = ldap_result
             if add_ctrls:
-                result_list = [
+                res_data = [
                     (t, r, DecodeControlTuples(c, resp_ctrl_classes))
-                    for t, r, c in result_list
+                    for t, r, c in res_data
                 ]
             else:
-                result_list = [
+                res_data = [
                     (t, r)
-                    for t, r, c in result_list
+                    for t, r, c in res_data
                 ]
-            yield LDAPResult((
-                result_type,
-                result_list,
-                result_msgid,
-                result_serverctrls
-            ))
+            yield LDAPResult(res_type, res_data, res_msgid, res_ctrls)
             ldap_result = self._ldap_call(
                 self._l.result,
                 msgid,

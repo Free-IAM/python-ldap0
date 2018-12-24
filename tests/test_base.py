@@ -8,7 +8,7 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
-import ldap0.base
+from ldap0.base import LDAPResult
 
 
 class TestLDAPResult(unittest.TestCase):
@@ -17,16 +17,16 @@ class TestLDAPResult(unittest.TestCase):
     """
 
     def test_simple_tuple(self):
-        r = ldap0.base.LDAPResult((None, None, None, None))
-        self.assertEqual(r, (None, None, None, None))
+        r = LDAPResult(None, None, None, None)
+        self.assertEqual(tuple(r), (None, None, None, None))
         self.assertEqual(r.rtype, None)
         self.assertEqual(r.data, None)
         self.assertEqual(r.msgid, None)
         self.assertEqual(r.ctrls, None)
         i1, i2, i3, i4 = r
         self.assertEqual((i1, i2, i3, i4), (None, None, None, None))
-        r = ldap0.base.LDAPResult((None, [], None, []))
-        self.assertEqual(r, (None, [], None, []))
+        r = LDAPResult(None, [], None, [])
+        self.assertEqual(tuple(r), (None, [], None, []))
         self.assertEqual(r.data, [])
         self.assertEqual(r.ctrls, [])
         i1, i2, i3, i4 = r
@@ -34,8 +34,8 @@ class TestLDAPResult(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(
-            repr(ldap0.base.LDAPResult((None, [], None, []))),
-            'LDAPResult((None, [], None, []))',
+            repr(LDAPResult(None, [], None, [])),
+            'LDAPResult(None, [], None, [])',
         )
 
 
