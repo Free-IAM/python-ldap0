@@ -123,7 +123,7 @@ class ExtensionTestCase(SlapdTestCase):
 
 class TestDeRef(ExtensionTestCase):
 
-    def test_deref(self):
+    def test001_deref_search_s(self):
         self.enable_overlay({
             'olcOverlay': ['deref'],
             'objectClass': ['olcOverlayConfig'],
@@ -140,6 +140,44 @@ class TestDeRef(ExtensionTestCase):
             add_ctrls=True,
         )
         dn, entry, crtls = ldap_result[0]
+        self.assertEqual(dn, 'cn=Foo7,ou=Container,%s' % (self.server.suffix))
+        self.assertEqual(
+            entry,
+            {
+                'cn': ['Foo7'],
+                'objectClass': ['organizationalRole'],
+                'roleOccupant': [
+                    'cn=user1,%s' % (self.server.suffix),
+                    'cn=Foo1,%s' % (self.server.suffix),
+                    'cn=Foo6,ou=Container,%s' % (self.server.suffix)
+                ],
+            },
+        )
+        deref_crtl = crtls[0]
+        self.assertEqual(isinstance(deref_crtl, DereferenceControl), True)
+        self.assertEqual(
+            deref_crtl.derefRes,
+            {
+                'roleOccupant': [
+                    ('cn=user1,%s' % (self.server.suffix), {'cn': ['user1']}),
+                    ('cn=Foo1,%s' % (self.server.suffix), {'cn': ['Foo1']}),
+                    ('cn=Foo6,ou=Container,%s' % (self.server.suffix), {'cn': ['Foo6']}),
+                ]
+            }
+        )
+        del dn; del entry; del crtls; del deref_crtl
+        dn, entry, crtls = self._ldap_conn.find_unique_entry(
+            self.server.suffix,
+            ldap0.SCOPE_SUBTREE,
+            'cn=Foo7',
+            serverctrls=[
+                DereferenceControl(
+                    True,
+                    {'roleOccupant': ['cn', 'uid']},
+                )
+            ],
+            add_ctrls=True,
+        )
         self.assertEqual(dn, 'cn=Foo7,ou=Container,%s' % (self.server.suffix))
         self.assertEqual(
             entry,

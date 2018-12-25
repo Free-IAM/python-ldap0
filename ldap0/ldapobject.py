@@ -864,7 +864,9 @@ class LDAPObject:
             attrlist=None,
             attrsonly=0,
             serverctrls=None,
-            timeout=-1
+            timeout=-1,
+            cache_ttl=None,
+            add_ctrls=False,
         ):
         try:
             ldap_res = self.search_s(
@@ -876,6 +878,8 @@ class LDAPObject:
                 serverctrls=serverctrls,
                 timeout=timeout,
                 sizelimit=2,
+                cache_ttl=cache_ttl,
+                add_ctrls=add_ctrls,
             )
         except _libldap0.SIZELIMIT_EXCEEDED:
             raise NO_UNIQUE_ENTRY('Size limit exceeded for %r ()' % (filterstr))
