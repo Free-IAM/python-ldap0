@@ -139,7 +139,6 @@ class TestDeRef(ExtensionTestCase):
             ],
             add_ctrls=True,
         )
-        import pprint
         dn, entry, crtls = ldap_result[0]
         self.assertEqual(dn, 'cn=Foo7,ou=Container,%s' % (self.server.suffix))
         self.assertEqual(
