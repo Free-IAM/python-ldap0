@@ -85,8 +85,6 @@ following option identifiers are defined as constants:
 
 .. py:data:: OPT_API_INFO
 
-.. py:data:: OPT_CLIENT_CONTROLS
-
 .. py:data:: OPT_DEBUG_LEVEL
 
    Sets the debug level within the underlying OpenLDAP C lib (libldap).

@@ -127,7 +127,6 @@ class TestLdapCExtension(SlapdTestCase):
         self.assertIsNotNone(_libldap0.OPT_RESTART)
         self.assertIsNotNone(_libldap0.OPT_PROTOCOL_VERSION)
         self.assertIsNotNone(_libldap0.OPT_SERVER_CONTROLS)
-        self.assertIsNotNone(_libldap0.OPT_CLIENT_CONTROLS)
         self.assertIsNotNone(_libldap0.OPT_API_FEATURE_INFO)
         self.assertIsNotNone(_libldap0.OPT_HOST_NAME)
         self.assertIsNotNone(_libldap0.OPT_ERROR_NUMBER)   # = OPT_RESULT_CODE

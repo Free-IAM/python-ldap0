@@ -148,7 +148,6 @@ LDAPinit_constants( PyObject* d )
     add_int(d,OPT_RESTART);
     add_int(d,OPT_PROTOCOL_VERSION);
     add_int(d,OPT_SERVER_CONTROLS);
-    add_int(d,OPT_CLIENT_CONTROLS);
     add_int(d,OPT_API_FEATURE_INFO);
     add_int(d,OPT_HOST_NAME);
 

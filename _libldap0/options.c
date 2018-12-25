@@ -147,7 +147,6 @@ LDAP_set_option(LDAPObject *self, int option, PyObject *value)
             break;
 
         case LDAP_OPT_SERVER_CONTROLS:
-        case LDAP_OPT_CLIENT_CONTROLS:
             if (!LDAPControls_from_object(value, &controls))
                 return 0;
             ptr = controls;
@@ -162,7 +161,7 @@ LDAP_set_option(LDAPObject *self, int option, PyObject *value)
     res = ldap_set_option(ld, option, ptr);
     if (self) LDAP_END_ALLOW_THREADS(self);
 
-    if ((option == LDAP_OPT_SERVER_CONTROLS) || (option == LDAP_OPT_CLIENT_CONTROLS))
+    if (option == LDAP_OPT_SERVER_CONTROLS)
         LDAPControl_List_DEL(controls);
 
     if (res != LDAP_OPT_SUCCESS) {
@@ -344,7 +343,6 @@ LDAP_get_option(LDAPObject *self, int option)
             return v;
 
         case LDAP_OPT_SERVER_CONTROLS:
-        case LDAP_OPT_CLIENT_CONTROLS:
             if (self) LDAP_BEGIN_ALLOW_THREADS(self);
             res = ldap_get_option(ld, option, &lcs);
             if (self) LDAP_END_ALLOW_THREADS(self);

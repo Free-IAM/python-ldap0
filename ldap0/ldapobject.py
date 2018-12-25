@@ -771,12 +771,12 @@ class LDAPObject:
 
     def get_option(self, option):
         result = self._ldap_call(self._l.get_option, option)
-        if option == _libldap0.OPT_SERVER_CONTROLS or option == _libldap0.OPT_CLIENT_CONTROLS:
+        if option == _libldap0.OPT_SERVER_CONTROLS:
             result = DecodeControlTuples(result)
         return result
 
     def set_option(self, option, invalue):
-        if option == _libldap0.OPT_SERVER_CONTROLS or option == _libldap0.OPT_CLIENT_CONTROLS:
+        if option == _libldap0.OPT_SERVER_CONTROLS:
             invalue = RequestControlTuples(invalue)
         return self._ldap_call(self._l.set_option, option, invalue)
 
