@@ -292,7 +292,7 @@ class Test00_LDAPObject(SlapdTestCase):
         ])
         new_dn = 'cn=Anna Blume,'+self.server.suffix
         # add a new entry and return operational attributes with post-read control
-        _, _, _, add_resp_ctrls = self._ldap_conn.add_s(
+        add_result = self._ldap_conn.add_s(
             new_dn,
             [
                 ('objectClass', ['applicationProcess']),
@@ -305,6 +305,11 @@ class Test00_LDAPObject(SlapdTestCase):
                 )
             ],
         )
+        self.assertEqual(add_result.ctrls[0].dn, new_dn)
+        self.assertEqual(add_result.ctrls[0].entry['entryDN'], [new_dn])
+        self.assertEqual(len(add_result.ctrls[0].entry), len(attr_list))
+        self.assertEqual(sorted(add_result.ctrls[0].entry.keys()), attr_list)
+        _, _, _, add_resp_ctrls = add_result
         self.assertEqual(add_resp_ctrls[0].dn, new_dn)
         self.assertEqual(add_resp_ctrls[0].entry['entryDN'], [new_dn])
         self.assertEqual(len(add_resp_ctrls[0].entry), len(attr_list))
