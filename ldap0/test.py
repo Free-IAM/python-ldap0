@@ -423,6 +423,15 @@ class SlapdTestCase(unittest.TestCase):
 
     def enable_overlay(self, slapo_entry, schema_files=None):
         olc_overlay = slapo_entry['olcOverlay'][0]
+        enabled_overlays = [
+            val.split('}', 1)[1]
+            for val in self._ldap_conn.read_s(
+                'cn=module{0},cn=config',
+                attrlist=['olcModuleLoad'],
+            )['olcModuleLoad']
+        ]
+        if olc_overlay in enabled_overlays:
+            return
         schema_entries = []
         for schema_filename in schema_files or []:
             with open(os.path.join(self.server.SCHEMADIR, schema_filename), 'rb') as schema_file:
