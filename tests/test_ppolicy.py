@@ -45,55 +45,6 @@ objectClass: simpleSecurityObject
 cn: user1
 userPassword: user1_pw
 
-dn: cn=Foo2,%(suffix)s
-objectClass: organizationalRole
-cn: Foo2
-
-dn: cn=Foo1,%(suffix)s
-objectClass: organizationalRole
-cn: Foo1
-
-dn: cn=Foo3,%(suffix)s
-objectClass: organizationalRole
-cn: Foo3
-roleOccupant: cn=user1,%(suffix)s
-
-dn: ou=Container,%(suffix)s
-objectClass: organizationalUnit
-ou: Container
-
-dn: cn=Foo5,ou=Container,%(suffix)s
-objectClass: organizationalRole
-cn: Foo5
-roleOccupant: cn=user1,%(suffix)s
-
-dn: cn=Foo4,ou=Container,%(suffix)s
-objectClass: organizationalRole
-cn: Foo4
-
-dn: cn=Foo7,ou=Container,%(suffix)s
-objectClass: organizationalRole
-cn: Foo7
-roleOccupant: cn=user1,%(suffix)s
-roleOccupant: cn=Foo1,%(suffix)s
-roleOccupant: cn=Foo6,ou=Container,%(suffix)s
-
-dn: cn=Foo6,ou=Container,%(suffix)s
-objectClass: organizationalRole
-cn: Foo6
-
-dn: dc=ref1,%(suffix)s
-objectClass: referral
-objectClass: dcObject
-dc: ref1
-ref: ldap://ldap.example.com/dc=example,dc=com??one?(objectClass=*)
-
-dn: dc=ref2,%(suffix)s
-objectClass: referral
-objectClass: dcObject
-dc: ref2
-ref: ldap://ldap.example.net/
-
 """
 
 
