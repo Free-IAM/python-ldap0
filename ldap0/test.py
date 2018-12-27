@@ -54,6 +54,12 @@ rootpw "%(rootpw)s"
 
 access to
   dn.subtree="%(suffix)s"
+  attrs=userPassword
+    by self =w
+    by anonymous auth
+
+access to
+  dn.subtree="%(suffix)s"
     by * auth
 """
 
