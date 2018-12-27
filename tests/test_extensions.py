@@ -8,7 +8,9 @@ available in all OpenLDAP builds
 from __future__ import absolute_import
 
 import os
+import time
 import unittest
+
 from ldap0.test import SlapdTestCase
 
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
@@ -21,7 +23,6 @@ from ldap0.ldapobject import LDAPObject
 from ldap0.controls.simple import ManageDSAITControl
 from ldap0.controls.deref import DereferenceControl
 from ldap0.controls.openldap import SearchNoOpControl
-from ldap0.controls.ppolicy import PasswordPolicyControl
 from ldap0.controls.sss import SSSRequestControl, SSSResponseControl
 from ldap0.controls.vlv import VLVRequestControl, VLVResponseControl
 
@@ -270,32 +271,6 @@ class TestDDS(ExtensionTestCase):
         self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn, ttl=178), 178)
         self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn, ttl=42), 60)
         self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn), 86400)
-
-
-class TestPPolicy(ExtensionTestCase):
-
-    def test_ppolicy(self):
-        ppolicy_default_dn = 'cn=ppolicy-default,'+self.server.suffix
-        self.enable_overlay(
-            {
-                'olcOverlay': ['ppolicy'],
-                'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
-                'olcPPolicyDefault': [ppolicy_default_dn],
-                'olcPPolicyForwardUpdates': ['FALSE'],
-                'olcPPolicyHashCleartext': ['FALSE'],
-                'olcPPolicyUseLockout': ['TRUE'],
-                'olcPPolicyUseLockout': ['TRUE'],
-            },
-            ['ppolicy.ldif'],
-        )
-        self._ldap_conn.add_s(
-            ppolicy_default_dn,
-            {
-                'objectClass': ['applicationProcess', 'pwdPolicy'],
-                'cn': ['ppolicy-default'],
-                'pwdAttribute': ['userPassword'],
-            },
-        )
 
 
 class TestSssVlv(ExtensionTestCase):
