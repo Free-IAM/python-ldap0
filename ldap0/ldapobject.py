@@ -19,12 +19,15 @@ from _libldap0 import LDAPError
 
 from .__about__ import __version__, __author__, __license__
 import ldap0
+from . import err
+from .err import PasswordPolicyChangeAfterReset, PasswordPolicyExpirationWarning, PasswordPolicyExpiredError
 from .base import LDAPResult
 from .lock import LDAPLock
 from .functions import _libldap0_function_call
 from .schema.subentry import SCHEMA_ATTRS
 from .controls import DecodeControlTuples, RequestControlTuples
 from .controls.openldap import SearchNoOpControl
+from .controls.ppolicy import PasswordPolicyControl
 from .extop import ExtendedResponse
 from .extop.dds import RefreshRequest, RefreshResponse
 from .extop.whoami import WhoAmIRequest, WhoAmIResponse
@@ -41,13 +44,11 @@ __all__ = [
     'ReconnectLDAPObject',
 ]
 
+NO_UNIQUE_ENTRY = ldap0.err.NO_UNIQUE_ENTRY
 
-class NO_UNIQUE_ENTRY(_libldap0.NO_SUCH_OBJECT):
-    """
-    Exception raised if a LDAP search returned more than entry entry
-    although assumed to return a unique single search result.
-    """
-
+#-----------------------------------------------------------------------
+# the real connection classes
+#-----------------------------------------------------------------------
 
 class LDAPObject:
     """
@@ -267,6 +268,37 @@ class LDAPObject:
             all=1,
             timeout=self.timeout
         )
+        if res.ctrls:
+            # Extract the password policy response control and raise 
+            # appropriate exceptions if needed
+            ppolicy_ctrls = [
+                c
+                for c in res.ctrls
+                if c.controlType == PasswordPolicyControl.controlType
+            ]
+            if ppolicy_ctrls and len(ppolicy_ctrls) == 1:
+                ppolicy_ctrl = ppolicy_ctrls[0]
+                if ppolicy_ctrl.error == 2:
+                    raise PasswordPolicyChangeAfterReset(
+                        who=who,
+                        desc='Password change is needed after reset!',
+                    )
+                elif ppolicy_ctrl.timeBeforeExpiration != None:
+                    raise PasswordPolicyExpirationWarning(
+                        who=who,
+                        desc='Password will expire in %d seconds!' % (
+                            ppolicy_ctrl.timeBeforeExpiration
+                        ),
+                        timeBeforeExpiration=ppolicy_ctrl.timeBeforeExpiration,
+                    )
+                elif ppolicy_ctrl.graceAuthNsRemaining != None:
+                    raise PasswordPolicyExpiredError(
+                        who=who,
+                        desc='Password expired! %d grace logins left.' % (
+                            ppolicy_ctrl.graceAuthNsRemaining
+                        ),
+                        graceAuthNsRemaining=ppolicy_ctrl.graceAuthNsRemaining,
+                    )
         return res
 
     def sasl_interactive_bind_s(
