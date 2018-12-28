@@ -76,24 +76,19 @@ class PasswordPolicyControl(ValueLessRequestControl, ResponseControl):
         ValueLessRequestControl.__init__(self, criticality=criticality)
 
     def decodeControlValue(self, encodedControlValue):
+        self.timeBeforeExpiration = None
+        self.graceAuthNsRemaining = None
+        self.error = None
         ppolicy_value, _ = decoder.decode(
             encodedControlValue,
             asn1Spec=PasswordPolicyResponseValue(),
         )
         warning = ppolicy_value.getComponentByName('warning')
-        if not warning.hasValue():
-            self.timeBeforeExpiration, self.graceAuthNsRemaining = None, None
-        else:
-            timeBeforeExpiration = warning.getComponentByName('timeBeforeExpiration')
-            if timeBeforeExpiration.hasValue():
-                self.timeBeforeExpiration = int(timeBeforeExpiration)
-            else:
-                self.timeBeforeExpiration = None
-            graceAuthNsRemaining = warning.getComponentByName('graceAuthNsRemaining')
-            if graceAuthNsRemaining.hasValue():
-                self.graceAuthNsRemaining = int(graceAuthNsRemaining)
-            else:
-                self.graceAuthNsRemaining = None
+        if warning.hasValue():
+            if 'timeBeforeExpiration' in warning:
+                self.timeBeforeExpiration = int(warning.getComponentByName('timeBeforeExpiration'))
+            elif 'graceAuthNsRemaining' in warning:
+                self.graceAuthNsRemaining = int(warning.getComponentByName('graceAuthNsRemaining'))
         error = ppolicy_value.getComponentByName('error')
         if error.hasValue():
             self.error = int(error)

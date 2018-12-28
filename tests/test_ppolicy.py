@@ -178,7 +178,6 @@ class TestPPolicy(SlapdTestCase):
             self.assertEqual(ctx.exception.timeBeforeExpiration, 1)
         return # test002_pwd_expiry_warning()
 
-    @unittest.expectedFailure
     def test003_pwd_grace_logins(self):
         user_password = 'supersecret2'
         user_entry = self._ldap_conn.read_s(
