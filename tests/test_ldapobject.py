@@ -814,6 +814,23 @@ class Test00_LDAPObject(SlapdTestCase):
         )
         self._ldap_conn.delete_s(add_dn)
 
+    def test025_search_subschemasubentry_s(self):
+        self.assertEqual(
+            self._ldap_conn.search_subschemasubentry_s(),
+            'cn=Subschema',
+        )
+        self.assertEqual(
+            self._ldap_conn.search_subschemasubentry_s(dn=''),
+            'cn=Subschema',
+        )
+        self.assertEqual(
+            self._ldap_conn.search_subschemasubentry_s(dn=self.server.suffix),
+            'cn=Subschema',
+        )
+        self.assertEqual(
+            self._ldap_conn.search_subschemasubentry_s('cn=doesnotexist'),
+            None,
+        )
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
