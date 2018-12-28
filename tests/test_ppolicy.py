@@ -180,7 +180,7 @@ class TestPPolicy(SlapdTestCase):
 
     @unittest.expectedFailure
     def test003_pwd_grace_logins(self):
-        user_password = 'supersecret3'
+        user_password = 'supersecret2'
         user_entry = self._ldap_conn.read_s(
             self.user_dn,
             attrlist=['pwdChangedTime', 'pwdReset'],
@@ -188,7 +188,7 @@ class TestPPolicy(SlapdTestCase):
         pwd_changed_time = strp_secs(user_entry['pwdChangedTime'][0])
         self.assertEqual('pwdReset' not in user_entry, True)
         # wait until password expired and check for PasswordPolicyExpiredError
-        time.sleep(self.pwd_max_age-(time.time()-pwd_changed_time-1.0))
+        time.sleep(self.pwd_max_age+1.0-(time.time()-pwd_changed_time))
         with self.ldap_object_class(self.server.ldap_uri) as l:
             with self.assertRaises(PasswordPolicyExpiredError) as ctx:
                 l.simple_bind_s(
