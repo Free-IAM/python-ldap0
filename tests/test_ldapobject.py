@@ -827,10 +827,12 @@ class Test00_LDAPObject(SlapdTestCase):
             self._ldap_conn.search_subschemasubentry_s(dn=self.server.suffix),
             'cn=Subschema',
         )
+        # this will cause fall back reading attribute subschemaSubentry from rootDSE
         self.assertEqual(
             self._ldap_conn.search_subschemasubentry_s('cn=doesnotexist'),
-            None,
+            'cn=Subschema',
         )
+
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """

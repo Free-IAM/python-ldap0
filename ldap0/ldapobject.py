@@ -814,34 +814,20 @@ class LDAPObject:
 
     def search_subschemasubentry_s(self, dn=''):
         try:
-            r = self.search_s(
-                dn,
-                _libldap0.SCOPE_BASE,
-                '(objectClass=*)',
-                attrlist=['subschemaSubentry'],
-            )
+            entry = self.read_s(dn, attrlist=['subschemaSubentry'])
         except (
                 _libldap0.NO_SUCH_OBJECT,
-                _libldap0.NO_SUCH_ATTRIBUTE,
                 _libldap0.INSUFFICIENT_ACCESS,
+                _libldap0.NO_SUCH_ATTRIBUTE,
+                _libldap0.UNDEFINED_TYPE,
             ):
-            r = []
-        except _libldap0.UNDEFINED_TYPE:
-            return None
-        try:
-            if r:
-                e = ldap0.cidict.cidict(r[0][1])
-                search_subschemasubentry_dn = e.get('subschemaSubentry', [None])[0]
-                if search_subschemasubentry_dn is None:
-                    if dn:
-                        # Try to find sub schema sub entry in root DSE
-                        return self.search_subschemasubentry_s(dn='')
-                    else:
-                        # If dn was already root DSE we can return here
-                        return None
-                return search_subschemasubentry_dn
-        except IndexError:
-            return None
+            res = None
+        else:
+            res = entry.get('subschemaSubentry',[None])[0]
+        if res is None and dn:
+            # fall back reading attribute subschemaSubentry from rootDSE
+            res = self.search_subschemasubentry_s(dn='')
+        return res # end of search_subschemasubentry_s()
 
     def read_s(
             self,
