@@ -66,18 +66,6 @@ setup(
     license=__about__.__license__,
     version=__about__.__version__,
     description='Module package for implementing LDAP clients'.format(PKG_NAME),
-    long_description=textwrap.dedent(
-        """
-        {0} provides an object-oriented API to access LDAP directory servers
-        from Python programs. Mainly it wraps the OpenLDAP 2.x libs for that purpose.
-        Additionally the package contains Python modules:
-        - parsing and producing LDIF
-        - handle LDAPURLs
-        - parse and handle LDAPv3 subschema
-        - LDAPv3 extended operations and controls
-        - automatic tests with OpenLDAP server
-        """.format(PKG_NAME)
-    ).lstrip(),
     author=__about__.__author__,
     author_email='michael@stroeder.com',
     maintainer=__about__.__author__,
@@ -87,23 +75,6 @@ setup(
     keywords=[
         'LDAP',
         'OpenLDAP',
-    ],
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'Intended Audience :: System Administrators',
-        'Operating System :: OS Independent',
-        'Operating System :: MacOS :: MacOS X',
-        'Operating System :: Microsoft :: Windows',
-        'Operating System :: POSIX',
-        'Programming Language :: C',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Topic :: Database',
-        'Topic :: Internet',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: System :: Systems Administration :: Authentication/Directory :: LDAP',
-        'License :: OSI Approved :: Python Software Foundation License',
     ],
     #-- C extension modules
     ext_modules=[

@@ -1,11 +1,29 @@
-This is a Python module package for LDAP wrapping the OpenLDAP libs
-used by [web2ldap](https://web2ldap.de), [Æ-DIR](https://ae-dir.com) and
-[OATH-LDAP](https://oath-ldap.stroeder.com/).
+Module ldap0
+============
 
-This module is of no general use!
-The API may change at any time without further notice!
-Don't use it for your own project!
+Module package *ldap0* provides an object-oriented API to access LDAP
+directory servers from Python programs. Mainly it wraps the OpenLDAP 2.x
+libs for that purpose.
 
-Look somewhere else for generally available Python modules for accessing LDAP servers.
+Additionally the package contains some Python modules for:
 
-You have been warned.
+  * parsing and producing LDIF
+  * handling LDAP URLs
+  * parse and handle LDAPv3 subschema
+  * LDAPv3 extended operations and controls
+  * automatic tests with OpenLDAP server
+
+Installing this module is required for running this software:
+
+  * [web2ldap](https://web2ldap.de)
+  * [Æ-DIR](https://ae-dir.com)
+  * [OATH-LDAP](https://oath-ldap.stroeder.com/)
+  * [slapdcheck](https://pypi.org/project/slapdcheck/)
+
+Further notes:
+
+  * This module is of no general use!
+  * Don't use it for your own project!
+  * The API may change at any time without further notice!
+
+**You have been warned!**
