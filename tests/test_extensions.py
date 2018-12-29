@@ -285,30 +285,28 @@ class TestSssVlv(ExtensionTestCase):
                 'olcSssVlvMaxPerConn': ['5'],
             },
         )
-        ldap_result = self._ldap_conn.search_s(
-            self.server.suffix,
-            ldap0.SCOPE_SUBTREE,
-            '(objectClass=organizationalRole)',
-            attrlist=['cn'],
-            serverctrls=[
-                SSSRequestControl(
-                    criticality=True,
-                    ordering_rules=['-cn:caseExactOrderingMatch']
-                )
-            ],
-        )
-        self.assertEqual(
-            ldap_result,
-            [
-                ('cn=Foo7,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo7']}),
-                ('cn=Foo6,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo6']}),
-                ('cn=Foo5,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo5']}),
-                ('cn=Foo4,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo4']}),
-                ('cn=Foo3,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo3']}),
-                ('cn=Foo2,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo2']}),
-                ('cn=Foo1,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo1']}),
-            ]
-        )
+        wanted_results = [
+            ('cn=Foo7,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo7']}),
+            ('cn=Foo6,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo6']}),
+            ('cn=Foo5,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo5']}),
+            ('cn=Foo4,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo4']}),
+            ('cn=Foo3,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo3']}),
+            ('cn=Foo2,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo2']}),
+            ('cn=Foo1,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo1']}),
+        ]
+
+        for ordr in (
+            '-cn:caseExactOrderingMatch',
+            #'-cn',
+        ):
+            ldap_result = self._ldap_conn.search_s(
+                self.server.suffix,
+                ldap0.SCOPE_SUBTREE,
+                '(objectClass=organizationalRole)',
+                attrlist=['cn'],
+                serverctrls=[SSSRequestControl(criticality=True, ordering_rules=[ordr])],
+            )
+            self.assertEqual(ldap_result, wanted_results)
         msg_id = self._ldap_conn.search(
             self.server.suffix,
             ldap0.SCOPE_SUBTREE,
