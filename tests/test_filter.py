@@ -57,6 +57,10 @@ class TestFilter(unittest.TestCase):
             ),
             r'\c3\a4\c3\b6\c3\bc\c3\84\c3\96\c3\9c\c3\9f'
         )
+        self.assertEqual(
+            escape_filter_chars('(foo*bar)', escape_mode=1),
+            r'\28foo\2abar\29'
+        )
 
     def test_escape_filter_chars_mode2(self):
         """
