@@ -29,14 +29,32 @@ class TestModlist(unittest.TestCase):
                 ('sn',['Str\303\266der']),
                 ('dummy2',['2']),
                 ('dummy3',['']),
-            ]
+            ],
+            None,
+        ),
+        (
+            {
+                'objectClass':['person','pilotPerson'],
+                'cn':['Michael Str\303\266der','Michael Stroeder'],
+                'sn':['Str\303\266der'],
+                'dummy1':[],
+                'dummy2':['2'],
+                'dummy3':[''],
+            },
+            [
+                ('objectClass',['person','pilotPerson']),
+                ('sn',['Str\303\266der']),
+                ('dummy2',['2']),
+                ('dummy3',['']),
+            ],
+            ('cn',),
         ),
     ]
 
     def test_add_modlist(self):
-        for entry,test_modlist in self.add_modlist_tests:
+        for entry, test_modlist, ignore_attr_types in self.add_modlist_tests:
             test_modlist.sort()
-            result_modlist = add_modlist(entry)
+            result_modlist = add_modlist(entry, ignore_attr_types=ignore_attr_types)
             result_modlist.sort()
             self.assertEqual(
                 test_modlist, result_modlist,
@@ -62,6 +80,7 @@ class TestModlist(unittest.TestCase):
                 'mail':['michael@stroeder.com'],
             },
             [],
+            [],
             [
                 (ldap0.MOD_DELETE,'objectClass',None),
                 (ldap0.MOD_ADD,'objectClass',['person','inetOrgPerson']),
@@ -80,6 +99,7 @@ class TestModlist(unittest.TestCase):
             {
                 'c':['FR'],
             },
+            [],
             [],
             [
                 (ldap0.MOD_DELETE,'c',None),
@@ -102,6 +122,7 @@ class TestModlist(unittest.TestCase):
                 'sn':[None],
             },
             [],
+            [],
             [
                 (ldap0.MOD_DELETE,'c',None),
                 (ldap0.MOD_DELETE,'objectClass',None),
@@ -122,7 +143,30 @@ class TestModlist(unittest.TestCase):
                 'sn':[],
                 'enum':['a','b','c'],
             },
+            [],
             ['objectClass'],
+            [
+                (ldap0.MOD_DELETE,'sn',None),
+                (ldap0.MOD_DELETE,'enum',None),
+                (ldap0.MOD_ADD,'enum',['a','b','c']),
+            ]
+        ),
+
+        (
+            {
+                'objectClass':['person'],
+                'cn':['Michael Str\303\266der','Michael Stroeder'],
+                'sn':['Str\303\266der'],
+                'enum':['a','b','C'],
+            },
+            {
+                'objectClass':['inetOrgPerson'],
+                'cn':['Michael Str\303\266der','Michael Stroeder'],
+                'sn':[],
+                'enum':['a','b','c'],
+            },
+            ['objectClass'],
+            [],
             [
                 (ldap0.MOD_DELETE,'sn',None),
                 (ldap0.MOD_DELETE,'enum',None),
@@ -133,10 +177,11 @@ class TestModlist(unittest.TestCase):
     ]
 
     def test_modify_modlist(self):
-        for old_entry, new_entry, case_ignore_attr_types, test_modlist in self.modify_modlist_tests:
+        for old_entry, new_entry, ignore_attr_types, case_ignore_attr_types, test_modlist in self.modify_modlist_tests:
             test_modlist.sort()
             result_modlist = modify_modlist(
                 old_entry, new_entry,
+                ignore_attr_types=ignore_attr_types,
                 case_ignore_attr_types=case_ignore_attr_types)
             result_modlist.sort()
 
