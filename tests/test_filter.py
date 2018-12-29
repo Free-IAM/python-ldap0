@@ -14,6 +14,8 @@ from ldap0.filter import \
     negate_filter, \
     map_filter_parts, \
     compose_filter, \
+    time_span_filter, \
+    filter_format, \
     dict_filter
 
 
@@ -132,6 +134,27 @@ class TestFilter(unittest.TestCase):
                 oop='|'
             ),
             '(|(&(foo1=bar1)(foo1=bar2))(&(foo2=bar1)(foo2=bar2)))'
+        )
+
+    def test_filter_format(self):
+        self.assertEqual(filter_format('', ()), '')
+        self.assertEqual(filter_format('(%s=%s)', ('foo', 'bar')), '(foo=bar)')
+        self.assertEqual(filter_format('(|(cn=%s)(cn=%s))', ('foo', 'bar')), '(|(cn=foo)(cn=bar))')
+        with self.assertRaises(TypeError):
+            filter_format('', ('foo', 'bar'))
+
+    def test_time_span_filter(self):
+        self.assertEqual(
+            time_span_filter(until_timestamp=0),
+            '(&(modifyTimestamp>=19700101000000Z)(!(modifyTimestamp>=19700101000000Z)))',
+        )
+        self.assertEqual(
+            time_span_filter(
+                from_timestamp=1000000,
+                until_timestamp=1546101638,
+                delta_attr='foo',
+            ),
+            '(&(foo>=19700112134640Z)(!(foo>=20181229164038Z)))',
         )
 
 
