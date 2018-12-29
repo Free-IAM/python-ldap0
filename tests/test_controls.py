@@ -11,6 +11,7 @@ import unittest
 from ldap0.controls import RequestControlTuples
 from ldap0.controls.sessiontrack import *
 from ldap0.controls.psearch import *
+from ldap0.controls.pwdpolicy import *
 
 
 class TestRequestControls(unittest.TestCase):
@@ -50,6 +51,17 @@ class TestRequestControls(unittest.TestCase):
                 psc_encoded,
             )],
         )
+
+
+class TestResponseControls(unittest.TestCase):
+
+    def test_pwdpolicy(self):
+        pec = PasswordExpiringControl()
+        pec.decodeControlValue('0')
+        self.assertEqual(pec.gracePeriod, 0)
+        pec = PasswordExpiredControl()
+        pec.decodeControlValue('0')
+        self.assertEqual(pec.passwordExpired, True)
 
 
 if __name__ == '__main__':
