@@ -278,6 +278,23 @@ class TestDNObj(unittest.TestCase):
             ):
             self.assertEqual(str(DNObj.fromstring(dn_str, flags=0)), dn_str)
 
+    def test_dnobj_unicode(self):
+        # test Unicode strings
+        self.assertEqual(list(DNObj.fromstring(u'')), [])
+        self.assertEqual(len(DNObj.fromstring(u'')), 0)
+        self.assertEqual(
+            str(DNObj.fromstring(u'ou=dept1  ,  dc=example, dc=com').rdn()),
+            'ou=dept1'
+        )
+        for dn_str in (
+                u'',
+                u'dc=example,dc=com',
+                u'ou=dept1,dc=example,dc=com',
+                u'cn=Michael Ströder,dc=example,dc=com',
+            ):
+            self.assertEqual(str(DNObj.fromstring(dn_str, flags=0)), dn_str.encode('utf-8'))
+        self.assertEqual(str(DNObj.fromdomain(u'example.com')), 'dc=example,dc=com')
+
     def test_weird_whitespaces(self):
         self.assertEqual(
             DNObj.fromstring('uid = test42 + uidNumber = 42, dc = example , dc = com'),
