@@ -96,6 +96,30 @@ objectClass: dcObject
 dc: ref2
 ref: ldap://ldap.example.net/
 
+dn: ou=Groups,%(suffix)s
+objectClass: organizationalUnit
+ou: Container
+
+dn: cn=Bar1,ou=Groups,%(suffix)s
+objectClass: posixGroup
+cn: Bar1
+gidNumber: 10001
+
+dn: cn=Bar3,ou=Groups,%(suffix)s
+objectClass: posixGroup
+cn: Bar3
+gidNumber: 10003
+
+dn: cn=Bar4,ou=Groups,%(suffix)s
+objectClass: posixGroup
+cn: Bar4
+gidNumber: 10004
+
+dn: cn=Bar2,ou=Groups,%(suffix)s
+objectClass: posixGroup
+cn: Bar2
+gidNumber: 10002
+
 """
 
 
@@ -286,23 +310,22 @@ class TestSssVlv(ExtensionTestCase):
             },
         )
         wanted_results = [
-            ('cn=Foo7,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo7']}),
-            ('cn=Foo6,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo6']}),
-            ('cn=Foo5,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo5']}),
-            ('cn=Foo4,ou=Container,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo4']}),
-            ('cn=Foo3,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo3']}),
-            ('cn=Foo2,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo2']}),
-            ('cn=Foo1,dc=slapd-test,dc=example,dc=org', {'cn': ['Foo1']}),
+            (
+                'cn=Bar%d,ou=Groups,dc=slapd-test,dc=example,dc=org' % i,
+                {'cn': ['Bar%d' % i]},
+            )
+            for i in range(4,0,-1)
         ]
 
         for ordr in (
             '-cn:caseExactOrderingMatch',
-            #'-cn',
+            '-gidNumber:integerOrderingMatch',
+            '-gidNumber',
         ):
             ldap_result = self._ldap_conn.search_s(
                 self.server.suffix,
                 ldap0.SCOPE_SUBTREE,
-                '(objectClass=organizationalRole)',
+                '(objectClass=posixGroup)',
                 attrlist=['cn'],
                 serverctrls=[SSSRequestControl(criticality=True, ordering_rules=[ordr])],
             )
