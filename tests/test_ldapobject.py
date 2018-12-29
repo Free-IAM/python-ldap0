@@ -532,6 +532,7 @@ class Test00_LDAPObject(SlapdTestCase):
             l.simple_bind_s(dn, 'changed')
         # let server set new random password
         new_pwd = self._ldap_conn.passwd_s(dn, 'changed', None)
+        self.assertIsInstance(new_pwd, bytes)
         with self.ldap_object_class(self.server.ldapi_uri) as l:
             l.simple_bind_s(dn, new_pwd)
 
