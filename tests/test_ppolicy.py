@@ -148,12 +148,13 @@ class TestPPolicy(SlapdTestCase):
         pwd_changed_time = strp_secs(user_entry['pwdChangedTime'][0])
         # check a normal simple bind first
         with self.ldap_object_class(self.server.ldap_uri) as l:
-            with self.assertRaises(PasswordPolicyChangeAfterReset):
+            with self.assertRaises(PasswordPolicyChangeAfterReset) as ctx:
                 l.simple_bind_s(
                     self.user_dn,
                     user_password,
                     serverctrls=[PasswordPolicyControl()],
                 )
+            self.assertEqual(str(ctx.exception), 'Password change is needed after reset!')
             # let the user change his own password
             l.passwd_s(self.user_dn, None, 'supersecret2')
         return # end of test001_pwd_reset()
@@ -175,6 +176,7 @@ class TestPPolicy(SlapdTestCase):
                     user_password,
                     serverctrls=[PasswordPolicyControl()],
                 )
+            self.assertEqual(str(ctx.exception), 'Password will expire in 1 seconds!')
             self.assertEqual(ctx.exception.timeBeforeExpiration, 1)
         return # test002_pwd_expiry_warning()
 
@@ -195,6 +197,7 @@ class TestPPolicy(SlapdTestCase):
                     user_password,
                     serverctrls=[PasswordPolicyControl()],
                 )
+            self.assertEqual(str(ctx.exception), 'Password expired! 2 grace logins left.')
             self.assertEqual(ctx.exception.graceAuthNsRemaining, self.pwd_graceauthn_limit)
 
 
