@@ -75,15 +75,16 @@ class PersistentSearchControl(RequestControl):
         RequestControl.__init__(self, criticality=criticality)
         self.changesOnly = changesOnly
         self.returnECs = returnECs
-        self.changeTypes = changeTypes or CHANGE_TYPES_INT.values()
+        if isinstance(changeTypes, int):
+            self.changeTypes = changeTypes
+        else:
+            # Assume a sequence type of integers to be OR-ed
+            self.changeTypes = 0
+            for chtype in changeTypes or CHANGE_TYPES_INT.values():
+                self.changeTypes = self.changeTypes|CHANGE_TYPES_INT.get(chtype, chtype)
+        return
 
     def encodeControlValue(self):
-        if isinstance(self.changeTypes, int):
-            # Assume a sequence type of integers to be OR-ed
-            change_types_int = 0
-            for chtype in self.changeTypes:
-                change_types_int = change_types_int|CHANGE_TYPES_INT.get(chtype, chtype)
-            self.changeTypes = change_types_int
         pval = self.PersistentSearchControlValue()
         pval.setComponentByName('changeTypes', univ.Integer(self.changeTypes))
         pval.setComponentByName('changesOnly', univ.Boolean(self.changesOnly))
