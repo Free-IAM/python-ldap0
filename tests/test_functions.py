@@ -16,7 +16,7 @@ from ldap0.filter import escape_filter_chars
 
 class TestFunction(unittest.TestCase):
     """
-    test ldap0.functions
+    test simple functions in ldap0.functions
     """
 
     def test_ldap_strf_secs(self):
@@ -89,6 +89,28 @@ class TestFunction(unittest.TestCase):
             attr_set('    foo, bar, foo bar'),
             {'foo', 'bar'}
         )
+
+
+class TestOptions(unittest.TestCase):
+    """
+    test LDAP option functions in ldap0.functions
+    """
+
+    def test_protocol_version(self):
+        # default should be LDAPv3
+        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_PROTOCOL_VERSION), 3)
+        # switch to LDAPv2
+        ldap0.functions.set_option(ldap0.OPT_PROTOCOL_VERSION, 2)
+        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_PROTOCOL_VERSION), 2)
+        # set back to LDAPv3
+        ldap0.functions.set_option(ldap0.OPT_PROTOCOL_VERSION, 3)
+        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_PROTOCOL_VERSION), 3)
+
+    def test_ca_cert(self):
+        ldap0.functions.set_option(ldap0.OPT_X_TLS_CACERTFILE, '/etc/ssl/ca-bundle.pem')
+        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_X_TLS_CACERTFILE), '/etc/ssl/ca-bundle.pem')
+        ldap0.functions.set_option(ldap0.OPT_X_TLS_CACERTDIR, '/etc/ssl/cacerts')
+        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_X_TLS_CACERTDIR), '/etc/ssl/cacerts')
 
 
 if __name__ == '__main__':
