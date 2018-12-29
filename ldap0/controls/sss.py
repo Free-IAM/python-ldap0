@@ -68,8 +68,6 @@ class SSSRequestControl(RequestControl):
         ):
         RequestControl.__init__(self, self.controlType, criticality)
         self.ordering_rules = ordering_rules
-        if isinstance(ordering_rules, basestring):
-            ordering_rules = [ordering_rules]
         for rule in ordering_rules:
             rule = rule.split(':')
             assert len(rule) < 3, 'syntax for ordering rule: [-]<attribute-type>[:ordering-rule]'
