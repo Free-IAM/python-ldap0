@@ -318,16 +318,18 @@ class TestSssVlv(ExtensionTestCase):
         ]
 
         for ordr in (
-            '-cn:caseExactOrderingMatch',
-            '-gidNumber:integerOrderingMatch',
-            '-gidNumber',
+            ('-cn:caseExactOrderingMatch',),
+            ('-cn:caseExactOrderingMatch',),
+            ('-gidNumber:integerOrderingMatch',),
+            ('-gidNumber',),
+            ('-gidNumber', 'createTimestamp',),
         ):
             ldap_result = self._ldap_conn.search_s(
                 self.server.suffix,
                 ldap0.SCOPE_SUBTREE,
                 '(objectClass=posixGroup)',
                 attrlist=['cn'],
-                serverctrls=[SSSRequestControl(criticality=True, ordering_rules=[ordr])],
+                serverctrls=[SSSRequestControl(criticality=True, ordering_rules=ordr)],
             )
             self.assertEqual(ldap_result, wanted_results)
         msg_id = self._ldap_conn.search(
