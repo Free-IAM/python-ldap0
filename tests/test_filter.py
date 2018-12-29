@@ -6,9 +6,11 @@ Automatic tests for module ldap0.filter
 from __future__ import absolute_import
 
 # from Python's standard lib
+import time
 import unittest
 from collections import OrderedDict
 
+from ldap0.functions import strf_secs
 from ldap0.filter import \
     escape_filter_chars, \
     negate_filter, \
@@ -156,6 +158,27 @@ class TestFilter(unittest.TestCase):
             ),
             '(&(foo>=19700112134640Z)(!(foo>=20181229164038Z)))',
         )
+        with self.assertRaises(ValueError):
+            time_span_filter(from_timestamp=1, until_timestamp=0)
+        # test time.time() based filter
+        before = time.time()
+        flt = time_span_filter(delta_attr='foo')
+        after = time.time()
+        results = set([
+            '(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(before)),
+            '(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(after)),
+        ])
+        self.assertIn(flt, results)
+        # test time.time() based filter with relative from_timestamp
+        fts = -10
+        before = time.time()
+        flt = time_span_filter(from_timestamp=fts, delta_attr='foo')
+        after = time.time()
+        results = set([
+            '(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(before+fts), strf_secs(before)),
+            '(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(after+fts), strf_secs(after)),
+        ])
+        self.assertIn(flt, results)
 
 
 if __name__ == '__main__':
