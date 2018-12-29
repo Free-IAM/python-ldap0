@@ -66,6 +66,13 @@ class TestFilter(unittest.TestCase):
             r'\66\6f\6f\62\61\72'
         )
 
+    def test_escape_filter_chars_mode666(self):
+        """
+        test function escape_filter_chars() with escape_mode=2
+        """
+        with self.assertRaises(ValueError):
+            escape_filter_chars('foobar', escape_mode=666)
+
     def test_negate_filter(self):
         self.assertEqual(negate_filter('(objectClass=*)'), '(!(objectClass=*))')
         self.assertEqual(negate_filter('(!(objectClass=*))'), '(objectClass=*)')
