@@ -93,6 +93,7 @@ class TestSyncReplDesc(unittest.TestCase):
             '',
         ]
         srd = SyncReplDesc('  '.join(srd_str_list))
+        self.assertEqual(repr(srd), 'SyncReplDesc(rid=23)')
         self.assertEqual(srd.rid, '23')
         self.assertEqual(srd.provider, 'ldap://ldap-23.example.com')
         self.assertEqual(srd.bindmethod, 'simple')
