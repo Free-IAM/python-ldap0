@@ -115,10 +115,7 @@ class SyncReplDesc(object):
             setattr(self, key.replace('-', '_'), val)
         # transform scope
         if self.scope is not None:
-            try:
-                self.scope = LDAPURL_SEARCH_SCOPE[self.scope]
-            except AttributeError:
-                pass
+            self.scope = LDAPURL_SEARCH_SCOPE[self.scope]
 
     def __repr__(self):
         return '%s(rid=%s)' % (self.__class__.__name__, self.rid)
