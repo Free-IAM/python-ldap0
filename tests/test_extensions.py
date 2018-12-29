@@ -288,7 +288,7 @@ class TestSssVlv(ExtensionTestCase):
         ldap_result = self._ldap_conn.search_s(
             self.server.suffix,
             ldap0.SCOPE_SUBTREE,
-            '(objectClass:=organizationalRole)',
+            '(objectClass=organizationalRole)',
             attrlist=['cn'],
             serverctrls=[
                 SSSRequestControl(
