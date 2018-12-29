@@ -26,6 +26,8 @@ SLAPD_CONF_TEMPLATE = r"""
 moduleload back_%(database)s
 
 include "%(schema_prefix)s/core.schema"
+include "%(schema_prefix)s/cosine.schema"
+include "%(schema_prefix)s/nis.schema"
 
 serverID %(serverid)s
 loglevel %(loglevel)s
@@ -116,6 +118,8 @@ class SlapdObject(object):
     )
     openldap_schema_files = (
         'core.schema',
+        'cosine.schema',
+        'nis.schema',
     )
 
     TMPDIR = os.environ.get('TMP', os.getcwd())
