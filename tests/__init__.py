@@ -23,3 +23,4 @@ from . import test_ppolicy
 from . import test_schema_subentry
 from . import test_syncrepl
 from . import test_openldap
+from . import test_logger
