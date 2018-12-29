@@ -15,6 +15,9 @@ from ldap0.controls.pwdpolicy import *
 
 
 class TestRequestControls(unittest.TestCase):
+    """
+    test classes for encoding request controls
+    """
 
     def test_sessiontrack(self):
         stc = SessionTrackingControl(
@@ -54,6 +57,9 @@ class TestRequestControls(unittest.TestCase):
 
 
 class TestResponseControls(unittest.TestCase):
+    """
+    test classes for decoding response controls
+    """
 
     def test_pwdpolicy(self):
         pec = PasswordExpiringControl()
