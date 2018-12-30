@@ -520,7 +520,7 @@ class TestEntry(SubschemaTest):
             'cn=Michael Str\303\266der,ou=test',
             ldap_entry,
         )
-        self.assertEqual(e1.keys(), ['sn', 'givenName', 'c', 'cn', 'objectClass'])
+        self.assertEqual(sorted(e1.keys()), ['c', 'cn', 'givenName', 'objectClass', 'sn'])
         self.assertEqual('2.5.4.3' in e1, True)
         self.assertEqual('cn' in e1, True)
         self.assertEqual(e1['cn'], ['Michael Str\xc3\xb6der', 'Michael Stroeder'])
