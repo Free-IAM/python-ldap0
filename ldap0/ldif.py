@@ -134,27 +134,14 @@ class LDIFWriter(object):
         modlist
             list of additions (2-tuple) or modifications (3-tuple)
         """
-        mod_len = len(modlist[0])
-        if mod_len == 2:
-            changetype = 'add'
-        elif mod_len == 3:
-            changetype = 'modify'
-        else:
-            raise ValueError("modlist item of wrong length: %d" % (mod_len))
-        self._unparse_attr_type_and_value('changetype', changetype)
+        self._unparse_attr_type_and_value('changetype', 'modify')
         for mod in modlist:
-            if mod_len == 2:
-                mod_type, mod_vals = mod
-            elif mod_len == 3:
-                mod_op, mod_type, mod_vals = mod
-                self._unparse_attr_type_and_value(MOD_OP_STR[mod_op], mod_type)
-            else:
-                raise ValueError("Subsequent modlist item of wrong length")
+            mod_op, mod_type, mod_vals = mod
+            self._unparse_attr_type_and_value(MOD_OP_STR[mod_op], mod_type)
             if mod_vals:
                 for mod_val in mod_vals:
                     self._unparse_attr_type_and_value(mod_type, mod_val)
-            if mod_len == 3:
-                self._output_file.write('-'+self._last_line_sep)
+            self._output_file.write('-'+self._last_line_sep)
 
     def unparse(self, dn, record):
         """
