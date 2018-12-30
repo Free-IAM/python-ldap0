@@ -133,6 +133,21 @@ class TestSubschemaLDIF(unittest.TestCase):
                     'oathHOTPUser', 'oathTOTPUser', 'pkiUser', 'posixAccount'
                 ],
             )
+            # check SubSchema.get_structural_oc()
+            self.assertEqual(sub_schema.get_structural_oc([]), None)
+            self.assertEqual(sub_schema.get_structural_oc(['posixAccount']), None)
+            self.assertEqual(sub_schema.get_structural_oc(
+                ['inetOrgPerson']),
+                '2.16.840.1.113730.3.2.2',
+            )
+            self.assertEqual(sub_schema.get_structural_oc(
+                ['inetOrgPerson', 'posixAccount']),
+                '2.16.840.1.113730.3.2.2',
+            )
+            self.assertEqual(sub_schema.get_structural_oc(
+                ['person', 'organizationalPerson', 'inetOrgPerson', 'posixAccount']),
+                '2.16.840.1.113730.3.2.2',
+            )
 
 
 if __name__ == '__main__':
