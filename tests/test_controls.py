@@ -8,10 +8,13 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
+from pyasn1.error import PyAsn1Error
+
 import _libldap0
 from ldap0.controls import RequestControlTuples, ResponseControl, DecodeControlTuples, ControlRegistry
 from ldap0.controls.sessiontrack import *
 from ldap0.controls.psearch import *
+from ldap0.controls.ppolicy import *
 from ldap0.controls.pwdpolicy import *
 from ldap0.controls.readentry import *
 
@@ -74,6 +77,10 @@ class TestResponseControls(unittest.TestCase):
         with self.assertRaises(ValueError):
             DecodeControlTuples(
                 [(PasswordExpiringControl.controlType, False, b'')],
+            )
+        with self.assertRaises(PyAsn1Error):
+            DecodeControlTuples(
+                [(PasswordPolicyControl.controlType, True, b'\xFF\x00\x00\x00\x00\x01')],
             )
         self.assertEqual(
             DecodeControlTuples(
