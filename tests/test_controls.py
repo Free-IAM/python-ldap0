@@ -12,6 +12,7 @@ from ldap0.controls import RequestControlTuples
 from ldap0.controls.sessiontrack import *
 from ldap0.controls.psearch import *
 from ldap0.controls.pwdpolicy import *
+from ldap0.controls.readentry import *
 
 
 class TestRequestControls(unittest.TestCase):
@@ -68,6 +69,14 @@ class TestResponseControls(unittest.TestCase):
         pec = PasswordExpiredControl()
         pec.decodeControlValue('0')
         self.assertEqual(pec.passwordExpired, True)
+
+    def test_readentry(self):
+        # test fall-back decoding caused by old OpenLDAP issue ITS#6899
+        broken_ber = b'0c\x043cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de0,0\x14\x04\tuidNumber1\x07\x04\x05100050\x14\x04\tgidNumber1\x07\x04\x0510005'
+        rec = ReadEntryControl()
+        rec.decodeControlValue(broken_ber)
+        self.assertEqual(rec.dn, 'cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de')
+        self.assertEqual(rec.entry, {'gidNumber': ['10005'], 'uidNumber': ['10005']})
 
 
 if __name__ == '__main__':
