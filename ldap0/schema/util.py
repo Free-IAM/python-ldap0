@@ -30,7 +30,7 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True):
     uri = uri.strip()
     if uri.startswith('ldap:') or uri.startswith('ldaps:') or uri.startswith('ldapi:'):
         ldap_url = LDAPUrl(uri)
-        ldap_conn = LDAPObject(ldap_url.initializeUrl(), trace_level)
+        ldap_conn = LDAPObject(ldap_url, trace_level)
         ldap_conn.simple_bind_s(ldap_url.who or '', ldap_url.cred or '')
         subschemasubentry_dn = ldap_conn.search_subschemasubentry_s(ldap_url.dn)
         if subschemasubentry_dn is None:
