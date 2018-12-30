@@ -8,6 +8,7 @@ from __future__ import absolute_import
 import unittest
 
 import ldap0.ldif
+import ldap0.schema.util
 from ldap0.schema.models import SchemaElement
 from ldap0.schema.models import AttributeType
 from ldap0.schema.models import ObjectClass
@@ -17,6 +18,7 @@ from ldap0.schema.models import MatchingRuleUse
 from ldap0.schema.models import DITContentRule
 from ldap0.schema.models import DITStructureRule
 from ldap0.schema.models import NameForm
+from ldap0.schema.models import Entry
 
 
 # class attribute names of ObjectClass instances
@@ -485,6 +487,64 @@ class TestNameForm(SchemaDescriptionTest):
             },
         ),
     )
+
+
+class SubschemaTest(unittest.TestCase):
+    schema_uri = 'file:tests/ldif/subschema-openldap-all.ldif'
+    maxDiff = 10000
+
+    @classmethod
+    def setUpClass(cls):
+        super(SubschemaTest, cls).setUpClass()
+        cls.sub_schema = ldap0.schema.util.urlfetch(cls.schema_uri, check_uniqueness=True)[1]
+
+
+class TestEntry(SubschemaTest):
+    def test001_correct_entry(self):
+        ldap_entry =             {
+            'objectClass':['person','pilotPerson'],
+            'cn':['Michael Str\303\266der','Michael Stroeder'],
+            'sn':['Str\303\266der'],
+            'givenName':['Michael'],
+            'c':['DE'],
+        }
+        e1 = Entry(
+            self.sub_schema,
+            'cn=Michael Str\303\266der,ou=test',
+            ldap_entry,
+        )
+        self.assertEqual(e1.keys(), ['sn', 'givenName', 'c', 'cn', 'objectClass'])
+        self.assertEqual('2.5.4.3' in e1, True)
+        self.assertEqual('cn' in e1, True)
+        self.assertEqual(e1['cn'], ['Michael Str\xc3\xb6der', 'Michael Stroeder'])
+        self.assertEqual(e1['cn'], e1['2.5.4.3'])
+        self.assertEqual(e1['cn'], e1['commonName'])
+        self.assertEqual('mail' in e1, False)
+        with self.assertRaises(KeyError):
+            e1['mail']
+        e1.update({'mail': ['michael@example.com']})
+        self.assertEqual('mail' in e1, True)
+        self.assertEqual(e1['mail'], e1['0.9.2342.19200300.100.1.3'])
+        del e1['mail']
+        with self.assertRaises(KeyError):
+            e1['mail']
+        must, may = e1.attribute_types()
+        self.assertEqual(sorted(must.keys()), ['2.5.4.0', '2.5.4.3', '2.5.4.4'])
+        self.assertEqual(
+            sorted(may.keys()),
+            [
+                '0.9.2342.19200300.100.1.1', '0.9.2342.19200300.100.1.2',
+                '0.9.2342.19200300.100.1.20', '0.9.2342.19200300.100.1.21',
+                '0.9.2342.19200300.100.1.22', '0.9.2342.19200300.100.1.3',
+                '0.9.2342.19200300.100.1.39', '0.9.2342.19200300.100.1.40',
+                '0.9.2342.19200300.100.1.41', '0.9.2342.19200300.100.1.42',
+                '0.9.2342.19200300.100.1.45', '0.9.2342.19200300.100.1.46',
+                '0.9.2342.19200300.100.1.47', '0.9.2342.19200300.100.1.5',
+                '0.9.2342.19200300.100.1.53', '0.9.2342.19200300.100.1.6',
+                '0.9.2342.19200300.100.1.8',
+                '2.5.4.13', '2.5.4.15', '2.5.4.20', '2.5.4.28', '2.5.4.34', '2.5.4.35'
+            ],
+        )
 
 
 if __name__ == '__main__':
