@@ -11,7 +11,7 @@ import ldap0.ldif
 from ldap0.schema import SubSchema
 from ldap0.schema.util import urlfetch
 from ldap0.schema.subentry import SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING
-from ldap0.schema.models import AttributeType
+from ldap0.schema.models import AttributeType, SchemaElementOIDSet
 
 class TestBasics(unittest.TestCase):
 
@@ -30,7 +30,8 @@ class TestSubschemaLDIF(unittest.TestCase):
 
     def test_subschema_file(self):
         for test_file in self.schema_files:
-            _, sub_schema = urlfetch(test_file, check_uniqueness=True)
+            schema_dn, sub_schema = urlfetch(test_file, check_uniqueness=True)
+            self.assertEqual(schema_dn, 'cn=Subschema')
             self.assertEqual(
                 len(SCHEMA_CLASS_MAPPING),
                 len(sub_schema.name2oid),
@@ -111,6 +112,13 @@ class TestSubschemaLDIF(unittest.TestCase):
             self.assertEqual(cn_i_at.equality, 'caseIgnoreMatch')
             self.assertEqual(cn_i_at.substr, 'caseIgnoreSubstringsMatch')
             self.assertEqual(cn_i_at.ordering, None)
+            # test SubSchema.determine_no_user_mod_attrs()
+            no_user_mod_attrs = sub_schema.determine_no_user_mod_attrs()
+            self.assertEqual(len(no_user_mod_attrs), 54)
+            self.assertIn('2.5.18.4', no_user_mod_attrs) # modifiersName
+            no_user_mod_attrs_set = SchemaElementOIDSet(sub_schema, AttributeType, no_user_mod_attrs)
+            self.assertIn('2.5.18.4', no_user_mod_attrs_set)
+            self.assertIn('modifiersName', no_user_mod_attrs_set)
 
 
 if __name__ == '__main__':
