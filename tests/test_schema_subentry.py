@@ -11,21 +11,26 @@ import ldap0.ldif
 from ldap0.schema import SubSchema
 from ldap0.schema.util import urlfetch
 from ldap0.schema.subentry import SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING
+from ldap0.schema.models import AttributeType
 
-TEST_SUBSCHEMA_FILES = (
-    'file:tests/ldif/subschema-openldap-all.ldif',
-)
+class TestBasics(unittest.TestCase):
+
+    def test_constants(self):
+        self.assertEqual(len(SCHEMA_ATTR_MAPPING), 8)
+        self.assertEqual(len(SCHEMA_CLASS_MAPPING), 8)
+
 
 class TestSubschemaLDIF(unittest.TestCase):
     """
     test ldap0.schema.SubSchema with subschema subentries read from LDIF files
     """
+    schema_files = (
+        'file:tests/ldif/subschema-openldap-all.ldif',
+    )
 
     def test_subschema_file(self):
-        for test_file in TEST_SUBSCHEMA_FILES:
+        for test_file in self.schema_files:
             _, sub_schema = urlfetch(test_file, check_uniqueness=True)
-            self.assertEqual(len(SCHEMA_ATTR_MAPPING), 8)
-            self.assertEqual(len(SCHEMA_CLASS_MAPPING), 8)
             self.assertEqual(
                 len(SCHEMA_CLASS_MAPPING),
                 len(sub_schema.name2oid),
@@ -84,6 +89,19 @@ class TestSubschemaLDIF(unittest.TestCase):
                     'preferredLanguage', 'userSMIMECertificate',
                     'userPKCS12'
                 ),
+            )
+            # check some class attributes inherited by attribute type 'name'
+            self.assertEqual(
+                sub_schema.get_inheritedattr(AttributeType, 'cn', 'syntax'),
+                '1.3.6.1.4.1.1466.115.121.1.15',
+            )
+            self.assertEqual(
+                sub_schema.get_inheritedattr(AttributeType, 'cn', 'equality'),
+                'caseIgnoreMatch',
+            )
+            self.assertEqual(
+                sub_schema.get_inheritedattr(AttributeType, 'cn', 'substr'),
+                'caseIgnoreSubstringsMatch',
             )
 
 
