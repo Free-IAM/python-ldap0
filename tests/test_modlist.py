@@ -11,7 +11,7 @@ import ldap0
 
 from ldap0.modlist import add_modlist, modify_modlist
 
-class TestModlist(unittest.TestCase):
+class TestAddModlist(unittest.TestCase):
 
     add_modlist_tests = [
         (
@@ -62,6 +62,8 @@ class TestModlist(unittest.TestCase):
                     repr(entry),repr(result_modlist),repr(test_modlist)
                 )
             )
+
+class TestModifyModlist(unittest.TestCase):
 
     modify_modlist_tests = [
         (
