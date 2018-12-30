@@ -17,6 +17,7 @@ from ldap0.controls.psearch import *
 from ldap0.controls.ppolicy import *
 from ldap0.controls.pwdpolicy import *
 from ldap0.controls.readentry import *
+from ldap0.controls.vlv import *
 
 
 class TestRequestControls(unittest.TestCase):
@@ -105,6 +106,35 @@ class TestResponseControls(unittest.TestCase):
         rec.decodeControlValue(broken_ber)
         self.assertEqual(rec.dn, 'cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de')
         self.assertEqual(rec.entry, {'gidNumber': ['10005'], 'uidNumber': ['10005']})
+
+
+class TestVirtualListView(unittest.TestCase):
+    """
+    test class for ldap0.controls.vlv
+    """
+
+    def test_vlv(self):
+        vrc = VLVRequestControl(
+            criticality=True,
+            before_count=10,
+            after_count=20,
+            offset=10,
+            content_count=10,
+            greater_than_or_equal=None,
+            context_id=None,
+        )
+        self.assertEqual(vrc.encodeControlValue(), b'0\x0e\x02\x01\n\x02\x01\x14\xa0\x06\x02\x01\n\x02\x01\n')
+        vrc = VLVRequestControl(
+            criticality=True,
+            before_count=10,
+            after_count=20,
+            offset=10,
+            content_count=None,
+            greater_than_or_equal=10,
+            context_id=None,
+        )
+        self.assertEqual(vrc.encodeControlValue(), b'0\n\x02\x01\n\x02\x01\x14\x81\x0210')
+        vrc = VLVResponseControl(criticality=True)
 
 
 if __name__ == '__main__':
