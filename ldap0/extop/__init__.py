@@ -55,7 +55,7 @@ class ExtendedResponse(object):
             self.decodeResponseValue(encodedResponseValue)
 
     def __repr__(self):
-        return '%s(%r, %r)' % (self.__class__.__name__, self.responseName, self.responseValue)
+        return '%s(responseName=%r, responseValue=%r)' % (self.__class__.__name__, self.responseName, self.responseValue)
 
     @classmethod
     def check_resp_name(cls, name):
