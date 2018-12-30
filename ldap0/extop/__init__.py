@@ -25,7 +25,7 @@ class ExtendedRequest(object):
         self.requestValue = requestValue
 
     def __repr__(self):
-        return '%s(%s,%s)' % (self.__class__.__name__, self.requestName, self.requestValue)
+        return '%s(requestName=%r, requestValue=%r)' % (self.__class__.__name__, self.requestName, self.requestValue)
 
     def encodedRequestValue(self):
         """
