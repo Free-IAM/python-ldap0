@@ -8,7 +8,6 @@ from __future__ import absolute_import
 import unittest
 
 import ldap0.ldif
-from ldap0.schema import SubSchema
 from ldap0.schema.util import urlfetch
 from ldap0.schema.subentry import SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING
 from ldap0.schema.models import AttributeType, SchemaElementOIDSet
@@ -139,16 +138,18 @@ class TestSubschemaLDIF(unittest.TestCase):
             # check SubSchema.get_structural_oc()
             self.assertEqual(sub_schema.get_structural_oc([]), None)
             self.assertEqual(sub_schema.get_structural_oc(['posixAccount']), None)
-            self.assertEqual(sub_schema.get_structural_oc(
-                ['inetOrgPerson']),
+            self.assertEqual(
+                sub_schema.get_structural_oc(['inetOrgPerson']),
                 '2.16.840.1.113730.3.2.2',
             )
-            self.assertEqual(sub_schema.get_structural_oc(
-                ['inetOrgPerson', 'posixAccount']),
+            self.assertEqual(
+                sub_schema.get_structural_oc(['inetOrgPerson', 'posixAccount']),
                 '2.16.840.1.113730.3.2.2',
             )
-            self.assertEqual(sub_schema.get_structural_oc(
-                ['person', 'organizationalPerson', 'inetOrgPerson', 'posixAccount']),
+            self.assertEqual(
+                sub_schema.get_structural_oc([
+                    'person', 'organizationalPerson', 'inetOrgPerson', 'posixAccount'
+                ]),
                 '2.16.840.1.113730.3.2.2',
             )
 
