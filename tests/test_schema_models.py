@@ -553,6 +553,28 @@ class TestEntry(SubschemaTest):
                 '2.5.4.13', '2.5.4.15', '2.5.4.20', '2.5.4.28', '2.5.4.34', '2.5.4.35'
             ],
         )
+        # retrieve all required and optional attributes with SUP name
+        ldap_entry = {
+            'objectClass':['person','inetOrgPerson'],
+            'cn':['Michael Str\303\266der','Michael Stroeder'],
+            'sn':['Str\303\266der'],
+            'givenName':['Michael'],
+        }
+        e2 = Entry(
+            self.sub_schema,
+            'cn=Michael Str\303\266der,ou=test',
+            ldap_entry,
+        )
+        must, may = e2.attribute_types(
+            attr_type_filter=(
+                ('sup', [('name',)]),
+            ),
+        )
+        self.assertEqual(sorted(must.keys()), ['2.5.4.3', '2.5.4.4'])
+        self.assertEqual(
+            sorted(may.keys()),
+            ['2.5.4.10', '2.5.4.11', '2.5.4.12', '2.5.4.42', '2.5.4.43', '2.5.4.7', '2.5.4.8'],
+        )
 
 
 if __name__ == '__main__':
