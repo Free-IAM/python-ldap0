@@ -535,6 +535,10 @@ class TestEntry(SubschemaTest):
         del e1['mail']
         with self.assertRaises(KeyError):
             e1['mail']
+        self.assertEqual(
+            sorted(e1.object_class_oid_set()),
+            ['0.9.2342.19200300.100.4.4', '2.5.6.6'],
+        )
         # retrieve all required and optional attributes without applying filter
         must, may = e1.attribute_types()
         self.assertEqual(sorted(must.keys()), ['2.5.4.0', '2.5.4.3', '2.5.4.4'])
