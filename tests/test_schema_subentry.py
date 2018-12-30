@@ -24,6 +24,7 @@ class TestSubschemaLDIF(unittest.TestCase):
     """
     test ldap0.schema.SubSchema with subschema subentries read from LDIF files
     """
+    maxDiff = 10000
     schema_files = (
         'file:tests/ldif/subschema-openldap-all.ldif',
     )
@@ -123,6 +124,15 @@ class TestSubschemaLDIF(unittest.TestCase):
             op_attrs = sub_schema.get_all_operational_attributes()
             self.assertIn('2.5.18.4', op_attrs)
             self.assertIn('modifiersName', op_attrs)
+            # check SubSchema.get_applicable_aux_classes()
+            aux_classes = sub_schema.get_applicable_aux_classes('aeUser-dcr')
+            self.assertEqual(
+                sorted(aux_classes),
+                [
+                    'inetLocalMailRecipient', 'ldapPublicKey', 'msPwdResetObject',
+                    'oathHOTPUser', 'oathTOTPUser', 'pkiUser', 'posixAccount'
+                ],
+            )
 
 
 if __name__ == '__main__':
