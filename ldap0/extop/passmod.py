@@ -133,12 +133,12 @@ class PassmodResponse(ExtendedResponse):
 
     def decodeResponseValue(self, value):
         self.genPasswd = None
-        if value is not None:
-            passmod_resp, _ = decoder.decode(
-                value,
-                asn1Spec=PasswdModifyResponseValue(),
-            )
-            gen_passwd = passmod_resp.getComponentByName('genPasswd')
-            if gen_passwd is not None:
-                self.genPasswd = bytes(gen_passwd)
+        if value is None:
+            return
+        passmod_resp, _ = decoder.decode(
+            value,
+            asn1Spec=PasswdModifyResponseValue(),
+        )
+        if 'genPasswd' in passmod_resp:
+            self.genPasswd = bytes(passmod_resp.getComponentByName('genPasswd'))
         return
