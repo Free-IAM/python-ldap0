@@ -63,7 +63,7 @@ class SchemaDescriptionTest(unittest.TestCase):
                 )
 
     def test_unparse(self):
-        for schema_desc_str, res in self.test_cases:
+        for schema_desc_str, _ in self.test_cases:
             if not schema_desc_str:
                 # skip empty strings
                 continue
@@ -509,11 +509,11 @@ class TestEntry(SubschemaTest):
 
     def test001_correct_entry(self):
         ldap_entry = {
-            'objectClass':['person','pilotPerson'],
-            'cn':['Michael Str\303\266der','Michael Stroeder'],
-            'sn':['Str\303\266der'],
-            'givenName':['Michael'],
-            'c':['DE'],
+            'objectClass': ['person', 'pilotPerson'],
+            'cn': ['Michael Str\303\266der', 'Michael Stroeder'],
+            'sn': ['Str\303\266der'],
+            'givenName': ['Michael'],
+            'c': ['DE'],
         }
         e1 = Entry(
             self.sub_schema,
@@ -559,10 +559,10 @@ class TestEntry(SubschemaTest):
         )
         # retrieve all required and optional attributes with SUP name
         ldap_entry = {
-            'objectClass':['person','inetOrgPerson'],
-            'cn':['Michael Str\303\266der','Michael Stroeder'],
-            'sn':['Str\303\266der'],
-            'givenName':['Michael'],
+            'objectClass': ['person', 'inetOrgPerson'],
+            'cn': ['Michael Str\303\266der', 'Michael Stroeder'],
+            'sn': ['Str\303\266der'],
+            'givenName': ['Michael'],
         }
         e2 = Entry(
             self.sub_schema,
