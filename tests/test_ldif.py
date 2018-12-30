@@ -674,6 +674,23 @@ class TestChangeRecords(TestLDIFParser):
             attrib: value2
 
             """,
+            """
+            dn: cn=foobar
+            changetype: modify
+            foo: attrib
+            attrib: value
+            attrib: value2
+
+            """,
+            """
+            dn: cn=foobar
+            changetype: modify
+            add: attrib
+            attrib: value
+            attrib: value2
+            \t-
+
+            """,
         ):
             ldif_string = textwrap.dedent(bad_ldif_string).lstrip() + '\n'
             with self.assertRaises(ValueError):
