@@ -8,7 +8,7 @@ from __future__ import absolute_import
 from itertools import combinations
 
 from ..__about__ import __version__, __author__, __license__
-from .models import AttributeType, DITContentRule, DITStructureRule, LDAPSyntax, MatchingRule, MatchingRuleUse, NameForm, ObjectClass
+from .models import AttributeType, DITContentRule, DITStructureRule, LDAPSyntax, MatchingRule, MatchingRuleUse, NameForm, ObjectClass, SchemaElementOIDSet
 from ..cidict import cidict
 from ..dn import str2dn
 
@@ -488,17 +488,17 @@ class SubSchema(object):
 
         return r_must, r_may # attribute_types()
 
-    def get_all_operational_attribute_names(self, only_user_editable=False):
+    def get_all_operational_attributes(self, only_user_editable=False):
         """
         Returns SchemaElementOIDSet with all operational attributes
         """
-        res = []
+        res = SchemaElementOIDSet(self, AttributeType, [])
         for at_obj in self.sed[AttributeType].values():
             if at_obj.usage != 0 and (
                     not only_user_editable or
                     not (at_obj.no_user_mod or at_obj.collective)
                 ):
-                res.append(at_obj.names[0])
+                res.add(at_obj.oid)
         return res
 
     def determine_no_user_mod_attrs(self):
