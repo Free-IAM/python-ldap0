@@ -946,7 +946,8 @@ class TestSchemaUrlFetchLDAP(SlapdTestCase):
         """
         test ldap0.schema.util.urlfetch() which requires a running slapd instance
         """
-        _, sub_schema = ldap0.schema.util.urlfetch(self.server.ldapi_uri, check_uniqueness=True)
+        schema_dn, sub_schema = ldap0.schema.util.urlfetch(self.server.ldapi_uri, check_uniqueness=True)
+        self.assertEqual(schema_dn, 'cn=Subschema')
         oid = sub_schema.name2oid[ldap0.schema.models.AttributeType]['cn']
         self.assertEqual(oid, '2.5.4.3')
         self.assertEqual(oid, sub_schema.name2oid[ldap0.schema.models.AttributeType]['commonName'])
