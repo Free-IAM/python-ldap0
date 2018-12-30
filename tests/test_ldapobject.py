@@ -18,6 +18,7 @@ os.environ['LDAPNOINIT'] = '1'
 import _libldap0
 import ldap0
 import ldap0.schema.util
+from ldap0.base import LDAPResult
 from ldap0.ldapurl import LDAPUrl
 from ldap0.sasl import SaslPasswordAuth
 from ldap0.test import SlapdTestCase
@@ -836,6 +837,28 @@ class Test00_LDAPObject(SlapdTestCase):
             'cn=Subschema',
         )
 
+    def test001_add_rename_delete(self):
+        dn1 = 'cn=äöüÄÖÜß,'+self.server.suffix
+        rdn2 = 'cn=LaLeLu4711'
+        dn2 = ','.join((rdn2, self.server.suffix))
+        entry = {
+            'objectClass': ['applicationProcess'],
+            'cn': ['äöüÄÖÜß'],
+        }
+        add_result = self._ldap_conn.add_s(dn1, entry)
+        self.assertEqual(tuple(add_result), (_libldap0.RES_ADD, [], 2, []))
+        with self.assertRaises(_libldap0.ALREADY_EXISTS):
+            self._ldap_conn.add_s(dn1, entry)
+        rename_result = self._ldap_conn.rename_s(dn1, rdn2, newsuperior=self.server.suffix)
+        self.assertEqual(tuple(rename_result), (_libldap0.RES_MODRDN, [], 4, []))
+        read_result = self._ldap_conn.read_s(dn2)
+        self.assertEqual(read_result, {'cn': ['LaLeLu4711'], 'objectClass': ['applicationProcess']})
+        with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
+            self._ldap_conn.rename_s(dn1, rdn2)
+        delete_result = self._ldap_conn.delete_s(dn2)
+        self.assertEqual(tuple(delete_result), (_libldap0.RES_DELETE, [], 7, []))
+        with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
+            self._ldap_conn.delete_s(dn2)
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
@@ -908,7 +931,7 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             self.assertEqual(l2.whoami_s(), 'dn:'+bind_dn)
 
 
-class TestSchemaUrlFetchLDAP(Test00_LDAPObject):
+class TestSchemaUrlFetchLDAP(SlapdTestCase):
 
     def test_schema_urlfetch(self):
         """
