@@ -90,6 +90,9 @@ class TestSubschemaLDIF(unittest.TestCase):
                     'userPKCS12'
                 ),
             )
+            # check SubSchema.get_syntax()
+            self.assertEqual(sub_schema.get_syntax('does_not_exist_in_sub_schema'), None)
+            self.assertEqual(sub_schema.get_syntax('cn'), '1.3.6.1.4.1.1466.115.121.1.15')
             # check some class attributes inherited by attribute type 'name'
             self.assertEqual(
                 sub_schema.get_inheritedattr(AttributeType, 'cn', 'syntax'),

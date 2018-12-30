@@ -303,18 +303,15 @@ class SubSchema(object):
                 )
         return se
 
-
     def get_syntax(self, nameoroid):
         """
         Get the syntax of an attribute type specified by name or OID
         """
-        at_oid = self.getoid(AttributeType, nameoroid)
         try:
-            at_obj = self.get_inheritedobj(AttributeType, at_oid)
+            syntax = self.get_inheritedattr(AttributeType, nameoroid, 'syntax')
         except KeyError:
             return None
-        else:
-            return at_obj.syntax
+        return syntax
 
     def get_structural_oc(self, oc_list):
         """
