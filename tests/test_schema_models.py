@@ -490,6 +490,9 @@ class TestNameForm(SchemaDescriptionTest):
 
 
 class SubschemaTest(unittest.TestCase):
+    """
+    base class for tests requiring the subschema to be loaded
+    """
     schema_uri = 'file:tests/ldif/subschema-openldap-all.ldif'
     maxDiff = 10000
 
@@ -500,8 +503,12 @@ class SubschemaTest(unittest.TestCase):
 
 
 class TestEntry(SubschemaTest):
+    """
+    test ldap0.schema.models.Entry
+    """
+
     def test001_correct_entry(self):
-        ldap_entry =             {
+        ldap_entry = {
             'objectClass':['person','pilotPerson'],
             'cn':['Michael Str\303\266der','Michael Stroeder'],
             'sn':['Str\303\266der'],
@@ -528,6 +535,7 @@ class TestEntry(SubschemaTest):
         del e1['mail']
         with self.assertRaises(KeyError):
             e1['mail']
+        # retrieve all required and optional attributes without applying filter
         must, may = e1.attribute_types()
         self.assertEqual(sorted(must.keys()), ['2.5.4.0', '2.5.4.3', '2.5.4.4'])
         self.assertEqual(
