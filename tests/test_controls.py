@@ -8,7 +8,8 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
-from ldap0.controls import RequestControlTuples
+import _libldap0
+from ldap0.controls import RequestControlTuples, ResponseControl, DecodeControlTuples, ControlRegistry
 from ldap0.controls.sessiontrack import *
 from ldap0.controls.psearch import *
 from ldap0.controls.pwdpolicy import *
@@ -61,6 +62,26 @@ class TestResponseControls(unittest.TestCase):
     """
     test classes for decoding response controls
     """
+
+    def test_base(self):
+        rc = ResponseControl()
+        rc.decodeControlValue(b'foo')
+        self.assertEqual(rc.controlValue, b'foo')
+        with self.assertRaises(_libldap0.UNAVAILABLE_CRITICAL_EXTENSION):
+            DecodeControlTuples(
+                [('1.2.3.4', True, b'')],
+            )
+        with self.assertRaises(ValueError):
+            DecodeControlTuples(
+                [(PasswordExpiringControl.controlType, False, b'')],
+            )
+        self.assertEqual(
+            DecodeControlTuples(
+                [(PasswordExpiringControl.controlType, False, b'')],
+                knownLDAPControls=ControlRegistry(),
+            ),
+            [],
+        )
 
     def test_pwdpolicy(self):
         pec = PasswordExpiringControl()
