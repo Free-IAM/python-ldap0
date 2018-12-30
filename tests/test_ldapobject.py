@@ -930,6 +930,15 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
         with pickle.loads(l1_state) as l2:
             self.assertEqual(l2.whoami_s(), 'dn:'+bind_dn)
 
+    def test105_null_reconnect(self):
+        with self.ldap_object_class(self.server.ldapi_uri, retry_max=0) as l:
+            l.sasl_non_interactive_bind_s('EXTERNAL')
+            authz_id = l.whoami_s()
+            self.assertEqual(authz_id, 'dn:'+self.server.root_dn.lower())
+            self.server.restart()
+            with self.assertRaises(_libldap0.SERVER_DOWN):
+                self.assertEqual(l.whoami_s(), authz_id)
+
 
 class TestSchemaUrlFetchLDAP(SlapdTestCase):
 
