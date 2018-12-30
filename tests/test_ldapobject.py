@@ -17,6 +17,7 @@ os.environ['LDAPNOINIT'] = '1'
 
 import _libldap0
 import ldap0
+import ldap0.schema.util
 from ldap0.ldapurl import LDAPUrl
 from ldap0.sasl import SaslPasswordAuth
 from ldap0.test import SlapdTestCase
@@ -905,6 +906,18 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             l1_state = pickle.dumps(l1)
         with pickle.loads(l1_state) as l2:
             self.assertEqual(l2.whoami_s(), 'dn:'+bind_dn)
+
+
+class TestSchemaUrlFetchLDAP(Test00_LDAPObject):
+
+    def test_schema_urlfetch(self):
+        """
+        test ldap0.schema.util.urlfetch() which requires a running slapd instance
+        """
+        _, sub_schema = ldap0.schema.util.urlfetch(self.server.ldapi_uri, check_uniqueness=True)
+        oid = sub_schema.name2oid[ldap0.schema.models.AttributeType]['cn']
+        self.assertEqual(oid, '2.5.4.3')
+        self.assertEqual(oid, sub_schema.name2oid[ldap0.schema.models.AttributeType]['commonName'])
 
 
 if __name__ == '__main__':
