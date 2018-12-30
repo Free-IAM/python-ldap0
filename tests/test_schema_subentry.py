@@ -11,7 +11,7 @@ import ldap0.ldif
 from ldap0.dn import DNObj
 from ldap0.schema.util import urlfetch
 from ldap0.schema.subentry import SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING
-from ldap0.schema.models import AttributeType, Entry, SchemaElementOIDSet
+from ldap0.schema.models import AttributeType, ObjectClass, NameForm, Entry, SchemaElementOIDSet
 
 class TestBasics(unittest.TestCase):
 
@@ -185,6 +185,29 @@ class TestSubschema(SubschemaTest):
             ['1.3.6.1.4.1.5427.1.389.100.6.13'],
         )
         self.assertEqual(ae_entry.get_rdn_templates(), ['cn='])
+
+    def test008_name_forms(self):
+        """
+        test SubSchema.get_applicable_name_form_objs()
+        """
+        aeperson_oid = self.sub_schema.getoid(ObjectClass, 'aePerson')
+        self.assertEqual(aeperson_oid, '1.3.6.1.4.1.5427.1.389.100.6.8')
+        name_forms = self.sub_schema.get_applicable_name_form_objs(
+            'uniqueIdentifier=foo,cn=hr,ou=ae-dir',
+            aeperson_oid,
+        )
+        self.assertEqual(len(name_forms), 1)
+        self.assertEqual(
+            str(name_forms[0]),
+            str(NameForm("( 1.3.6.1.4.1.5427.1.389.42.15.12 NAME 'aePerson-aeZone-NF-uniqueIdentifier' OC aePerson MUST ( uniqueIdentifier ) )")),
+        )
+
+    def test009_tree(self):
+        """
+        test SubSchema.tree()
+        """
+        tree = self.sub_schema.tree(AttributeType)
+        self.assertEqual(len(tree), 1490)
 
 
 if __name__ == '__main__':
