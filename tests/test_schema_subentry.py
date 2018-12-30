@@ -8,9 +8,10 @@ from __future__ import absolute_import
 import unittest
 
 import ldap0.ldif
+from ldap0.dn import DNObj
 from ldap0.schema.util import urlfetch
 from ldap0.schema.subentry import SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING
-from ldap0.schema.models import AttributeType, SchemaElementOIDSet
+from ldap0.schema.models import AttributeType, Entry, SchemaElementOIDSet
 
 class TestBasics(unittest.TestCase):
 
@@ -158,6 +159,32 @@ class TestSubschema(SubschemaTest):
             ]),
             '2.16.840.1.113730.3.2.2',
         )
+
+    def test007_models_entry(self):
+        """
+        test ldap0.schema.models.Entry
+        """
+        ldap_entry = {
+            'objectClass': ['aeSrvGroup'],
+            'cn': ['test-srvgroup-1'],
+            'description': ['testing...'],
+        }
+        ae_dn = DNObj.fromstring('cn=test-srvgroup-1,ou=ae-dir')
+        ae_entry = Entry(self.sub_schema, str(ae_dn), ldap_entry)
+        self.assertIn('cn', ae_entry)
+        self.assertIn('2.5.4.3', ae_entry)
+        self.assertNotIn('aeLoginGroups', ae_entry)
+        self.assertEqual(
+            ae_entry.get_possible_dit_structure_rules(str(ae_dn)),
+            ['5'],
+        )
+        self.assertEqual(sorted(ae_entry.keys()), sorted(ldap_entry.keys()))
+        self.assertEqual(sorted(ae_entry.items()), sorted(ldap_entry.items()))
+        self.assertEqual(
+            sorted(ae_entry.object_class_oid_set()),
+            ['1.3.6.1.4.1.5427.1.389.100.6.13'],
+        )
+        self.assertEqual(ae_entry.get_rdn_templates(), ['cn='])
 
 
 if __name__ == '__main__':
