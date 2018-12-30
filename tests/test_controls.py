@@ -11,7 +11,7 @@ import unittest
 from pyasn1.error import PyAsn1Error
 
 import _libldap0
-from ldap0.controls import RequestControlTuples, ResponseControl, DecodeControlTuples, ControlRegistry
+from ldap0.controls import encode_request_ctrls, ResponseControl, decode_response_ctrls, ControlRegistry
 from ldap0.controls.sessiontrack import *
 from ldap0.controls.psearch import *
 from ldap0.controls.ppolicy import *
@@ -34,7 +34,7 @@ class TestRequestControls(unittest.TestCase):
         stc_encoded = b'0G\x04\x0b12.34.56.78\x04\rtracking-NAME\x04\x1c1.3.6.1.4.1.21008.108.63.1.1\x04\x0btracking-ID'
         self.assertEqual(stc.encodeControlValue(), stc_encoded)
         self.assertEqual(
-            RequestControlTuples([stc]),
+            encode_request_ctrls([stc]),
             [(
                 SessionTrackingControl.controlType,
                 False,
@@ -52,7 +52,7 @@ class TestRequestControls(unittest.TestCase):
         psc_encoded = b'0\t\x02\x01\x0f\x01\x01\x00\x01\x01\x01'
         self.assertEqual(psc.encodeControlValue(), psc_encoded)
         self.assertEqual(
-            RequestControlTuples([psc]),
+            encode_request_ctrls([psc]),
             [(
                 PersistentSearchControl.controlType,
                 True,
@@ -71,19 +71,19 @@ class TestResponseControls(unittest.TestCase):
         rc.decodeControlValue(b'foo')
         self.assertEqual(rc.controlValue, b'foo')
         with self.assertRaises(_libldap0.UNAVAILABLE_CRITICAL_EXTENSION):
-            DecodeControlTuples(
+            decode_response_ctrls(
                 [('1.2.3.4', True, b'')],
             )
         with self.assertRaises(ValueError):
-            DecodeControlTuples(
+            decode_response_ctrls(
                 [(PasswordExpiringControl.controlType, False, b'')],
             )
         with self.assertRaises(PyAsn1Error):
-            DecodeControlTuples(
+            decode_response_ctrls(
                 [(PasswordPolicyControl.controlType, True, b'\xFF\x00\x00\x00\x00\x01')],
             )
         self.assertEqual(
-            DecodeControlTuples(
+            decode_response_ctrls(
                 [(PasswordExpiringControl.controlType, False, b'')],
                 knownLDAPControls=ControlRegistry(),
             ),

@@ -25,7 +25,7 @@ from .base import LDAPResult
 from .lock import LDAPLock
 from .functions import _libldap0_function_call
 from .schema.subentry import SCHEMA_ATTRS
-from .controls import DecodeControlTuples, RequestControlTuples
+from .controls import decode_response_ctrls, encode_request_ctrls
 from .controls.openldap import SearchNoOpControl
 from .controls.ppolicy import PasswordPolicyControl
 from .extop import ExtendedResponse
@@ -214,7 +214,7 @@ class LDAPObject:
         return self._ldap_call(
             self._l.abandon_ext,
             msgid,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def cancel(self, cancelid, serverctrls=None):
@@ -240,7 +240,7 @@ class LDAPObject:
             self._l.add_ext,
             dn,
             modlist,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def add_s(self, dn, modlist, serverctrls=None):
@@ -258,7 +258,7 @@ class LDAPObject:
             self._l.simple_bind,
             who,
             cred,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def simple_bind_s(self, who='', cred='', serverctrls=None):
@@ -313,7 +313,7 @@ class LDAPObject:
             self._l.sasl_interactive_bind_s,
             who,
             auth,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
             sasl_flags
         )
 
@@ -348,7 +348,7 @@ class LDAPObject:
             dn,
             mechanism,
             cred,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def compare(self, dn, attr, value, serverctrls=None):
@@ -356,7 +356,7 @@ class LDAPObject:
             self._l.compare_ext, dn,
             attr,
             value,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def compare_s(self, dn, attr, value, serverctrls=None):
@@ -380,7 +380,7 @@ class LDAPObject:
         return self._ldap_call(
             self._l.delete_ext,
             dn,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def delete_s(self, dn, serverctrls=None):
@@ -397,7 +397,7 @@ class LDAPObject:
             self._l.extop,
             extreq.requestName,
             extreq.encodedRequestValue(),
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def extop_result(self, msgid=_libldap0.RES_ANY, extop_resp_class=None):
@@ -439,7 +439,7 @@ class LDAPObject:
         return self._ldap_call(
             self._l.modify_ext, dn,
             modlist,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def modify_s(self, dn, modlist, serverctrls=None):
@@ -488,7 +488,7 @@ class LDAPObject:
             newrdn,
             newsuperior,
             delold,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
 
     def rename_s(
@@ -532,7 +532,7 @@ class LDAPObject:
             resp_type, resp_data, resp_msgid, resp_ctrls = ldap_result
             if add_ctrls:
                 resp_data = [
-                    (t, r, DecodeControlTuples(c, resp_ctrl_classes))
+                    (t, r, decode_response_ctrls(c, resp_ctrl_classes))
                     for t, r, c in resp_data
                 ]
             else:
@@ -540,7 +540,7 @@ class LDAPObject:
                     (t, r)
                     for t, r, c in resp_data
                 ]
-        decoded_resp_ctrls = DecodeControlTuples(resp_ctrls, resp_ctrl_classes)
+        decoded_resp_ctrls = decode_response_ctrls(resp_ctrls, resp_ctrl_classes)
         return LDAPResult(resp_type, resp_data, resp_msgid, decoded_resp_ctrls)
 
     def results(
@@ -569,7 +569,7 @@ class LDAPObject:
             res_type, res_data, res_msgid, res_ctrls = ldap_result
             if add_ctrls:
                 res_data = [
-                    (t, r, DecodeControlTuples(c, resp_ctrl_classes))
+                    (t, r, decode_response_ctrls(c, resp_ctrl_classes))
                     for t, r, c in res_data
                 ]
             else:
@@ -607,7 +607,7 @@ class LDAPObject:
             filterstr,
             attrlist,
             attrsonly,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
             timeout,
             sizelimit,
         )
@@ -769,7 +769,7 @@ class LDAPObject:
     def unbind(self, serverctrls=None):
         res = self._ldap_call(
             self._l.unbind_ext,
-            RequestControlTuples(serverctrls),
+            encode_request_ctrls(serverctrls),
         )
         try:
             del self._l
@@ -804,12 +804,12 @@ class LDAPObject:
     def get_option(self, option):
         result = self._ldap_call(self._l.get_option, option)
         if option == _libldap0.OPT_SERVER_CONTROLS:
-            result = DecodeControlTuples(result)
+            result = decode_response_ctrls(result)
         return result
 
     def set_option(self, option, invalue):
         if option == _libldap0.OPT_SERVER_CONTROLS:
-            invalue = RequestControlTuples(invalue)
+            invalue = encode_request_ctrls(invalue)
         return self._ldap_call(self._l.set_option, option, invalue)
 
     def search_subschemasubentry_s(self, dn=''):

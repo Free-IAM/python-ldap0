@@ -29,8 +29,8 @@ __all__ = [
     'SimplePagedResultsControl',
     'ValueLessRequestControl',
     # Functions
-    'RequestControlTuples',
-    'DecodeControlTuples',
+    'encode_request_ctrls',
+    'decode_response_ctrls',
 ]
 
 
@@ -118,7 +118,7 @@ class LDAPControl(RequestControl, ResponseControl):
         )
 
 
-def RequestControlTuples(ldapControls):
+def encode_request_ctrls(ldapControls):
     """
     Return list of readily encoded 3-tuples which can be directly
     passed to C module _ldap
@@ -135,7 +135,7 @@ def RequestControlTuples(ldapControls):
     return result
 
 
-def DecodeControlTuples(ldapControlTuples, knownLDAPControls=None):
+def decode_response_ctrls(ldapControlTuples, knownLDAPControls=None):
     """
     Returns list of readily decoded ResponseControl objects
 
