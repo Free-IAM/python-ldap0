@@ -119,6 +119,10 @@ class TestSubschemaLDIF(unittest.TestCase):
             no_user_mod_attrs_set = SchemaElementOIDSet(sub_schema, AttributeType, no_user_mod_attrs)
             self.assertIn('2.5.18.4', no_user_mod_attrs_set)
             self.assertIn('modifiersName', no_user_mod_attrs_set)
+            # test SubSchema.determine_no_user_mod_attrs()
+            op_attrs = sub_schema.get_all_operational_attributes()
+            self.assertIn('2.5.18.4', op_attrs)
+            self.assertIn('modifiersName', op_attrs)
 
 
 if __name__ == '__main__':
