@@ -10,7 +10,7 @@ import unittest
 import ldap0.ldif
 from ldap0.dn import DNObj
 from ldap0.schema.util import urlfetch
-from ldap0.schema.subentry import SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING
+from ldap0.schema.subentry import SubSchema, SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING, OIDNotUnique, NameNotUnique
 from ldap0.schema.models import AttributeType, ObjectClass, NameForm, Entry, SchemaElementOIDSet
 
 class TestBasics(unittest.TestCase):
@@ -30,7 +30,7 @@ class SubschemaTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super(SubschemaTest, cls).setUpClass()
-        cls.schema_dn, cls.sub_schema = urlfetch(cls.schema_file, check_uniqueness=True)
+        cls.schema_dn, cls.sub_schema = urlfetch(cls.schema_file, check_uniqueness=2)
 
 
 class TestSubschema(SubschemaTest):
@@ -209,6 +209,42 @@ class TestSubschema(SubschemaTest):
         tree = self.sub_schema.tree(AttributeType)
         self.assertEqual(len(tree), 1490)
 
+    def test010_check_uniqueness(self):
+        """
+        provoke exceptions to be raised because of non-unique OIDs or NAMEs
+        """
+        for non_unique_oid_tests in (
+            {
+                'attributeTypes': [
+                    '( 1.2.3.4 NAME foo )',
+                    '( 1.2.3.4 NAME bar )',
+                ],
+            },
+            {
+                'objectClasses': [
+                    '( 1.2.3.4 NAME foo )',
+                    '( 1.2.3.4 NAME bar )',
+                ],
+            },
+        ):
+            with self.assertRaises(OIDNotUnique):
+                SubSchema(non_unique_oid_tests, check_uniqueness=2)
+        for non_unique_name_tests in (
+            {
+                'attributeTypes': [
+                    '( 1.2.3.4 NAME foo )',
+                    '( 2.3.4.5 NAME foo )',
+                ],
+            },
+            {
+                'objectClasses': [
+                    '( 1.2.3.4 NAME foo )',
+                    '( 2.3.4.5 NAME foo )',
+                ],
+            },
+        ):
+            with self.assertRaises(NameNotUnique):
+                SubSchema(non_unique_name_tests, check_uniqueness=2)
 
 if __name__ == '__main__':
     unittest.main()
