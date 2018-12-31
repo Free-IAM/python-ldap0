@@ -319,7 +319,7 @@ class SubSchema(object):
         if any is present. Returns None else.
         """
         # Get tree of all STRUCTURAL object classes
-        oc_tree = self.tree(ObjectClass, [('kind', [0])])
+        oc_tree = self.tree(ObjectClass, [('kind', {0})])
         # Filter all STRUCTURAL object classes
         struct_ocs = {}
         for oc_nameoroid in oc_list:
