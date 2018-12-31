@@ -95,9 +95,13 @@ class TestResponseControls(unittest.TestCase):
         pec = PasswordExpiringControl()
         pec.decodeControlValue('0')
         self.assertEqual(pec.gracePeriod, 0)
+        with self.assertRaises(ValueError):
+            pec.decodeControlValue('x')
         pec = PasswordExpiredControl()
         pec.decodeControlValue('0')
         self.assertEqual(pec.passwordExpired, True)
+        pec.decodeControlValue('x')
+        self.assertEqual(pec.passwordExpired, False)
 
     def test_readentry(self):
         # test fall-back decoding caused by old OpenLDAP issue ITS#6899
@@ -106,6 +110,8 @@ class TestResponseControls(unittest.TestCase):
         rec.decodeControlValue(broken_ber)
         self.assertEqual(rec.dn, 'cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de')
         self.assertEqual(rec.entry, {'gidNumber': ['10005'], 'uidNumber': ['10005']})
+        with self.assertRaises(PyAsn1Error):
+            rec.decodeControlValue(b'\xFF')
 
 
 class TestVirtualListView(unittest.TestCase):
@@ -135,6 +141,8 @@ class TestVirtualListView(unittest.TestCase):
         )
         self.assertEqual(vrc.encodeControlValue(), b'0\n\x02\x01\n\x02\x01\x14\x81\x0210')
         vrc = VLVResponseControl(criticality=True)
+        with self.assertRaises(PyAsn1Error):
+            vrc.decodeControlValue(b'\xFF')
 
 
 if __name__ == '__main__':
