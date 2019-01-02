@@ -133,7 +133,7 @@ class SlapdObject(object):
     PATH_SLAPTEST = os.path.join(SBINDIR, 'slaptest')
 
     # time in secs to wait before trying to access slapd via LDAP (again)
-    _start_sleep = 1.5
+    _start_sleep = 1.0
 
     def __init__(self):
         self._log = combined_logger('slapdtest')
@@ -255,6 +255,19 @@ class SlapdObject(object):
             raise RuntimeError("configuration test failed")
         self._log.info("config ok: %s", self._slapd_conf)
 
+    def get_slapd_version(self):
+        """
+        Determines slapd version
+        """
+        proc = subprocess.Popen(
+            [self.PATH_SLAPD, '-V'],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        _, stderr_data = proc.communicate('')
+        return tuple(stderr_data.split('\n')[0].split(' ')[3].split('.'))
+
     def _start_slapd(self):
         """
         Spawns/forks the slapd process
@@ -265,10 +278,14 @@ class SlapdObject(object):
             '-h', '%s' % ' '.join((self.ldap_uri, self.ldapi_uri)),
         ]
         if self._log.isEnabledFor(logging.DEBUG):
-            slapd_args.extend(['-d', '-1'])
+            slapd_args.extend(['-d', self.slapd_loglevel])
         else:
             slapd_args.extend(['-d', '0'])
-        self._log.info('starting slapd: %r', ' '.join(slapd_args))
+        self._log.info(
+            'starting slapd %s: %r',
+            '.'.join(self.get_slapd_version()),
+            ' '.join(slapd_args),
+        )
         self._proc = subprocess.Popen(slapd_args)
         # Waits until the LDAP server socket is open, or slapd crashed
         while 1:
