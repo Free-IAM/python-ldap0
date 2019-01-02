@@ -20,7 +20,6 @@ import ldap0.ldapobject
 from .filter import escape_filter_chars
 import ldap0.modlist
 from .ldif import LDIFParser
-from .logger import LoggerFileObj
 
 # a template string for generating simple slapd.conf file
 SLAPD_CONF_TEMPLATE = r"""

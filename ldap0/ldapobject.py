@@ -7,12 +7,12 @@ from __future__ import absolute_import
 
 import sys
 import time
+import logging
 from os import strerror
 
 if __debug__:
     # Tracing is only supported in debugging mode
     import pprint
-    import traceback
 
 import _libldap0
 from _libldap0 import LDAPError
@@ -71,13 +71,9 @@ class LDAPObject:
             self,
             uri,
             trace_level=0,
-            trace_file=None,
-            trace_stack_limit=5,
             cache_ttl=0.0,
         ):
         self._trace_level = trace_level
-        self._trace_file = trace_file or ldap0._trace_file
-        self._trace_stack_limit = trace_stack_limit
         if isinstance(uri, str):
             ldap_url = LDAPUrl(uri)
         elif isinstance(uri, LDAPUrl):
@@ -85,8 +81,8 @@ class LDAPObject:
         else:
             raise TypeError('Expected uri to be of type LDAPUrl or str, got %r' % (uri))
         self._libldap0_lock = LDAPLock(
-            desc='_libldap0_lock within %r' % self,
-            trace_level=trace_level,
+            '_libldap0_lock in %r' % self,
+            trace_level=self._trace_level,
         )
         conn_uri = ldap_url.connect_uri()
         self._l = _libldap0_function_call(_libldap0.initialize, conn_uri)
@@ -108,14 +104,15 @@ class LDAPObject:
         self._libldap0_lock.acquire()
         if __debug__:
             if self._trace_level >= 1:
-                self._trace_file.write('*** %s %s - %s\n%s\n' % (
-                    repr(self),
+                logging.debug(
+                    '%r %s - %s.%s(%s)',
+                    self,
                     self._uri,
-                    '.'.join((self.__class__.__name__, func.__name__)),
-                    pprint.pformat((args, kwargs))
-                ))
-                if self._trace_level >= 9:
-                    traceback.print_stack(limit=self._trace_stack_limit, file=self._trace_file)
+                    self.__class__.__name__,
+                    func.__name__,
+                    pprint.pformat((args, kwargs)),
+                    exc_info=(ldap0._trace_level>=9),
+                )
         diagnostic_message_success = None
         try:
             try:
@@ -125,24 +122,26 @@ class LDAPObject:
                         diagnostic_message_success = self._l.get_option(_libldap0.OPT_DIAGNOSTIC_MESSAGE)
             finally:
                 self._libldap0_lock.release()
-        except LDAPError as e:
-            if hasattr(e, 'args') \
-               and e.args \
-               and 'info' not in e.args[0] \
-               and 'errno' in e.args[0]:
-                e.args[0]['info'] = strerror(e.args[0]['errno'])
+        except LDAPError as ldap_err:
+            if hasattr(ldap_err, 'args') \
+               and ldap_err.args \
+               and 'info' not in ldap_err.args[0] \
+               and 'errno' in ldap_err.args[0]:
+                ldap_err.args[0]['info'] = strerror(ldap_err.args[0]['errno'])
             if __debug__ and self._trace_level >= 2:
-                self._trace_file.write(
-                    '-> LDAPError - %s: %s\n' % (e.__class__.__name__, e)
+                logging.debug(
+                    '-> LDAPError - %s',
+                    ldap_err,
                 )
-            raise e
+            raise ldap_err
         else:
             if __debug__ and self._trace_level >= 2:
                 if not diagnostic_message_success is None:
-                    self._trace_file.write(
-                        '-> diagnosticMessage: %r\n' % (diagnostic_message_success)
+                    logging.debug(
+                        '-> diagnosticMessage: %r',
+                        diagnostic_message_success,
                     )
-                self._trace_file.write('-> %s\n' % (pprint.pformat(result)))
+                logging.debug('-> %s', pprint.pformat(result))
         return result
 
     def __setattr__(self, name, value):
@@ -332,7 +331,6 @@ class LDAPObject:
             sasl_mech,
             authz_id=authz_id,
             trace_level=self._trace_level,
-            trace_file=self._trace_file,
         )
         return self.sasl_interactive_bind_s(
             '',
@@ -422,12 +420,7 @@ class LDAPObject:
                 )
             extop_response = extop_resp_class(encodedResponseValue=respvalue)
         if __debug__ and self._trace_level >= 2:
-            self._trace_file.write(
-                '%s.extop_result(): %r' % (
-                    self.__class__.__name__,
-                    extop_response
-                )
-            )
+            logging.debug('%s.extop_result(): %r', self.__class__.__name__, extop_response)
         return extop_response
 
     def extop_s(self, extreq, serverctrls=None, extop_resp_class=None):
@@ -783,11 +776,6 @@ class LDAPObject:
             result = self.result(msgid, all=1, timeout=self.timeout)
         else:
             result = None
-        if __debug__ and self._trace_level >= 1:
-            try:
-                self._trace_file.flush()
-            except AttributeError:
-                pass
         return result
 
     def whoami_s(self, serverctrls=None):
@@ -955,7 +943,6 @@ class ReconnectLDAPObject(LDAPObject):
     __transient_attrs__ = {
         '_l',
         '_libldap0_lock',
-        '_trace_file',
         '_reconnect_lock',
         '_last_bind',
     }
@@ -964,8 +951,6 @@ class ReconnectLDAPObject(LDAPObject):
             self,
             uri,
             trace_level=0,
-            trace_file=None,
-            trace_stack_limit=5,
             cache_ttl=0.0,
             retry_max=1,
             retry_delay=60.0,
@@ -986,13 +971,11 @@ class ReconnectLDAPObject(LDAPObject):
             self,
             uri,
             trace_level=trace_level,
-            trace_file=trace_file,
-            trace_stack_limit=trace_stack_limit,
             cache_ttl=cache_ttl,
         )
         self._reconnect_lock = LDAPLock(
-            desc='_reconnect_lock within %r' % self,
-            trace_level=trace_level,
+            '_reconnect_lock in %r' % self,
+            trace_level=self._trace_level,
         )
         self._retry_max = retry_max
         self._retry_delay = retry_delay
@@ -1025,14 +1008,13 @@ class ReconnectLDAPObject(LDAPObject):
             self._last_bind[2],
         )
         self._libldap0_lock = LDAPLock(
-            desc='_libldap0_lock within %r' % self,
+            '_libldap0_lock in %r' % self,
             trace_level=self._trace_level,
         )
         self._reconnect_lock = LDAPLock(
-            desc='_reconnect_lock within %r' % self,
+            '_reconnect_lock in %r' % self,
             trace_level=self._trace_level,
         )
-        self._trace_file = sys.stderr
         self.reconnect(self._uri)
 
     def _store_last_bind(self, method, *args, **kwargs):
@@ -1067,9 +1049,10 @@ class ReconnectLDAPObject(LDAPObject):
             while reconnect_counter:
                 counter_text = '%d. (of %d)' % (retry_max-reconnect_counter+1, retry_max)
                 if __debug__ and self._trace_level >= 1:
-                    self._trace_file.write('*** Trying %s reconnect to %s...\n' % (
-                        counter_text, uri
-                    ))
+                    logging.debug(
+                        'Trying %s reconnect to %s...\n',
+                        counter_text, uri,
+                    )
                 try:
                     # Do the connect
                     self._l = _libldap0_function_call(_libldap0.initialize, uri)
@@ -1081,23 +1064,23 @@ class ReconnectLDAPObject(LDAPObject):
                     self._apply_last_bind()
                 except (_libldap0.SERVER_DOWN, _libldap0.TIMEOUT) as ldap_error:
                     if __debug__ and self._trace_level >= 1:
-                        self._trace_file.write('*** %s reconnect to %s failed\n' % (
+                        logging.debug(
+                            '%s reconnect to %s failed\n',
                             counter_text, uri
-                        ))
+                        )
                     reconnect_counter = reconnect_counter-1
                     if not reconnect_counter:
                         raise ldap_error
                     if __debug__ and self._trace_level >= 1:
-                        self._trace_file.write('=> delay %s...\n' % (retry_delay))
+                        logging.debug('=> delay %s...\n', retry_delay)
                     time.sleep(retry_delay)
                     LDAPObject.unbind_s(self)
                 else:
                     if __debug__ and self._trace_level >= 1:
-                        self._trace_file.write(
-                            '*** %s reconnect to %s successful => repeat last operation\n' % (
-                                counter_text,
-                                uri,
-                            )
+                        logging.debug(
+                            '%s reconnect to %s successful => repeat last operation\n',
+                            counter_text,
+                            uri,
                         )
                     self._reconnects_done += 1
                     break

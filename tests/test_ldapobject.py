@@ -911,7 +911,6 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             'cache_ttl': 0.0,
             'timeout': -1,
             '_trace_level': 0,
-            '_trace_stack_limit': 5,
             '_whoami_dn': bind_dn,
         }
         with self.ldap_object_class(self.server.ldapi_uri) as l1:

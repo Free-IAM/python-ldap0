@@ -18,9 +18,9 @@ __all__ = [
     'strp_secs',
 ]
 
-import sys
 import pprint
 import time
+import logging
 from calendar import timegm
 
 from .__about__ import __version__, __author__, __license__
@@ -34,17 +34,8 @@ from . import LDAPError
 from .lock import LDAPLock
 import ldap0
 
-if __debug__:
-    # Tracing is only supported in debugging mode
-    import traceback
-
-
 global _libldap0_module_lock
-_libldap0_module_lock = LDAPLock(
-    desc='Module lock',
-    trace_level=ldap0._trace_level,
-    trace_file=ldap0._trace_file,
-)
+_libldap0_module_lock = LDAPLock(desc='Module lock', trace_level=ldap0._trace_level)
 
 
 def _libldap0_function_call(func, *args, **kwargs):
@@ -57,16 +48,12 @@ def _libldap0_function_call(func, *args, **kwargs):
         Function to call with arguments passed in via *args and **kwargs
     """
     if __debug__ and ldap0._trace_level >= 1:
-        ldap0._trace_file.write('*** %s.%s %s\n' % (
-            '_ldap',
+        logging.debug(
+            '_libldap0.%s %s\n',
             func.__name__,
-            pprint.pformat((args, kwargs))
-        ))
-        if ldap0._trace_level >= 9:
-            traceback.print_stack(
-                limit=ldap0._trace_stack_limit,
-                file=ldap0._trace_file,
-            )
+            pprint.pformat((args, kwargs)),
+            exc_info=(ldap0._trace_level >= 9),
+        )
     _libldap0_module_lock.acquire()
     try: # finally
         try: # error / result logging
@@ -81,7 +68,7 @@ def _libldap0_function_call(func, *args, **kwargs):
     finally:
         _libldap0_module_lock.release()
     if __debug__ and ldap0._trace_level >= 2:
-        ldap0._trace_file.write('-> %s\n' % (result_log_msg))
+        logging.debug('-> %s', result_log_msg)
     return result # end of _libldap0_function_call()
 
 

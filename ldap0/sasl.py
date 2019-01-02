@@ -5,6 +5,8 @@ ldap0.sasl - support for SASL mechanism
 
 from __future__ import absolute_import
 
+import logging
+
 from .__about__ import __version__, __author__, __license__
 
 
@@ -46,17 +48,10 @@ class SaslAuth(object):
     This class handles SASL interactions for authentication.
     """
 
-    def __init__(
-            self,
-            cb_value_dict,
-            mech,
-            trace_level=0,
-            trace_file=None,
-        ):
+    def __init__(self, cb_value_dict, mech, trace_level=0):
         self.cb_value_dict = cb_value_dict or {}
         self.mech = mech.upper()
         self._trace_level = trace_level
-        self._trace_file = trace_file
 
     def callback(self, cb_id, challenge, prompt, defresult):
         """
@@ -66,9 +61,10 @@ class SaslAuth(object):
         # new sasl mechanisms. So it is left here
         cb_result = self.cb_value_dict.get(cb_id, defresult) or ''
         if __debug__ and self._trace_level >= 1:
-            self._trace_file.write("*** cb_id=%d, challenge=%r, prompt=%r, defresult=%r -> %r\n" % (
-                cb_id, challenge, prompt, defresult, cb_result
-            ))
+            logging.debug(
+                'cb_id=%d, challenge=%r, prompt=%r, defresult=%r -> %r', 
+                cb_id, challenge, prompt, defresult, cb_result,
+            )
         return cb_result
 
 
@@ -85,7 +81,6 @@ class SaslPasswordAuth(SaslAuth):
             password,
             authz_id='',
             trace_level=0,
-            trace_file=None,
         ):
         assert mech in SASL_PASSWORD_MECHS, ValueError(
             'Invalid SASL mech %r for %s' % (mech, self.__class__.__name__)
@@ -100,7 +95,6 @@ class SaslPasswordAuth(SaslAuth):
             auth_dict,
             mech=mech,
             trace_level=trace_level,
-            trace_file=trace_file,
         )
 
 
@@ -115,7 +109,6 @@ class SaslNoninteractiveAuth(SaslAuth):
             mech,
             authz_id="",
             trace_level=0,
-            trace_file=None,
         ):
         assert mech in SASL_NONINTERACTIVE_MECHS, ValueError(
             'Invalid SASL mech %r for %s' % (mech, self.__class__.__name__)
@@ -128,5 +121,4 @@ class SaslNoninteractiveAuth(SaslAuth):
             auth_dict,
             mech=mech,
             trace_level=trace_level,
-            trace_file=trace_file,
         )

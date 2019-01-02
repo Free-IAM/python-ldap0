@@ -519,7 +519,7 @@ LDAPObject classes
    and :py:func:`open()` (deprecated). The connection is automatically unbound
    and closed when the LDAP object is deleted.
 
-.. py:class:: LDAPObject(uri [, trace_level=0 [, trace_file=None [, trace_stack_limit=5]]])
+.. py:class:: LDAPObject(uri [, trace_level=0])
 
    Initializes a new connection object for accessing the given LDAP server,
    and return an LDAP object (see :ref:`ldap-objects`) used to perform operations
@@ -539,9 +539,7 @@ LDAPObject classes
    application has to correctly handle this behaviour.
 
    The optional arguments are for generating debug log information:
-   *trace_level* specifies the amount of information being logged,
-   *trace_file* specifies a file-like object as target of the debug log and
-   *trace_stack_limit* specifies the stack limit of tracebacks in debug log.
+   *trace_level* specifies the amount of information being logged.
 
    Possible values for *trace_level* are
    :py:const:`0` for no logging,
@@ -554,7 +552,7 @@ LDAPObject classes
       :rfc:`4516` - Lightweight Directory Access Protocol (LDAP): Uniform Resource Locator
 
 
-.. py:class:: ReconnectLDAPObject(uri [, trace_level=0 [, trace_file=None [, trace_stack_limit=5] [, retry_max=1 [, retry_delay=60.0]]]])
+.. py:class:: ReconnectLDAPObject(uri [, trace_level=0 [, retry_max=1 [, retry_delay=60.0]]])
 
    This class is derived from :py:class:`LDAPObject` and used for automatic
    reconnects when using the synchronous request methods (see below). This class

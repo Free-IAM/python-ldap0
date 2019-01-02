@@ -9,12 +9,9 @@ import _libldap0
 from _libldap0 import *
 
 from .__about__ import __version__, __author__, __license__
-from .logger import LoggerFileObj
 
 # Tracing is only supported in debugging mode
 _trace_level = 0
-_trace_file = LoggerFileObj()
-_trace_stack_limit = None
 
 from .functions import get_option, set_option
 from .functions import escape_str, strf_secs, strp_secs
