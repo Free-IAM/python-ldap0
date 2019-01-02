@@ -6,6 +6,7 @@ Automatic tests for C wrapper module _libldap0
 from __future__ import absolute_import
 
 import os
+import logging
 import unittest
 from errno import ENOTCONN
 
@@ -31,7 +32,7 @@ class TestLdapCExtension(SlapdTestCase):
         super(TestLdapCExtension, cls).setUpClass()
         # add two initial objects after server was started and is still empty
         suffix_dc = cls.server.suffix.split(',')[0][3:]
-        cls.server._log.debug(
+        logging.debug(
             "adding %s and %s",
             cls.server.suffix,
             cls.server.root_dn,
