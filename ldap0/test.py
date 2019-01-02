@@ -112,7 +112,7 @@ class SlapdObject(object):
     PATH_SLAPTEST = os.path.join(SBINDIR, 'slaptest')
 
     # time in secs to wait before trying to access slapd via LDAP (again)
-    _start_sleep = 1.0
+    _start_sleep = 1.5
 
     def __init__(self):
         self._proc = None
@@ -394,7 +394,6 @@ class SlapdTestCase(unittest.TestCase):
         ldap_conn = self.ldap_object_class(
             self.server.ldap_uri,
             trace_level=self.trace_level,
-            trace_file=LoggerFileObj(),
         )
         ldap_conn.protocol_version = 3
         #ldap_conn.set_option(ldap0.OPT_REFERRALS, 0)
