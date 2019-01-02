@@ -20,7 +20,10 @@ class LoggerFileObj(object):
     """
 
     def __init__(self, logger=None, logging_level=logging.DEBUG):
-        self._logger = logger
+        if logger is None:
+            self._logger = logging.getLogger()
+        else:
+            self._logger = logger
         self._logging_level = logging_level
         self.log_lines = 0
 
@@ -28,10 +31,7 @@ class LoggerFileObj(object):
         """
         write msg to log
         """
-        if self._logger is not None:
-            self._logger.log(self._logging_level, msg[:-1])
-        else:
-            logging.log(self._logging_level, msg[:-1])
+        self._logger.log(self._logging_level, msg[:-1])
         self.log_lines += 1
 
     def read(self, size=None):
