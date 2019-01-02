@@ -97,7 +97,7 @@ class SyncReplDesc(object):
         parts.sort()
         parts_len = len(parts)
         for ind in range(parts_len):
-            if ind==parts_len-1:
+            if ind == parts_len-1:
                 next_pos = len(syncrepl_statement)
             else:
                 next_pos = parts[ind+1]
