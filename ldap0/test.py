@@ -109,7 +109,7 @@ class SlapdObject(object):
     root_cn = 'Manager'
     root_dn = 'cn=%s,%s' % (root_cn, suffix)
     root_pw = 'password'
-    slapd_loglevel = 'stats stats2'
+    slapd_loglevel = [ v.strip() for v in os.environ.get('SLAPD_LOGLEVEL', 'stats,stats2').split(',') ]
     # use SASL/EXTERNAL via LDAPI when invoking OpenLDAP CLI tools
     cli_sasl_external = True
     local_host = '127.0.0.1'
@@ -201,7 +201,7 @@ class SlapdObject(object):
         config_dict = {
             'serverid': hex(self.server_id),
             'schema_prefix':self._schema_prefix,
-            'loglevel': self.slapd_loglevel,
+            'loglevel': ' '.join(self.slapd_loglevel),
             'database': self.database,
             'directory': self._db_directory,
             'suffix': self.suffix,
@@ -278,7 +278,7 @@ class SlapdObject(object):
             '-h', '%s' % ' '.join((self.ldap_uri, self.ldapi_uri)),
         ]
         if self._log.isEnabledFor(logging.DEBUG):
-            slapd_args.extend(['-d', self.slapd_loglevel])
+            slapd_args.extend(['-d', ','.join(self.slapd_loglevel)])
         else:
             slapd_args.extend(['-d', '0'])
         self._log.info(
