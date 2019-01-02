@@ -7,12 +7,7 @@ from __future__ import absolute_import
 
 __all__ = [
     'escape_str',
-    'explode_dn',
-    'explode_rdn',
     'get_option',
-    'init',
-    'initialize',
-    'open',
     'set_option',
     'strf_secs',
     'strp_secs',
