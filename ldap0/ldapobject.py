@@ -10,17 +10,15 @@ import time
 import logging
 from os import strerror
 
-if __debug__:
-    # Tracing is only supported in debugging mode
-    import pprint
-
 import _libldap0
 from _libldap0 import LDAPError
 
 from .__about__ import __version__, __author__, __license__
 import ldap0
-from . import err
-from .err import PasswordPolicyChangeAfterReset, PasswordPolicyExpirationWarning, PasswordPolicyExpiredError
+from .err import \
+    PasswordPolicyChangeAfterReset, \
+    PasswordPolicyExpirationWarning, \
+    PasswordPolicyExpiredError
 from .base import LDAPResult
 from .lock import LDAPLock
 from .functions import _libldap0_function_call
@@ -32,10 +30,14 @@ from .extop import ExtendedResponse
 from .extop.dds import RefreshRequest, RefreshResponse
 from .extop.whoami import WhoAmIRequest, WhoAmIResponse
 from .extop.passmod import PassmodRequest, PassmodResponse
-from .extop.cancel import CancelRequest, CancelResponse
+from .extop.cancel import CancelRequest
 from .sasl import SaslNoninteractiveAuth
 from .modlist import add_modlist
 from .ldapurl import LDAPUrl
+
+if __debug__:
+    # Tracing is only supported in debugging mode
+    import pprint
 
 __all__ = [
     'NO_UNIQUE_ENTRY',
@@ -87,6 +89,7 @@ class LDAPObject:
         conn_uri = ldap_url.connect_uri()
         self._l = _libldap0_function_call(_libldap0.initialize, conn_uri)
         self._uri = self.uri = conn_uri
+        self._whoami_dn = None
         self.timeout = -1
         self.protocol_version = _libldap0.VERSION3
         self.cache_ttl = cache_ttl
@@ -111,15 +114,15 @@ class LDAPObject:
                     self.__class__.__name__,
                     func.__name__,
                     pprint.pformat((args, kwargs)),
-                    exc_info=(ldap0._trace_level>=9),
+                    exc_info=(ldap0._trace_level >= 9),
                 )
-        diagnostic_message_success = None
+        diag_msg_ok = None
         try:
             try:
                 result = func(*args, **kwargs)
                 if __debug__ and self._trace_level >= 2:
                     if func.__name__ != "unbind_ext":
-                        diagnostic_message_success = self._l.get_option(_libldap0.OPT_DIAGNOSTIC_MESSAGE)
+                        diag_msg_ok = self._l.get_option(_libldap0.OPT_DIAGNOSTIC_MESSAGE)
             finally:
                 self._libldap0_lock.release()
         except LDAPError as ldap_err:
@@ -136,10 +139,10 @@ class LDAPObject:
             raise ldap_err
         else:
             if __debug__ and self._trace_level >= 2:
-                if not diagnostic_message_success is None:
+                if not diag_msg_ok is None:
                     logging.debug(
                         '-> diagnosticMessage: %r',
-                        diagnostic_message_success,
+                        diag_msg_ok,
                     )
                 logging.debug('-> %s', pprint.pformat(result))
         return result
@@ -193,7 +196,7 @@ class LDAPObject:
                     tls_pathname = _libldap0.get_option(tls_option)
                 if tls_pathname:
                     # Check whether CA cert file can be read
-                    with open(tls_pathname, 'rb') as tls_fileobj:
+                    with open(tls_pathname, 'rb'):
                         pass
                     self._l.set_option(tls_option, tls_pathname)
             except ValueError as value_error:
@@ -225,11 +228,9 @@ class LDAPObject:
     def cancel_s(self, cancelid, serverctrls=None):
         try:
             msgid = self.cancel(cancelid, serverctrls=serverctrls)
-            ldap_res = self.result(msgid, all=1, timeout=self.timeout)
+            self.result(msgid, all=1, timeout=self.timeout)
         except _libldap0.CANCELLED:
             pass
-        #else:
-        #    raise _libldap0.PROTOCOL_ERROR('cancel operation returned {0}'.format(ldap_res))
 
     def add(self, dn, modlist, serverctrls=None):
         self.uncache(dn)
@@ -268,7 +269,7 @@ class LDAPObject:
             timeout=self.timeout
         )
         if res.ctrls:
-            # Extract the password policy response control and raise 
+            # Extract the password policy response control and raise
             # appropriate exceptions if needed
             ppolicy_ctrls = [
                 c
@@ -811,7 +812,7 @@ class LDAPObject:
             ):
             res = None
         else:
-            res = entry.get('subschemaSubentry',[None])[0]
+            res = entry.get('subschemaSubentry', [None])[0]
         if res is None and dn:
             # fall back reading attribute subschemaSubentry from rootDSE
             res = self.search_subschemasubentry_s(dn='')
@@ -890,12 +891,14 @@ class LDAPObject:
         except _libldap0.SIZELIMIT_EXCEEDED:
             raise NO_UNIQUE_ENTRY('Size limit exceeded for %r ()' % (filterstr))
         # strip search continuations
-        ldap_res = [ res for res in ldap_res if res[0] is not None ]
+        ldap_res = [res for res in ldap_res if res[0] is not None]
         # now check again for length
         if not ldap_res:
             raise NO_UNIQUE_ENTRY('No search result for %r' % (filterstr))
         elif len(ldap_res) > 1:
-            raise NO_UNIQUE_ENTRY('Non-unique search results (%d) for %r' % (len(ldap_res), filterstr))
+            raise NO_UNIQUE_ENTRY(
+                'Non-unique search results (%d) for %r' % (len(ldap_res), filterstr)
+            )
         return ldap_res[0]
 
     def read_rootdse_s(self, filterstr='(objectClass=*)', attrlist=None):
