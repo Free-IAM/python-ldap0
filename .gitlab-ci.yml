@@ -1,5 +1,5 @@
 .tests:
-  script: pushd /var/tmp && popd && pip2 install -e . && coverage-2.7 run setup.py test && coverage-2.7 report
+  script: pushd /var/tmp && popd && pip2 install -e . && LDAP0_TRACE_LEVEL=3 coverage-2.7 run setup.py test && coverage-2.7 report
   stage: test
   only:
     refs:
