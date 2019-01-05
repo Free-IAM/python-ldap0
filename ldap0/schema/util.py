@@ -9,7 +9,7 @@ from urllib import urlopen
 
 from ..__about__ import __version__, __author__, __license__
 from ..cidict import cidict
-from ..ldapurl import LDAPUrl
+from ..ldapurl import LDAPUrl, isLDAPUrl
 from ..ldapobject import LDAPObject
 from ..ldif import LDIFParser
 from ..schema import SubSchema, SCHEMA_ATTRS, SCHEMA_CLASS_MAPPING
@@ -30,7 +30,7 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
     :rootdse: is passed to LDAPObject.search_subschemasubentry_s()
     """
     uri = uri.strip()
-    if uri.startswith('ldap:') or uri.startswith('ldaps:') or uri.startswith('ldapi:'):
+    if isLDAPUrl(uri):
         ldap_url = LDAPUrl(uri)
         ldap_conn = LDAPObject(ldap_url, trace_level)
         ldap_conn.simple_bind_s(ldap_url.who or '', ldap_url.cred or '')
