@@ -836,6 +836,11 @@ class Test00_LDAPObject(SlapdTestCase):
             self._ldap_conn.search_subschemasubentry_s('cn=doesnotexist'),
             'cn=Subschema',
         )
+        # DN of subschema subentry cannot be determined and will return None
+        self.assertEqual(
+            self._ldap_conn.search_subschemasubentry_s('cn=doesnotexist', rootdse=False),
+            None,
+        )
 
     def test001_add_rename_delete(self):
         dn1 = 'cn=äöüÄÖÜß,'+self.server.suffix
