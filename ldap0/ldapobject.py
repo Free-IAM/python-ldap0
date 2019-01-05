@@ -801,7 +801,8 @@ class LDAPObject:
             invalue = encode_request_ctrls(invalue)
         return self._ldap_call(self._l.set_option, option, invalue)
 
-    def search_subschemasubentry_s(self, dn=''):
+    def search_subschemasubentry_s(self, dn='', rootdse=True):
+        res = None
         try:
             entry = self.read_s(dn, attrlist=['subschemaSubentry'])
         except (
@@ -810,10 +811,11 @@ class LDAPObject:
                 _libldap0.NO_SUCH_ATTRIBUTE,
                 _libldap0.UNDEFINED_TYPE,
             ):
-            res = None
+            pass
         else:
-            res = entry.get('subschemaSubentry', [None])[0]
-        if res is None and dn:
+            if entry is not None:
+                res = entry.get('subschemaSubentry', [None])[0]
+        if res is None and dn and rootdse:
             # fall back reading attribute subschemaSubentry from rootDSE
             res = self.search_subschemasubentry_s(dn='')
         return res # end of search_subschemasubentry_s()

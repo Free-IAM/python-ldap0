@@ -15,7 +15,7 @@ from ..ldif import LDIFParser
 from ..schema import SubSchema, SCHEMA_ATTRS, SCHEMA_CLASS_MAPPING
 
 
-def urlfetch(uri, trace_level=0, check_uniqueness=True):
+def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
     """
     Fetches a parsed schema entry by uri.
 
@@ -25,14 +25,19 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True):
 
     :trace_level: is passed to class LDAPObject for debugging.
 
-    :check_uniqueness: is passed to class SubSchema.
+    :check_uniqueness: is passed to SubSchema().
+
+    :rootdse: is passed to LDAPObject.search_subschemasubentry_s()
     """
     uri = uri.strip()
     if uri.startswith('ldap:') or uri.startswith('ldaps:') or uri.startswith('ldapi:'):
         ldap_url = LDAPUrl(uri)
         ldap_conn = LDAPObject(ldap_url, trace_level)
         ldap_conn.simple_bind_s(ldap_url.who or '', ldap_url.cred or '')
-        subschemasubentry_dn = ldap_conn.search_subschemasubentry_s(ldap_url.dn)
+        subschemasubentry_dn = ldap_conn.search_subschemasubentry_s(
+            ldap_url.dn,
+            rootdse=rootdse,
+        )
         if subschemasubentry_dn is None:
             s_temp = None
         else:
