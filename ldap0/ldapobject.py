@@ -810,6 +810,7 @@ class LDAPObject:
                 _libldap0.INSUFFICIENT_ACCESS,
                 _libldap0.NO_SUCH_ATTRIBUTE,
                 _libldap0.UNDEFINED_TYPE,
+                _libldap0.REFERRAL,
             ):
             pass
         else:
