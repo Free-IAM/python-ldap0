@@ -26,6 +26,7 @@ __all__ = [
     'SchemaElement',
     'SchemaElementOIDSet',
     'NOT_HUMAN_READABLE_LDAP_SYNTAXES',
+    'OBJECTCLASS_KIND_STR',
 ]
 
 NOT_HUMAN_READABLE_LDAP_SYNTAXES = {
@@ -47,6 +48,12 @@ ATTRIBUTE_USAGE = cidict({
     'distributedOperation': 2,
     'dSAOperation': 3,
 })
+
+OBJECTCLASS_KIND_STR = {
+    0: 'STRUCTURAL',
+    1: 'ABSTRACT',
+    2: 'AUXILIARY'
+}
 
 
 class SchemaElement(object):
@@ -185,13 +192,7 @@ class ObjectClass(SchemaElement):
         result.append(self.key_attr('DESC', self.desc, quoted=1))
         result.append(self.key_list('SUP', self.sup, sep=' $ '))
         result.append({0:'', 1:' OBSOLETE'}[self.obsolete])
-        result.append(
-            {
-                0: ' STRUCTURAL',
-                1: ' ABSTRACT',
-                2: ' AUXILIARY'
-            }[self.kind]
-        )
+        result.append(' %s' % OBJECTCLASS_KIND_STR[self.kind])
         result.append(self.key_list('MUST', self.must, sep=' $ '))
         result.append(self.key_list('MAY', self.may, sep=' $ '))
         return '( %s )' % ''.join(result)
