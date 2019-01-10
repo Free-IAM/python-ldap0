@@ -5,15 +5,19 @@ ldap0.pw - stuff for passwords
 
 from __future__ import absolute_import
 
+import hashlib
 import string
+from binascii import hexlify
 from random import SystemRandom
 
 from .__about__ import __version__, __author__, __license__
 
 __all__ = [
+    'ntlm_password_hash',
     'random_string',
     'unicode_pwd',
     'PWD_ALPHABET',
+    'PWD_LENGTH',
     'PWD_OCTETS_ALPHABET',
 ]
 
@@ -64,6 +68,8 @@ def unicode_pwd(password=None, alphabet=PWD_ALPHABET, length=PWD_LENGTH):
     returns password or random generated password as properly encoded
     'unicodePwd' value for MS AD
 
+    :password: must be UTF-8 encoded bytes
+
     see also:
     https://msdn.microsoft.com/en-us/library/cc223248.aspx
     https://support.microsoft.com/en-us/help/269190/how-to-change-a-windows-active-directory-and-lds-user-password-through-ldap
@@ -71,3 +77,14 @@ def unicode_pwd(password=None, alphabet=PWD_ALPHABET, length=PWD_LENGTH):
     if password is None:
         password = random_string(alphabet=alphabet, length=length)
     return u'"{}"'.format(password.decode('utf-8')).encode('utf-16-le')
+
+
+def ntlm_password_hash(password):
+    """
+    returns MD4-based NT password hash for a password.
+
+    :password: must be UTF-8 encoded bytes
+    """
+    md4_digest = hashlib.new('md4')
+    md4_digest.update(password.decode('utf-8')[:128].encode('utf-16-le'))
+    return hexlify(md4_digest.digest()).upper()

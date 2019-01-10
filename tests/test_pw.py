@@ -6,10 +6,11 @@ Automatic tests for module ldap0.dn
 from __future__ import absolute_import
 
 # from Python's standard lib
+import hashlib
 import unittest
 
 import ldap0.pw
-from ldap0.pw import PWD_LENGTH, random_string, unicode_pwd
+from ldap0.pw import *
 
 
 class TestBasics(unittest.TestCase):
@@ -42,6 +43,17 @@ class TestPasswordFunctions(unittest.TestCase):
                 unicode_pwd(pw),
                 u'"{}"'.format(pw.decode('utf-8')).encode('utf-16-le')
             )
+
+    def test_ntlm_password_hash(self):
+        ntlm_password_hash_hex_size = 2 * hashlib.new('md4').digest_size
+        for pw, pw_hash in (
+                ('foo', 'AC8E657F83DF82BEEA5D43BDAF7800CC'),
+                ('bar', '86C156FC198B358CCCF6278D8BD49B6A'),
+                ('\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f', 'F4B08969FAAC3D4A52924FA91944261E'),
+            ):
+            res = ntlm_password_hash(pw)
+            self.assertEqual(len(res), ntlm_password_hash_hex_size)
+            self.assertEqual(res, pw_hash)
 
 
 if __name__ == '__main__':
