@@ -943,6 +943,14 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             with self.assertRaises(_libldap0.SERVER_DOWN):
                 self.assertEqual(l.whoami_s(), authz_id)
 
+    def test106_reconnect_reset_last_bind(self):
+        with self.ldap_object_class(self.server.ldapi_uri, retry_max=1) as l:
+            l.sasl_non_interactive_bind_s('EXTERNAL')
+            self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
+            # now force reconnect with anon bind
+            l.reconnect(l.uri, reset_last_bind=True)
+            self.assertEqual(l.whoami_s(), '')
+
 
 class TestSchemaUrlFetchLDAP(SlapdTestCase):
 

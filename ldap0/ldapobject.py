@@ -1045,11 +1045,13 @@ class ReconnectLDAPObject(LDAPObject):
     def passwd_s(self, *args, **kwargs):
         return self._apply_method_s(LDAPObject.passwd_s, *args, **kwargs)
 
-    def reconnect(self, uri, retry_max=1, retry_delay=60.0):
+    def reconnect(self, uri, retry_max=1, retry_delay=60.0, reset_last_bind=False):
         """
         Drop and clean up old connection completely and reconnect
         """
         self._reconnect_lock.acquire()
+        if reset_last_bind:
+            self._last_bind = None
         try:
             reconnect_counter = retry_max
             while reconnect_counter:
