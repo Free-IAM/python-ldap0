@@ -8,10 +8,28 @@ from __future__ import absolute_import
 from itertools import combinations
 
 from ..__about__ import __version__, __author__, __license__
-from .models import AttributeType, DITContentRule, DITStructureRule, LDAPSyntax, MatchingRule, MatchingRuleUse, NameForm, ObjectClass, SchemaElementOIDSet
+from .models import \
+    AttributeType, \
+    DITContentRule, \
+    DITStructureRule, \
+    LDAPSyntax, \
+    MatchingRule, \
+    MatchingRuleUse, \
+    NameForm, \
+    ObjectClass, \
+    SchemaElementOIDSet
 from ..cidict import cidict
 from ..dn import str2dn
 
+
+__all__ = [
+    'NameNotUnique',
+    'OIDNotUnique',
+    'SCHEMA_ATTR_MAPPING',
+    'SCHEMA_CLASS_MAPPING',
+    'SubSchema',
+    'SubschemaError',
+]
 
 SCHEMA_ATTR_MAPPING = {
     AttributeType: AttributeType.schema_attribute,
