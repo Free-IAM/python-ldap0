@@ -732,6 +732,13 @@ class Entry(User_Dict):
     """
 
     def __init__(self, schema, dn, entry):
+        if __debug__:
+            # lazy import needed for assert
+            from .subentry import SubSchema
+        assert isinstance(schema, SubSchema), \
+            TypeError('Expected schema to be instance of SubSchema, was %r' % (schema))
+        assert isinstance(dn, bytes), TypeError('Expected dn to be bytes, was %r' % (dn))
+        assert isinstance(entry, dict), TypeError('Expected entry to be dict, was %r' % (entry))
         self._keytuple2attrtype = {}
         self._attrtype2keytuple = {}
         self._s = schema
