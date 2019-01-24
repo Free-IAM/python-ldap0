@@ -293,8 +293,10 @@ class TestDNObj(unittest.TestCase):
                 u'ou=dept1,dc=example,dc=com',
                 u'cn=Michael Ströder,dc=example,dc=com',
             ):
-            self.assertEqual(str(DNObj.fromstring(dn_str, flags=0)), dn_str.encode('utf-8'))
-        self.assertEqual(str(DNObj.fromdomain(u'example.com')), 'dc=example,dc=com')
+            dn_obj = DNObj.fromstring(dn_str, flags=0)
+            self.assertEqual(str(dn_obj), dn_str.encode('utf-8'))
+            self.assertEqual(unicode(dn_obj), dn_str)
+        self.assertEqual(str(DNObj.fromdomain(u'example.com')), u'dc=example,dc=com')
 
     def test_weird_whitespaces(self):
         self.assertEqual(
@@ -370,6 +372,10 @@ class TestDNObj(unittest.TestCase):
         self.assertEqual(
             DNObj.fromdomain('example.com').domain(),
             'example.com'
+        )
+        self.assertEqual(
+            DNObj.fromdomain(u'ströder.de').domain(),
+            u'ströder.de'.encode('idna')
         )
         self.assertEqual(
             DNObj.fromstring('ou=dept1,  dc=example, dc=com').domain(only_dc=False),
