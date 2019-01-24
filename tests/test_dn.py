@@ -294,6 +294,7 @@ class TestDNObj(unittest.TestCase):
                 u'cn=Michael Ströder,dc=example,dc=com',
             ):
             dn_obj = DNObj.fromstring(dn_str, flags=0)
+            self.assertEqual(bytes(dn_obj), dn_str.encode('utf-8'))
             self.assertEqual(str(dn_obj), dn_str.encode('utf-8'))
             self.assertEqual(unicode(dn_obj), dn_str)
         self.assertEqual(str(DNObj.fromdomain(u'example.com')), u'dc=example,dc=com')

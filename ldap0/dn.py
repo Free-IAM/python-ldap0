@@ -154,8 +154,11 @@ class DNObj(tuple):
             domain = domain.encode('idna')
         return cls([(('dc', d, 1),) for d in domain.split('.')])
 
-    def __str__(self):
+    def __bytes__(self):
         return dn2str(self)
+
+    def __str__(self):
+        return self.__bytes__()
 
     def __unicode__(self):
         return dn2str(self).decode(self.charset)
