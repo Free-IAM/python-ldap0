@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-setup.py - Setup package with the help Python's DistUtils
+package/install module package ldap0
 """
 
 import sys
@@ -70,7 +70,7 @@ setup(
     author_email='michael@stroeder.com',
     maintainer=__about__.__author__,
     maintainer_email='michael@stroeder.com',
-    url='https://pypi.org/project/ldap0/',
+    url='https://pypi.org/project/%s/' % (PKG_NAME),
     download_url='https://pypi.python.org/pypi/%s/' % (PKG_NAME),
     keywords=[
         'LDAP',
