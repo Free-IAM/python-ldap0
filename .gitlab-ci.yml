@@ -38,9 +38,9 @@ test:centos:
   extends: .tests
   image: centos:latest
   before_script:
-  - yum update
+  - yum update -y
   - rpm --import https://ltb-project.org/lib/RPM-GPG-KEY-LTB-project
-  - yum install epel-release -y
+  - yum install -y epel-release
   - *script-1
   - yum install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram openldap-ltb openldap-ltb-contrib-overlays openldap-ltb-mdb-utils openldap-ltb-ppm openldap-devel python-setuptools gcc python-devel cyrus-sasl-devel python-pip
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
