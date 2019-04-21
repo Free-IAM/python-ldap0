@@ -145,5 +145,27 @@ class TestVirtualListView(unittest.TestCase):
             vrc.decodeControlValue(b'\xFF')
 
 
+class TestPPolicy(unittest.TestCase):
+
+    def _check_decoded_val(self, pp_buf, timeBeforeExpiration=None, graceAuthNsRemaining=None, error=None):
+        pp = PasswordPolicyControl()
+        pp.decodeControlValue(pp_buf)
+        self.assertEqual(pp.timeBeforeExpiration, timeBeforeExpiration)
+        self.assertEqual(pp.graceAuthNsRemaining, graceAuthNsRemaining)
+        self.assertEqual(pp.error, error)
+
+    def test_ppolicy_graceauth(self):
+        self._check_decoded_val(
+            b'0\x84\x00\x00\x00\t\xa0\x84\x00\x00\x00\x03\x81\x01\x02',
+            graceAuthNsRemaining=2,
+        )
+
+    def test_ppolicy_timebefore(self):
+        self._check_decoded_val(
+            b'0\x84\x00\x00\x00\t\xa0\x84\x00\x00\x00\x03\x80\x012',
+            timeBeforeExpiration=50,
+        )
+
+
 if __name__ == '__main__':
     unittest.main()
