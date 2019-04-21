@@ -27,10 +27,10 @@ class TestRequestControls(unittest.TestCase):
 
     def test_sessiontrack(self):
         stc = SessionTrackingControl(
-            '12.34.56.78',
-            'tracking-NAME',
+            b'12.34.56.78',
+            b'tracking-NAME',
             SESSION_TRACKING_FORMAT_OID_RADIUS_ACCT_SESSION_ID,
-            'tracking-ID',
+            b'tracking-ID',
         )
         stc_encoded = b'0G\x04\x0b12.34.56.78\x04\rtracking-NAME\x04\x1c1.3.6.1.4.1.21008.108.63.1.1\x04\x0btracking-ID'
         self.assertEqual(stc.encodeControlValue(), stc_encoded)
@@ -73,7 +73,7 @@ class TestResponseControls(unittest.TestCase):
         self.assertEqual(rc.controlValue, b'foo')
         with self.assertRaises(_libldap0.UNAVAILABLE_CRITICAL_EXTENSION):
             decode_response_ctrls(
-                [('1.2.3.4', True, b'')],
+                [(b'1.2.3.4', True, b'')],
             )
         with self.assertRaises(ValueError):
             decode_response_ctrls(
@@ -93,14 +93,14 @@ class TestResponseControls(unittest.TestCase):
 
     def test_pwdpolicy(self):
         pec = PasswordExpiringControl()
-        pec.decodeControlValue('0')
+        pec.decodeControlValue(b'0')
         self.assertEqual(pec.gracePeriod, 0)
         with self.assertRaises(ValueError):
-            pec.decodeControlValue('x')
+            pec.decodeControlValue(b'x')
         pec = PasswordExpiredControl()
-        pec.decodeControlValue('0')
+        pec.decodeControlValue(b'0')
         self.assertEqual(pec.passwordExpired, True)
-        pec.decodeControlValue('x')
+        pec.decodeControlValue(b'x')
         self.assertEqual(pec.passwordExpired, False)
 
     def test_readentry(self):
@@ -108,8 +108,8 @@ class TestResponseControls(unittest.TestCase):
         broken_ber = b'0c\x043cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de0,0\x14\x04\tuidNumber1\x07\x04\x05100050\x14\x04\tgidNumber1\x07\x04\x0510005'
         rec = ReadEntryControl()
         rec.decodeControlValue(broken_ber)
-        self.assertEqual(rec.dn, 'cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de')
-        self.assertEqual(rec.entry, {'gidNumber': ['10005'], 'uidNumber': ['10005']})
+        self.assertEqual(rec.dn, b'cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de')
+        self.assertEqual(rec.entry, {b'gidNumber': [b'10005'], b'uidNumber': [b'10005']})
         with self.assertRaises(PyAsn1Error):
             rec.decodeControlValue(b'\xFF')
 
