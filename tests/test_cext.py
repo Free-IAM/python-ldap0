@@ -247,12 +247,8 @@ class TestLdapCExtension(SlapdTestCase):
         m = l.search_ext(self.server.suffix, _libldap0.SCOPE_SUBTREE, b'(objectClass=*)')
         ret = l.abandon_ext(m)
         self.assertIsNone(ret)
-        try:
+        with self.assertRaises(_libldap0.TIMEOUT):
             r = l.result(m, _libldap0.MSG_ALL, 0.3)  # (timeout /could/ be longer)
-        except _libldap0.TIMEOUT as e:
-            pass
-        else:
-            self.fail("expected TIMEOUT, got %r" % r)
 
     def test_search_ext_all(self):
         l = self._open_conn()
@@ -326,28 +322,16 @@ class TestLdapCExtension(SlapdTestCase):
         self.assertEqual(result, _libldap0.RES_ADD)
         # try a false compare
         m = l.compare_ext(dn, b'userPassword', b'bad_string')
-        try:
+        with self.assertRaises(_libldap0.COMPARE_FALSE):
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.COMPARE_FALSE:
-            pass
-        else:
-            self.fail("expected COMPARE_FALSE, got %r" % r)
         # try a true compare
         m = l.compare_ext(dn, b'userPassword', b'the_password')
-        try:
+        with self.assertRaises(_libldap0.COMPARE_TRUE):
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.COMPARE_TRUE:
-            pass
-        else:
-            self.fail("expected COMPARE_TRUE, got %r" % r)
         # try a compare on bad attribute
         m = l.compare_ext(dn, b'badAttribute', b'ignoreme')
-        try:
+        with self.assertRaises(_libldap0.error):
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.error:
-            pass
-        else:
-            self.fail("expected LDAPError, got %r" % r)
 
     def test_delete_no_such_object(self):
         """
@@ -355,12 +339,8 @@ class TestLdapCExtension(SlapdTestCase):
         """
         l = self._open_conn()
         m = l.delete_ext(b'cn=DoesNotExist,'+self.server.suffix)
-        try:
+        with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.NO_SUCH_OBJECT:
-            pass
-        else:
-            self.fail("expected NO_SUCH_OBJECT, got %r" % r)
 
     def test_delete(self):
         l = self._open_conn()
@@ -394,12 +374,8 @@ class TestLdapCExtension(SlapdTestCase):
                 (_libldap0.MOD_ADD, b'description', [b'blah']),
             ]
         )
-        try:
+        with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.NO_SUCH_OBJECT:
-            pass
-        else:
-            self.fail("expected NO_SUCH_OBJECT, got %r" % r)
 
     def test_modify_no_such_object_empty_attrs(self):
         """
@@ -413,12 +389,8 @@ class TestLdapCExtension(SlapdTestCase):
             ]
         )
         self.assertTrue(isinstance(m, int))
-        try:
+        with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.NO_SUCH_OBJECT:
-            pass
-        else:
-            self.fail("expected NO_SUCH_OBJECT, got %r" % r)
 
     def test_modify(self):
         """
@@ -550,13 +522,8 @@ class TestLdapCExtension(SlapdTestCase):
     def test_options(self):
         oldval = _libldap0.get_option(_libldap0.OPT_PROTOCOL_VERSION)
         try:
-            try:
+            with self.assertRaises(TypeError):
                 _libldap0.set_option(_libldap0.OPT_PROTOCOL_VERSION, b'3')
-            except TypeError:
-                pass
-            else:
-                self.fail("expected string value to raise a TypeError")
-
             _libldap0.set_option(_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION2)
             v = _libldap0.get_option(_libldap0.OPT_PROTOCOL_VERSION)
             self.assertEqual(v, _libldap0.VERSION2)
@@ -578,37 +545,9 @@ class TestLdapCExtension(SlapdTestCase):
         v = l.get_option(_libldap0.OPT_PROTOCOL_VERSION)
         self.assertEqual(v, _libldap0.VERSION3)
 
-        # Try setting options that will yield a known error.
-        try:
+        # Try getting options that will yield a known error.
+        with self.assertRaises(ValueError):
             _libldap0.get_option(_libldap0.OPT_MATCHED_DN)
-        except ValueError:
-            pass
-        else:
-            self.fail("expected ValueError")
-
-    def _require_attr(self, obj, attrname):
-        """Returns true if the attribute exists on the object.
-           This is to allow some tests to be optional, because
-           _ldap is compiled with different properties depending
-           on the underlying C library.
-           This could me made to thrown an exception if you want the
-           tests to be strict."""
-        if hasattr(obj, attrname):
-            return True
-        #self.fail("required attribute '%s' missing" % attrname)
-        return False
-
-    def test_sasl(self):
-        l = self._open_conn()
-        if not self._require_attr(l, 'sasl_interactive_bind_s'): # HAVE_SASL
-            return
-        # TODO
-
-    def test_tls(self):
-        l = self._open_conn()
-        if not self._require_attr(l, 'start_tls_s'):    # HAVE_TLS
-            return
-        # TODO
 
     def test_enotconn(self):
         l = _libldap0.initialize(b'ldap://127.0.0.1:42')
@@ -625,29 +564,21 @@ class TestLdapCExtension(SlapdTestCase):
     def test_invalid_filter(self):
         l = self._open_conn(bind=False)
         # search with invalid filter
-        try:
+        with self.assertRaises(_libldap0.FILTER_ERROR):
             m = l.search_ext(
                 b'',
                 _libldap0.SCOPE_BASE,
                 b'(|(objectClass=*)',
             )
-            self.assertEqual(type(m), type(0))
+            self.assertEqual(isinstance(m), int)
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.FILTER_ERROR:
-            pass
-        else:
-            self.fail("expected FILTER_ERROR, got %r" % r)
 
     def test_invalid_credentials(self):
         l = self._open_conn(bind=False)
         # search with invalid filter
-        try:
+        with self.assertRaises(_libldap0.INVALID_CREDENTIALS):
             m = l.simple_bind(self.server.root_dn, self.server.root_pw+b'wrong')
             r = l.result(m, _libldap0.MSG_ALL, self.timeout)
-        except _libldap0.INVALID_CREDENTIALS:
-            pass
-        else:
-            self.fail("expected INVALID_CREDENTIALS, got %r" % r)
 
 
 if __name__ == '__main__':
