@@ -59,7 +59,7 @@ class SSSRequestControl(RequestControl):
 
     >>> s = SSSRequestControl(ordering_rules=['-cn'])
     """
-    controlType = '1.2.840.113556.1.4.473'
+    controlType = b'1.2.840.113556.1.4.473'
 
     def __init__(
             self,
@@ -127,7 +127,7 @@ class SortResultType(univ.Sequence):
 
 
 class SSSResponseControl(ResponseControl):
-    controlType = '1.2.840.113556.1.4.474'
+    controlType = b'1.2.840.113556.1.4.474'
 
     def __init__(self, criticality=False):
         ResponseControl.__init__(self, self.controlType, criticality)

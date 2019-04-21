@@ -78,7 +78,7 @@ class SyncRequestControl(RequestControl):
     The Sync Request Control is only applicable to the SearchRequest
     Message.
     """
-    controlType = '1.3.6.1.4.1.4203.1.9.1.1'
+    controlType = b'1.3.6.1.4.1.4203.1.9.1.1'
 
     def __init__(self, criticality=1, cookie=None, mode='refreshOnly', reloadHint=False):
         self.criticality = criticality
@@ -144,7 +144,7 @@ class SyncStateControl(ResponseControl):
     The Sync State Control is only applicable to SearchResultEntry and
     SearchResultReference Messages.
     """
-    controlType = '1.3.6.1.4.1.4203.1.9.1.2'
+    controlType = b'1.3.6.1.4.1.4203.1.9.1.2'
     opnames = ('present', 'add', 'modify', 'delete')
 
     def decodeControlValue(self, encodedControlValue):
@@ -185,7 +185,7 @@ class SyncDoneControl(ResponseControl):
     The Sync Done Control is only applicable to the SearchResultDone
     Message.
     """
-    controlType = '1.3.6.1.4.1.4203.1.9.1.3'
+    controlType = b'1.3.6.1.4.1.4203.1.9.1.3'
 
     def decodeControlValue(self, encodedControlValue):
         d = decoder.decode(encodedControlValue, asn1Spec=SyncDoneValue())

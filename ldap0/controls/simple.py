@@ -155,7 +155,7 @@ class AuthorizationIdentityRequestControl(ValueLessRequestControl):
     """
     Authorization Identity Request and Response Controls
     """
-    controlType = '2.16.840.1.113730.3.4.16'
+    controlType = b'2.16.840.1.113730.3.4.16'
 
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(
@@ -173,7 +173,7 @@ class AuthorizationIdentityResponseControl(ResponseControl):
     authzId
         decoded authorization identity
     """
-    controlType = '2.16.840.1.113730.3.4.15'
+    controlType = b'2.16.840.1.113730.3.4.15'
 
     def decodeControlValue(self, encodedControlValue):
         self.authzId = encodedControlValue
@@ -186,7 +186,7 @@ class SubentriesControl(BooleanControl):
     Subentries Control (RFC 3672)
     https://tools.ietf.org/html/rfc3672#section-3
     """
-    controlType = '1.3.6.1.4.1.4203.1.10.1'
+    controlType = b'1.3.6.1.4.1.4203.1.10.1'
 
     def __init__(self, criticality=False, booleanValue=False):
         BooleanControl.__init__(

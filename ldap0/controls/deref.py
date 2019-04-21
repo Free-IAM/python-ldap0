@@ -69,7 +69,7 @@ class DerefResultControlValue(univ.SequenceOf):
 
 
 class DereferenceControl(LDAPControl):
-    controlType = '1.3.6.1.4.1.4203.666.5.16'
+    controlType = b'1.3.6.1.4.1.4203.666.5.16'
 
     def __init__(self, criticality=False, derefSpecs=None):
         LDAPControl.__init__(self, criticality=criticality)
