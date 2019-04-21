@@ -33,12 +33,12 @@ class TestTemplateEntry(unittest.TestCase):
                 'mail_addr': 'theo.tester@example.com',
             }),
             (
-                'cn=Theo Tester,ou=People,dc=example,dc=com',
+                b'cn=Theo Tester,ou=People,dc=example,dc=com',
                 {
-                    'objectClass': ['top', 'person', 'organizationalPerson', 'inetOrgPerson'],
-                    'cn': ['Theo Tester', 'Tester, Theo'],
-                    'sn': ['Tester'],
-                    'mail': ['theo.tester@example.com'],
+                    b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                    b'cn': [b'Theo Tester', b'Tester, Theo'],
+                    b'sn': [b'Tester'],
+                    b'mail': [b'theo.tester@example.com'],
                 }
             )
         )
@@ -49,11 +49,11 @@ class TestTemplateEntry(unittest.TestCase):
                 'last_name': 'Tester',
             }),
             (
-                'cn=Theo Tester,ou=People,dc=example,dc=com',
+                b'cn=Theo Tester,ou=People,dc=example,dc=com',
                 {
-                    'objectClass': ['top', 'person', 'organizationalPerson', 'inetOrgPerson'],
-                    'cn': ['Theo Tester', 'Tester, Theo'],
-                    'sn': ['Tester'],
+                    b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                    b'cn': [b'Theo Tester', b'Tester, Theo'],
+                    b'sn': [b'Tester'],
                 }
             )
         )
