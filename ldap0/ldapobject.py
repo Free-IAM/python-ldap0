@@ -327,7 +327,7 @@ class LDAPObject:
         if not authz_id:
             # short-cut allows really non-interactive SASL bind
             # without the flaky C call-backs
-            return self.sasl_bind_s(None, 'EXTERNAL', '')
+            return self.sasl_bind_s(None, sasl_mech, '')
         auth = SaslNoninteractiveAuth(
             sasl_mech,
             authz_id=authz_id,
