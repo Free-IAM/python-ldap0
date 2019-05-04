@@ -108,7 +108,6 @@ class SlapdObject(object):
     PATH_LDAPMODIFY = os.path.join(BINDIR, 'ldapmodify')
     PATH_LDAPWHOAMI = os.path.join(BINDIR, 'ldapwhoami')
     PATH_SLAPD = os.environ.get('SLAPD', os.path.join(SBINDIR, 'slapd'))
-    PATH_SLAPTEST = os.path.join(SBINDIR, 'slaptest')
 
     # time in secs to wait before trying to access slapd via LDAP (again)
     _start_sleep = 1.5
@@ -218,8 +217,9 @@ class SlapdObject(object):
     def _test_config(self):
         logging.debug('testing config %s', self._slapd_conf)
         popen_list = [
-            self.PATH_SLAPTEST,
-            "-f", self._slapd_conf,
+            self.PATH_SLAPD,
+            '-T', 'test',
+            '-f', self._slapd_conf,
             '-u',
         ]
         if logging.getLogger().isEnabledFor(logging.DEBUG):
