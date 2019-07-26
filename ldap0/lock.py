@@ -29,6 +29,12 @@ class LDAPLock(object):
         self._lock = threading.Lock()
         self._trace_level = trace_level
 
+    def __enter__(self):
+        return self._lock.__enter__()
+
+    def __exit__(self, *args):
+        return self._lock.__exit__(*args)
+
     def acquire(self):
         """
         acquire lock and log
