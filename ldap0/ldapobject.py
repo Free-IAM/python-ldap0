@@ -130,10 +130,9 @@ class LDAPObject:
                         ldap_err,
                     )
                 raise ldap_err
-            if __debug__ and self._trace_level >= 2:
-                if func.__name__ != "unbind_ext":
-                    diag_msg_ok = self._l.get_option(_libldap0.OPT_DIAGNOSTIC_MESSAGE)
-                if not diag_msg_ok is None:
+            if __debug__ and self._trace_level >= 2 and func.__name__ != "unbind_ext":
+                diag_msg_ok = self._l.get_option(_libldap0.OPT_DIAGNOSTIC_MESSAGE)
+                if diag_msg_ok:
                     logging.debug(
                         '-> diagnosticMessage: %r',
                         diag_msg_ok,
