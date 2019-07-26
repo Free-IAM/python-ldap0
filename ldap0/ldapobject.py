@@ -104,41 +104,35 @@ class LDAPObject:
         Wrapper method mainly for serializing calls into OpenLDAP libs
         and trace logs
         """
-        self._libldap0_lock.acquire()
-        if __debug__:
-            if self._trace_level >= 1:
-                logging.debug(
-                    '%r %s - %s.%s(%s)',
-                    self,
-                    self._uri,
-                    self.__class__.__name__,
-                    func.__name__,
-                    pprint.pformat((args, kwargs)),
-                    exc_info=(ldap0._trace_level >= 9),
-                )
-        diag_msg_ok = None
-        try:
+        with self._libldap0_lock:
+            if __debug__:
+                if self._trace_level >= 1:
+                    logging.debug(
+                        '%r %s - %s.%s(%s)',
+                        self,
+                        self._uri,
+                        self.__class__.__name__,
+                        func.__name__,
+                        pprint.pformat((args, kwargs)),
+                        exc_info=(ldap0._trace_level >= 9),
+                    )
             try:
                 result = func(*args, **kwargs)
+            except LDAPError as ldap_err:
+                if hasattr(ldap_err, 'args') \
+                   and ldap_err.args \
+                   and 'info' not in ldap_err.args[0] \
+                   and 'errno' in ldap_err.args[0]:
+                    ldap_err.args[0]['info'] = strerror(ldap_err.args[0]['errno'])
                 if __debug__ and self._trace_level >= 2:
-                    if func.__name__ != "unbind_ext":
-                        diag_msg_ok = self._l.get_option(_libldap0.OPT_DIAGNOSTIC_MESSAGE)
-            finally:
-                self._libldap0_lock.release()
-        except LDAPError as ldap_err:
-            if hasattr(ldap_err, 'args') \
-               and ldap_err.args \
-               and 'info' not in ldap_err.args[0] \
-               and 'errno' in ldap_err.args[0]:
-                ldap_err.args[0]['info'] = strerror(ldap_err.args[0]['errno'])
+                    logging.debug(
+                        '-> LDAPError - %s',
+                        ldap_err,
+                    )
+                raise ldap_err
             if __debug__ and self._trace_level >= 2:
-                logging.debug(
-                    '-> LDAPError - %s',
-                    ldap_err,
-                )
-            raise ldap_err
-        else:
-            if __debug__ and self._trace_level >= 2:
+                if func.__name__ != "unbind_ext":
+                    diag_msg_ok = self._l.get_option(_libldap0.OPT_DIAGNOSTIC_MESSAGE)
                 if not diag_msg_ok is None:
                     logging.debug(
                         '-> diagnosticMessage: %r',
@@ -371,7 +365,7 @@ class LDAPObject:
         except _libldap0.COMPARE_FALSE:
             return False
         raise _libldap0.PROTOCOL_ERROR(
-            'Compare operation returned wrong result: %r' % (ldap_res)
+            'Compare operation returned wrong result: %r' % (ldap_res,)
         )
 
     def delete(self, dn, serverctrls=None):
