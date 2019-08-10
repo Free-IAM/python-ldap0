@@ -462,7 +462,7 @@ class Test00_LDAPObject(SlapdTestCase):
             _ = l.search_s(
                 self.server.suffix,
                 ldap0.SCOPE_SUBTREE,
-                '(entryDN={0})'.format(new_dn),
+                b'(entryDN=%s)' % (new_dn,),
             )
             self.assertEqual(len(l._cache), 2)
             l.uncache(new_dn)
@@ -648,7 +648,7 @@ class Test00_LDAPObject(SlapdTestCase):
         }
         self._ldap_conn.add_s(dn, entry)
         old_entry = self._ldap_conn.read_s(dn, attrlist=['modifyTimestamp', 'entryCSN'])
-        assertion_filter = '(&(modifyTimestamp={0})(entryCSN={1}))'.format(
+        assertion_filter = b'(&(modifyTimestamp=%s)(entryCSN=%s))' % (
             old_entry['modifyTimestamp'][0],
             old_entry['entryCSN'][0],
         )
@@ -690,7 +690,7 @@ class Test00_LDAPObject(SlapdTestCase):
                 attrlist=['objectClass', 'cn'],
                 serverctrls=[
                     MatchedValuesControl(
-                        filterstr='((objectClass=person)(cn={0}))'.format(val)
+                        filterstr=b'((objectClass=person)(cn=%s))' % (val,)
                     ),
                 ]
             )
