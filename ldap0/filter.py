@@ -142,11 +142,11 @@ def time_span_filter(
         ))
     return (
         '(&'
-        '{filterstr}'
-        '({delta_attr}>={from_timestr})'
-        '(!({delta_attr}>={until_timestr}))'
+        '%(filterstr)s'
+        '(%(delta_attr)s>=%(from_timestr)s)'
+        '(!(%(delta_attr)s>=%(until_timestr)s))'
         ')'
-    ).format(
+    ) % dict(
         filterstr=filterstr,
         delta_attr=delta_attr,
         from_timestr=strf_secs(from_timestamp),
