@@ -4,6 +4,7 @@ ldap0.tmpl - templating
 """
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
 from .__about__ import __version__, __author__, __license__
 

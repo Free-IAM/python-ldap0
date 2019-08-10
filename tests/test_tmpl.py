@@ -4,6 +4,7 @@ Automatic tests for module ldap0.tmpl
 """
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
 # from Python's standard lib
 import unittest

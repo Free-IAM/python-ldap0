@@ -4,6 +4,7 @@ ldap0.base - basic classes and functions
 """
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
 
 def decode_entry_dict(entry, encoding='utf-8'):
