@@ -8,12 +8,69 @@ from __future__ import absolute_import
 # from Python's standard lib
 import unittest
 
+from ldap0.base import decode_entry_dict, encode_entry_dict
+
 from ldap0.base import LDAPResult
 
 
-class TestLDAPResult(unittest.TestCase):
+class Test001Functions(unittest.TestCase):
+
+    def test001_decode_entry_dict(self):
+          self.assertEqual(
+              decode_entry_dict({
+                    b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                    b'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
+                    b'sn': [b'T\xc3\xa4ster'],
+                    b'inv\xc3\xa4lid': [],
+              }),
+              {
+                    u'objectClass': [u'top', u'person', u'organizationalPerson', u'inetOrgPerson'],
+                    u'cn': [u'Theo Täster', u'Täster, Theo'],
+                    u'sn': [u'Täster'],
+                    u'invälid': [],
+              },
+          )
+          with self.assertRaises(UnicodeDecodeError):
+              decode_entry_dict(
+                  {
+                        b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                        b'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
+                        b'sn': [b'T\xc3\xa4ster'],
+                        b'inv\xc3\xa4lid': [],
+                  },
+                  'ascii'
+              )
+
+    def test002_encode_entry_dict(self):
+          self.assertEqual(
+              encode_entry_dict({
+                    u'objectClass': [u'top', u'person', u'organizationalPerson', u'inetOrgPerson'],
+                    u'cn': [u'Theo Täster', u'Täster, Theo'],
+                    u'sn': [u'Täster'],
+                    u'invälid': [],
+              }),
+              {
+                    b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                    b'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
+                    b'sn': [b'T\xc3\xa4ster'],
+                    b'inv\xc3\xa4lid': [],
+              },
+          )
+          with self.assertRaises(UnicodeEncodeError):
+              encode_entry_dict(
+                  {
+                        u'objectClass': [u'top', u'person', u'organizationalPerson', u'inetOrgPerson'],
+                        u'cn': [u'Theo Täster', u'Täster, Theo'],
+                        u'sn': [u'Täster'],
+                        u'invälid': [],
+                  },
+                  'ascii'
+              )
+
+
+class Test002LDAPResult(unittest.TestCase):
     """
-    test ldap0.base
+    tests for class ldap0.base.LDAPResult
     """
 
     def test_simple_tuple(self):

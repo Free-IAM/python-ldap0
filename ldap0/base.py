@@ -6,6 +6,28 @@ ldap0.base - basic classes and functions
 from __future__ import absolute_import
 
 
+def decode_entry_dict(entry, encoding='utf-8'):
+    """
+    decode an LDAP entry dict containing only
+    byte-strings in keys and values with given encoding
+    """
+    return dict([
+        (at.decode(encoding), [av.decode(encoding) for av in avs])
+        for at, avs in entry.items()
+    ])
+
+
+def encode_entry_dict(entry, encoding='utf-8'):
+    """
+    encode an LDAP entry dict containing only
+    Unicode-strings in keys and values with given encoding
+    """
+    return dict([
+        (at.encode(encoding), [av.encode(encoding) for av in avs])
+        for at, avs in entry.items()
+    ])
+
+
 class LDAPResult(object):
     """
     base class for LDAP result objects
