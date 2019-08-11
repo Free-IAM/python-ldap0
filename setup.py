@@ -6,7 +6,10 @@ package/install module package ldap0
 import sys
 import os
 import textwrap
-from ConfigParser import ConfigParser
+try:
+    from ConfigParser import ConfigParser
+except ImportError:
+    from configparser import ConfigParser
 from setuptools import setup, Extension, find_packages
 
 PKG_NAME = 'ldap0'

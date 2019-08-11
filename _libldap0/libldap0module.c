@@ -20,7 +20,7 @@ LDAPinit_pkginfo( PyObject* d )
     author = PyBytes_FromString(STR(LDAP0_MODULE_AUTHOR));
     license = PyBytes_FromString(STR(LDAP0_MODULE_LICENSE));
 
-    PyDict_SetItemString( d, "__version__", version );
+    PyDict_SetItemString(d, "__version__", version);
     PyDict_SetItemString(d, "__author__", author);
     PyDict_SetItemString(d, "__license__", license);
 
@@ -41,7 +41,18 @@ PyObject* init_libldap0(void)
     PyObject *m, *d;
 
     /* Create the module and add the functions */
+#if PY_MAJOR_VERSION < 3
     m = Py_InitModule("_libldap0", methods);
+#else
+    static struct PyModuleDef ldap_moduledef = {
+            PyModuleDef_HEAD_INIT,
+            "_libldap0",          /* m_name */
+            "",                   /* m_doc */
+            -1,                   /* m_size */
+            methods,              /* m_methods */
+    };
+    m = PyModule_Create(&ldap_moduledef);
+#endif
     if (PyType_Ready(&LDAP_Type) < 0) {
         Py_DECREF(m);
         return NULL;
@@ -63,6 +74,12 @@ PyObject* init_libldap0(void)
     return m;
 }
 
+#if PY_MAJOR_VERSION < 3
 PyMODINIT_FUNC init__libldap0() {
     init_libldap0();
 }
+#else
+PyMODINIT_FUNC PyInit__libldap0() {
+    return init_libldap0();
+}
+#endif

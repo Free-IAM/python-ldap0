@@ -18,8 +18,9 @@ from .functions import escape_str, strf_secs, strp_secs
 from .ldapobject import LDAPObject, ReconnectLDAPObject, NO_UNIQUE_ENTRY
 from .dn import explode_dn, explode_rdn
 
-assert _libldap0.__version__ == __version__, ImportError(
-    'ldap %s and _libldap0 %s version mismatch!' % (__version__, _libldap0.__version__)
+import _libldap0
+assert _libldap0.__version__.decode('ascii') == __version__, ImportError(
+    'ldap0 %s and _libldap0 %s version mismatch!' % (__version__, _libldap0.__version__)
 )
 
 # call into libldap to initialize it right now
