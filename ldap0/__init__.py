@@ -19,9 +19,13 @@ from .ldapobject import LDAPObject, ReconnectLDAPObject, NO_UNIQUE_ENTRY
 from .dn import explode_dn, explode_rdn
 
 import _libldap0
-assert _libldap0.__version__.decode('ascii') == __version__, ImportError(
-    'ldap0 %s and _libldap0 %s version mismatch!' % (__version__, _libldap0.__version__)
-)
+if _libldap0.__version__.decode('ascii') != __version__:
+    raise ImportError(
+    'ldap0 %s and _libldap0 %s version mismatch!' % (
+            __version__,
+            _libldap0.__version__,
+        )
+    )
 
 # call into libldap to initialize it right now
 LIBLDAP_API_INFO = _libldap0.get_option(_libldap0.OPT_API_INFO)
