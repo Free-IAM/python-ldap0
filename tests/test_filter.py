@@ -27,7 +27,7 @@ class TestFilter(unittest.TestCase):
     test ldap0.filter
     """
 
-    def test_escape_filter_chars_mode0(self):
+    def test000_escape_filter_chars_mode0(self):
         """
         test function escape_filter_chars() with escape_mode=0
         """
@@ -54,7 +54,7 @@ class TestFilter(unittest.TestCase):
             b'T\xc3\xa4ster'
         )
 
-    def test_escape_filter_chars_mode1(self):
+    def test001_escape_filter_chars_mode1(self):
         """
         test function escape_filter_chars() with escape_mode=1
         """
@@ -70,7 +70,7 @@ class TestFilter(unittest.TestCase):
             b'\\28foo\\2abar\\29'
         )
 
-    def test_escape_filter_chars_mode2(self):
+    def test002_escape_filter_chars_mode2(self):
         """
         test function escape_filter_chars() with escape_mode=2
         """
@@ -82,19 +82,19 @@ class TestFilter(unittest.TestCase):
             b'\\66\\6f\\6f\\62\\61\\72'
         )
 
-    def test_escape_filter_chars_mode666(self):
+    def test003_escape_filter_chars_mode666(self):
         """
         test function escape_filter_chars() with escape_mode=2
         """
         with self.assertRaises(ValueError):
             escape_filter_chars(b'foobar', escape_mode=666)
 
-    def test_negate_filter(self):
+    def test004_negate_filter(self):
         self.assertEqual(negate_filter(b'(objectClass=*)'), b'(!(objectClass=*))')
         self.assertEqual(negate_filter(b'(!(objectClass=*))'), b'(objectClass=*)')
         self.assertEqual(negate_filter(b'(!(!(objectClass=*)))'), b'(!(objectClass=*))')
 
-    def test_map_filter_parts(self):
+    def test005_map_filter_parts(self):
         self.assertEqual(map_filter_parts(b'foo', []), [])
         self.assertEqual(
             map_filter_parts(b'foo', [b'1', b'2']),
@@ -113,7 +113,7 @@ class TestFilter(unittest.TestCase):
             [b'(sn=\\54\\c3\\a4\\73\\74\\65\\72)', b'(sn=\\4d\\c3\\bc\\6c\\6c\\65\\72)']
         )
 
-    def test_compose_filter(self):
+    def test007_compose_filter(self):
         self.assertEqual(compose_filter(b'', []), b'')
         self.assertEqual(compose_filter(b'&', []), b'')
         self.assertEqual(compose_filter(b'|', []), b'')
@@ -133,7 +133,7 @@ class TestFilter(unittest.TestCase):
             b'(|(foo=\\31)(foo=\\32))'
         )
 
-    def test_dict_filter(self):
+    def test008_dict_filter(self):
         self.assertEqual(dict_filter({}), b'')
         self.assertEqual(dict_filter({b'foo': [b'bar']}), b'(foo=bar)')
         self.assertEqual(
@@ -165,14 +165,14 @@ class TestFilter(unittest.TestCase):
             b'(|(&(foo1=T\xc3\xa4ster)(foo1=M\xc3\xbcller))(&(foo2=T\xc3\xa4ster)(foo2=M\xc3\xbcller)))'
         )
 
-    def test_filter_format(self):
+    def test009_filter_format(self):
         self.assertEqual(filter_format(b'', ()), b'')
         self.assertEqual(filter_format(b'(%s=%s)', (b'foo', b'bar')), b'(foo=bar)')
         self.assertEqual(filter_format(b'(|(cn=%s)(cn=%s))', (b'foo', b'bar')), b'(|(cn=foo)(cn=bar))')
         with self.assertRaises(TypeError):
             filter_format(b'', (b'foo', b'bar'))
 
-    def test_time_span_filter(self):
+    def test010_time_span_filter(self):
         self.assertEqual(
             time_span_filter(until_timestamp=0),
             b'(&(modifyTimestamp>=19700101000000Z)(!(modifyTimestamp>=19700101000000Z)))',
