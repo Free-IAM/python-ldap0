@@ -22,10 +22,10 @@ __all__ = [
     'LDAPUrl'
 ]
 
-from UserDict import UserDict as User_Dict
-
 from urllib import quote as url_quote
 from urllib import unquote as url_unquote
+
+from .compat import User_Dict
 
 LDAP_SCOPE_BASE = 0
 LDAP_SCOPE_ONELEVEL = 1

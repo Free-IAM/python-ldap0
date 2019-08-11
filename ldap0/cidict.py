@@ -5,8 +5,7 @@ ldap0.cidict - custom dictionary class with keys being strings handled case-inse
 
 from __future__ import absolute_import
 
-from UserDict import IterableUserDict as User_Dict
-
+from .compat import User_Dict
 from .__about__ import __version__, __author__, __license__
 
 

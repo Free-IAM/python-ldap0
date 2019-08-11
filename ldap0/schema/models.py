@@ -5,12 +5,12 @@ ldap0.schema.models - support for subSchemaSubEntry information
 
 from __future__ import absolute_import
 
-import collections
-from UserDict import IterableUserDict as User_Dict
+from collections import MutableSet
 
 from ..__about__ import __version__, __author__, __license__
 from ..cidict import cidict
 from .parse import split_tokens, extract_tokens
+from ..compat import User_Dict
 
 
 __all__ = [
@@ -642,7 +642,7 @@ class NameForm(SchemaElement):
         return '( %s )' % ''.join(result)
 
 
-class SchemaElementOIDSet(collections.MutableSet):
+class SchemaElementOIDSet(MutableSet):
     """
     set-like class which handles OIDs and NAMEs of schema elements
     """
