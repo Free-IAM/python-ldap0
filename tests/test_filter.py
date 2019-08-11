@@ -46,6 +46,13 @@ class TestFilter(unittest.TestCase):
             ),
             b'foo\\5cbar'
         )
+        self.assertEqual(
+            escape_filter_chars(
+                b'T\xc3\xa4ster',
+                escape_mode=0
+            ),
+            b'T\xc3\xa4ster'
+        )
 
     def test_escape_filter_chars_mode1(self):
         """
@@ -120,32 +127,32 @@ class TestFilter(unittest.TestCase):
         )
         self.assertEqual(
             compose_filter(
-                '|',
-                map_filter_parts('foo', ['1', '2'], escape_mode=2)
+                b'|',
+                map_filter_parts(b'foo', [b'1', b'2'], escape_mode=2)
             ),
-            '(|(foo=\\31)(foo=\\32))'
+            b'(|(foo=\\31)(foo=\\32))'
         )
 
     def test_dict_filter(self):
-        self.assertEqual(dict_filter({}), '')
-        self.assertEqual(dict_filter({'foo': ['bar']}), '(foo=bar)')
+        self.assertEqual(dict_filter({}), b'')
+        self.assertEqual(dict_filter({b'foo': [b'bar']}), b'(foo=bar)')
         self.assertEqual(
-            dict_filter({'foo': ['bar1', 'bar2']}),
-            '(&(foo=bar1)(foo=bar2))'
+            dict_filter({b'foo': [b'bar1', b'bar2']}),
+            b'(&(foo=bar1)(foo=bar2))'
         )
         self.assertEqual(
-            dict_filter({'foo': ['bar1', 'bar2']}, iop='|'), '(|(foo=bar1)(foo=bar2))'
+            dict_filter({b'foo': [b'bar1', b'bar2']}, iop='|'), b'(|(foo=bar1)(foo=bar2))'
         )
         self.assertEqual(
             dict_filter(
-                OrderedDict([('foo1', ['bar1', 'bar2']), ('foo2', ['bar1', 'bar2'])]),
+                OrderedDict([(b'foo1', [b'bar1', b'bar2']), (b'foo2', [b'bar1', b'bar2'])]),
                 iop='|'
             ),
-            '(&(|(foo1=bar1)(foo1=bar2))(|(foo2=bar1)(foo2=bar2)))'
+            b'(&(|(foo1=bar1)(foo1=bar2))(|(foo2=bar1)(foo2=bar2)))'
         )
         self.assertEqual(
             dict_filter(
-                OrderedDict([('foo1', ['bar1', 'bar2']), ('foo2', ['bar1', 'bar2'])]),
+                OrderedDict([(b'foo1', [b'bar1', b'bar2']), (b'foo2', [b'bar1', b'bar2'])]),
                 oop='|'
             ),
             b'(|(&(foo1=bar1)(foo1=bar2))(&(foo2=bar1)(foo2=bar2)))'
@@ -160,7 +167,7 @@ class TestFilter(unittest.TestCase):
 
     def test_filter_format(self):
         self.assertEqual(filter_format(b'', ()), b'')
-        self.assertEqual(filter_format(b'(%s=%s)', ('foo', 'bar')), b'(foo=bar)')
+        self.assertEqual(filter_format(b'(%s=%s)', (b'foo', b'bar')), b'(foo=bar)')
         self.assertEqual(filter_format(b'(|(cn=%s)(cn=%s))', (b'foo', b'bar')), b'(|(cn=foo)(cn=bar))')
         with self.assertRaises(TypeError):
             filter_format(b'', (b'foo', b'bar'))
