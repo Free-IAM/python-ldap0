@@ -25,7 +25,7 @@ assert _libldap0.__version__.decode('ascii') == __version__, ImportError(
     'ldap0 %s and _libldap0 %s version mismatch!' % (__version__, _libldap0.__version__)
 )
 
-from . import LDAPError
+from _libldap0 import LDAPError
 from .lock import LDAPLock
 import ldap0
 

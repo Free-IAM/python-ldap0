@@ -22,8 +22,8 @@ __all__ = [
     'LDAPUrl'
 ]
 
-from urllib import quote as url_quote
-from urllib import unquote as url_unquote
+from .compat import url_quote
+from .compat import url_unquote
 
 from .compat import User_Dict
 
