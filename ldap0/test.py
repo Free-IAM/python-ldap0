@@ -110,7 +110,7 @@ class SlapdObject(object):
     PATH_SLAPD = os.environ.get('SLAPD', os.path.join(SBINDIR, 'slapd'))
 
     # time in secs to wait before trying to access slapd via LDAP (again)
-    _start_sleep = 1.5
+    start_sleep = float(os.environ.get('START_SLEEP', '1.5'))
 
     def __init__(self):
         self._proc = None
@@ -269,7 +269,7 @@ class SlapdObject(object):
             if self._proc.poll() is not None:
                 self._stopped()
                 raise RuntimeError("slapd exited before opening port")
-            time.sleep(self._start_sleep)
+            time.sleep(self.start_sleep)
             try:
                 logging.debug("slapd connection check to %s", self.ldapi_uri)
                 self.ldapwhoami()
