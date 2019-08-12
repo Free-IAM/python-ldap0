@@ -8,16 +8,10 @@ from __future__ import absolute_import
 import re
 from base64 import b64encode, b64decode
 
-from urllib import urlopen
-from urlparse import urlparse
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
 from _libldap0 import MOD_ADD, MOD_DELETE, MOD_REPLACE, MOD_INCREMENT
 
+from .compat import url_open, url_parse
+from .compat import StringIO
 from .__about__ import __version__, __author__, __license__
 from .dn import is_dn
 
@@ -286,7 +280,7 @@ class LDIFParser(object):
             attr_value = None
             if self._process_url_schemes:
                 if urlparse(url)[0] in self._process_url_schemes:
-                    attr_value = urlopen(url).read()
+                    attr_value = url_open(url).read()
         else:
             attr_value = unfolded_line[colon_pos+1:]
         return attr_type, attr_value

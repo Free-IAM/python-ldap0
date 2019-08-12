@@ -5,7 +5,7 @@ ldap0.schema.util -  misc. subschema utility stuff
 
 from __future__ import absolute_import
 
-from urllib import urlopen
+from ..compat import url_open
 
 from ..__about__ import __version__, __author__, __license__
 from ..cidict import cidict
@@ -52,7 +52,7 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
         ldap_conn.unbind_s()
         del ldap_conn
     else:
-        ldif_file = urlopen(uri)
+        ldif_file = url_open(uri)
         ldif_parser = LDIFParser(ldif_file, max_entries=1)
         ldif_res = ldif_parser.list_entry_records()
         subschemasubentry_dn, s_temp = ldif_res[0]
