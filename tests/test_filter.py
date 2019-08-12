@@ -141,19 +141,19 @@ class TestFilter(unittest.TestCase):
             b'(&(foo=bar1)(foo=bar2))'
         )
         self.assertEqual(
-            dict_filter({b'foo': [b'bar1', b'bar2']}, iop='|'), b'(|(foo=bar1)(foo=bar2))'
+            dict_filter({b'foo': [b'bar1', b'bar2']}, iop=b'|'), b'(|(foo=bar1)(foo=bar2))'
         )
         self.assertEqual(
             dict_filter(
                 OrderedDict([(b'foo1', [b'bar1', b'bar2']), (b'foo2', [b'bar1', b'bar2'])]),
-                iop='|'
+                iop=b'|'
             ),
             b'(&(|(foo1=bar1)(foo1=bar2))(|(foo2=bar1)(foo2=bar2)))'
         )
         self.assertEqual(
             dict_filter(
                 OrderedDict([(b'foo1', [b'bar1', b'bar2']), (b'foo2', [b'bar1', b'bar2'])]),
-                oop='|'
+                oop=b'|'
             ),
             b'(|(&(foo1=bar1)(foo1=bar2))(&(foo2=bar1)(foo2=bar2)))'
         )
@@ -192,8 +192,8 @@ class TestFilter(unittest.TestCase):
         flt = time_span_filter(delta_attr=b'foo')
         after = time.time()
         results = set([
-            b'(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(before)),
-            b'(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(after)),
+            b'(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(before).encode('ascii')),
+            b'(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(after).encode('ascii')),
         ])
         self.assertIn(flt, results)
         # test time.time() based filter with relative from_timestamp
@@ -202,8 +202,8 @@ class TestFilter(unittest.TestCase):
         flt = time_span_filter(from_timestamp=fts, delta_attr=b'foo')
         after = time.time()
         results = set([
-            b'(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(before+fts), strf_secs(before)),
-            b'(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(after+fts), strf_secs(after)),
+            b'(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(before+fts).encode('ascii'), strf_secs(before).encode('ascii')),
+            b'(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(after+fts).encode('ascii'), strf_secs(after).encode('ascii')),
         ])
         self.assertIn(flt, results)
 
