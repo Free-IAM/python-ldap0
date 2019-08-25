@@ -3,8 +3,6 @@
 Simple tests for module ldap0.extop
 """
 
-from __future__ import absolute_import
-
 # from Python's standard lib
 import unittest
 

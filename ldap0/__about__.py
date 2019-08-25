@@ -3,8 +3,6 @@
 ldap0.__about__ - Meta information
 """
 
-from __future__ import absolute_import
-
 import collections
 
 VersionInfo = collections.namedtuple('version_info', ('major', 'minor', 'micro'))

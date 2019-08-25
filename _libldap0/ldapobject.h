@@ -1,5 +1,5 @@
-#ifndef __h_LDAPObject
-#define __h_LDAPObject
+#ifndef __h_ldapobject
+#define __h_ldapobject
 
 #include "common.h"
 
@@ -39,4 +39,4 @@ extern LDAPObject *newLDAPObject( LDAP* );
     PyEval_RestoreThread( _save ); \
   }
 
-#endif /* __h_LDAPObject */
+#endif /* __h_ldapobject */

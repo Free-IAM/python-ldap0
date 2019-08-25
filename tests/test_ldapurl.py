@@ -3,10 +3,8 @@
 Automatic tests for module ldap0.ldapurl
 """
 
-from __future__ import absolute_import
-
 import unittest
-from urllib import quote as url_quote
+from urllib.request import quote as url_quote
 
 import ldap0
 import ldap0.ldapurl
@@ -24,7 +22,7 @@ class MyLDAPUrl(LDAPUrl):
 
 class TestIsLDAPUrl(unittest.TestCase):
 
-    is_ldap_url_tests = {
+    is_ldapurl_tests = {
         # Examples from RFC2255
         'ldap:///o=University%20of%20Michigan,c=US':1,
         'ldap://ldap.itd.umich.edu/o=University%20of%20Michigan,c=US':1,
@@ -41,17 +39,17 @@ class TestIsLDAPUrl(unittest.TestCase):
         'ldap://root.openldap.org/dc=openldap,dc=org':1,
         'ldap://x500.mh.se/o=Mitthogskolan,c=se????1.2.752.58.10.2=T.61':1,
         'ldp://root.openldap.org/dc=openldap,dc=org':0,
-        'ldap://localhost:1389/ou%3DUnstructured%20testing%20tree%2Cdc%3Dstroeder%2Cdc%3Dcom??one':1,
+        'ldap://localhost:1389/ou%3DUnstructured%20testing%20tree%2Cdc%3Dexample%2Cdc%3Dcom??one':1,
         'ldaps://ldap.example.com/c%3dDE':1,
-        'ldapi:///dc=stroeder,dc=de????x-saslmech=EXTERNAL':1,
+        'ldapi:///dc=example,dc=com????x-saslmech=EXTERNAL':1,
     }
 
-    def test_isLDAPUrl(self):
-        for ldap_url, expected in self.is_ldap_url_tests.items():
-            result = ldap0.ldapurl.isLDAPUrl(ldap_url)
+    def test_is_ldapurl(self):
+        for ldap_url, expected in self.is_ldapurl_tests.items():
+            result = ldap0.ldapurl.is_ldapurl(ldap_url)
             self.assertEqual(
                 result, expected,
-                'isLDAPUrl("%s") returns %d instead of %d.' % (
+                'is_ldapurl("%s") returns %d instead of %d.' % (
                     ldap_url, result, expected,
                 )
             )
@@ -112,13 +110,13 @@ class TestParseLDAPUrl(unittest.TestCase):
         )
     ),
     (
-        'ldap://localhost:12345/dc=stroeder,dc=com????!bindname=cn=Michael%2Cdc=stroeder%2Cdc=com,!X-BINDPW=secretpassword',
+        'ldap://localhost:12345/dc=example,dc=com????!bindname=cn=Michael%2Cdc=example%2Cdc=com,!X-BINDPW=secretpassword',
         LDAPUrl(
             hostport='localhost:12345',
-            dn='dc=stroeder,dc=com',
+            dn='dc=example,dc=com',
             extensions=ldap0.ldapurl.LDAPUrlExtensions({
                 'bindname':ldap0.ldapurl.LDAPUrlExtension(
-                critical=1,extype='bindname',exvalue='cn=Michael,dc=stroeder,dc=com'
+                critical=1,extype='bindname',exvalue='cn=Michael,dc=example,dc=com'
                 ),
                 'X-BINDPW':ldap0.ldapurl.LDAPUrlExtension(
                 critical=1,extype='X-BINDPW',exvalue='secretpassword'
@@ -127,28 +125,37 @@ class TestParseLDAPUrl(unittest.TestCase):
         )
     ),
     (
-        'ldap://localhost:54321/dc=stroeder,dc=com????bindname=cn=Michael%2Cdc=stroeder%2Cdc=com,X-BINDPW=secretpassword',
+        'ldap://localhost:54321/dc=example,dc=com????bindname=cn=Michael%2Cdc=example%2Cdc=com,X-BINDPW=secretpassword',
         LDAPUrl(
             hostport='localhost:54321',
-            dn='dc=stroeder,dc=com',
-            who='cn=Michael,dc=stroeder,dc=com',
+            dn='dc=example,dc=com',
+            who='cn=Michael,dc=example,dc=com',
             cred='secretpassword'
         )
     ),
     (
-        'ldaps://localhost:12345/dc=stroeder,dc=com',
+        'ldap://localhost:54321/cn=Michael Ströder+mail=michael@example.com,o=Test????bindname=cn=Michael%20Ströder%2bmail=michael@example.com%2Co=Test,X-BINDPW=secretpassword',
+        LDAPUrl(
+            hostport='localhost:54321',
+            dn='cn=Michael Ströder+mail=michael@example.com,o=Test',
+            who='cn=Michael Ströder+mail=michael@example.com,o=Test',
+            cred='secretpassword'
+        )
+    ),
+    (
+        'ldaps://localhost:12345/dc=example,dc=com',
         LDAPUrl(
             urlscheme='ldaps',
             hostport='localhost:12345',
-            dn='dc=stroeder,dc=com',
+            dn='dc=example,dc=com',
         ),
     ),
     (
-        'ldapi://%2ftmp%2fopenldap2-1389/dc=stroeder,dc=com',
+        'ldapi://%2ftmp%2fopenldap2-1389/dc=example,dc=com',
         LDAPUrl(
             urlscheme='ldapi',
             hostport='/tmp/openldap2-1389',
-            dn='dc=stroeder,dc=com',
+            dn='dc=example,dc=com',
         ),
     ),
     ]
@@ -158,20 +165,20 @@ class TestParseLDAPUrl(unittest.TestCase):
             ldap_url_obj = LDAPUrl(ldapUrl=ldap_url_str)
             self.assertEqual(
                 ldap_url_obj, test_ldap_url_obj,
-                'Attributes of LDAPUrl(%s) are:\n%s\ninstead of:\n%s' % (
-                    repr(ldap_url_str),
-                    repr(ldap_url_obj),
-                    repr(test_ldap_url_obj),
+                'Attributes of LDAPUrl(%r) are:\n%r\ninstead of:\n%r' % (
+                    ldap_url_str,
+                    ldap_url_obj,
+                    test_ldap_url_obj,
                 )
             )
             unparsed_ldap_url_str = test_ldap_url_obj.unparse()
             unparsed_ldap_url_obj = LDAPUrl(ldapUrl=unparsed_ldap_url_str)
             self.assertEqual(
                 unparsed_ldap_url_obj, test_ldap_url_obj,
-                'Attributes of LDAPUrl(%s) are:\n%s\ninstead of:\n%s' % (
-                    repr(unparsed_ldap_url_str),
-                    repr(unparsed_ldap_url_obj),
-                    repr(test_ldap_url_obj),
+                'Attributes of LDAPUrl(%r) are:\n%r\ninstead of:\n%r' % (
+                    unparsed_ldap_url_str,
+                    unparsed_ldap_url_obj,
+                    test_ldap_url_obj,
                 )
             )
 
@@ -272,7 +279,7 @@ class TestLDAPUrl(unittest.TestCase):
         u = LDAPUrl("ldap:///dn=foo%3f")
         self.assertEqual(u.dn, "dn=foo?")
         u = LDAPUrl("ldap:///dn=str%c3%b6der.com")
-        self.assertEqual(u.dn, "dn=str\xc3\xb6der.com")
+        self.assertEqual(u.dn, "dn=ströder.com")
 
     def test_parse_attrs(self):
         u = LDAPUrl("ldap:///?")
@@ -336,7 +343,7 @@ class TestLDAPUrl(unittest.TestCase):
         u = LDAPUrl("ldap:///???(cn=Q%3f)")
         self.assertEqual(u.filterstr, "(cn=Q?)")
         u = LDAPUrl("ldap:///???(sn=Str%c3%b6der)") # (possibly bad?)
-        self.assertEqual(u.filterstr, "(sn=Str\xc3\xb6der)")
+        self.assertEqual(u.filterstr, "(sn=Ströder)")
         u = LDAPUrl("ldap:///???(sn=Str\\c3\\b6der)")
         self.assertEqual(u.filterstr, "(sn=Str\\c3\\b6der)") # (recommended)
         u = LDAPUrl("ldap:///???(cn=*\\2a*)")
@@ -436,11 +443,10 @@ class TestLDAPUrl(unittest.TestCase):
             ('ldap://root.openldap.org/dc=openldap,dc=org', 'ldap://root.openldap.org'),
             ('ldap://x500.mh.se/o=Mitthogskolan,c=se????1.2.752.58.10.2=T.61', 'ldap://x500.mh.se'),
             ('ldap://localhost:1389/ou%3DUnstructured%20testing%20tree??one', 'ldap://localhost:1389'),
-            ('ldapi:///dc=stroeder,dc=de????x-saslmech=EXTERNAL', 'ldapi://'),
+            ('ldapi:///dc=example,dc=com????x-saslmech=EXTERNAL', 'ldapi://'),
             ('ldapi://%2Fopt%2Fae-dir%2Frun%2Fslapd%2Fldapi/ou=ae-dir????bindname=aead', 'ldapi://%2Fopt%2Fae-dir%2Frun%2Fslapd%2Fldapi'),
         ):
             self.assertEqual(LDAPUrl(url).connect_uri(), uri)
-            self.assertEqual(LDAPUrl(url).initializeUrl(), uri)
 
 
 if __name__ == '__main__':

@@ -4,8 +4,6 @@ ldap0.controls.readentry - classes for the Read Entry controls
 (see RFC 4527)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 import _libldap0
@@ -67,11 +65,11 @@ class ReadEntryControl(LDAPControl):
                 encodedControlValue,
                 asn1Spec=OpenLDAPITS6899SearchResultEntry(),
             )
-        self.dn = str(decodedEntry[0])
+        self.dn = bytes(decodedEntry[0])
         self.entry = {}
         for attr in decodedEntry[1]:
-            self.entry[str(attr[0])] = [
-                str(attr_value)
+            self.entry[bytes(attr[0])] = [
+                bytes(attr_value)
                 for attr_value in attr[1]
             ]
 
@@ -80,7 +78,7 @@ class PreReadControl(ReadEntryControl):
     """
     Class for pre-read control described in RFC 4527
     """
-    controlType = _libldap0.CONTROL_PRE_READ
+    controlType = b'1.3.6.1.1.13.1'
 
 KNOWN_RESPONSE_CONTROLS.reg(PreReadControl)
 
@@ -89,6 +87,6 @@ class PostReadControl(ReadEntryControl):
     """
     Class for post-read control described in RFC 4527
     """
-    controlType = _libldap0.CONTROL_POST_READ
+    controlType = b'1.3.6.1.1.13.2'
 
 KNOWN_RESPONSE_CONTROLS.reg(PostReadControl)

@@ -1,9 +1,0 @@
-#ifndef __h_berval
-#define __h_berval
-
-#include "common.h"
-#include "lber.h"
-
-PyObject *LDAPberval_to_object(const struct berval *bv);
-
-#endif /* __h_berval_ */

@@ -3,12 +3,10 @@
 ldap0.extop - support classes for LDAPv3 extended operations
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 
 
-class ExtendedRequest(object):
+class ExtendedRequest:
     """
     Generic base class for a LDAPv3 extended operation request
 
@@ -35,7 +33,7 @@ class ExtendedRequest(object):
         return self.requestValue
 
 
-class ExtendedResponse(object):
+class ExtendedResponse:
     """
     Generic base class for a LDAPv3 extended operation response
 

@@ -3,20 +3,25 @@
 Automatic tests for module ldap0.base
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 # from Python's standard lib
 import unittest
 
-from ldap0.base import decode_entry_dict, encode_entry_dict
+from ldap0.base import decode_list, encode_list, decode_entry_dict, encode_entry_dict
 
 from ldap0.base import LDAPResult
 
 
 class Test001Functions(unittest.TestCase):
 
-    def test001_decode_entry_dict(self):
+    def test001_decode_list(self):
+          self.assertEqual(
+              decode_list(
+                  [b'foo', b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
+              ),
+              [u'foo', u'Theo Täster', u'Täster, Theo'],
+          )
+
+    def test002_decode_entry_dict(self):
           self.assertEqual(
               decode_entry_dict({
                     b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
@@ -42,7 +47,15 @@ class Test001Functions(unittest.TestCase):
                   'ascii'
               )
 
-    def test002_encode_entry_dict(self):
+    def test003_encode_list(self):
+          self.assertEqual(
+              encode_list(
+                  [u'foo', u'Theo Täster', u'Täster, Theo'],
+              ),
+              [b'foo', b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
+          )
+
+    def test004_encode_entry_dict(self):
           self.assertEqual(
               encode_entry_dict({
                     u'objectClass': [u'top', u'person', u'organizationalPerson', u'inetOrgPerson'],

@@ -4,8 +4,6 @@ ldap0.extop.dds - Classes for Dynamic Entries extended operations
 (see RFC 2589)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 from . import ExtendedRequest, ExtendedResponse
 
@@ -17,7 +15,7 @@ from pyasn1_modules.rfc2251 import LDAPDN
 
 class RefreshRequest(ExtendedRequest):
 
-    requestName = '1.3.6.1.4.1.1466.101.119.1'
+    requestName = b'1.3.6.1.4.1.1466.101.119.1'
     defaultRequestTtl = 86400
 
     class RefreshRequestValue(univ.Sequence):
@@ -60,7 +58,7 @@ class RefreshRequest(ExtendedRequest):
 
 class RefreshResponse(ExtendedResponse):
 
-    responseName = '1.3.6.1.4.1.1466.101.119.1'
+    responseName = b'1.3.6.1.4.1.1466.101.119.1'
 
     class RefreshResponseValue(univ.Sequence):
         componentType = namedtype.NamedTypes(

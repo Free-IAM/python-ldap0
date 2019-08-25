@@ -3,8 +3,6 @@
 Automatic tests for module ldap0.syncrepl
 """
 
-from __future__ import absolute_import
-
 # from Python's standard lib
 import unittest
 
@@ -85,7 +83,7 @@ class TestSyncReplDesc(unittest.TestCase):
             'tls_reqcert=try',
             'tls_crlcheck=peer',
             'filter="(cn=*FooBar*)"',
-            'searchbase="ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f"',
+            'searchbase="ou=äöüÄÖÜß"',
             'scope=one',
             'schemachecking=on',
             'type=refreshAndPersist',
@@ -109,13 +107,13 @@ class TestSyncReplDesc(unittest.TestCase):
         self.assertEqual(srd.tls_protocol_min, None)
         self.assertEqual(srd.tls_crlcheck, 'peer')
         self.assertEqual(srd.filter, '(cn=*FooBar*)')
-        self.assertEqual(srd.searchbase, 'ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f')
+        self.assertEqual(srd.searchbase, 'ou=äöüÄÖÜß')
         self.assertEqual(srd.scope, SCOPE_ONELEVEL)
         self.assertEqual(srd.schemachecking, 'on')
         self.assertEqual(srd.type, 'refreshAndPersist')
         self.assertEqual(srd.retry, None)
         srd_url_obj = srd.ldap_url()
-        self.assertEqual(srd_url_obj.dn, 'ou=\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f')
+        self.assertEqual(srd_url_obj.dn, 'ou=äöüÄÖÜß')
         self.assertEqual(srd_url_obj.scope, SCOPE_ONELEVEL)
         self.assertEqual(
             str(srd_url_obj),

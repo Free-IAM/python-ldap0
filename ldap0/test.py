@@ -3,8 +3,6 @@
 ldap0.test - module for spawning test instances of OpenLDAP's slapd server
 """
 
-from __future__ import absolute_import
-
 import os
 import socket
 import time
@@ -12,12 +10,15 @@ import subprocess
 import logging
 import unittest
 
-from urllib import quote_plus as url_quote_plus
+from urllib.parse import quote_plus
+
+import _libldap0
 
 from .__about__ import __version__, __author__, __license__
-import _libldap0
+from .base import encode_entry_dict
 import ldap0.ldapobject
-from .filter import escape_filter_chars
+from .functions import escape_format
+from .filter import escape_str as escape_ldap_str
 import ldap0.modlist
 from .ldif import LDIFParser
 
@@ -70,7 +71,7 @@ LOCALHOST = '127.0.0.1'
 CONSOLE_LOG_FORMAT = '%(name)s %(asctime)s %(levelname)s %(message)s'
 
 
-class SlapdObject(object):
+class SlapdObject:
     """
     Controller class for a slapd instance, OpenLDAP's server.
 
@@ -83,8 +84,8 @@ class SlapdObject(object):
     """
     slapd_conf_template = SLAPD_CONF_TEMPLATE
     database = 'mdb'
-    suffix = 'dc=slapd-test,dc=example,dc=org'
-    root_cn = 'Manager'
+    suffix = 'o=öäü,dc=example,dc=org'
+    root_cn = 'Mänager'
     root_dn = 'cn=%s,%s' % (root_cn, suffix)
     root_pw = 'password'
     slapd_loglevel = [ v.strip() for v in os.environ.get('SLAPD_LOGLEVEL', 'stats,stats2').split(',') ]
@@ -122,7 +123,7 @@ class SlapdObject(object):
         self._db_directory = os.path.join(self.testrundir, "openldap-data")
         self.ldap_uri = "ldap://%s:%d/" % (LOCALHOST, self._port)
         ldapi_path = os.path.join(self.testrundir, 'ldapi')
-        self.ldapi_uri = "ldapi://%s" % url_quote_plus(ldapi_path)
+        self.ldapi_uri = "ldapi://%s" % quote_plus(ldapi_path)
 
     def setup_rundir(self):
         """
@@ -210,7 +211,7 @@ class SlapdObject(object):
     def _write_config(self):
         """Writes the slapd.conf file out, and returns the path to it."""
         logging.debug('Writing config to %s', self._slapd_conf)
-        with open(self._slapd_conf, 'wb') as config_file:
+        with open(self._slapd_conf, 'w', encoding='utf-8') as config_file:
             config_file.write(self.gen_config())
         logging.info('Wrote config to %s', self._slapd_conf)
 
@@ -242,8 +243,8 @@ class SlapdObject(object):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
-        _, stderr_data = proc.communicate('')
-        return tuple(stderr_data.split('\n')[0].split(' ')[3].split('.'))
+        _, stderr_data = proc.communicate(None)
+        return tuple(stderr_data.decode('utf-8').split('\n')[0].split(' ')[3].split('.'))
 
     def _start_slapd(self):
         """
@@ -265,7 +266,7 @@ class SlapdObject(object):
         )
         self._proc = subprocess.Popen(slapd_args)
         # Waits until the LDAP server socket is open, or slapd crashed
-        while 1:
+        while True:
             if self._proc.poll() is not None:
                 self._stopped()
                 raise RuntimeError("slapd exited before opening port")
@@ -363,17 +364,17 @@ class SlapdObject(object):
         """
         self._cli_popen(self.PATH_LDAPWHOAMI, extra_args=extra_args)
 
-    def ldapadd(self, ldif, extra_args=None):
+    def ldapadd(self, ldif_data, extra_args=None):
         """
         Runs ldapadd on this slapd instance, passing it the ldif content
         """
-        self._cli_popen(self.PATH_LDAPADD, extra_args=extra_args, stdin_data=ldif)
+        self._cli_popen(self.PATH_LDAPADD, extra_args=extra_args, stdin_data=ldif_data)
 
-    def ldapmodify(self, ldif, extra_args=None):
+    def ldapmodify(self, ldif_data, extra_args=None):
         """
         Runs ldapadd on this slapd instance, passing it the ldif content
         """
-        self._cli_popen(self.PATH_LDAPMODIFY, extra_args=extra_args, stdin_data=ldif)
+        self._cli_popen(self.PATH_LDAPMODIFY, extra_args=extra_args, stdin_data=ldif_data)
 
 
 class SlapdTestCase(unittest.TestCase):
@@ -396,12 +397,15 @@ class SlapdTestCase(unittest.TestCase):
         )
         ldap_conn.protocol_version = 3
         #ldap_conn.set_option(ldap0.OPT_REFERRALS, 0)
-        ldap_conn.simple_bind_s(who or self.server.root_dn, cred or self.server.root_pw)
+        ldap_conn.simple_bind_s(
+            (who or self.server.root_dn).encode('utf-8'),
+            (cred or self.server.root_pw).encode('utf-8'),
+        )
         return ldap_conn
 
     @classmethod
     def setUpClass(cls):
-        logging.getLogger().setLevel(int(os.environ.get('LOGLEVEL', str(logging.WARN))))
+        logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'WARN').upper())
         cls.server = cls.server_class()
         cls.server.start()
 
@@ -416,21 +420,19 @@ class SlapdTestCase(unittest.TestCase):
             # open local LDAP connection
             self._ldap_conn = self._open_ldap_conn()
             self.mdb_config_dn, _ = self._ldap_conn.search_s(
-                'cn=config',
+                b'cn=config',
                 _libldap0.SCOPE_SUBTREE,
-                '(olcSuffix={0})'.format(
-                    escape_filter_chars(self.server.suffix)
-                ),
+                escape_format(escape_ldap_str, '(olcSuffix={0})', self.server.suffix).encode('utf-8'),
             )[0]
 
     def enable_overlay(self, slapo_entry, schema_files=None):
         olc_overlay = slapo_entry['olcOverlay'][0]
         enabled_overlays = [
-            val.split('}', 1)[1]
+            val.split(b'}', 1)[1].decode('utf-8')
             for val in self._ldap_conn.read_s(
-                'cn=module{0},cn=config',
-                attrlist=['olcModuleLoad'],
-            )['olcModuleLoad']
+                b'cn=module{0},cn=config',
+                attrlist=[b'olcModuleLoad'],
+            )[b'olcModuleLoad']
         ]
         if olc_overlay in enabled_overlays:
             return
@@ -443,15 +445,15 @@ class SlapdTestCase(unittest.TestCase):
             for dn, entry in schema_entries:
                 self._ldap_conn.add_s(dn, entry)
             self._ldap_conn.modify_s(
-                'cn=module{0},cn=config',
-                [(_libldap0.MOD_ADD, 'olcModuleLoad', [olc_overlay])]
+                b'cn=module{0},cn=config',
+                [(_libldap0.MOD_ADD, b'olcModuleLoad', [olc_overlay.encode('utf-8')])]
             )
             self._ldap_conn.add_s(
                 'olcOverlay={{0}}{0},{1}'.format(
                     olc_overlay,
-                    self.mdb_config_dn,
-                ),
-                slapo_entry,
+                    self.mdb_config_dn.decode('utf-8'),
+                ).encode('utf-8'),
+                encode_entry_dict(slapo_entry, encoding='utf-8'),
             )
         except _libldap0.OTHER as ldap_err:
             self.skipTest(

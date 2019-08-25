@@ -3,15 +3,13 @@
 Automatic tests for module ldap0.functions
 """
 
-from __future__ import absolute_import
-
 # from Python's standard lib
 import unittest
 
 import ldap0
-from ldap0.functions import attr_set
-from ldap0.dn import escape_dn_chars
-from ldap0.filter import escape_filter_chars
+from ldap0.functions import attr_set, escape_str
+from ldap0.dn import escape_str as escape_dn_str
+from ldap0.filter import escape_str as escape_filter_str
 
 
 class TestFunction(unittest.TestCase):
@@ -38,32 +36,32 @@ class TestFunction(unittest.TestCase):
         test function escape_string_tmpl()
         """
         self.assertEqual(
-            ldap0.escape_str(
-                escape_filter_chars,
+            escape_str(
+                escape_filter_str,
                 '(&(objectClass=aeUser)(uid=%s))',
                 'foo'
             ),
             '(&(objectClass=aeUser)(uid=foo))'
         )
         self.assertEqual(
-            ldap0.escape_str(
-                escape_filter_chars,
+            escape_str(
+                escape_filter_str,
                 '(&(objectClass=aeUser)(uid=%s))',
                 'foo)bar'
             ),
             '(&(objectClass=aeUser)(uid=foo\\29bar))'
         )
         self.assertEqual(
-            ldap0.escape_str(
-                escape_dn_chars,
+            escape_str(
+                escape_dn_str,
                 'uid=%s',
                 'foo=bar'
             ),
             'uid=foo\\=bar'
         )
         self.assertEqual(
-            ldap0.escape_str(
-                escape_dn_chars,
+            escape_str(
+                escape_dn_str,
                 'uid=%s,cn=%s,cn=%s,dc=example,dc=com',
                 'foo=bar',
                 'foo+',
@@ -107,10 +105,10 @@ class TestOptions(unittest.TestCase):
         self.assertEqual(ldap0.functions.get_option(ldap0.OPT_PROTOCOL_VERSION), 3)
 
     def test_ca_cert(self):
-        ldap0.functions.set_option(ldap0.OPT_X_TLS_CACERTFILE, '/etc/ssl/ca-bundle.pem')
-        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_X_TLS_CACERTFILE), '/etc/ssl/ca-bundle.pem')
-        ldap0.functions.set_option(ldap0.OPT_X_TLS_CACERTDIR, '/etc/ssl/cacerts')
-        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_X_TLS_CACERTDIR), '/etc/ssl/cacerts')
+        ldap0.functions.set_option(ldap0.OPT_X_TLS_CACERTFILE, b'/etc/ssl/ca-bundle.pem')
+        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_X_TLS_CACERTFILE), b'/etc/ssl/ca-bundle.pem')
+        ldap0.functions.set_option(ldap0.OPT_X_TLS_CACERTDIR, b'/etc/ssl/cacerts')
+        self.assertEqual(ldap0.functions.get_option(ldap0.OPT_X_TLS_CACERTDIR), b'/etc/ssl/cacerts')
 
 
 if __name__ == '__main__':

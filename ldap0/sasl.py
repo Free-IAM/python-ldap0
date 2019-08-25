@@ -3,8 +3,6 @@
 ldap0.sasl - support for SASL mechanism
 """
 
-from __future__ import absolute_import
-
 import logging
 
 from .__about__ import __version__, __author__, __license__
@@ -27,30 +25,34 @@ CB_GETREALM = 0x4008
 
 # SASL mechs known to only require username and password
 SASL_PASSWORD_MECHS = {
-    'CRAM-MD5',
-    'DIGEST-MD5',
-    'LOGIN',
-    'NTLM',
-    'OTP',
-    'PLAIN',
-    'SCRAM-SHA-1',
+    b'CRAM-MD5',
+    b'DIGEST-MD5',
+    b'LOGIN',
+    b'NTLM',
+    b'OTP',
+    b'PLAIN',
+    b'SCRAM-SHA-1',
 }
 
 # SASL mechs known to not require application-provided authc information
 SASL_NONINTERACTIVE_MECHS = {
-    'EXTERNAL',
-    'GSSAPI',
+    b'EXTERNAL',
+    b'GSSAPI',
 }
 
 
-class SaslAuth(object):
+class SaslAuth:
     """
     This class handles SASL interactions for authentication.
     """
 
-    def __init__(self, cb_value_dict, mech, trace_level=0):
-        self.cb_value_dict = cb_value_dict or {}
-        self.mech = mech.upper()
+    def __init__(self, cb_value_dict, trace_level=0):
+        self.cb_value_dict = {}
+        for key, val in (cb_value_dict or {}).items():
+            assert isinstance(val, bytes), TypeError(
+                'Expected value for SASL param %d to be bytes, got %r' % (key, val)
+            )
+            self.cb_value_dict[key] = val
         self._trace_level = trace_level
 
     def callback(self, cb_id, challenge, prompt, defresult):
@@ -59,10 +61,10 @@ class SaslAuth(object):
         """
         # The following print command might be useful for debugging
         # new sasl mechanisms. So it is left here
-        cb_result = self.cb_value_dict.get(cb_id, defresult) or ''
+        cb_result = self.cb_value_dict.get(cb_id, defresult) or b''
         if __debug__ and self._trace_level >= 1:
             logging.debug(
-                'cb_id=%d, challenge=%r, prompt=%r, defresult=%r -> %r', 
+                'cb_id=%d, challenge=%r, prompt=%r, defresult=%r -> %r',
                 cb_id, challenge, prompt, defresult, cb_result,
             )
         return cb_result
@@ -76,24 +78,18 @@ class SaslPasswordAuth(SaslAuth):
 
     def __init__(
             self,
-            mech,
             authc_id,
             password,
-            authz_id='',
+            authz_id=b'',
             trace_level=0,
         ):
-        assert mech in SASL_PASSWORD_MECHS, ValueError(
-            'Invalid SASL mech %r for %s' % (mech, self.__class__.__name__)
-        )
-        auth_dict = {
-            CB_AUTHNAME: authc_id,
-            CB_PASS: password,
-            CB_USER: authz_id,
-        }
         SaslAuth.__init__(
             self,
-            auth_dict,
-            mech=mech,
+            {
+                CB_AUTHNAME: authc_id,
+                CB_PASS: password,
+                CB_USER: authz_id,
+            },
             trace_level=trace_level,
         )
 
@@ -106,19 +102,13 @@ class SaslNoninteractiveAuth(SaslAuth):
 
     def __init__(
             self,
-            mech,
-            authz_id="",
+            authz_id=b'',
             trace_level=0,
         ):
-        assert mech in SASL_NONINTERACTIVE_MECHS, ValueError(
-            'Invalid SASL mech %r for %s' % (mech, self.__class__.__name__)
-        )
-        auth_dict = {
-            CB_USER: authz_id,
-        }
         SaslAuth.__init__(
             self,
-            auth_dict,
-            mech=mech,
+            {
+                CB_USER: authz_id,
+            },
             trace_level=trace_level,
         )

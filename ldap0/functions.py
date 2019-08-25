@@ -3,8 +3,6 @@
 ldap0.functions - wraps functions of module _ldap
 """
 
-from __future__ import absolute_import
-
 __all__ = [
     'escape_str',
     'get_option',
@@ -89,13 +87,25 @@ def set_option(option, invalue):
     return _libldap0_function_call(_libldap0.set_option, option, invalue)
 
 
-def escape_str(escape_func, val, *args):
+def escape_str(escape_str_func, fmt, *args):
     """
     Applies escape_func() to all items of `args' and returns a string based
     on format string `val'.
     """
-    escape_args = map(escape_func, args)
-    return val % tuple(escape_args)
+    escaped_args = map(escape_str_func, args)
+    return fmt % tuple(escaped_args)
+
+
+def escape_format(escape_str_func, fmt, *args, **kwargs):
+    escaped_args = [
+        escape_str_func(val)
+        for val in args
+    ]
+    escaped_kwargs = dict([
+        (key, escape_str_func(val))
+        for key, val in kwargs.items()
+    ])
+    return fmt.format(*escaped_args, **escaped_kwargs)
 
 
 def strf_secs(secs):

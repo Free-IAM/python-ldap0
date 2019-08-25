@@ -1,28 +1,32 @@
 # -*- coding: utf-8 -*-
 """
-ldap0.cidict - custom dictionary class with keys being strings handled case-insensitive
+ldap0.cidict - custom dictionary classes with case-insensitive string-keys
 """
 
-from __future__ import absolute_import
+from collections import UserDict
 
-from .compat import User_Dict
 from .__about__ import __version__, __author__, __license__
 
 
-class cidict(User_Dict):
+class CIDict(UserDict):
     """
     Case-insensitive but case-respecting dictionary.
     """
 
-    def __init__(self, default=None):
+    def __init__(self, default=None, keytype=None):
         self._keys = {}
-        User_Dict.__init__(self, {})
+        self._keytype = keytype
+        UserDict.__init__(self, {})
         self.update(default or {})
 
     def __getitem__(self, key):
         return self.data[key.lower()]
 
     def __setitem__(self, key, value):
+        if self._keytype is None:
+            self._keytype = type(key)
+        if not isinstance(key, self._keytype):
+            raise TypeError('Expected %s for key, got %r' % (self._keytype.__name__, key))
         lower_key = key.lower()
         self._keys[lower_key] = key
         self.data[lower_key] = value
@@ -37,26 +41,25 @@ class cidict(User_Dict):
             self[key] = data[key]
 
     def has_key(self, key):
-        return key in self
+        raise NotImplementedError('do not use %s.has_key() method' % (self.__class__.__name__,))
 
     def __contains__(self, key):
-        return User_Dict.__contains__(self, key.lower())
+        return UserDict.__contains__(self, key.lower())
 
     def keys(self):
         return self._keys.values()
 
     def items(self):
-        result = []
         for k in self._keys.values():
-            result.append((k, self[k]))
-        return result
+            yield (k, self[k])
+        return
 
 
-class SingleValueDict(cidict):
+class SingleValueDict(CIDict):
     """
     dictionary for reading only the 1st attribute value
     (strictly relational data model)
     """
 
     def __setitem__(self, key, val):
-        return cidict.__setitem__(self, key, val[0])
+        return CIDict.__setitem__(self, key, val[0])

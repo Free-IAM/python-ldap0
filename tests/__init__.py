@@ -3,8 +3,6 @@
 Automatic tests for ldap0
 """
 
-from __future__ import absolute_import
-
 from . import test_about
 from . import test_base
 from . import test_cext

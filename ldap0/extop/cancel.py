@@ -4,8 +4,6 @@ ldap0.extop.cancel - Classes for Cancel Operation
 (see RFC 3909)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 from . import ExtendedRequest, ExtendedResponse
 
@@ -20,7 +18,7 @@ class CancelRequest(ExtendedRequest):
     Cancel Operation Request
     """
 
-    requestName = '1.3.6.1.1.8'
+    requestName = b'1.3.6.1.1.8'
 
     class CancelRequestValue(univ.Sequence):
         """
@@ -41,7 +39,7 @@ class CancelRequest(ExtendedRequest):
         req_value = self.CancelRequestValue()
         req_value.setComponentByName(
             'cancelID',
-            self.cancelID
+            str(self.cancelID).encode('ascii')
         )
         return encoder.encode(req_value)
 

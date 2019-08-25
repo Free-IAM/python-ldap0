@@ -4,8 +4,6 @@ ldap0.controls.deref - classes for
 (see https://tools.ietf.org/html/draft-masarati-ldap-deref)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
@@ -99,12 +97,12 @@ class DereferenceControl(LDAPControl):
         )
         self.derefRes = {}
         for deref_res in decoded_value:
-            deref_attr = str(deref_res[0])
-            deref_val = str(deref_res[1])
+            deref_attr = bytes(deref_res[0])
+            deref_val = bytes(deref_res[1])
             deref_vals = deref_res[2]
             deref_attrs = {}
             for tv in deref_vals or []:
-                deref_attrs[str(tv[0])] = map(str, tv[1])
+                deref_attrs[bytes(tv[0])] = list(map(bytes, tv[1]))
             try:
                 self.derefRes[deref_attr].append((deref_val, deref_attrs))
             except KeyError:

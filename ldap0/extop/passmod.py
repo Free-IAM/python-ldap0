@@ -4,8 +4,6 @@ ldap0.extop.passmod - Classes for Password Modify extended operation
 (see RFC 3062)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 from . import ExtendedRequest, ExtendedResponse
 
@@ -57,7 +55,7 @@ class PassmodRequest(ExtendedRequest):
     Password Modify extended request
     """
 
-    requestName = '1.3.6.1.4.1.4203.1.11.1'
+    requestName = b'1.3.6.1.4.1.4203.1.11.1'
 
     class PasswdModifyRequestValue(univ.Sequence):
         """

@@ -3,8 +3,6 @@
 Automatic tests for module ldap0.syncrepl
 """
 
-from __future__ import absolute_import
-
 import os
 import unittest
 import shelve
@@ -46,10 +44,8 @@ sync_use_subentry
 
 # Define initial data load, both as an LDIF and as a dictionary.
 LDIF_TEMPLATE = """dn: %(suffix)s
-objectClass: dcObject
 objectClass: organization
-dc: %(dc)s
-o: %(dc)s
+o: %(o)s
 
 dn: %(rootdn)s
 objectClass: applicationProcess
@@ -81,35 +77,34 @@ cn: Foo4
 
 # NOTE: For the dict, it needs to be kept up-to-date as we make changes!
 LDAP_ENTRIES = {
-    'ou=Container,dc=slapd-test,dc=example,dc=org': {
-        'objectClass': ['organizationalUnit'],
-        'ou': ['Container']
+    b'ou=Container,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org': {
+        b'objectClass': [b'organizationalUnit'],
+        b'ou': ['Container']
     },
-    'cn=Foo2,dc=slapd-test,dc=example,dc=org': {
-        'objectClass': ['organizationalRole'],
-        'cn': ['Foo2']
+    b'cn=Foo2,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org': {
+        b'objectClass': [b'organizationalRole'],
+        b'cn': ['Foo2']
     },
-    'cn=Foo4,ou=Container,dc=slapd-test,dc=example,dc=org': {
-        'objectClass': ['organizationalRole'],
-        'cn': ['Foo4']
+    b'cn=Foo4,ou=Container,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org': {
+        b'objectClass': [b'organizationalRole'],
+        b'cn': ['Foo4']
     },
-    'cn=Manager,dc=slapd-test,dc=example,dc=org': {
-        'objectClass': ['applicationProcess', 'simpleSecurityObject'],
-        'userPassword': ['password'],
-        'cn': ['Manager']
+    b'cn=M\xc3\xa4nager,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org': {
+        b'objectClass': [b'applicationProcess', b'simpleSecurityObject'],
+        b'userPassword': ['password'],
+        b'cn': ['Manager']
     },
-    'cn=Foo3,dc=slapd-test,dc=example,dc=org': {
-        'objectClass': ['organizationalRole'],
-        'cn': ['Foo3']
+    b'cn=Foo3,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org': {
+        b'objectClass': [b'organizationalRole'],
+        b'cn': ['Foo3']
     },
-    'cn=Foo1,dc=slapd-test,dc=example,dc=org': {
-        'objectClass': ['organizationalRole'],
-        'cn': ['Foo1']
+    b'cn=Foo1,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org': {
+        b'objectClass': [b'organizationalRole'],
+        b'cn': ['Foo1']
     },
-    'dc=slapd-test,dc=example,dc=org': {
-        'objectClass': ['dcObject', 'organization'],
-        'dc': ['slapd-test'],
-        'o': ['slapd-test']
+    b'o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org': {
+        b'objectClass': [b'dcObject', b'organization'],
+        b'o': [b'xc3xb6xc3xa4xc3xbc']
     }
 }
 
@@ -146,7 +141,7 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
         self.present = []
         self.refresh_done = False
         LDAPObject.__init__(self, uri)
-        self.simple_bind_s(dn, password)
+        self.simple_bind_s(dn.encode('utf-8'), password.encode('utf-8'))
 
     def unbind_s(self):
         """
@@ -166,7 +161,7 @@ class SyncreplClient(LDAPObject, SyncreplConsumer):
             search_base,
             ldap0.SCOPE_SUBTREE,
             mode=search_mode,
-            filterstr='(objectClass=*)'
+            filterstr=b'(objectClass=*)'
         )
 
     def cancel_search(self):
@@ -253,19 +248,20 @@ class Test00_Syncrepl(SlapdTestCase):
     timeouts and cancellation are working properly.
     """
     server_class = SyncreplProvider
+    #maxDiff = None
 
     @classmethod
     def setUpClass(cls):
         super(Test00_Syncrepl, cls).setUpClass()
         # insert some Foo* objects via ldapadd
         cls.server.ldapadd(
-            LDIF_TEMPLATE % {
+            (LDIF_TEMPLATE % {
                 'suffix':cls.server.suffix,
                 'rootdn':cls.server.root_dn,
                 'rootcn':cls.server.root_cn,
                 'rootpw':cls.server.root_pw,
-                'dc': cls.server.suffix.split(',')[0][3:],
-            }
+                'o': cls.server.suffix.split(',')[0][3:],
+            }).encode('utf-8')
         )
 
     def setUp(self):
@@ -281,24 +277,24 @@ class Test00_Syncrepl(SlapdTestCase):
     def test000_syncrepl_subentry(self):
         self.assertEqual(
             self._ldap_conn.search_s(
-                self.server.suffix,
+                self.server.suffix.encode('utf-8'),
                 ldap0.SCOPE_SUBTREE,
-                ('objectClass=subentry'),
+                b'(objectClass=subentry)',
             ),
             []
         )
         self.assertEqual(
             self._ldap_conn.search_s(
-                self.server.suffix,
+                self.server.suffix.encode('utf-8'),
                 ldap0.SCOPE_SUBTREE,
-                ('objectClass=subentry'),
-                serverctrls=[SubentriesControl(True, True)],
+                b'(objectClass=subentry)',
+                req_ctrls=[SubentriesControl(True, True)],
             ),
             [(
-                'cn=ldapsync,dc=slapd-test,dc=example,dc=org',
+                b'cn=ldapsync,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org',
                 {
-                    'objectClass': ['top', 'subentry', 'syncProviderSubentry'],
-                    'cn': ['ldapsync'],
+                    b'objectClass': [b'top', b'subentry', b'syncProviderSubentry'],
+                    b'cn': [b'ldapsync'],
                 }
             )]
         )
@@ -313,7 +309,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_pw
         )
         self._ldap_conn.start_search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             'refreshOnly'
         )
 
@@ -325,7 +321,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_pw
         )
         self._ldap_conn.start_search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             'refreshAndPersist'
         )
 
@@ -339,7 +335,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_pw
         )
         self._ldap_conn.start_search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             'refreshOnly'
         )
         poll_result = self._ldap_conn.poll(
@@ -347,7 +343,10 @@ class Test00_Syncrepl(SlapdTestCase):
             timeout=None
         )
         self.assertFalse(poll_result)
-        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(
+            sorted(self._ldap_conn.dn_attrs),
+            sorted(LDAP_ENTRIES)
+        )
 
     def test_refreshAndPersist_poll_only(self):
         """
@@ -359,7 +358,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_pw
         )
         self._ldap_conn.start_search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             'refreshAndPersist'
         )
         # Make sure to stop the test before going into persist mode.
@@ -369,7 +368,10 @@ class Test00_Syncrepl(SlapdTestCase):
                 timeout=None
             )
             self.assertTrue(poll_result)
-        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(
+            sorted(self._ldap_conn.dn_attrs),
+            sorted(LDAP_ENTRIES)
+        )
 
     def test_refreshAndPersist_timeout(self):
         """
@@ -381,7 +383,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_pw
         )
         self._ldap_conn.start_search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             'refreshAndPersist'
         )
         # Run a quick refresh, that shouldn't have any changes.
@@ -392,7 +394,10 @@ class Test00_Syncrepl(SlapdTestCase):
             )
             self.assertTrue(poll_result)
         # Again, server data should not have changed.
-        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(
+            sorted(self._ldap_conn.dn_attrs),
+            sorted(LDAP_ENTRIES)
+        )
         # Run a search with timeout.
         # Nothing is changing the server, so it shoud timeout.
         self.assertRaises(
@@ -412,7 +417,7 @@ class Test00_Syncrepl(SlapdTestCase):
             self.server.root_pw
         )
         self._ldap_conn.start_search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             'refreshAndPersist'
         )
         # Run a quick refresh, that shouldn't have any changes.
@@ -423,7 +428,10 @@ class Test00_Syncrepl(SlapdTestCase):
             )
             self.assertTrue(poll_result)
         # Again, server data should not have changed.
-        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(
+            sorted(self._ldap_conn.dn_attrs),
+            sorted(LDAP_ENTRIES)
+        )
         # Request cancellation.
         self._ldap_conn.cancel_search()
         # Run another poll, without timeout, but which should cancel out.
@@ -434,7 +442,10 @@ class Test00_Syncrepl(SlapdTestCase):
             timeout=None
         )
         # Server data should still be intact.
-        self.assertEqual(self._ldap_conn.dn_attrs, LDAP_ENTRIES)
+        self.assertEqual(
+            sorted(self._ldap_conn.dn_attrs),
+            sorted(LDAP_ENTRIES)
+        )
 
     @unittest.skip('not yet implemented')
     def test_data_store1(self):

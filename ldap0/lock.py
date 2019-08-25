@@ -3,8 +3,6 @@
 ldap0.lock -- specific lock class with logging
 """
 
-from __future__ import absolute_import
-
 import logging
 import threading
 
@@ -12,7 +10,7 @@ import ldap0
 from .__about__ import __version__, __author__, __license__
 
 
-class LDAPLock(object):
+class LDAPLock:
     """
     Mainly a wrapper class to log all locking events.
     Note that this cumbersome approach with _lock attribute was taken

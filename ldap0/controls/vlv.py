@@ -4,8 +4,6 @@ ldap0.controls.vlv - classes for Virtual List View
 (see draft-ietf-ldapext-ldapv3-vlv)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
@@ -140,7 +138,7 @@ class VLVResponseControl(ResponseControl):
         self.virtualListViewResult = int(virtual_list_view_result)
         context_id = drv.getComponentByName('contextID')
         if context_id.hasValue():
-            self.contextID = str(context_id)
+            self.contextID = bytes(context_id)
         else:
             self.contextID = None
 

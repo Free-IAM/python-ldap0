@@ -1,6 +1,6 @@
 #include "common.h"
 #include "errors.h"
-#include "LDAPObject.h"
+#include "ldapobject.h"
 #include "ldapcontrol.h"
 #include "options.h"
 
@@ -128,7 +128,7 @@ LDAP_set_option(LDAPObject *self, int option, PyObject *value)
         case LDAP_OPT_X_SASL_SECPROPS:
 #endif
             /* String valued options */
-            if (!PyArg_Parse(value, "s:set_option", &strval))
+            if (!PyArg_Parse(value, "y:set_option", &strval))
                 return 0;
             ptr = strval;
             break;
@@ -270,7 +270,7 @@ LDAP_get_option(LDAPObject *self, int option)
           if (self) LDAP_END_ALLOW_THREADS(self);
           if (res != LDAP_OPT_SUCCESS)
         return option_error(res, "ldap_get_option");
-          return PyInt_FromLong(intval);
+          return PyLong_FromLong(intval);
 
         case LDAP_OPT_HOST_NAME:
         case LDAP_OPT_URI:

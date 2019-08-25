@@ -85,7 +85,7 @@ LDAPerror( LDAP *l, char *msg )
         Py_XDECREF(str);
 
         if (myerrno != 0) {
-            pyerrno = PyInt_FromLong(myerrno);
+            pyerrno = PyLong_FromLong(myerrno);
             if (pyerrno)
                 PyDict_SetItemString( info, "errno", pyerrno );
             Py_XDECREF(pyerrno);
@@ -95,7 +95,7 @@ LDAPerror( LDAP *l, char *msg )
             if (*matched != '\0') {
                 str = PyBytes_FromString(matched);
                 if (str)
-                    PyDict_SetItemString( info, "matched", str );
+                    PyDict_SetItemString(info, "matched", str);
                 Py_XDECREF(str);
             }
             ldap_memfree(matched);
@@ -110,7 +110,7 @@ LDAPerror( LDAP *l, char *msg )
             if (error != NULL && *error != '\0') {
                 str = PyBytes_FromString(error);
                 if (str)
-                    PyDict_SetItemString( info, "info", str );
+                    PyDict_SetItemString(info, "info", str);
                 Py_XDECREF(str);
             }
             ldap_memfree(error);

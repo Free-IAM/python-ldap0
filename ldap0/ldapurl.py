@@ -3,8 +3,6 @@
 ldap0.ldapurl - handling of LDAP URLs as described in RFC 4516
 """
 
-from __future__ import absolute_import
-
 from .__about__ import __version__, __author__, __license__
 
 __all__ = [
@@ -15,17 +13,19 @@ __all__ = [
     'LDAP_SCOPE_ONELEVEL',
     'LDAP_SCOPE_SUBTREE',
     # functions
-    'isLDAPUrl',
+    'is_ldapurl',
     # classes
     'LDAPUrlExtension',
     'LDAPUrlExtensions',
     'LDAPUrl'
 ]
 
-from .compat import url_quote
-from .compat import url_unquote
+from urllib.parse import (
+    quote as url_quote,
+    unquote as url_unquote,
+)
 
-from .compat import User_Dict
+from collections import UserDict
 
 LDAP_SCOPE_BASE = 0
 LDAP_SCOPE_ONELEVEL = 1
@@ -57,7 +57,7 @@ SEARCH_SCOPE = {
 }
 
 
-def isLDAPUrl(val):
+def is_ldapurl(val):
     """
     Returns True if s is a LDAP URL, False else
     """
@@ -68,12 +68,12 @@ def isLDAPUrl(val):
     return scheme.lower() in LDAPURL_SCHEMES
 
 
-def ldapUrlEscape(val):
+def escape_str(val):
     """Returns URL encoding of string s"""
-    return url_quote(val).replace(',', '%2C').replace('/', '%2F')
+    return url_quote(val, safe='', encoding='utf-8').replace(',', '%2C').replace('/', '%2F')
 
 
-class LDAPUrlExtension(object):
+class LDAPUrlExtension:
     """
     Class for parsing and unparsing LDAP URL extensions
     as described in RFC 4516.
@@ -115,7 +115,7 @@ class LDAPUrlExtension(object):
             # No value, just the extype
             self.extype, self.exvalue = extension, None
         else:
-            self.exvalue = url_unquote(self.exvalue.strip())
+            self.exvalue = url_unquote(self.exvalue.strip(), encoding='utf-8')
         self.extype = self.extype.strip()
 
     def unparse(self):
@@ -127,7 +127,7 @@ class LDAPUrlExtension(object):
         return '%s%s=%s' % (
             '!'*(self.critical > 0),
             self.extype,
-            ldapUrlEscape(self.exvalue or ''),
+            escape_str(self.exvalue or ''),
         )
 
     def __str__(self):
@@ -151,14 +151,14 @@ class LDAPUrlExtension(object):
         return not self.__eq__(other)
 
 
-class LDAPUrlExtensions(User_Dict):
+class LDAPUrlExtensions(UserDict):
     """
     Models a collection of LDAP URL extensions as
     dictionary type
     """
 
     def __init__(self, default=None):
-        User_Dict.__init__(self)
+        UserDict.__init__(self)
         for key, val in (default or {}).items():
             self[key] = val
 
@@ -211,7 +211,7 @@ class LDAPUrlExtensions(User_Dict):
         return ','.join([val.unparse() for val in self.values()])
 
 
-class LDAPUrl(object):
+class LDAPUrl:
     """
     Class for parsing and unparsing LDAP URLs
     as described in RFC 4516.
@@ -291,7 +291,7 @@ class LDAPUrl(object):
         parse a LDAP URL and set the class attributes
         urlscheme,host,dn,attrs,scope,filterstr,extensions
         """
-        if not isLDAPUrl(ldap_url):
+        if not is_ldapurl(ldap_url):
             raise ValueError('Value %r for ldap_url does not seem to be a LDAP URL.' % (ldap_url))
         scheme, rest = ldap_url.split('://', 1)
         self.urlscheme = scheme.strip()
@@ -301,18 +301,18 @@ class LDAPUrl(object):
         qemark_pos = rest.find('?')
         if (slash_pos == -1) and (qemark_pos == -1):
             # No / and ? found at all
-            self.hostport = url_unquote(rest)
+            self.hostport = url_unquote(rest, encoding='utf-8')
             self.dn = ''
             return
         else:
             if slash_pos != -1 and (qemark_pos == -1 or (slash_pos < qemark_pos)):
                 # Slash separates DN from hostport
-                self.hostport = url_unquote(rest[:slash_pos])
+                self.hostport = url_unquote(rest[:slash_pos], encoding='utf-8')
                 # Eat the slash from rest
                 rest = rest[slash_pos+1:]
             elif qemark_pos != 1 and (slash_pos == -1 or (slash_pos > qemark_pos)):
                 # Question mark separates hostport from rest, DN is assumed to be empty
-                self.hostport = url_unquote(rest[:qemark_pos])
+                self.hostport = url_unquote(rest[:qemark_pos], encoding='utf-8')
                 # Do not eat question mark
                 rest = rest[qemark_pos:]
             else:
@@ -320,9 +320,9 @@ class LDAPUrl(object):
         paramlist = rest.split('?', 4)
         paramlist_len = len(paramlist)
         if paramlist_len >= 1:
-            self.dn = url_unquote(paramlist[0]).strip()
+            self.dn = url_unquote(paramlist[0], encoding='utf-8').strip()
         if (paramlist_len >= 2) and (paramlist[1]):
-            self.attrs = url_unquote(paramlist[1].strip()).split(',')
+            self.attrs = url_unquote(paramlist[1].strip(), encoding='utf-8').split(',')
         if paramlist_len >= 3:
             scope = paramlist[2].strip()
             try:
@@ -334,7 +334,7 @@ class LDAPUrl(object):
             if not filterstr:
                 self.filterstr = None
             else:
-                self.filterstr = url_unquote(filterstr)
+                self.filterstr = url_unquote(filterstr, encoding='utf-8')
         if paramlist_len >= 5:
             if paramlist[4]:
                 self.extensions = LDAPUrlExtensions()
@@ -350,16 +350,10 @@ class LDAPUrl(object):
         """
         if self.urlscheme == 'ldapi':
             # hostport part might contain slashes when ldapi:// is used
-            hostport = ldapUrlEscape(self.hostport)
+            hostport = escape_str(self.hostport)
         else:
             hostport = self.hostport
         return '%s://%s' % (self.urlscheme, hostport)
-
-    def initializeUrl(self):
-        """
-        backward-compatible wrapper for LDAPUrl.connect_uri()
-        """
-        return self.connect_uri()
 
     def unparse(self):
         """
@@ -373,11 +367,11 @@ class LDAPUrl(object):
         if self.filterstr is None:
             filterstr = ''
         else:
-            filterstr = ldapUrlEscape(self.filterstr)
-        dn = ldapUrlEscape(self.dn)
+            filterstr = escape_str(self.filterstr)
+        dn = escape_str(self.dn)
         if self.urlscheme == 'ldapi':
             # hostport part might contain slashes when ldapi:// is used
-            hostport = ldapUrlEscape(self.hostport)
+            hostport = escape_str(self.hostport)
         else:
             hostport = self.hostport
         ldap_url = '%s://%s/%s?%s?%s?%s' % (
@@ -428,11 +422,10 @@ class LDAPUrl(object):
         return self.unparse()
 
     def __repr__(self):
-        return '<%s.%s instance at %s: %s>' % (
+        return '%s.%s(%r)' % (
             self.__class__.__module__,
             self.__class__.__name__,
-            hex(id(self)),
-            self.__dict__
+            self.__str__(),
         )
 
     def __getattr__(self, name):
@@ -441,7 +434,7 @@ class LDAPUrl(object):
             if self.extensions and \
                extype in self.extensions and \
                not self.extensions[extype].exvalue is None:
-                result = url_unquote(self.extensions[extype].exvalue)
+                result = url_unquote(self.extensions[extype].exvalue, encoding='utf-8')
             else:
                 return None
         else:
@@ -461,7 +454,7 @@ class LDAPUrl(object):
                 # Add appropriate extension
                 self.extensions[extype] = LDAPUrlExtension(
                     extype=extype,
-                    exvalue=url_unquote(value),
+                    exvalue=url_unquote(value, encoding='utf-8'),
                 )
         else:
             self.__dict__[name] = value
