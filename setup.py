@@ -70,7 +70,7 @@ setup(
     author_email='michael@stroeder.com',
     maintainer=__about__.__author__,
     maintainer_email='michael@stroeder.com',
-    url='https://pypi.org/project/%s/' % (PKG_NAME),
+    url='https://gitlab.com/ae-dir/python-%s' % (PKG_NAME),
     download_url='https://pypi.python.org/pypi/%s/' % (PKG_NAME),
     keywords=[
         'LDAP',
