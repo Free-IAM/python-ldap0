@@ -3,22 +3,19 @@
 Automatic tests for module ldap0.filter
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-
 # from Python's standard lib
 import time
 import unittest
 from collections import OrderedDict
 
-from ldap0.functions import strf_secs
+from ldap0.functions import strf_secs, escape_format
 from ldap0.filter import \
-    escape_filter_chars, \
+    escape_str, \
+    escape_bytes, \
     negate_filter, \
     map_filter_parts, \
     compose_filter, \
     time_span_filter, \
-    filter_format, \
     dict_filter
 
 
@@ -27,183 +24,127 @@ class TestFilter(unittest.TestCase):
     test ldap0.filter
     """
 
-    def test000_escape_filter_chars_mode0(self):
+    def test000_escape_str(self):
         """
-        test function escape_filter_chars() with escape_mode=0
+        test function ldap0.filter.escape_str()
         """
-        self.assertEqual(
-            escape_filter_chars(b'foobar'),
-            b'foobar'
-        )
-        self.assertEqual(
-            escape_filter_chars(b'foo\\bar'),
-            b'foo\\5cbar'
-        )
-        self.assertEqual(
-            escape_filter_chars(
-                b'foo\\bar',
-                escape_mode=0
-            ),
-            b'foo\\5cbar'
-        )
-        self.assertEqual(
-            escape_filter_chars(
-                b'T\xc3\xa4ster',
-                escape_mode=0
-            ),
-            b'T\xc3\xa4ster'
-        )
+        self.assertEqual(escape_str('foobar'), 'foobar')
+        self.assertEqual(escape_str('foo\\bar'), 'foo\\5cbar')
+        self.assertEqual(escape_str('foo*bar'), 'foo\\2abar')
+        self.assertEqual(escape_str('Täster'), 'Täster')
 
-    def test001_escape_filter_chars_mode1(self):
+    def test001_escape_bytes(self):
         """
-        test function escape_filter_chars() with escape_mode=1
-        """
-        self.assertEqual(
-            escape_filter_chars(
-                b'\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f',
-                escape_mode=1
-            ),
-            b'\\c3\\a4\\c3\\b6\\c3\\bc\\c3\\84\\c3\\96\\c3\\9c\\c3\\9f'
-        )
-        self.assertEqual(
-            escape_filter_chars(b'(foo*bar)', escape_mode=1),
-            b'\\28foo\\2abar\\29'
-        )
-
-    def test002_escape_filter_chars_mode2(self):
-        """
-        test function escape_filter_chars() with escape_mode=2
+        test function ldap0.filter.escape_bytes()
         """
         self.assertEqual(
-            escape_filter_chars(
-                b'foobar',
-                escape_mode=2
-            ),
-            b'\\66\\6f\\6f\\62\\61\\72'
+            escape_bytes(b'\xc3\xa4\xc3\xb6\xc3\xbc\xc3\x84\xc3\x96\xc3\x9c\xc3\x9f'),
+            '\\c3\\a4\\c3\\b6\\c3\\bc\\c3\\84\\c3\\96\\c3\\9c\\c3\\9f'
         )
-
-    def test003_escape_filter_chars_mode666(self):
-        """
-        test function escape_filter_chars() with escape_mode=2
-        """
-        with self.assertRaises(ValueError):
-            escape_filter_chars(b'foobar', escape_mode=666)
 
     def test004_negate_filter(self):
-        self.assertEqual(negate_filter(b'(objectClass=*)'), b'(!(objectClass=*))')
-        self.assertEqual(negate_filter(b'(!(objectClass=*))'), b'(objectClass=*)')
-        self.assertEqual(negate_filter(b'(!(!(objectClass=*)))'), b'(!(objectClass=*))')
+        self.assertEqual(negate_filter('(objectClass=*)'), '(!(objectClass=*))')
+        self.assertEqual(negate_filter('(!(objectClass=*))'), '(objectClass=*)')
+        self.assertEqual(negate_filter('(!(!(objectClass=*)))'), '(!(objectClass=*))')
 
     def test005_map_filter_parts(self):
-        self.assertEqual(map_filter_parts(b'foo', []), [])
+        self.assertEqual(map_filter_parts('foo', []), [])
         self.assertEqual(
-            map_filter_parts(b'foo', [b'1', b'2']),
-            [b'(foo=1)', b'(foo=2)']
+            map_filter_parts('foo', ['1', '2']),
+            ['(foo=1)', '(foo=2)']
         )
         self.assertEqual(
-            map_filter_parts(b'sn', [b'T\xc3\xa4ster', b'M\xc3\xbcller'], escape_mode=1),
-            [b'(sn=T\\c3\\a4ster)', b'(sn=M\\c3\\bcller)']
-        )
-        self.assertEqual(
-            map_filter_parts(b'foo', [b'1', b'2'], escape_mode=2),
-            [b'(foo=\\31)', b'(foo=\\32)']
-        )
-        self.assertEqual(
-            map_filter_parts(b'sn', [b'T\xc3\xa4ster', b'M\xc3\xbcller'], escape_mode=2),
-            [b'(sn=\\54\\c3\\a4\\73\\74\\65\\72)', b'(sn=\\4d\\c3\\bc\\6c\\6c\\65\\72)']
+            map_filter_parts('sn', ['Täster', 'Müller']),
+            ['(sn=Täster)', '(sn=Müller)']
         )
 
     def test007_compose_filter(self):
-        self.assertEqual(compose_filter(b'', []), b'')
-        self.assertEqual(compose_filter(b'&', []), b'')
-        self.assertEqual(compose_filter(b'|', []), b'')
+        self.assertEqual(compose_filter('', []), '')
+        self.assertEqual(compose_filter('&', []), '')
+        self.assertEqual(compose_filter('|', []), '')
         self.assertEqual(
-            compose_filter(b'|', map_filter_parts(b'foo', [b'1'])),
-            b'(foo=1)'
+            compose_filter('|', map_filter_parts('foo', ['1'])),
+            '(foo=1)'
         )
         self.assertEqual(
-            compose_filter(b'|', map_filter_parts(b'foo', [b'1', b'2'])),
-            b'(|(foo=1)(foo=2))'
-        )
-        self.assertEqual(
-            compose_filter(
-                b'|',
-                map_filter_parts(b'foo', [b'1', b'2'], escape_mode=2)
-            ),
-            b'(|(foo=\\31)(foo=\\32))'
+            compose_filter('|', map_filter_parts('foo', ['1', '2'])),
+            '(|(foo=1)(foo=2))'
         )
 
     def test008_dict_filter(self):
-        self.assertEqual(dict_filter({}), b'')
-        self.assertEqual(dict_filter({b'foo': [b'bar']}), b'(foo=bar)')
+        self.assertEqual(dict_filter({}), '')
+        self.assertEqual(dict_filter({'foo': ['bar']}), '(foo=bar)')
         self.assertEqual(
-            dict_filter({b'foo': [b'bar1', b'bar2']}),
-            b'(&(foo=bar1)(foo=bar2))'
+            dict_filter({'foo': ['bar1', 'bar2']}),
+            '(&(foo=bar1)(foo=bar2))'
         )
         self.assertEqual(
-            dict_filter({b'foo': [b'bar1', b'bar2']}, iop=b'|'), b'(|(foo=bar1)(foo=bar2))'
-        )
-        self.assertEqual(
-            dict_filter(
-                OrderedDict([(b'foo1', [b'bar1', b'bar2']), (b'foo2', [b'bar1', b'bar2'])]),
-                iop=b'|'
-            ),
-            b'(&(|(foo1=bar1)(foo1=bar2))(|(foo2=bar1)(foo2=bar2)))'
+            dict_filter({'foo': ['bar1', 'bar2']}, iop='|'), '(|(foo=bar1)(foo=bar2))'
         )
         self.assertEqual(
             dict_filter(
-                OrderedDict([(b'foo1', [b'bar1', b'bar2']), (b'foo2', [b'bar1', b'bar2'])]),
-                oop=b'|'
+                OrderedDict([('foo1', ['bar1', 'bar2']), ('foo2', ['bar1', 'bar2'])]),
+                iop='|'
             ),
-            b'(|(&(foo1=bar1)(foo1=bar2))(&(foo2=bar1)(foo2=bar2)))'
+            '(&(|(foo1=bar1)(foo1=bar2))(|(foo2=bar1)(foo2=bar2)))'
         )
         self.assertEqual(
             dict_filter(
-                OrderedDict([(b'foo1', [b'T\xc3\xa4ster', b'M\xc3\xbcller']), (b'foo2', [b'T\xc3\xa4ster', b'M\xc3\xbcller'])]),
-                oop=b'|'
+                OrderedDict([('foo1', ['bar1', 'bar2']), ('foo2', ['bar1', 'bar2'])]),
+                oop='|'
             ),
-            b'(|(&(foo1=T\xc3\xa4ster)(foo1=M\xc3\xbcller))(&(foo2=T\xc3\xa4ster)(foo2=M\xc3\xbcller)))'
+            '(|(&(foo1=bar1)(foo1=bar2))(&(foo2=bar1)(foo2=bar2)))'
+        )
+        self.assertEqual(
+            dict_filter(
+                OrderedDict([('foo1', ['T\xc3\xa4ster', 'M\xc3\xbcller']), ('foo2', ['T\xc3\xa4ster', 'M\xc3\xbcller'])]),
+                oop='|'
+            ),
+            '(|(&(foo1=T\xc3\xa4ster)(foo1=M\xc3\xbcller))(&(foo2=T\xc3\xa4ster)(foo2=M\xc3\xbcller)))'
         )
 
-    def test009_filter_format(self):
-        self.assertEqual(filter_format(b'', ()), b'')
-        self.assertEqual(filter_format(b'(%s=%s)', (b'foo', b'bar')), b'(foo=bar)')
-        self.assertEqual(filter_format(b'(|(cn=%s)(cn=%s))', (b'foo', b'bar')), b'(|(cn=foo)(cn=bar))')
-        with self.assertRaises(TypeError):
-            filter_format(b'', (b'foo', b'bar'))
+    def test009_escape_format_with_filter(self):
+        self.assertEqual(escape_format(escape_str, ''), '')
+        self.assertEqual(escape_format(escape_str, '', 'foo', 'bar'), '')
+        self.assertEqual(escape_format(escape_str, '({}={})', 'foo', 'bar'), '(foo=bar)')
+        self.assertEqual(escape_format(escape_str, '(|(cn={})(cn={}))', 'foo', 'bar'), '(|(cn=foo)(cn=bar))')
+        self.assertEqual(escape_format(escape_str, '(|(cn={})(cn={}))', 'fo*o', 'ba\\r'), '(|(cn=fo\\2ao)(cn=ba\\5cr))')
+        self.assertEqual(escape_format(escape_str, '(|(cn={arg1})(cn={arg2}))', arg1='foo', arg2='bar'), '(|(cn=foo)(cn=bar))')
+        self.assertEqual(escape_format(escape_str, '(|(cn={arg1})(cn={arg2}))', arg1='fo*o', arg2='ba\\r'), '(|(cn=fo\\2ao)(cn=ba\\5cr))')
+        self.assertEqual(escape_format(escape_str, '(|({0}={arg1})({1}={arg2}))', 'foo', 'bar', arg1='fo*o', arg2='ba\\r'), '(|(foo=fo\\2ao)(bar=ba\\5cr))')
 
     def test010_time_span_filter(self):
         self.assertEqual(
             time_span_filter(until_timestamp=0),
-            b'(&(modifyTimestamp>=19700101000000Z)(!(modifyTimestamp>=19700101000000Z)))',
+            '(&(modifyTimestamp>=19700101000000Z)(!(modifyTimestamp>=19700101000000Z)))',
         )
         self.assertEqual(
             time_span_filter(
                 from_timestamp=1000000,
                 until_timestamp=1546101638,
-                delta_attr=b'foo',
+                delta_attr='foo',
             ),
-            b'(&(foo>=19700112134640Z)(!(foo>=20181229164038Z)))',
+            '(&(foo>=19700112134640Z)(!(foo>=20181229164038Z)))',
         )
         with self.assertRaises(ValueError):
             time_span_filter(from_timestamp=1, until_timestamp=0)
         # test time.time() based filter
         before = time.time()
-        flt = time_span_filter(delta_attr=b'foo')
+        flt = time_span_filter(delta_attr='foo')
         after = time.time()
         results = set([
-            b'(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(before).encode('ascii')),
-            b'(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(after).encode('ascii')),
+            '(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(before)),
+            '(&(foo>=19700101000000Z)(!(foo>=%s)))' % (strf_secs(after)),
         ])
         self.assertIn(flt, results)
         # test time.time() based filter with relative from_timestamp
         fts = -10
         before = time.time()
-        flt = time_span_filter(from_timestamp=fts, delta_attr=b'foo')
+        flt = time_span_filter(from_timestamp=fts, delta_attr='foo')
         after = time.time()
         results = set([
-            b'(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(before+fts).encode('ascii'), strf_secs(before).encode('ascii')),
-            b'(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(after+fts).encode('ascii'), strf_secs(after).encode('ascii')),
+            '(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(before+fts), strf_secs(before)),
+            '(&(foo>=%s)(!(foo>=%s)))' % (strf_secs(after+fts), strf_secs(after)),
         ])
         self.assertIn(flt, results)
 

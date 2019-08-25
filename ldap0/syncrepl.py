@@ -3,8 +3,6 @@
 ldap0.syncrepl - for implementing syncrepl consumer (see RFC 4533)
 """
 
-from __future__ import absolute_import
-
 from uuid import UUID
 
 # Imports from pyasn1
@@ -305,7 +303,7 @@ class SyncInfoMessage:
     1.3.6.1.4.1.4203.1.9.1.4 and responseValue contains a BER-encoded
     syncInfoValue.  The criticality is FALSE (and hence absent).
     """
-    responseName = '1.3.6.1.4.1.4203.1.9.1.4'
+    responseName = b'1.3.6.1.4.1.4203.1.9.1.4'
 
     def __init__(self, encodedMessage):
         d = decoder.decode(encodedMessage, asn1Spec=SyncInfoValue())
@@ -355,7 +353,7 @@ class SyncreplConsumer:
 
         base, scope, and search_args are passed along to
         self.search_ext unmodified (aside from adding a Sync
-        Request control to any serverctrls provided).
+        Request control to any req_ctrls provided).
 
         mode provides syncrepl mode. Can be 'refreshOnly'
         to finish after synchronization, or
@@ -378,10 +376,10 @@ class SyncreplConsumer:
 
         syncreq = SyncRequestControl(cookie=cookie, mode=mode)
 
-        if 'serverctrls' in search_args:
-            search_args['serverctrls'] += [syncreq]
+        if 'req_ctrls' in search_args:
+            search_args['req_ctrls'] += [syncreq]
         else:
-            search_args['serverctrls'] = [syncreq]
+            search_args['req_ctrls'] = [syncreq]
 
         self.__refreshDone = False
         return self.search(base, scope, **search_args)

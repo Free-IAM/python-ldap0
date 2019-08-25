@@ -3,10 +3,9 @@
 ldap0.controls.openldap - classes for OpenLDAP-specific controls
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
-from . import ValueLessRequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
+from . import ResponseControl, KNOWN_RESPONSE_CONTROLS
+from .simple import ValueLessRequestControl
 
 import _libldap0
 

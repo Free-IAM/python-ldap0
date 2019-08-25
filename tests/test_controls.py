@@ -3,8 +3,6 @@
 Simple tests for module ldap0.controls
 """
 
-from __future__ import absolute_import
-
 # from Python's standard lib
 import unittest
 
@@ -119,7 +117,8 @@ class TestVirtualListView(unittest.TestCase):
     test class for ldap0.controls.vlv
     """
 
-    def test_vlv(self):
+    @unittest.skip('Test vectors not verified')
+    def test001_vlv_request_control(self):
         vrc = VLVRequestControl(
             criticality=True,
             before_count=10,
@@ -140,6 +139,8 @@ class TestVirtualListView(unittest.TestCase):
             context_id=None,
         )
         self.assertEqual(vrc.encodeControlValue(), b'0\n\x02\x01\n\x02\x01\x14\x81\x0210')
+
+    def test002_vlv_response_control(self):
         vrc = VLVResponseControl(criticality=True)
         with self.assertRaises(PyAsn1Error):
             vrc.decodeControlValue(b'\xFF')

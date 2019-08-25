@@ -44,10 +44,10 @@ The :mod:`ldap0.ldapurl` module exports the following constants:
 Functions
 =========
 
-.. autofunction:: ldap0.ldapurl.isLDAPUrl
+.. autofunction:: ldap0.ldapurl.is_ldapurl
 
 
-.. autofunction:: ldap0.ldapurl.ldapUrlEscape
+.. autofunction:: ldap0.ldapurl.escape_str
 
 
 Classes

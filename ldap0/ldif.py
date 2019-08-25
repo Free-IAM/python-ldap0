@@ -3,17 +3,18 @@
 ldap0.ldif - generate and parse LDIF data (see RFC 2849)
 """
 
-from __future__ import absolute_import
-
 import re
-from base64 import b64encode, b64decode
+from binascii import a2b_base64, b2a_base64
+from binascii import Error as binascii_Error
+from urllib.request import urlopen
+from urllib.parse import urlparse
+from io import BytesIO
 
+import _libldap0
 from _libldap0 import MOD_ADD, MOD_DELETE, MOD_REPLACE, MOD_INCREMENT
 
-from .compat import url_open, url_parse
-from .compat import StringIO
 from .__about__ import __version__, __author__, __license__
-from .dn import is_dn
+from .functions import _libldap0_function_call
 
 __all__ = [
     'LDIFWriter',
@@ -21,33 +22,33 @@ __all__ = [
 ]
 
 MOD_OP_INTEGER = {
-    'add': MOD_ADD,
-    'delete': MOD_DELETE,
-    'replace': MOD_REPLACE,
-    'increment': MOD_INCREMENT,
+    b'add': MOD_ADD,
+    b'delete': MOD_DELETE,
+    b'replace': MOD_REPLACE,
+    b'increment': MOD_INCREMENT,
 }
 
 MOD_OP_STR = {
-    MOD_ADD: 'add',
-    MOD_DELETE: 'delete',
-    MOD_REPLACE: 'replace',
-    MOD_INCREMENT: 'increment',
+    MOD_ADD: b'add',
+    MOD_DELETE: b'delete',
+    MOD_REPLACE: b'replace',
+    MOD_INCREMENT: b'increment',
 }
 
-CHANGE_TYPES = {'add', 'delete', 'modify', 'modrdn'}
+CHANGE_TYPES = {b'add', b'delete', b'modify', b'modrdn'}
 
 SAFE_STRING_PATTERN = '(^(\000|\n|\r| |:|<)|[\000\n\r\200-\377]+|[ ]+$)'
 SAFE_STRING_RE = re.compile(SAFE_STRING_PATTERN)
 
 
-class LDIFWriter(object):
+class LDIFWriter:
     """
     Write LDIF entry or change records to file object
     Copy LDIF input to a file output object containing all data retrieved
     via URLs
     """
 
-    def __init__(self, output_file, base64_attrs=None, cols=76, line_sep='\n'):
+    def __init__(self, output_file, base64_attrs=None, cols=76, line_sep=b'\n'):
         """
         output_file
             file object for output
@@ -81,7 +82,7 @@ class LDIFWriter(object):
             self._output_file.write(line[0:min(line_len, self._cols)])
             self._output_file.write(self._last_line_sep)
             while pos < line_len:
-                self._output_file.write(' ')
+                self._output_file.write(b' ')
                 self._output_file.write(line[pos:min(line_len, pos+self._cols-1)])
                 self._output_file.write(self._last_line_sep)
                 pos = pos+self._cols-1
@@ -92,8 +93,10 @@ class LDIFWriter(object):
         returns True if attr_value has to be base-64 encoded because
         of special chars or because attr_type is in self._base64_attrs
         """
-        return attr_type.lower() in self._base64_attrs or \
-               SAFE_STRING_RE.search(attr_value) is not None
+        return (
+            attr_type.lower() in self._base64_attrs or
+            SAFE_STRING_RE.search(attr_value.decode('utf-8')) is not None
+        )
 
     def _unparse_attr_type_and_value(self, attr_type, attr_value):
         """
@@ -104,13 +107,15 @@ class LDIFWriter(object):
         attr_value
               attribute value
         """
+        assert isinstance(attr_type, bytes), TypeError('Expected bytes for attr_type, got %r' % (attr_type,))
+        assert isinstance(attr_value, bytes), TypeError('Expected bytes for attr_value, got %r' % (attr_value,))
         if self._needs_base64_encoding(attr_type, attr_value):
             # Encode with base64
-            aval = b64encode(attr_value)
-            sep = ':: '
+            aval = b2a_base64(attr_value, newline=False)
+            sep = b':: '
         else:
             aval = attr_value
-            sep = ': '
+            sep = b': '
         self._unfold_lines(sep.join((attr_type, aval)))
         return # _unparseAttrTypeandValue()
 
@@ -128,14 +133,14 @@ class LDIFWriter(object):
         modlist
             list of additions (2-tuple) or modifications (3-tuple)
         """
-        self._unparse_attr_type_and_value('changetype', 'modify')
+        self._unparse_attr_type_and_value(b'changetype', b'modify')
         for mod in modlist:
             mod_op, mod_type, mod_vals = mod
             self._unparse_attr_type_and_value(MOD_OP_STR[mod_op], mod_type)
             if mod_vals:
                 for mod_val in mod_vals:
                     self._unparse_attr_type_and_value(mod_type, mod_val)
-            self._output_file.write('-'+self._last_line_sep)
+            self._output_file.write(b'-'+self._last_line_sep)
 
     def unparse(self, dn, record):
         """
@@ -146,7 +151,7 @@ class LDIFWriter(object):
               or a list with a modify list like for LDAPObject.modify().
         """
         # Start with line containing the distinguished name
-        self._unparse_attr_type_and_value('dn', dn)
+        self._unparse_attr_type_and_value(b'dn', dn)
         # Dispatch to record type specific writers
         if isinstance(record, dict):
             self._unparse_entry_record(record)
@@ -161,7 +166,7 @@ class LDIFWriter(object):
         return # unparse()
 
 
-class LDIFParser(object):
+class LDIFParser:
     """
     Base class for a LDIF parser. Applications should sub-class this
     class and override method handle() to implement something meaningful.
@@ -178,7 +183,7 @@ class LDIFParser(object):
             ignored_attr_types=None,
             max_entries=None,
             process_url_schemes=None,
-            line_sep='\n'
+            line_sep=b'\n'
         ):
         """
         Parameters:
@@ -207,17 +212,16 @@ class LDIFParser(object):
         self.byte_counter = 0
         self.records_read = 0
         self.changetype_counter = {}.fromkeys(CHANGE_TYPES, 0)
-        # Store some symbols for better performance
-        self._b64decode = b64decode
         # Read very first line
         try:
             self._last_line = self._readline()
         except EOFError:
-            self._last_line = ''
+            self._last_line = b''
 
     @classmethod
-    def fromstring(cls, ldif_str, **kwargs):
-        return cls(StringIO(ldif_str), **kwargs)
+    def frombuf(cls, ldif_bytes, **kwargs):
+        assert isinstance(ldif_bytes, bytes), TypeError('Expected bytes for ldif_bytes, got %r' % (ldif_bytes,))
+        return cls(BytesIO(ldif_bytes), **kwargs)
 
     def _readline(self):
         line = self._input_file.readline()
@@ -225,9 +229,9 @@ class LDIFParser(object):
         self.byte_counter = self.byte_counter + len(line)
         if not line:
             return None
-        elif line[-2:] == '\r\n':
+        elif line[-2:] == b'\r\n':
             return line[:-2]
-        elif line[-1:] == '\n':
+        elif line[-1:] == b'\n':
             return line[:-1]
         return line
 
@@ -242,11 +246,11 @@ class LDIFParser(object):
             ))
         unfolded_lines = [self._last_line]
         next_line = self._readline()
-        while next_line and next_line[0] == ' ':
+        while next_line and next_line[0:1] == b' ':
             unfolded_lines.append(next_line[1:])
             next_line = self._readline()
         self._last_line = next_line
-        return ''.join(unfolded_lines)
+        return b''.join(unfolded_lines)
 
     def _next_key_and_value(self):
         """
@@ -256,31 +260,36 @@ class LDIFParser(object):
         # Reading new attribute line
         unfolded_line = self._unfold_lines()
         # Ignore comments which can also be folded
-        while unfolded_line and unfolded_line[0] == '#':
+        while unfolded_line and unfolded_line[0:1] == b'#':
             unfolded_line = self._unfold_lines()
         if not unfolded_line:
             return None, None
-        if unfolded_line == '-':
-            return '-', None
+        if unfolded_line == b'-':
+            return b'-', None
         try:
-            colon_pos = unfolded_line.index(':')
+            colon_pos = unfolded_line.index(b':')
         except ValueError:
-            raise ValueError('no value-spec in %r' % (unfolded_line))
+            raise ValueError('no value-spec in %r' % (unfolded_line,))
         attr_type = unfolded_line[0:colon_pos]
         # if needed attribute value is BASE64 decoded
         value_spec = unfolded_line[colon_pos:colon_pos+2]
-        if value_spec == ': ':
+        if value_spec == b': ':
             attr_value = unfolded_line[colon_pos+2:].lstrip()
-        elif value_spec == '::':
+        elif value_spec == b'::':
             # attribute value needs base64-decoding
-            attr_value = self._b64decode(unfolded_line[colon_pos+2:])
-        elif value_spec == ':<':
+            try:
+                attr_value = a2b_base64(unfolded_line[colon_pos+2:])
+            except binascii_Error as err:
+                raise ValueError('Error decoding base64 in %r: %s' % (unfolded_line, err))
+        elif value_spec == b':<':
             # fetch attribute value from URL
             url = unfolded_line[colon_pos+2:].strip()
             attr_value = None
-            if self._process_url_schemes:
-                if urlparse(url)[0] in self._process_url_schemes:
-                    attr_value = url_open(url).read()
+            if (
+                self._process_url_schemes and
+                urlparse(url)[0] in self._process_url_schemes
+            ):
+                attr_value = urlopen(url).read()
         else:
             attr_value = unfolded_line[colon_pos+1:]
         return attr_type, attr_value
@@ -315,8 +324,8 @@ class LDIFParser(object):
         try:
             # Consume empty lines
             key, val = self._consume_empty_lines()
-            # Consume 'version' line
-            if key == 'version':
+            # Consume version line
+            if key == b'version':
                 self.version = int(val)
                 key, val = self._consume_empty_lines()
         except EOFError:
@@ -326,14 +335,16 @@ class LDIFParser(object):
         while key != None and \
               (max_entries is None or self.records_read < max_entries):
             # Consume first line which must start with "dn: "
-            if key != 'dn':
+            if key != b'dn':
                 raise ValueError(
                     'Line %d: First line of record does not start with "dn:": %r' % (
                         self.line_counter,
                         key,
                     )
                 )
-            if not is_dn(val):
+            try:
+                _libldap0_function_call(_libldap0.str2dn, val, 0)
+            except Exception:
                 raise ValueError(
                     'Line %d: Not a valid string-representation for dn: %r' % (
                         self.line_counter,
@@ -383,8 +394,8 @@ class LDIFParser(object):
 
         # Consume empty lines
         key, val = self._consume_empty_lines()
-        # Consume 'version' line
-        if key == 'version':
+        # Consume version line
+        if key == b'version':
             self.version = int(val)
             key, val = self._consume_empty_lines()
 
@@ -392,14 +403,16 @@ class LDIFParser(object):
         while key != None and \
               (max_entries is None or self.records_read < max_entries):
             # Consume first line which must start with "dn: "
-            if key != 'dn':
+            if key != b'dn':
                 raise ValueError(
                     'Line %d: First line of record does not start with "dn:": %r' % (
                         self.line_counter,
                         key,
                     )
                 )
-            if not is_dn(val):
+            try:
+                _libldap0_function_call(_libldap0.str2dn, val, 0)
+            except Exception:
                 raise ValueError(
                     'Line %d: Not a valid string-representation for dn: %r' % (
                         self.line_counter,
@@ -411,7 +424,7 @@ class LDIFParser(object):
             key, val = next_key_and_value()
             # Read "control:" lines
             controls = []
-            while key != None and key == 'control':
+            while key != None and key == b'control':
                 try:
                     control_type, criticality, control_value = val.split(' ', 2)
                 except ValueError:
@@ -423,13 +436,13 @@ class LDIFParser(object):
             # Determine changetype first
             changetype = None
             # Consume changetype line of record
-            if key == 'changetype':
+            if key == b'changetype':
                 if val not in CHANGE_TYPES:
                     raise ValueError('Invalid changetype: %r' % val)
                 changetype = val
                 key, val = next_key_and_value()
 
-            if changetype == 'modify':
+            if changetype == b'modify':
                 # From here we assume a change record is read with changetype: modify
                 modops = []
                 try:
@@ -457,7 +470,7 @@ class LDIFParser(object):
                                 key, val = None, None
                         modops.append((modop, modattr, modvalues or None))
                         key, val = next_key_and_value()
-                        if key == '-':
+                        if key == b'-':
                             # Consume next line
                             key, val = next_key_and_value()
                 except EOFError:

@@ -6,35 +6,26 @@ The ldap0.controls module provides LDAPControl classes.
 Each class provides support for a certain control.
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 
-import _libldap0
-
 from pyasn1.error import PyAsn1Error
+
+import _libldap0
 
 
 __all__ = [
     'KNOWN_RESPONSE_CONTROLS',
     # Classes
-    'AssertionControl',
-    'BooleanControl',
     'LDAPControl',
-    'ManageDSAITControl',
-    'MatchedValuesControl',
-    'RelaxRulesControl',
     'RequestControl',
     'ResponseControl',
-    'SimplePagedResultsControl',
-    'ValueLessRequestControl',
     # Functions
     'encode_request_ctrls',
     'decode_response_ctrls',
 ]
 
 
-class ControlRegistry(object):
+class ControlRegistry:
     """
     A simple registry for extended controls and their handler class
     """
@@ -53,7 +44,7 @@ class ControlRegistry(object):
 KNOWN_RESPONSE_CONTROLS = ControlRegistry()
 
 
-class RequestControl(object):
+class RequestControl:
     """
     Base class for all request controls
 
@@ -81,7 +72,7 @@ class RequestControl(object):
         return self.encodedControlValue
 
 
-class ResponseControl(object):
+class ResponseControl:
     """
     Base class for all response controls
 
@@ -118,21 +109,20 @@ class LDAPControl(RequestControl, ResponseControl):
         )
 
 
-def encode_request_ctrls(ldapControls):
+def encode_request_ctrls(ctrls):
     """
     Return list of readily encoded 3-tuples which can be directly
     passed to C module _ldap
 
-    ldapControls
+    ctrls
         sequence-type of RequestControl objects
     """
-    if ldapControls is None:
+    if ctrls is None:
         return None
-    result = [
+    return [
         (c.controlType, c.criticality, c.encodeControlValue())
-        for c in ldapControls
+        for c in ctrls
     ]
-    return result
 
 
 def decode_response_ctrls(ldapControlTuples, knownLDAPControls=None):
@@ -168,7 +158,3 @@ def decode_response_ctrls(ldapControlTuples, knownLDAPControls=None):
             else:
                 result.append(control)
     return result
-
-# Import the standard sub-modules
-from .simple import *
-from .libldap import *

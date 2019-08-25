@@ -1,7 +1,6 @@
 #include "common.h"
-#include "LDAPObject.h"
+#include "ldapobject.h"
 #include "ldapcontrol.h"
-#include "berval.h"
 #include "constants.h"
 #include "errors.h"
 
@@ -53,11 +52,11 @@ Tuple_to_LDAPControl( PyObject* tup )
     Py_ssize_t len;
 
     if (!PyTuple_Check(tup)) {
-        PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO", "expected a tuple", tup));
+        PyErr_SetObject(PyExc_TypeError, Py_BuildValue("yO", "expected a tuple", tup));
         return NULL;
     }
 
-    if (!PyArg_ParseTuple( tup, "sbO", &oid, &iscritical, &bytes ))
+    if (!PyArg_ParseTuple( tup, "ybO:Tuple_to_LDAPControl", &oid, &iscritical, &bytes ))
         return NULL;
 
     lc = PyMem_NEW(LDAPControl, 1);
@@ -109,7 +108,7 @@ LDAPControls_from_object(PyObject* list, LDAPControl ***controls_ret)
     PyObject* item;
 
     if (!PySequence_Check(list)) {
-        PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO", "expected a list", list));
+        PyErr_SetObject(PyExc_TypeError, Py_BuildValue("yO", "expected a list", list));
         return 0;
     }
 
@@ -159,7 +158,7 @@ LDAPControls_to_List(LDAPControl **ldcs)
 
     for (i = 0; i < num_ctrls; i++) {
         pyctrl = Py_BuildValue(
-            "sbO&",
+            "ybO&",
             ldcs[i]->ldctl_oid,
             ldcs[i]->ldctl_iscritical,
             LDAPberval_to_object, &ldcs[i]->ldctl_value);
@@ -186,7 +185,7 @@ encode_rfc3876(PyObject *self, PyObject *args)
     char *vrFilter;
     struct berval *ctrl_val;
 
-    if (!PyArg_ParseTuple(args, "s:encode_valuesreturnfilter_control", &vrFilter)) {
+    if (!PyArg_ParseTuple(args, "y:encode_valuesreturnfilter_control", &vrFilter)) {
         goto endlbl;
     }
 
@@ -226,7 +225,7 @@ encode_assertion_control(PyObject *self, PyObject *args)
     struct berval ctrl_val;
     LDAP *ld = NULL;
 
-    if (!PyArg_ParseTuple(args, "s:encode_assertion_control", &assertion_filterstr)) {
+    if (!PyArg_ParseTuple(args, "y:encode_assertion_control", &assertion_filterstr)) {
         goto endlbl;
     }
 

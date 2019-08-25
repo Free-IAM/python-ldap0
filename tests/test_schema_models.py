@@ -3,8 +3,6 @@
 Automatic tests for class ldap0.schema.SubSchema
 """
 
-from __future__ import absolute_import
-
 import unittest
 
 import ldap0.ldif
@@ -509,21 +507,21 @@ class TestEntry(SubschemaTest):
 
     def test001_correct_entry(self):
         ldap_entry = {
-            'objectClass': ['person', 'pilotPerson'],
-            'cn': ['Michael Str\303\266der', 'Michael Stroeder'],
-            'sn': ['Str\303\266der'],
-            'givenName': ['Michael'],
-            'c': ['DE'],
+            b'objectClass': [b'person', b'pilotPerson'],
+            b'cn': [b'Michael Str\303\266der', b'Michael Stroeder'],
+            b'sn': [b'Str\303\266der'],
+            b'givenName': [b'Michael'],
+            b'c': [b'DE'],
         }
         e1 = Entry(
             self.sub_schema,
-            'cn=Michael Str\303\266der,ou=test',
+            b'cn=Michael Str\303\266der,ou=test',
             ldap_entry,
         )
         self.assertEqual(sorted(e1.keys()), ['c', 'cn', 'givenName', 'objectClass', 'sn'])
         self.assertEqual('2.5.4.3' in e1, True)
         self.assertEqual('cn' in e1, True)
-        self.assertEqual(e1['cn'], ['Michael Str\xc3\xb6der', 'Michael Stroeder'])
+        self.assertEqual(e1['cn'], [b'Michael Str\xc3\xb6der', b'Michael Stroeder'])
         self.assertEqual(e1['cn'], e1['2.5.4.3'])
         self.assertEqual(e1['cn'], e1['commonName'])
         self.assertEqual('mail' in e1, False)
@@ -559,14 +557,14 @@ class TestEntry(SubschemaTest):
         )
         # retrieve all required and optional attributes with SUP name
         ldap_entry = {
-            'objectClass': ['person', 'inetOrgPerson'],
-            'cn': ['Michael Str\303\266der', 'Michael Stroeder'],
-            'sn': ['Str\303\266der'],
-            'givenName': ['Michael'],
+            b'objectClass': [b'person', b'inetOrgPerson'],
+            b'cn': [b'Michael Str\303\266der', b'Michael Stroeder'],
+            b'sn': [b'Str\303\266der'],
+            b'givenName': [b'Michael'],
         }
         e2 = Entry(
             self.sub_schema,
-            'cn=Michael Str\303\266der,ou=test',
+            b'cn=Michael Str\303\266der,ou=test',
             ldap_entry,
         )
         must, may = e2.attribute_types(

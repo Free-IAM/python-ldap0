@@ -5,10 +5,9 @@
 #include <limits.h>
 #include "errors.h"
 #include "constants.h"
-#include "LDAPObject.h"
+#include "ldapobject.h"
 #include "ldapcontrol.h"
 #include "message.h"
-#include "berval.h"
 #include "options.h"
 
 #ifdef HAVE_SASL
@@ -38,9 +37,9 @@ dealloc( LDAPObject* self )
 {
     if (self->ldap) {
         if (self->valid) {
-            LDAP_BEGIN_ALLOW_THREADS( self );
+            LDAP_BEGIN_ALLOW_THREADS(self);
             ldap_unbind_ext( self->ldap, NULL, NULL );
-            LDAP_END_ALLOW_THREADS( self );
+            LDAP_END_ALLOW_THREADS(self);
             self->valid = 0;
         }
         self->ldap = NULL;
@@ -108,11 +107,11 @@ Tuple_to_LDAPMod( PyObject* tup, int no_op )
     }
 
     if (no_op) {
-        if (!PyArg_ParseTuple( tup, "sO", &type, &list ))
+        if (!PyArg_ParseTuple( tup, "yO:Tuple_to_LDAPMod", &type, &list ))
             return NULL;
         op = 0;
     } else {
-        if (!PyArg_ParseTuple( tup, "isO", &op, &type, &list ))
+        if (!PyArg_ParseTuple( tup, "iyO:Tuple_to_LDAPMod", &op, &type, &list ))
                 return NULL;
     }
 
@@ -244,10 +243,10 @@ attrs_from_List( PyObject *attrlist, char***attrsp, PyObject** seq) {
     if (attrlist == Py_None) {
         /* None means a NULL attrlist */
     } else if (PyBytes_Check(attrlist)) {
-        PyErr_SetObject( PyExc_TypeError, Py_BuildValue("sO", "expected *list* of strings, not a string", attrlist ));
+        PyErr_SetObject( PyExc_TypeError, Py_BuildValue("sO", "expected list of bytes", attrlist ));
         goto error;
     } else {
-        *seq = PySequence_Fast(attrlist, "expected list of strings or None");
+        *seq = PySequence_Fast(attrlist, "expected list of bytes or None");
         if (*seq == NULL)
             goto error;
 
@@ -263,7 +262,7 @@ attrs_from_List( PyObject *attrlist, char***attrsp, PyObject** seq) {
             if (item == NULL)
                 goto error;
             if (!PyBytes_Check(item)) {
-                PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO", "expected string in list", item));
+                PyErr_SetObject(PyExc_TypeError, Py_BuildValue("sO", "expected bytes in list", item));
                 goto error;
             }
             attrs[i] = PyBytes_AsString(item);
@@ -304,25 +303,25 @@ free_attrs( char*** attrsp, PyObject* seq ) {
 static PyObject*
 l_ldap_unbind_ext( LDAPObject* self, PyObject* args )
 {
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     int ldaperror;
 
-    if (!PyArg_ParseTuple( args, "|O", &serverctrls))
+    if (!PyArg_ParseTuple( args, "|O:unbind_ext", &req_ctrls))
         return NULL;
 
     if (not_valid(self))
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_unbind_ext( self->ldap, server_ldcs, NULL );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPControl_List_DEL( server_ldcs );
 
@@ -340,25 +339,25 @@ static PyObject*
 l_ldap_abandon_ext( LDAPObject* self, PyObject* args )
 {
     int msgid;
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     int ldaperror;
 
-    if (!PyArg_ParseTuple( args, "i|O", &msgid, &serverctrls))
+    if (!PyArg_ParseTuple( args, "i|O:abandon_ext", &msgid, &req_ctrls))
         return NULL;
 
     if (not_valid(self))
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_abandon_ext( self->ldap, msgid, server_ldcs, NULL );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPControl_List_DEL( server_ldcs );
 
@@ -376,14 +375,14 @@ l_ldap_add_ext( LDAPObject* self, PyObject *args )
 {
     char *dn;
     PyObject *modlist;
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     int msgid;
     int ldaperror;
     LDAPMod **mods;
 
-    if (!PyArg_ParseTuple( args, "sO|O", &dn, &modlist, &serverctrls))
+    if (!PyArg_ParseTuple(args, "yO|O:add_ext", &dn, &modlist, &req_ctrls))
         return NULL;
 
     if (not_valid(self))
@@ -393,23 +392,23 @@ l_ldap_add_ext( LDAPObject* self, PyObject *args )
     if (mods == NULL)
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs)) {
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs)) {
             LDAPMods_DEL( mods );
             return NULL;
         }
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_add_ext( self->ldap, dn, mods, server_ldcs, NULL, &msgid);
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
     LDAPMods_DEL( mods );
     LDAPControl_List_DEL( server_ldcs );
 
     if ( ldaperror!=LDAP_SUCCESS )
         return LDAPerror( self->ldap, "ldap_add_ext" );
 
-    return PyInt_FromLong(msgid);
+    return PyLong_FromLong(msgid);
 }
 
 /* ldap_simple_bind */
@@ -421,32 +420,32 @@ l_ldap_simple_bind( LDAPObject* self, PyObject* args )
     int msgid;
     int ldaperror;
     Py_ssize_t cred_len;
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
     struct berval cred;
 
-    if (!PyArg_ParseTuple( args, "ss#|O", &who, &cred.bv_val, &cred_len, &serverctrls))
+    if (!PyArg_ParseTuple( args, "yz#|O:simple_bind", &who, &cred.bv_val, &cred_len, &req_ctrls))
         return NULL;
     cred.bv_len = (ber_len_t) cred_len;
 
     if (not_valid(self))
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_sasl_bind( self->ldap, who, LDAP_SASL_SIMPLE, &cred, server_ldcs, NULL, &msgid);
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPControl_List_DEL( server_ldcs );
 
     if ( ldaperror!=LDAP_SUCCESS )
         return LDAPerror( self->ldap, "ldap_simple_bind" );
 
-    return PyInt_FromLong( msgid );
+    return PyLong_FromLong(msgid);
 }
 
 
@@ -495,7 +494,7 @@ static int interaction ( unsigned flags,
     result = PyObject_CallMethod(
         SASLObject,
         "callback",
-        "isss",
+        "iyyy",
         interact->id,  /* see sasl.h */
         interact->challenge,
         interact->prompt,
@@ -557,18 +556,17 @@ int py_ldap_sasl_interaction(   LDAP *ld,
 static PyObject*
 l_ldap_sasl_bind_s( LDAPObject* self, PyObject* args )
 {
-    const char *dn;
-    const char *mechanism;
+    char *mechanism;
     struct berval cred;
     Py_ssize_t cred_len;
 
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     struct berval *servercred;
     int ldaperror;
 
-    if (!PyArg_ParseTuple(args, "zzz#O", &dn, &mechanism, &cred.bv_val, &cred_len, &serverctrls))
+    if (!PyArg_ParseTuple(args, "yz#O:sasl_bind_s", &mechanism, &cred.bv_val, &cred_len, &req_ctrls))
         return NULL;
 
     if (not_valid(self))
@@ -576,21 +574,21 @@ l_ldap_sasl_bind_s( LDAPObject* self, PyObject* args )
 
     cred.bv_len = cred_len;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_sasl_bind_s(
         self->ldap,
-        dn,
+        NULL,
         mechanism,
         cred.bv_val ? &cred : NULL,
         (LDAPControl**) server_ldcs,
         NULL,
         &servercred);
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPControl_List_DEL( server_ldcs );
 
@@ -598,52 +596,42 @@ l_ldap_sasl_bind_s( LDAPObject* self, PyObject* args )
         if (servercred && servercred->bv_val && *servercred->bv_val)
             return PyBytes_FromStringAndSize( servercred->bv_val, servercred->bv_len );
     } else if (ldaperror != LDAP_SUCCESS)
-        return LDAPerror( self->ldap, "l_ldap_sasl_bind_s" );
-    return PyInt_FromLong( ldaperror );
+        return LDAPerror(self->ldap, "l_ldap_sasl_bind_s");
+    return PyLong_FromLong(ldaperror);
 }
 
 static PyObject*
-l_ldap_sasl_interactive_bind_s( LDAPObject* self, PyObject* args )
+l_ldap_sasl_interactive_bind_s(LDAPObject* self, PyObject* args)
 {
-    char *c_mechanism;
-    char *who;
+    char *mechanism;
 
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
+    PyObject *SASLObject = NULL;
 
-    PyObject       *SASLObject = NULL;
-    PyObject *mechanism = NULL;
-    int msgid;
+    int ldaperror;
 
     static unsigned sasl_flags = LDAP_SASL_QUIET;
 
-    if (!PyArg_ParseTuple(args, "sOOI", &who, &SASLObject, &serverctrls, &sasl_flags ))
+    if (!PyArg_ParseTuple(args, "yOOI:sasl_interactive_bind_s", &mechanism, &SASLObject, &req_ctrls, &sasl_flags ))
       return NULL;
 
     if (not_valid(self))
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
-
-    /* now we extract the sasl mechanism from the SASL Object */
-    mechanism = PyObject_GetAttrString(SASLObject, "mech");
-    if (mechanism == NULL)
-return NULL;
-    c_mechanism = PyBytes_AsString(mechanism);
-    Py_DECREF(mechanism);
-    mechanism = NULL;
 
     /* Don't know if it is the "intended use" of the defaults
        parameter of ldap_sasl_interactive_bind_s when we pass the
        Python object SASLObject, but passing it through some
        static variable would destroy thread safety, IMHO.
      */
-    msgid = ldap_sasl_interactive_bind_s(self->ldap,
-                                         who,
-                                         c_mechanism,
+    ldaperror = ldap_sasl_interactive_bind_s(self->ldap,
+                                         NULL,
+                                         mechanism,
                                          (LDAPControl**) server_ldcs,
                                          NULL,
                                          sasl_flags,
@@ -652,9 +640,9 @@ return NULL;
 
     LDAPControl_List_DEL( server_ldcs );
 
-    if (msgid != LDAP_SUCCESS)
-        return LDAPerror( self->ldap, "ldap_sasl_interactive_bind_s" );
-    return PyInt_FromLong( msgid );
+    if (ldaperror != LDAP_SUCCESS)
+        return LDAPerror(self->ldap, "ldap_sasl_interactive_bind_s");
+    return PyLong_FromLong(ldaperror);
 }
 #endif
 
@@ -665,7 +653,7 @@ static PyObject *
 l_ldap_compare_ext( LDAPObject* self, PyObject *args )
 {
     char *dn, *attr;
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     int msgid;
@@ -673,28 +661,28 @@ l_ldap_compare_ext( LDAPObject* self, PyObject *args )
     Py_ssize_t value_len;
     struct berval value;
 
-    if (!PyArg_ParseTuple( args, "sss#|O", &dn, &attr, &value.bv_val, &value_len, &serverctrls))
+    if (!PyArg_ParseTuple( args, "yyz#|O:compare_ext", &dn, &attr, &value.bv_val, &value_len, &req_ctrls))
         return NULL;
     value.bv_len = (ber_len_t) value_len;
 
     if (not_valid(self))
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_compare_ext( self->ldap, dn, attr, &value, server_ldcs, NULL, &msgid );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPControl_List_DEL( server_ldcs );
 
     if ( ldaperror!=LDAP_SUCCESS )
         return LDAPerror( self->ldap, "ldap_compare_ext" );
 
-    return PyInt_FromLong( msgid );
+    return PyLong_FromLong(msgid);
 }
 
 
@@ -704,33 +692,33 @@ static PyObject *
 l_ldap_delete_ext( LDAPObject* self, PyObject *args )
 {
     char *dn;
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     int msgid;
     int ldaperror;
 
-    if (!PyArg_ParseTuple( args, "s|O", &dn, &serverctrls))
+    if (!PyArg_ParseTuple( args, "y|O:delete_ext", &dn, &req_ctrls))
         return NULL;
 
     if (not_valid(self))
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_delete_ext( self->ldap, dn, server_ldcs, NULL, &msgid );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPControl_List_DEL( server_ldcs );
 
     if ( ldaperror!=LDAP_SUCCESS )
         return LDAPerror( self->ldap, "ldap_delete_ext" );
 
-    return PyInt_FromLong(msgid);
+    return PyLong_FromLong(msgid);
 }
 
 
@@ -741,14 +729,14 @@ l_ldap_modify_ext( LDAPObject* self, PyObject *args )
 {
     char *dn;
     PyObject *modlist;
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     int msgid;
     int ldaperror;
     LDAPMod **mods;
 
-    if (!PyArg_ParseTuple( args, "sO|O", &dn, &modlist, &serverctrls))
+    if (!PyArg_ParseTuple( args, "yO|O:modify_ext", &dn, &modlist, &req_ctrls))
         return NULL;
 
     if (not_valid(self))
@@ -758,16 +746,16 @@ l_ldap_modify_ext( LDAPObject* self, PyObject *args )
     if (mods == NULL)
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs)) {
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs)) {
             LDAPMods_DEL( mods );
             return NULL;
         }
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_modify_ext( self->ldap, dn, mods, server_ldcs, NULL, &msgid );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPMods_DEL( mods );
     LDAPControl_List_DEL( server_ldcs );
@@ -775,7 +763,7 @@ l_ldap_modify_ext( LDAPObject* self, PyObject *args )
     if ( ldaperror!=LDAP_SUCCESS )
         return LDAPerror( self->ldap, "ldap_modify_ext" );
 
-    return PyInt_FromLong( msgid );
+    return PyLong_FromLong(msgid);
 }
 
 
@@ -786,34 +774,35 @@ l_ldap_rename( LDAPObject* self, PyObject *args )
 {
     char *dn, *newrdn;
     char *newSuperior = NULL;
+    int new_sup_len = 0;
     int delold = 1;
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     int msgid;
     int ldaperror;
 
-    if (!PyArg_ParseTuple( args, "ss|ziO", &dn, &newrdn, &newSuperior, &delold, &serverctrls))
+    if (!PyArg_ParseTuple( args, "yy|z#iO:rename", &dn, &newrdn, &newSuperior, &new_sup_len, &delold, &req_ctrls))
         return NULL;
 
     if (not_valid(self))
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_rename( self->ldap, dn, newrdn, newSuperior, delold, server_ldcs, NULL, &msgid );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPControl_List_DEL( server_ldcs );
 
     if ( ldaperror!=LDAP_SUCCESS )
         return LDAPerror( self->ldap, "ldap_rename" );
 
-    return PyInt_FromLong( msgid );
+    return PyLong_FromLong(msgid);
 }
 
 
@@ -838,9 +827,9 @@ l_ldap_result( LDAPObject* self, PyObject *args )
     PyObject *valuestr = NULL;
     int result = LDAP_SUCCESS;
     char **refs = NULL;
-    LDAPControl **serverctrls = 0;
+    LDAPControl **req_ctrls = 0;
 
-    if (!PyArg_ParseTuple( args, "|iidiii", &msgid, &all, &timeout, &add_ctrls, &add_intermediates, &add_extop ))
+    if (!PyArg_ParseTuple( args, "|iidiii:result", &msgid, &all, &timeout, &add_ctrls, &add_intermediates, &add_extop ))
         return NULL;
 
     if (not_valid(self))
@@ -853,9 +842,9 @@ l_ldap_result( LDAPObject* self, PyObject *args )
         tvp = NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     res_type = ldap_result( self->ldap, msgid, all, tvp, &msg );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     if (res_type < 0)   /* LDAP or system error */
         return LDAPerror( self->ldap, "ldap_result" );
@@ -873,8 +862,9 @@ l_ldap_result( LDAPObject* self, PyObject *args )
             return LDAPerr(LDAP_TIMEOUT);
     }
 
-    if (msg)
+    if (msg) {
         res_msgid = ldap_msgid(msg);
+    }
 
     if (res_type == LDAP_RES_SEARCH_ENTRY) {
         /* LDAPmessage_to_python will parse entries and read the controls for each entry */
@@ -886,9 +876,9 @@ l_ldap_result( LDAPObject* self, PyObject *args )
         int rc;
         if (res_type == LDAP_RES_EXTENDED) {
             struct berval *retdata = 0;
-            LDAP_BEGIN_ALLOW_THREADS( self );
+            LDAP_BEGIN_ALLOW_THREADS(self);
             rc = ldap_parse_extended_result( self->ldap, msg, &retoid, &retdata, 0 );
-            LDAP_END_ALLOW_THREADS( self );
+            LDAP_END_ALLOW_THREADS(self);
             /* handle error rc!=0 here? */
             if (rc == LDAP_SUCCESS) {
                 valuestr = LDAPberval_to_object(retdata);
@@ -896,9 +886,9 @@ l_ldap_result( LDAPObject* self, PyObject *args )
             ber_bvfree( retdata );
         }
 
-        LDAP_BEGIN_ALLOW_THREADS( self );
-        rc = ldap_parse_result( self->ldap, msg, &result, NULL, NULL, &refs, &serverctrls, 0 );
-        LDAP_END_ALLOW_THREADS( self );
+        LDAP_BEGIN_ALLOW_THREADS(self);
+        rc = ldap_parse_result( self->ldap, msg, &result, NULL, NULL, &refs, &req_ctrls, 0 );
+        LDAP_END_ALLOW_THREADS(self);
     }
 
     if (result != LDAP_SUCCESS) {               /* result error */
@@ -913,16 +903,17 @@ l_ldap_result( LDAPObject* self, PyObject *args )
         return LDAPerror( self->ldap, e );
     }
 
-    if (!(pyctrls = LDAPControls_to_List(serverctrls))) {
+    if (!(pyctrls = LDAPControls_to_List(req_ctrls))) {
         int err = LDAP_NO_MEMORY;
-        LDAP_BEGIN_ALLOW_THREADS( self );
+        LDAP_BEGIN_ALLOW_THREADS(self);
         ldap_set_option(self->ldap, LDAP_OPT_ERROR_NUMBER, &err);
-        LDAP_END_ALLOW_THREADS( self );
+        LDAP_END_ALLOW_THREADS(self);
+        ldap_controls_free(req_ctrls);
         ldap_msgfree(msg);
         Py_XDECREF(valuestr);
         return LDAPerror(self->ldap, "LDAPControls_to_List");
     }
-    ldap_controls_free(serverctrls);
+    ldap_controls_free(req_ctrls);
 
     pmsg = LDAPmessage_to_python( self->ldap, msg, add_ctrls, add_intermediates );
 
@@ -930,7 +921,7 @@ l_ldap_result( LDAPObject* self, PyObject *args )
         result_str = Py_None;
         Py_INCREF(Py_None);
     } else {
-        result_str = PyInt_FromLong( res_type );
+        result_str = PyLong_FromLong(res_type);
     }
 
     if (pmsg == NULL) {
@@ -938,7 +929,7 @@ l_ldap_result( LDAPObject* self, PyObject *args )
     } else {
         /* s handles NULL, but O does not */
         if (add_extop) {
-            retval = Py_BuildValue("(OOiOsO)", result_str, pmsg, res_msgid, pyctrls, retoid, valuestr ? valuestr : Py_None);
+            retval = Py_BuildValue("(OOiOyO)", result_str, pmsg, res_msgid, pyctrls, retoid, valuestr ? valuestr : Py_None);
         } else {
             retval = Py_BuildValue("(OOiO)", result_str, pmsg, res_msgid, pyctrls);
         }
@@ -966,7 +957,7 @@ l_ldap_search_ext( LDAPObject* self, PyObject* args )
     char **attrs;
     int attrsonly = 0;
 
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     PyObject *attrs_seq = NULL;
     LDAPControl** server_ldcs = NULL;
 
@@ -979,7 +970,7 @@ l_ldap_search_ext( LDAPObject* self, PyObject* args )
     int msgid;
     int ldaperror;
 
-    if (!PyArg_ParseTuple( args, "sis|OiOdi", &base, &scope, &filter, &attrlist, &attrsonly, &serverctrls, &timeout, &sizelimit ))
+    if (!PyArg_ParseTuple( args, "yiy|OiOdi", &base, &scope, &filter, &attrlist, &attrsonly, &req_ctrls, &timeout, &sizelimit ))
         return NULL;
 
     if (not_valid(self))
@@ -995,14 +986,14 @@ l_ldap_search_ext( LDAPObject* self, PyObject* args )
         tvp = NULL;
     }
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs)) {
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs)) {
             free_attrs( &attrs,  attrs_seq);
             return NULL;
         }
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_search_ext(
         self->ldap,
         base,
@@ -1015,7 +1006,7 @@ l_ldap_search_ext( LDAPObject* self, PyObject* args )
         tvp,
         sizelimit,
         &msgid );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     free_attrs( &attrs,  attrs_seq);
     LDAPControl_List_DEL( server_ldcs );
@@ -1023,7 +1014,7 @@ l_ldap_search_ext( LDAPObject* self, PyObject* args )
     if ( ldaperror!=LDAP_SUCCESS )
         return LDAPerror( self->ldap, "ldap_search_ext" );
 
-    return PyInt_FromLong( msgid );
+    return PyLong_FromLong(msgid);
 }
 
 
@@ -1035,15 +1026,15 @@ l_ldap_start_tls_s( LDAPObject* self, PyObject* args )
 {
     int ldaperror;
 
-    if (!PyArg_ParseTuple( args, "" ))
+    if (!PyArg_ParseTuple( args, ":start_tls_s" ))
         return NULL;
 
     if (not_valid(self))
         return NULL;
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_start_tls_s( self->ldap, NULL, NULL );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
     if ( ldaperror != LDAP_SUCCESS ){
         ldap_set_option(self->ldap, LDAP_OPT_ERROR_NUMBER, &ldaperror);
         return LDAPerror( self->ldap, "ldap_start_tls_s" );
@@ -1089,42 +1080,42 @@ l_ldap_get_option(PyObject* self, PyObject *args)
 /* ldap_extended_operation */
 
 static PyObject *
-l_ldap_extended_operation( LDAPObject* self, PyObject *args )
+l_ldap_extop( LDAPObject* self, PyObject *args )
 {
     char *reqoid = NULL;
     struct berval reqvalue = {0, NULL};
-    PyObject *serverctrls = Py_None;
+    PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
 
     int msgid;
     int ldaperror;
 
-    if (!PyArg_ParseTuple( args, "sz#|O", &reqoid, &reqvalue.bv_val, &reqvalue.bv_len, &serverctrls))
+    if (!PyArg_ParseTuple( args, "yz#|O:extended_operation", &reqoid, &reqvalue.bv_val, &reqvalue.bv_len, &req_ctrls))
         return NULL;
 
     if (not_valid(self))
         return NULL;
 
-    if (serverctrls != Py_None) {
-        if (!LDAPControls_from_object(serverctrls, &server_ldcs))
+    if (req_ctrls != Py_None) {
+        if (!LDAPControls_from_object(req_ctrls, &server_ldcs))
             return NULL;
     }
 
-    LDAP_BEGIN_ALLOW_THREADS( self );
+    LDAP_BEGIN_ALLOW_THREADS(self);
     ldaperror = ldap_extended_operation(
         self->ldap, reqoid,
         reqvalue.bv_val != NULL ? &reqvalue : NULL,
         server_ldcs,
         NULL,
         &msgid );
-    LDAP_END_ALLOW_THREADS( self );
+    LDAP_END_ALLOW_THREADS(self);
 
     LDAPControl_List_DEL( server_ldcs );
 
     if ( ldaperror!=LDAP_SUCCESS )
         return LDAPerror( self->ldap, "ldap_extended_operation" );
 
-    return PyInt_FromLong( msgid );
+    return PyLong_FromLong(msgid);
 }
 
 /* methods */
@@ -1149,7 +1140,7 @@ static PyMethodDef methods[] = {
 #endif
     {"set_option",      (PyCFunction)l_ldap_set_option,         METH_VARARGS },
     {"get_option",      (PyCFunction)l_ldap_get_option,         METH_VARARGS },
-    {"extop",           (PyCFunction)l_ldap_extended_operation,         METH_VARARGS },
+    {"extop",           (PyCFunction)l_ldap_extop,         METH_VARARGS },
     { NULL, NULL }
 };
 

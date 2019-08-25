@@ -3,86 +3,62 @@
 ldap0.filters - misc stuff for handling LDAP filter strings (see RFC 4515)
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from .__about__ import __version__, __author__, __license__
 
 import time
 
-from .__about__ import __version__, __author__, __license__
-
 from .functions import strf_secs
 
-
-FILTER_SAFE_CHARS = set([
-    char
-    for char in map(chr, range(128))
-    if not (char < b'0' or char > b'z' or char in b'\\*()')
-])
+FILTER_SPECIAL_CHARS = set('\\*()')
 
 
-FILTER_ESCAPE_CHARS = dict([
-    (chr(b), b'\\%02x' % b)
-    for b in range(256)
-])
+def escape_bytes(assertion_value):
+    """
+    escape all bytes and return str (unicode)
+    """
+    return ''.join([ '\\%02x' % char_code for char_code in assertion_value])
 
 
-def escape_filter_chars(assertion_value, escape_mode=0):
+def escape_str(assertion_value):
     """
     Replace all special characters found in assertion_value
     by quoted notation.
-
-    escape_mode
-        If 0 only special chars mentioned in RFC 4515 are escaped.
-        If 1 all NON-ASCII chars are escaped.
-        If 2 all chars are escaped.
     """
-    if escape_mode:
-        res = []
-        if escape_mode == 1:
-            for char in assertion_value:
-                if char in FILTER_SAFE_CHARS:
-                    res.append(char)
-                else:
-                    res.append(FILTER_ESCAPE_CHARS[char])
-        elif escape_mode == 2:
-            for char in assertion_value:
-                res.append(FILTER_ESCAPE_CHARS[char])
-        else:
-            raise ValueError('Argument escape_mode must be 0, 1 or 2.')
-        val = b''.join(res)
-    else:
-        val = assertion_value.replace(
-            b'\\', b'\\5c'
+    assert isinstance(assertion_value, str), TypeError(
+        'Expected assertion_value to be unicode (str), got %r' % (assertion_value,)
+    )
+    return assertion_value.replace(
+            '\\', '\\5c'
         ).replace(
-            b'*', b'\\2a'
+            '*', '\\2a'
         ).replace(
-            b'(', b'\\28'
+            '(', '\\28'
         ).replace(
-            b')', b'\\29'
+            ')', '\\29'
         ).replace(
-            b'\x00', b'\\00'
+            '\x00', '\\00'
         )
-    return val
+    # end of escape_str()
 
 
 def negate_filter(flt):
     """
     Returns the simple negation of flt
     """
-    if flt.startswith(b'(!') and flt.endswith(b')'):
+    assert isinstance(flt, str), TypeError(
+        'Expected flt to be unicode (str), got %r' % (flt,)
+    )
+    if flt.startswith('(!') and flt.endswith(')'):
         return flt[2:-1]
-    return b'(!%s)' % flt
+    return '(!{0})'.format(flt)
 
 
-def map_filter_parts(assertion_type, assertion_values, escape_mode=0):
+def map_filter_parts(assertion_type, assertion_values):
     """
     returns filter parts all with same asserton type but different values
     """
     return [
-        b'(%s=%s)' % (
-            assertion_type,
-            escape_filter_chars(av, escape_mode=escape_mode),
-        )
+        '(%s=%s)' % (assertion_type, escape_str(av))
         for av in assertion_values
     ]
 
@@ -92,19 +68,18 @@ def compose_filter(operand, filter_parts):
     returns filter string composed by operand and list of sub-filters
     """
     if not filter_parts:
-        return b''
+        return ''
     elif len(filter_parts) == 1:
         return filter_parts[0]
-    return b'(%s%s)' % (
+    return '(%s%s)' % (
         operand,
-        b''.join(filter_parts),
+        ''.join(filter_parts),
     )
 
 def dict_filter(
         entry,
-        iop=b'&',
-        oop=b'&',
-        escape_mode=0
+        iop='&',
+        oop='&',
     ):
     """
     returns a filter compose from an entry dictionary
@@ -119,7 +94,7 @@ def dict_filter(
         filter_parts.append(
             compose_filter(
                 iop,
-                map_filter_parts(attr_type, attr_values, escape_mode=escape_mode)
+                map_filter_parts(attr_type, attr_values)
             )
         )
     if len(filter_parts) == 1:
@@ -127,22 +102,11 @@ def dict_filter(
     return compose_filter(oop, filter_parts)
 
 
-def filter_format(filter_template, assertion_values):
-    """
-    filter_template
-          String containing %s as placeholder for assertion values.
-    assertion_values
-          List or tuple of assertion values. Length must match
-          count of %s in filter_template.
-    """
-    return filter_template % (tuple(map(escape_filter_chars, assertion_values)))
-
-
 def time_span_filter(
-        filterstr=b'',
+        filterstr='',
         from_timestamp=0,
         until_timestamp=None,
-        delta_attr=b'modifyTimestamp',
+        delta_attr='modifyTimestamp',
     ):
     """
     If last_run_timestr is non-zero filterstr will be extended
@@ -156,12 +120,12 @@ def time_span_filter(
             from_timestamp, until_timestamp
         ))
     return (
-        b'(&'
-        b'%(filterstr)s'
-        b'(%(delta_attr)s>=%(from_timestr)s)'
-        b'(!(%(delta_attr)s>=%(until_timestr)s))'
-        b')'
-    ) % dict(
+        '(&'
+        '{filterstr}'
+        '({delta_attr}>={from_timestr})'
+        '(!({delta_attr}>={until_timestr}))'
+        ')'
+    ).format(
         filterstr=filterstr,
         delta_attr=delta_attr,
         from_timestr=strf_secs(from_timestamp),

@@ -4,8 +4,6 @@ ldap0.controls.pwdpolicy - classes for Password Policy controls
 (see https://tools.ietf.org/html/draft-vchu-ldap-pwd-policy)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 from . import ResponseControl, KNOWN_RESPONSE_CONTROLS
 
@@ -34,6 +32,6 @@ class PasswordExpiredControl(ResponseControl):
     controlType = b'2.16.840.1.113730.3.4.4'
 
     def decodeControlValue(self, encodedControlValue):
-        self.passwordExpired = (encodedControlValue == '0')
+        self.passwordExpired = (encodedControlValue == b'0')
 
 KNOWN_RESPONSE_CONTROLS.reg(PasswordExpiredControl)

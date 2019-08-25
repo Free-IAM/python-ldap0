@@ -3,8 +3,6 @@
 ldap0.schema.parse - Low-level parsing functions for schema element strings
 """
 
-from __future__ import absolute_import
-
 import re
 
 from ..__about__ import __version__, __author__, __license__
@@ -77,7 +75,7 @@ def extract_tokens(tkl, known_tokens):
                     i += 1 # Consume right parentheses
                 else:
                     # single-valued
-                    result[token] = tkl[i],
+                    result[token] = (tkl[i],)
                     i += 1 # Consume single value
         else:
             i += 1 # Consume unrecognized item

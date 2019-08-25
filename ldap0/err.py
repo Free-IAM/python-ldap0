@@ -3,8 +3,6 @@
 ldap0.err - error classes
 """
 
-from __future__ import absolute_import
-
 import _libldap0
 from . import LDAPError
 

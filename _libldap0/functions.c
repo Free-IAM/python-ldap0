@@ -1,7 +1,6 @@
 #include "common.h"
 #include "functions.h"
-#include "LDAPObject.h"
-#include "berval.h"
+#include "ldapobject.h"
 #include "errors.h"
 #include "options.h"
 
@@ -14,7 +13,7 @@ l_ldap_initialize(PyObject* unused, PyObject *args)
     LDAP *ld = NULL;
     int ret;
 
-    if (!PyArg_ParseTuple(args, "s", &uri))
+    if (!PyArg_ParseTuple(args, "y:initialize", &uri))
         return NULL;
 
     Py_BEGIN_ALLOW_THREADS

@@ -3,14 +3,12 @@
 ldap0.schema.models - support for subSchemaSubEntry information
 """
 
-from __future__ import absolute_import
-
 from collections import MutableSet
+from collections import UserDict
 
 from ..__about__ import __version__, __author__, __license__
-from ..cidict import cidict
+from ..cidict import CIDict
 from .parse import split_tokens, extract_tokens
-from ..compat import User_Dict
 
 
 __all__ = [
@@ -41,7 +39,7 @@ NOT_HUMAN_READABLE_LDAP_SYNTAXES = {
     '1.3.6.1.4.1.1466.115.121.1.49', # Supported Algorithm
 }
 
-ATTRIBUTE_USAGE = cidict({
+ATTRIBUTE_USAGE = CIDict({
     'userApplication': 0, # work-around for non-compliant schema
     'userApplications': 0,
     'directoryOperation': 1,
@@ -56,7 +54,7 @@ OBJECTCLASS_KIND_STR = {
 }
 
 
-class SchemaElement(object):
+class SchemaElement:
     """
     Base class for all schema element classes. Not used directly!
 
@@ -663,7 +661,7 @@ class SchemaElementOIDSet(MutableSet):
         return len(self._nameoroid_dict)
 
     def discard(self, nameoroid):
-        oid = self._schema.getoid(self._se_class, nameoroid, raise_keyerror=0).lower()
+        oid = self._schema.get_oid(self._se_class, nameoroid, raise_keyerror=0).lower()
         try:
             del self._nameoroid_dict[oid]
         except KeyError:
@@ -672,7 +670,7 @@ class SchemaElementOIDSet(MutableSet):
             self._nameoroid_list.remove(oid)
 
     def __contains__(self, nameoroid):
-        oid = self._schema.getoid(self._se_class, nameoroid, raise_keyerror=0).lower()
+        oid = self._schema.get_oid(self._se_class, nameoroid, raise_keyerror=0).lower()
         return oid in self._nameoroid_dict
 
     def intersection(self, s):
@@ -703,7 +701,7 @@ class SchemaElementOIDSet(MutableSet):
         else:
             at_list = [
                 (
-                    self._schema.getoid(self._se_class, se_name, raise_keyerror=0).lower(),
+                    self._schema.get_oid(self._se_class, se_name, raise_keyerror=0).lower(),
                     se_name
                 )
             ]
@@ -723,7 +721,7 @@ class SchemaElementOIDSet(MutableSet):
         ]
 
 
-class Entry(User_Dict):
+class Entry(UserDict):
     """
     Schema-aware implementation of an LDAP entry class.
 
@@ -743,65 +741,69 @@ class Entry(User_Dict):
         self._attrtype2keytuple = {}
         self._s = schema
         self.dn = dn
-        User_Dict.__init__(self, {})
-        self.update(entry)
+        UserDict.__init__(self, {})
+        self.update([
+            (at.decode('ascii'), avs)
+            for at, avs in entry.items()
+        ])
 
-    def _at2key(self, nameoroid):
+    def _name2key(self, nameoroid):
         """
         Return tuple of OID and all sub-types of attribute type specified
         in nameoroid.
         """
+        if isinstance(nameoroid, tuple):
+            return nameoroid
         try:
             # Mapping already in cache
             return self._attrtype2keytuple[nameoroid]
         except KeyError:
             # Mapping has to be constructed
-            oid = self._s.getoid(AttributeType, nameoroid)
-            l = nameoroid.lower().split(';')
-            l[0] = oid
-            t = tuple(l)
-            self._attrtype2keytuple[nameoroid] = t
-            return t
-
-    def update(self, data):
-        for key in data.keys():
-            self[key] = data[key]
+            noid_l = nameoroid.lower().split(';')
+            oid = self._s.get_oid(AttributeType, noid_l[0])
+            if oid.lower() == 'entrydn':
+                oid = '1.3.6.1.1.20'
+            self._attrtype2keytuple[nameoroid] = (oid,)+tuple(noid_l[1:])
+            return self._attrtype2keytuple[nameoroid]
 
     def __contains__(self, nameoroid):
-        return self._at2key(nameoroid) in self.data
+        return self._name2key(nameoroid) in self.data
 
     def __getitem__(self, nameoroid):
+        key = self._name2key(nameoroid)
         try:
-            return self.data[self._at2key(nameoroid)]
+            return self.data[key]
         except KeyError as err:
-            if self.dn != None and nameoroid.lower() in ('entrydn', '1.3.6.1.1.20'):
+            if (
+                key[0] == '1.3.6.1.1.20' and
+                self.dn is not None
+            ):
                 return [self.dn]
-            else:
-                raise err
+            raise err
 
     def __setitem__(self, nameoroid, attr_values):
-        k = self._at2key(nameoroid)
-        self._keytuple2attrtype[k] = nameoroid
-        self.data[k] = attr_values
+        key = self._name2key(nameoroid)
+        self._keytuple2attrtype[key] = nameoroid
+        self.data[key] = attr_values
 
     def __delitem__(self, nameoroid):
-        k = self._at2key(nameoroid)
-        del self.data[k]
-        del self._attrtype2keytuple[nameoroid]
-        del self._keytuple2attrtype[k]
+        key = self._name2key(nameoroid)
+        del self._keytuple2attrtype[key]
+        del self.data[key]
 
-    def has_key(self, nameoroid):
-        k = self._at2key(nameoroid)
-        return k in self.data
+    def __iter__(self):
+        for key in self.data.keys():
+            yield self._keytuple2attrtype[key]
+
+    def has_key(self, key):
+        raise NotImplementedError('do not use %s.has_key() method' % (self.__class__.__name__,))
 
     def keys(self):
-        return self._keytuple2attrtype.values()
+        return self.__iter__()
 
     def items(self):
-        return [
-            (k, self[k])
-            for k in self.keys()
-        ]
+        for k in self.keys():
+            yield (k, self[k])
 
     def attribute_types(
             self,
@@ -814,28 +816,31 @@ class Entry(User_Dict):
         SubSchema.attribute_types()
         """
         return self._s.attribute_types(
-            self.get('objectClass', []),
+            self.object_class_oid_set(),
             attr_type_filter,
             raise_keyerror,
         )
 
     def object_class_oid_set(self):
         try:
-            object_classes = self.__getitem__('objectClass')
+            object_classes = [
+                oc.decode('ascii')
+                for oc in self.__getitem__('objectClass')
+            ]
         except KeyError:
             object_classes = []
         return SchemaElementOIDSet(self._s, ObjectClass, object_classes)
 
     def get_structural_oc(self):
         try:
-            structural_object_class_oid = self._s.getoid(
+            structural_object_class_oid = self._s.get_oid(
                 ObjectClass,
-                self.__getitem__('structuralObjectClass')[-1]
+                self.__getitem__('structuralObjectClass')[-1].decode('ascii')
             )
         except (KeyError, IndexError):
             try:
                 structural_object_class_oid = self._s.get_structural_oc(
-                    self.__getitem__('objectClass')
+                    [av.decode('ascii') for av in self.__getitem__('objectClass')]
                 )
             except KeyError:
                 return None

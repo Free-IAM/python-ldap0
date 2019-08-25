@@ -4,8 +4,6 @@ ldap0.controls.psearch - classes for Persistent Search Control
 (see https://tools.ietf.org/html/draft-ietf-ldapext-psearch)
 """
 
-from __future__ import absolute_import
-
 # Imports from pyasn1
 from pyasn1.type import namedtype, namedval, univ, constraint
 from pyasn1.codec.ber import encoder, decoder
@@ -49,7 +47,7 @@ class PersistentSearchControl(RequestControl):
       Boolean which indicates whether the server should return an
       Entry Change Notication response control
     """
-    controlType = "2.16.840.1.113730.3.4.3"
+    controlType = b'2.16.840.1.113730.3.4.3'
 
     class PersistentSearchControlValue(univ.Sequence):
         """
@@ -139,7 +137,7 @@ class EntryChangeNotificationControl(ResponseControl):
     changeNumber
       A change serial number returned by the server (optional).
     """
-    controlType = "2.16.840.1.113730.3.4.7"
+    controlType = b'2.16.840.1.113730.3.4.7'
 
     def decodeControlValue(self, encodedControlValue):
         ecncValue, _ = decoder.decode(
@@ -149,7 +147,7 @@ class EntryChangeNotificationControl(ResponseControl):
         self.changeType = int(ecncValue.getComponentByName('changeType'))
         previousDN = ecncValue.getComponentByName('previousDN')
         if previousDN.hasValue():
-            self.previousDN = str(previousDN)
+            self.previousDN = bytes(previousDN)
         else:
             self.previousDN = None
         changeNumber = ecncValue.getComponentByName('changeNumber')

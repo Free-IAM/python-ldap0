@@ -3,53 +3,51 @@
 Automatic tests for module ldap0.modlist
 """
 
-from __future__ import absolute_import
-
 import unittest
 
 import ldap0
 import ldap0.schema.models
 import ldap0.schema.util
 
-from ldap0.modlist import add_modlist, modify_modlist, modify_modlist2
+from ldap0.modlist import add_modlist, modify_modlist
 
 class Test001AddModlist(unittest.TestCase):
 
     add_modlist_tests = [
         (
             {
-                'objectClass':['person','pilotPerson'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':['Str\303\266der'],
-                'dummy1':[],
-                'dummy2':['2'],
-                'dummy3':[''],
+                b'objectClass':[b'person', b'pilotPerson'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[b'Str\303\266der'],
+                b'dummy1':[],
+                b'dummy2':[b'2'],
+                b'dummy3':[b''],
             },
             [
-                ('objectClass',['person','pilotPerson']),
-                ('cn',['Michael Str\303\266der','Michael Stroeder']),
-                ('sn',['Str\303\266der']),
-                ('dummy2',['2']),
-                ('dummy3',['']),
+                (b'objectClass', [b'person', b'pilotPerson']),
+                (b'cn', [b'Michael Str\303\266der', b'Michael Stroeder']),
+                (b'sn', [b'Str\303\266der']),
+                (b'dummy2', [b'2']),
+                (b'dummy3', [b'']),
             ],
             None,
         ),
         (
             {
-                'objectClass':['person','pilotPerson'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':['Str\303\266der'],
-                'dummy1':[],
-                'dummy2':['2'],
-                'dummy3':[''],
+                b'objectClass':[b'person', b'pilotPerson'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[b'Str\303\266der'],
+                b'dummy1':[],
+                b'dummy2':[b'2'],
+                b'dummy3':[b''],
             },
             [
-                ('objectClass',['person','pilotPerson']),
-                ('sn',['Str\303\266der']),
-                ('dummy2',['2']),
-                ('dummy3',['']),
+                (b'objectClass', [b'person', b'pilotPerson']),
+                (b'sn', [b'Str\303\266der']),
+                (b'dummy2', [b'2']),
+                (b'dummy3', [b'']),
             ],
-            ('cn',),
+            (b'cn',),
         ),
     ]
 
@@ -70,111 +68,111 @@ class Test002ModifyModlist(unittest.TestCase):
     modify_modlist_tests = [
         (
             {
-                'objectClass':['person','pilotPerson'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':['Str\303\266der'],
-                'enum':['a','b','c'],
-                'c':['DE'],
+                b'objectClass':[b'person', b'pilotPerson'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[b'Str\303\266der'],
+                b'enum':[b'a', b'b', b'c'],
+                b'c':[b'DE'],
             },
             {
-                'objectClass':['person','inetOrgPerson'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':[],
-                'enum':['a','b','d'],
-                'mail':['michael@stroeder.com'],
+                b'objectClass':[b'person', b'inetOrgPerson'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[],
+                b'enum':[b'a', b'b', b'd'],
+                b'mail':[b'michael@stroeder.com'],
             },
             [],
             [],
             [
-                (ldap0.MOD_DELETE,'objectClass',None),
-                (ldap0.MOD_ADD,'objectClass',['person','inetOrgPerson']),
-                (ldap0.MOD_DELETE,'c',None),
-                (ldap0.MOD_DELETE,'sn',None),
-                (ldap0.MOD_ADD,'mail',['michael@stroeder.com']),
-                (ldap0.MOD_DELETE,'enum',None),
-                (ldap0.MOD_ADD,'enum',['a','b','d']),
+                (ldap0.MOD_DELETE, b'objectClass', None),
+                (ldap0.MOD_ADD, b'objectClass', [b'person', b'inetOrgPerson']),
+                (ldap0.MOD_DELETE, b'c', None),
+                (ldap0.MOD_DELETE, b'sn', None),
+                (ldap0.MOD_ADD, b'mail', [b'michael@stroeder.com']),
+                (ldap0.MOD_DELETE, b'enum', None),
+                (ldap0.MOD_ADD, b'enum', [b'a', b'b', b'd']),
             ]
         ),
 
         (
             {
-                'c':['DE'],
+                b'c':[b'DE'],
             },
             {
-                'c':['FR'],
+                b'c':[b'FR'],
             },
             [],
             [],
             [
-                (ldap0.MOD_DELETE,'c',None),
-                (ldap0.MOD_ADD,'c',['FR']),
+                (ldap0.MOD_DELETE, b'c', None),
+                (ldap0.MOD_ADD, b'c', [b'FR']),
             ]
         ),
 
         # Now a weird test-case for catching all possibilities
-        # of removing an attribute with MOD_DELETE,attr_type,None
+        # of removing an attribute with MOD_DELETE,attr_type, None
         (
             {
-                'objectClass':['person'],
-                'cn':[None],
-                'sn':[''],
-                'c':['DE'],
+                b'objectClass':[b'person'],
+                b'cn':[None],
+                b'sn':[b''],
+                b'c':[b'DE'],
             },
             {
-                'objectClass':[],
-                'cn':[],
-                'sn':[None],
+                b'objectClass':[],
+                b'cn':[],
+                b'sn':[None],
             },
             [],
             [],
             [
-                (ldap0.MOD_DELETE,'c',None),
-                (ldap0.MOD_DELETE,'objectClass',None),
-                (ldap0.MOD_DELETE,'sn',None),
+                (ldap0.MOD_DELETE, b'c', None),
+                (ldap0.MOD_DELETE, b'objectClass', None),
+                (ldap0.MOD_DELETE, b'sn', None),
             ]
         ),
 
         (
             {
-                'objectClass':['person'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':['Str\303\266der'],
-                'enum':['a','b','C'],
+                b'objectClass':[b'person'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[b'Str\303\266der'],
+                b'enum':[b'a', b'b', b'C'],
             },
             {
-                'objectClass':['Person'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':[],
-                'enum':['a','b','c'],
+                b'objectClass':[b'Person'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[],
+                b'enum':[b'a', b'b', b'c'],
             },
             [],
-            ['objectClass'],
+            [b'objectClass'],
             [
-                (ldap0.MOD_DELETE,'sn',None),
-                (ldap0.MOD_DELETE,'enum',None),
-                (ldap0.MOD_ADD,'enum',['a','b','c']),
+                (ldap0.MOD_DELETE, b'sn', None),
+                (ldap0.MOD_DELETE, b'enum', None),
+                (ldap0.MOD_ADD, b'enum', [b'a', b'b', b'c']),
             ]
         ),
 
         (
             {
-                'objectClass':['person'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':['Str\303\266der'],
-                'enum':['a','b','C'],
+                b'objectClass':[b'person'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[b'Str\303\266der'],
+                b'enum':[b'a', b'b', b'C'],
             },
             {
-                'objectClass':['inetOrgPerson'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':[],
-                'enum':['a','b','c'],
+                b'objectClass':[b'inetOrgPerson'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[],
+                b'enum':[b'a', b'b', b'c'],
             },
-            ['objectClass'],
+            [b'objectClass'],
             [],
             [
-                (ldap0.MOD_DELETE,'sn',None),
-                (ldap0.MOD_DELETE,'enum',None),
-                (ldap0.MOD_ADD,'enum',['a','b','c']),
+                (ldap0.MOD_DELETE, b'sn', None),
+                (ldap0.MOD_DELETE, b'enum', None),
+                (ldap0.MOD_ADD, b'enum', [b'a', b'b', b'c']),
             ]
         ),
 
@@ -193,96 +191,6 @@ class Test002ModifyModlist(unittest.TestCase):
             self.assertEqual(
                 test_modlist, result_modlist,
                 'modify_modlist(%s,%s) returns\n%s\ninstead of\n%s.' % (
-                    repr(old_entry),
-                    repr(new_entry),
-                    repr(result_modlist),
-                    repr(test_modlist),
-                )
-            )
-
-
-class Test003ModifyModlist(unittest.TestCase):
-    schema_uri = 'file:tests/ldif/subschema-openldap-all.ldif'
-    modify_modlist_tests = [
-        (
-            {
-                'objectClass':['person','pilotPerson'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':['Str\303\266der'],
-                'enum':['a','b','c'],
-                'c':['DE'],
-            },
-            {
-                'objectClass':['person','inetOrgPerson'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':[],
-                'enum':['a','b','d'],
-                'mail':['michael@stroeder.com'],
-            },
-            [],
-            [
-                (ldap0.MOD_DELETE,'objectClass',['person','pilotPerson']),
-                (ldap0.MOD_ADD,'objectClass',['person','inetOrgPerson']),
-                (ldap0.MOD_DELETE,'c',['DE']),
-                (ldap0.MOD_DELETE,'sn',['Str\303\266der']),
-                (ldap0.MOD_ADD,'mail',['michael@stroeder.com']),
-                (ldap0.MOD_DELETE,'enum',None),
-                (ldap0.MOD_ADD,'enum',['a','b','d']),
-            ]
-        ),
-
-        (
-            {
-                'c':['DE'],
-            },
-            {
-                'c':['FR'],
-            },
-            [],
-            [
-                (ldap0.MOD_DELETE,'c',['DE']),
-                (ldap0.MOD_ADD,'c',['FR']),
-            ]
-        ),
-
-        (
-            {
-                'objectClass':['person'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':['Str\303\266der'],
-                'enum':['a','b'],
-            },
-            {
-                'objectClass':['inetOrgPerson'],
-                'cn':['Michael Str\303\266der','Michael Stroeder'],
-                'sn':[],
-                'enum':['a','B'],
-            },
-            ['2.5.4.0'],
-            [
-                (ldap0.MOD_DELETE,'sn',['Str\303\266der']),
-                (ldap0.MOD_DELETE,'enum',None),
-                (ldap0.MOD_ADD,'enum',['a','B']),
-            ]
-        ),
-
-    ]
-
-    def test_modify_modlist2(self):
-        _, sub_schema = ldap0.schema.util.urlfetch(self.schema_uri, check_uniqueness=True)
-        for old_entry, new_entry, ignore_attr_types, test_modlist in self.modify_modlist_tests:
-            test_modlist.sort()
-            result_modlist = modify_modlist2(
-                sub_schema,
-                ldap0.schema.models.Entry(sub_schema, 'cn=test', old_entry),
-                ldap0.schema.models.Entry(sub_schema, 'cn=test', new_entry),
-                ignore_attr_types=ignore_attr_types,
-            )
-            result_modlist.sort()
-
-            self.assertEqual(
-                test_modlist, result_modlist,
-                'modify_modlist2(%s,%s)\nreturns\n%s\ninstead of\n%s.' % (
                     repr(old_entry),
                     repr(new_entry),
                     repr(result_modlist),

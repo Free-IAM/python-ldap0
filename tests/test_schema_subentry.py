@@ -3,13 +3,12 @@
 Automatic tests for class ldap0.schema.SubSchema
 """
 
-from __future__ import absolute_import
-
 import unittest
+from pprint import pformat
 
 import ldap0.ldif
 from ldap0.dn import DNObj
-from ldap0.schema.util import urlfetch
+from ldap0.schema.util import urlfetch, modify_modlist
 from ldap0.schema.subentry import SubSchema, SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING, OIDNotUnique, NameNotUnique
 from ldap0.schema.models import AttributeType, ObjectClass, NameForm, Entry, SchemaElementOIDSet
 
@@ -39,7 +38,7 @@ class TestSubschema(SubschemaTest):
     """
 
     def test001_basics(self):
-        self.assertEqual(self.schema_dn, 'cn=Subschema')
+        self.assertEqual(self.schema_dn, b'cn=Subschema')
         self.assertEqual(
             len(SCHEMA_CLASS_MAPPING),
             len(self.sub_schema.name2oid),
@@ -165,21 +164,27 @@ class TestSubschema(SubschemaTest):
         test ldap0.schema.models.Entry
         """
         ldap_entry = {
-            'objectClass': ['aeSrvGroup'],
-            'cn': ['test-srvgroup-1'],
-            'description': ['testing...'],
+            b'objectClass': [b'aeSrvGroup'],
+            b'cn': [b'test-srvgroup-1'],
+            b'description': [b'testing...'],
         }
         ae_dn = DNObj.fromstring('cn=test-srvgroup-1,ou=ae-dir')
-        ae_entry = Entry(self.sub_schema, str(ae_dn), ldap_entry)
+        ae_entry = Entry(self.sub_schema, bytes(ae_dn), ldap_entry)
         self.assertIn('cn', ae_entry)
         self.assertIn('2.5.4.3', ae_entry)
         self.assertNotIn('aeLoginGroups', ae_entry)
         self.assertEqual(
-            ae_entry.get_possible_dit_structure_rules(str(ae_dn)),
+            list(ae_entry.get_possible_dit_structure_rules(str(ae_dn))),
             ['5'],
         )
-        self.assertEqual(sorted(ae_entry.keys()), sorted(ldap_entry.keys()))
-        self.assertEqual(sorted(ae_entry.items()), sorted(ldap_entry.items()))
+        self.assertEqual(
+            sorted(ae_entry.keys()),
+            sorted([at.decode('ascii') for at in ldap_entry.keys()])
+        )
+        self.assertEqual(
+            sorted(ae_entry.items()),
+            sorted([(at.decode('ascii'), av) for at, av in ldap_entry.items()])
+        )
         self.assertEqual(
             sorted(ae_entry.object_class_oid_set()),
             ['1.3.6.1.4.1.5427.1.389.100.6.13'],
@@ -190,7 +195,7 @@ class TestSubschema(SubschemaTest):
         """
         test SubSchema.get_applicable_name_form_objs()
         """
-        aeperson_oid = self.sub_schema.getoid(ObjectClass, 'aePerson')
+        aeperson_oid = self.sub_schema.get_oid(ObjectClass, 'aePerson')
         self.assertEqual(aeperson_oid, '1.3.6.1.4.1.5427.1.389.100.6.8')
         name_forms = self.sub_schema.get_applicable_name_form_objs(
             'uniqueIdentifier=foo,cn=hr,ou=ae-dir',
@@ -245,6 +250,95 @@ class TestSubschema(SubschemaTest):
         ):
             with self.assertRaises(NameNotUnique):
                 SubSchema(non_unique_name_tests, check_uniqueness=2)
+
+
+class TestModifyModlist(unittest.TestCase):
+    schema_uri = 'file:tests/ldif/subschema-openldap-all.ldif'
+    modify_modlist_tests = [
+        (
+            {
+                b'objectClass':[b'person', b'pilotPerson'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[b'Str\303\266der'],
+                b'enum':[b'a', b'b', b'c'],
+                b'c':[b'DE'],
+            },
+            {
+                b'objectClass':[b'person', b'inetOrgPerson'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[],
+                b'enum':[b'a', b'b', b'd'],
+                b'mail':[b'michael@stroeder.com'],
+            },
+            [],
+            [
+                (ldap0.MOD_DELETE, b'objectClass', [b'person', b'pilotPerson']),
+                (ldap0.MOD_ADD, b'objectClass', [b'person', b'inetOrgPerson']),
+                (ldap0.MOD_DELETE, b'c', [b'DE']),
+                (ldap0.MOD_DELETE, b'sn', [b'Str\303\266der']),
+                (ldap0.MOD_ADD, b'mail', [b'michael@stroeder.com']),
+                (ldap0.MOD_DELETE, b'enum', None),
+                (ldap0.MOD_ADD, b'enum', [b'a', b'b', b'd']),
+            ]
+        ),
+
+        (
+            {
+                b'c':[b'DE'],
+            },
+            {
+                b'c':[b'FR'],
+            },
+            [],
+            [
+                (ldap0.MOD_DELETE, b'c', [b'DE']),
+                (ldap0.MOD_ADD, b'c', [b'FR']),
+            ]
+        ),
+
+        (
+            {
+                b'objectClass':[b'person'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[b'Str\303\266der'],
+                b'enum':[b'a', b'b'],
+            },
+            {
+                b'objectClass':[b'inetOrgPerson'],
+                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                b'sn':[],
+                b'enum':[b'a', b'B'],
+            },
+            ['objectClass'],
+            [
+                (ldap0.MOD_DELETE, b'sn', [b'Str\303\266der']),
+                (ldap0.MOD_DELETE, b'enum', None),
+                (ldap0.MOD_ADD, b'enum', [b'a', b'B']),
+            ]
+        ),
+
+    ]
+
+    def test_modify_modlist(self):
+        _, sub_schema = ldap0.schema.util.urlfetch(self.schema_uri, check_uniqueness=True)
+        for old_entry, new_entry, ignore_attr_types, test_modlist in self.modify_modlist_tests:
+            result_modlist = modify_modlist(
+                sub_schema,
+                ldap0.schema.models.Entry(sub_schema, b'cn=test', old_entry),
+                ldap0.schema.models.Entry(sub_schema, b'cn=test', new_entry),
+                ignore_attr_types=ignore_attr_types,
+            )
+            self.assertEqual(
+                sorted(test_modlist),
+                sorted(result_modlist),
+                '\nmodify_modlist(\n%s,\n%s\n)\nreturns\n%s\ninstead of\n%s.' % (
+                    pformat(old_entry),
+                    pformat(new_entry),
+                    pformat(sorted(result_modlist)),
+                    pformat(sorted(test_modlist)),
+                )
+            )
+
 
 if __name__ == '__main__':
     unittest.main()

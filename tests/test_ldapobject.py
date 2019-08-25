@@ -3,8 +3,6 @@
 Automatic tests for module ldap0.ldapobject
 """
 
-from __future__ import absolute_import
-
 import os
 import platform
 import unittest
@@ -16,6 +14,7 @@ from errno import ENOTCONN
 os.environ['LDAPNOINIT'] = '1'
 
 import _libldap0
+
 import ldap0
 import ldap0.schema.util
 from ldap0.base import LDAPResult
@@ -31,10 +30,8 @@ from ldap0.controls.libldap import AssertionControl, MatchedValuesControl
 from ldap0.extop.whoami import WhoAmIRequest, WhoAmIResponse
 
 LDIF_TEMPLATE = """dn: %(suffix)s
-objectClass: dcObject
 objectClass: organization
-dc: %(dc)s
-o: %(dc)s
+o: %(o)s
 
 dn: %(rootdn)s
 objectClass: applicationProcess
@@ -99,13 +96,13 @@ class Test00_LDAPObject(SlapdTestCase):
         super(Test00_LDAPObject, cls).setUpClass()
         # insert some Foo* objects via ldapadd
         cls.server.ldapadd(
-            LDIF_TEMPLATE % {
+            (LDIF_TEMPLATE % {
                 'suffix':cls.server.suffix,
                 'rootdn':cls.server.root_dn,
                 'rootcn':cls.server.root_cn,
                 'rootpw':cls.server.root_pw,
-                'dc': cls.server.suffix.split(',')[0][3:],
-            }
+                'o': cls.server.suffix.split(',')[0][3:],
+            }).encode('utf-8')
         )
 
     def setUp(self):
@@ -123,28 +120,31 @@ class Test00_LDAPObject(SlapdTestCase):
         with self.assertRaises(ValueError):
             self.ldap_object_class('ldap.example.com')
         with self.ldap_object_class(LDAPUrl(self.server.ldap_uri)) as l:
-            self.assertEqual(l.uri, LDAPUrl(self.server.ldap_uri).connect_uri())
+            self.assertEqual(
+                l.uri,
+                LDAPUrl(self.server.ldap_uri).connect_uri().encode('ascii')
+            )
 
     def test001_search_subtree(self):
         result = self._ldap_conn.search_s(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(cn=Foo*)',
-            attrlist=['*'],
+            b'(cn=Foo*)',
+            attrlist=[b'*'],
         )
         result.sort()
         self.assertEqual(
             result,
             [
                 (
-                    'cn=Foo%d,%s' % (i, self.server.suffix),
-                    {'cn': ['Foo%d' % i], 'objectClass': ['organizationalRole']}
+                    b'cn=Foo%d,%s' % (i, self.server.suffix.encode('utf-8')),
+                    {b'cn': [b'Foo%d' % i], b'objectClass': [b'organizationalRole']}
                 )
                 for i in range(1, 4)
             ] + [
                 (
-                    'cn=Foo%d,ou=Container,%s' % (i, self.server.suffix),
-                    {'cn': ['Foo%d' % i], 'objectClass': ['organizationalRole']}
+                    b'cn=Foo%d,ou=Container,%s' % (i, self.server.suffix.encode('utf-8')),
+                    {b'cn': [b'Foo%d' % i], b'objectClass': [b'organizationalRole']}
                 )
                 for i in range(4, 8)
             ]
@@ -152,47 +152,47 @@ class Test00_LDAPObject(SlapdTestCase):
 
     def test002_search_onelevel(self):
         result = self._ldap_conn.search_s(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_ONELEVEL,
-            '(cn=Foo*)',
-            ['*'],
+            b'(cn=Foo*)',
+            [b'*'],
         )
         result.sort()
         self.assertEqual(
             result,
             [
                 (
-                    'cn=Foo1,'+self.server.suffix,
-                    {'cn': ['Foo1'], 'objectClass': ['organizationalRole']}
+                    b'cn=Foo1,'+self.server.suffix.encode('utf-8'),
+                    {b'cn': [b'Foo1'], b'objectClass': [b'organizationalRole']}
                 ),
                 (
-                    'cn=Foo2,'+self.server.suffix,
-                    {'cn': ['Foo2'], 'objectClass': ['organizationalRole']}
+                    b'cn=Foo2,'+self.server.suffix.encode('utf-8'),
+                    {b'cn': [b'Foo2'], b'objectClass': [b'organizationalRole']}
                 ),
                 (
-                    'cn=Foo3,'+self.server.suffix,
-                    {'cn': ['Foo3'], 'objectClass': ['organizationalRole']}
+                    b'cn=Foo3,'+self.server.suffix.encode('utf-8'),
+                    {b'cn': [b'Foo3'], b'objectClass': [b'organizationalRole']}
                 ),
             ]
         )
 
     def test003_search_oneattr(self):
         result = self._ldap_conn.search_s(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(cn=Foo4)',
-            ['cn'],
+            b'(cn=Foo4)',
+            [b'cn'],
         )
         result.sort()
         self.assertEqual(
             result,
-            [('cn=Foo4,ou=Container,'+self.server.suffix, {'cn': ['Foo4']})]
+            [(b'cn=Foo4,ou=Container,'+self.server.suffix.encode('utf-8'), {b'cn': [b'Foo4']})]
         )
 
     def test004_errno107(self):
         with self.ldap_object_class('ldap://127.0.0.1:42') as l:
             try:
-                m = l.simple_bind_s("", "")
+                m = l.simple_bind_s(b'', b'')
                 r = l.result(m, ldap0.MSG_ALL, 1.0)
             except ldap0.SERVER_DOWN as ldap_err:
                 err_no = ldap_err.args[0]['errno']
@@ -208,7 +208,10 @@ class Test00_LDAPObject(SlapdTestCase):
         with self.ldap_object_class(self.server.ldap_uri) as l:
             # search with invalid filter
             try:
-                m = l.simple_bind(self.server.root_dn, self.server.root_pw+'wrong')
+                m = l.simple_bind(
+                    self.server.root_dn.encode('utf-8'),
+                    (self.server.root_pw+'wrong').encode('utf-8'),
+                )
                 r = l.result(m, ldap0.MSG_ALL)
             except ldap0.INVALID_CREDENTIALS:
                 pass
@@ -217,112 +220,107 @@ class Test00_LDAPObject(SlapdTestCase):
 
     def test006_sasl_external(self):
         with self.ldap_object_class(self.server.ldapi_uri) as l:
-            l.sasl_non_interactive_bind_s('EXTERNAL')
-            self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
+            l.sasl_non_interactive_bind_s(b'EXTERNAL')
+            self.assertEqual(l.whoami_s().decode('utf-8'), 'dn:'+self.server.root_dn.lower())
         authz_id = 'dn:cn=Foo2,%s' % (self.server.suffix)
         with self.ldap_object_class(self.server.ldapi_uri) as l:
-            l.sasl_non_interactive_bind_s('EXTERNAL', authz_id=authz_id)
-            self.assertEqual(l.whoami_s(), authz_id.lower())
+            l.sasl_non_interactive_bind_s(b'EXTERNAL', authz_id=authz_id.encode('utf-8'))
+            self.assertEqual(l.whoami_s().decode('utf-8'), authz_id.lower())
 
     @unittest.skipIf(platform.linux_distribution()[0].lower()=='debian', 'SASL password mechs not working on Debian')
     def test006_sasl_password_mechs(self):
         authz_id = 'dn:cn=user1,%s' % (self.server.suffix)
         for sasl_mech in (
-                'PLAIN',
-                'CRAM-MD5',
-                'DIGEST-MD5',
-                'SCRAM-SHA-1',
+                b'PLAIN',
+                b'CRAM-MD5',
+                b'DIGEST-MD5',
+                b'SCRAM-SHA-1',
             ):
             with self.ldap_object_class(self.server.ldapi_uri) as l:
-                try:
-                    l.sasl_interactive_bind_s(
-                        '',
-                        SaslPasswordAuth(sasl_mech, 'user1', 'user1_pw'),
-                    )
-                except Exception as exc:
-                    self.fail('Testing SASL mech %s failed: %s' % (sasl_mech, exc))
-                self.assertEqual(l.whoami_s(), authz_id.lower())
+                l.sasl_interactive_bind_s(
+                    sasl_mech,
+                    SaslPasswordAuth(b'user1', b'user1_pw'),
+                )
+                self.assertEqual(l.whoami_s().decode('utf-8'), authz_id.lower())
 
     @unittest.skipIf(platform.linux_distribution()[0].lower()=='debian', 'SASL password mechs not working on Debian')
     def test006_sasl_password_mechs_bad(self):
         for sasl_mech in (
-                'PLAIN',
-                'CRAM-MD5',
-                'DIGEST-MD5',
-#                'SCRAM-SHA-1',
+                b'PLAIN',
+                b'CRAM-MD5',
+                b'DIGEST-MD5',
+#                b'SCRAM-SHA-1',
             ):
             with self.ldap_object_class(self.server.ldapi_uri) as l:
-                try:
+                with self.assertRaises(ldap0.INVALID_CREDENTIALS):
                     l.sasl_interactive_bind_s(
-                        '',
-                        SaslPasswordAuth(sasl_mech, 'user1', 'badpassword'),
+                        sasl_mech,
+                        SaslPasswordAuth(b'user1', b'badpassword'),
                     )
-                except ldap0.INVALID_CREDENTIALS:
-                    pass
-                except Exception, err:
-                    self.fail('Expected SASL/%s bind with wrong password to raise ldap0.INVALID_CREDENTIALS, got: %s' % (sasl_mech, err))
-                else:
-                    self.fail('Expected SASL/%s bind with wrong password to raise ldap0.INVALID_CREDENTIALS' % (sasl_mech))
 
     def test007_timeout(self):
         with self.ldap_object_class(self.server.ldap_uri) as l:
-            m = l.search(self.server.suffix, ldap0.SCOPE_SUBTREE, '(objectClass=*)')
+            m = l.search(
+                self.server.suffix.encode('utf-8'),
+                ldap0.SCOPE_SUBTREE,
+                b'(objectClass=*)',
+            )
             l.abandon(m)
             with self.assertRaises(ldap0.TIMEOUT):
                 result = l.result(m, timeout=0.001)
 
     def test008_sessiontrack_control(self):
         self._ldap_conn.search_s(
-            '',
+            b'',
             ldap0.SCOPE_BASE,
-            serverctrls=[
+            req_ctrls=[
                 SessionTrackingControl(
-                    '192.0.2.1',
-                    'app.example.com',
+                    b'192.0.2.1',
+                    b'app.example.com',
                     SESSION_TRACKING_FORMAT_OID_USERNAME,
-                    'bloggs'
+                    b'bloggs'
                 )
             ],
         )
 
     def test009_readentry_control(self):
         attr_list = sorted([
-            'entryUUID',
-            'entryDN',
-            'createTimestamp',
-            'modifyTimestamp',
+            b'entryUUID',
+            b'entryDN',
+            b'createTimestamp',
+            b'modifyTimestamp',
         ])
         new_dn = 'cn=Anna Blume,'+self.server.suffix
         # add a new entry and return operational attributes with post-read control
         add_result = self._ldap_conn.add_s(
-            new_dn,
+            new_dn.encode('utf-8'),
             [
-                ('objectClass', ['applicationProcess']),
-                ('cn', ['Anna Blume']),
+                (b'objectClass', [b'applicationProcess']),
+                (b'cn', [b'Anna Blume']),
             ],
-            serverctrls=[
+            req_ctrls=[
                 PostReadControl(
                     criticality=True,
                     attrList=attr_list,
                 )
             ],
         )
-        self.assertEqual(add_result.ctrls[0].dn, new_dn)
-        self.assertEqual(add_result.ctrls[0].entry['entryDN'], [new_dn])
+        self.assertEqual(add_result.ctrls[0].dn.decode('utf-8'), new_dn)
+        self.assertEqual(add_result.ctrls[0].entry[b'entryDN'], [new_dn.encode('utf-8')])
         self.assertEqual(len(add_result.ctrls[0].entry), len(attr_list))
         self.assertEqual(sorted(add_result.ctrls[0].entry.keys()), attr_list)
         _, _, _, add_resp_ctrls = add_result
-        self.assertEqual(add_resp_ctrls[0].dn, new_dn)
-        self.assertEqual(add_resp_ctrls[0].entry['entryDN'], [new_dn])
+        self.assertEqual(add_resp_ctrls[0].dn.decode('utf-8'), new_dn)
+        self.assertEqual(add_resp_ctrls[0].entry[b'entryDN'], [new_dn.encode('utf-8')])
         self.assertEqual(len(add_resp_ctrls[0].entry), len(attr_list))
         self.assertEqual(sorted(add_resp_ctrls[0].entry.keys()), attr_list)
         # modify existing entry and return old operational attributes with pre-read control
         _, _, _, mod_resp_ctrls = self._ldap_conn.modify_s(
-            new_dn,
+            new_dn.encode('utf-8'),
             [
-                (ldap0.MOD_ADD, 'description', ['testing...']),
+                (ldap0.MOD_ADD, b'description', [b'testing...']),
             ],
-            serverctrls=[
+            req_ctrls=[
                 PreReadControl(
                     criticality=True,
                     attrList=attr_list,
@@ -334,15 +332,15 @@ class Test00_LDAPObject(SlapdTestCase):
     def test010_pagedresults(self):
         expected_ldap_result = sorted(
             self._ldap_conn.search_s(
-                self.server.suffix,
+                self.server.suffix.encode('utf-8'),
                 ldap0.SCOPE_SUBTREE,
-                attrlist=['1.1'],
+                attrlist=[b'1.1'],
             )
         )
         expected_num_results = len(expected_ldap_result)
-        self.assertEqual(expected_ldap_result >= 10, True)
+        self.assertTrue(expected_num_results >= 10)
         page_size = 3
-        expected_num_pages = expected_num_results / page_size + \
+        expected_num_pages = expected_num_results // page_size + \
                             (expected_num_results % page_size > 0)
         paged_results_control = SimplePagedResultsControl(
             True,
@@ -352,10 +350,10 @@ class Test00_LDAPObject(SlapdTestCase):
         result_pages = 0
         all_paged_results = []
         msg_id = self._ldap_conn.search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            attrlist=['1.1'],
-            serverctrls=[paged_results_control],
+            attrlist=[b'1.1'],
+            req_ctrls=[paged_results_control],
         )
         while True:
             rtype, rdata, rmsgid, rctrls = self._ldap_conn.result(msg_id)
@@ -367,10 +365,10 @@ class Test00_LDAPObject(SlapdTestCase):
                 # Copy cookie from response control to request control
                 paged_results_control.cookie = rctrls[0].cookie
                 msg_id = self._ldap_conn.search(
-                    self.server.suffix,
+                    self.server.suffix.encode('utf-8'),
                     ldap0.SCOPE_SUBTREE,
-                    attrlist=['1.1'],
-                    serverctrls=[paged_results_control],
+                    attrlist=[b'1.1'],
+                    req_ctrls=[paged_results_control],
                 )
             else:
                 break # no more pages available
@@ -380,24 +378,24 @@ class Test00_LDAPObject(SlapdTestCase):
     def test011_add_dict(self):
         new_dn = 'cn=Kurt Schwitters,'+self.server.suffix
         new_entry = {
-            'objectClass': ['applicationProcess'],
-            'cn': ['Kurt Schwitters'],
-            'description': ['Dada!'],
+            b'objectClass': [b'applicationProcess'],
+            b'cn': [b'Kurt Schwitters'],
+            b'description': [b'Dada!'],
         }
-        self._ldap_conn.add_s(new_dn, new_entry)
-        entry = self._ldap_conn.read_s(new_dn, attrlist=new_entry.keys())
+        self._ldap_conn.add_s(new_dn.encode('utf-8'), new_entry)
+        entry = self._ldap_conn.read_s(new_dn.encode('utf-8'), attrlist=new_entry.keys())
         self.assertEqual(entry, new_entry)
-        self._ldap_conn.delete_s(new_dn)
+        self._ldap_conn.delete_s(new_dn.encode('utf-8'))
 
     def test012_results(self):
         msg_id = self._ldap_conn.search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(cn=Foo*)',
-            attrlist=['*'],
+            b'(cn=Foo*)',
+            attrlist=[b'*'],
         )
         result = []
-        for result_type, result_list, result_msgid, result_serverctrls in self._ldap_conn.results(msg_id):
+        for result_type, result_list, result_msgid, result_req_ctrls in self._ldap_conn.results(msg_id):
             for dn, entry in result_list:
                 result.append((dn, entry))
         result.sort()
@@ -405,14 +403,14 @@ class Test00_LDAPObject(SlapdTestCase):
             result,
             [
                 (
-                    'cn=Foo%d,%s' % (i, self.server.suffix),
-                    {'cn': ['Foo%d' % i], 'objectClass': ['organizationalRole']}
+                    ('cn=Foo%d,%s' % (i, self.server.suffix)).encode('utf-8'),
+                    {b'cn': [b'Foo%d' % i], b'objectClass': [b'organizationalRole']}
                 )
                 for i in range(1, 4)
             ] + [
                 (
-                    'cn=Foo%d,ou=Container,%s' % (i, self.server.suffix),
-                    {'cn': ['Foo%d' % i], 'objectClass': ['organizationalRole']}
+                    ('cn=Foo%d,ou=Container,%s' % (i, self.server.suffix)).encode('utf-8'),
+                    {b'cn': [b'Foo%d' % i], b'objectClass': [b'organizationalRole']}
                 )
                 for i in range(4, 8)
             ]
@@ -424,25 +422,25 @@ class Test00_LDAPObject(SlapdTestCase):
             trace_level=self.trace_level,
             cache_ttl=10.0,
         ) as l:
-            l.sasl_non_interactive_bind_s('EXTERNAL')
-            self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
+            l.sasl_non_interactive_bind_s(b'EXTERNAL')
+            self.assertEqual(l.whoami_s().decode('utf-8'), 'dn:'+self.server.root_dn.lower())
             new_dn = 'cn=Cache Tester,'+self.server.suffix
             new_entry = {
-                'objectClass': ['applicationProcess'],
-                'cn': ['Cache Tester'],
+                b'objectClass': [b'applicationProcess'],
+                b'cn': [b'Cache Tester'],
             }
-            l.add_s(new_dn, new_entry)
+            l.add_s(new_dn.encode('utf-8'), new_entry)
             for i in range(5):
-                dn, entry = l.search_s(new_dn, ldap0.SCOPE_BASE)[0]
-                self.assertEqual(dn, new_dn)
+                dn, entry = l.search_s(new_dn.encode('utf-8'), ldap0.SCOPE_BASE)[0]
+                self.assertEqual(dn.decode('utf-8'), new_dn)
                 self.assertEqual(entry, new_entry)
                 self.assertEqual(l._cache_misses, 1)
                 self.assertEqual(l._cache_hits, i)
                 self.assertEqual(len(l._cache), 1)
             cache_hits = l._cache_hits
             cache_misses = l._cache_misses
-            l.modify_s(new_dn, [(ldap0.MOD_ADD, 'description', ['cache test'])])
-            l.modify_s(new_dn, [(ldap0.MOD_DELETE, 'description', ['cache test'])])
+            l.modify_s(new_dn.encode('utf-8'), [(ldap0.MOD_ADD, b'description', [b'cache test'])])
+            l.modify_s(new_dn.encode('utf-8'), [(ldap0.MOD_DELETE, b'description', [b'cache test'])])
             self.assertEqual(l._cache_misses, cache_misses)
             self.assertEqual(l._cache_hits, cache_hits)
             self.assertEqual(len(l._cache), 0)
@@ -453,26 +451,30 @@ class Test00_LDAPObject(SlapdTestCase):
             self.assertEqual(len(l._cache), 0)
             self.assertEqual(l.cache_hit_ratio(), None)
             for i in range(5):
-                dn, entry = l.search_s(new_dn, ldap0.SCOPE_BASE)[0]
-                self.assertEqual(dn, new_dn)
+                dn, entry = l.search_s(new_dn.encode('utf-8'), ldap0.SCOPE_BASE)[0]
+                self.assertEqual(dn.decode('utf-8'), new_dn)
                 self.assertEqual(entry, new_entry)
                 self.assertEqual(l._cache_misses, 1)
                 self.assertEqual(l._cache_hits, i)
                 self.assertEqual(len(l._cache), 1)
             _ = l.search_s(
-                self.server.suffix,
+                self.server.suffix.encode('utf-8'),
                 ldap0.SCOPE_SUBTREE,
-                b'(entryDN=%s)' % (new_dn,),
+                ('(entryDN=%s)' % (new_dn,)).encode('utf-8'),
             )
             self.assertEqual(len(l._cache), 2)
-            l.uncache(new_dn)
+            l.uncache(new_dn.encode('utf-8'))
             self.assertEqual(l._cache_misses, 2)
             self.assertEqual(l._cache_hits, i)
             self.assertEqual(len(l._cache), 0)
             l.flush_cache()
             for i in range(4):
-                dn, entry = l.search_s(new_dn, ldap0.SCOPE_BASE, cache_ttl=0.05)[0]
-                self.assertEqual(dn, new_dn)
+                dn, entry = l.search_s(
+                    new_dn.encode('utf-8'),
+                    ldap0.SCOPE_BASE,
+                    cache_ttl=0.05
+                )[0]
+                self.assertEqual(dn.decode('utf-8'), new_dn)
                 self.assertEqual(entry, new_entry)
                 self.assertEqual(l._cache_misses, i+1)
                 self.assertEqual(l._cache_hits, 0)
@@ -481,63 +483,61 @@ class Test00_LDAPObject(SlapdTestCase):
 
     def test014_extop_whoami(self):
         with self.ldap_object_class(self.server.ldapi_uri) as l:
-            l.sasl_non_interactive_bind_s('EXTERNAL')
+            l.sasl_non_interactive_bind_s(b'EXTERNAL')
             wai = l.extop_s(
                 WhoAmIRequest(),
                 extop_resp_class=WhoAmIResponse,
             )
-            self.assertEqual(wai.responseValue, 'dn:'+self.server.root_dn.lower())
-            self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
+            self.assertEqual(wai.responseValue.decode('utf-8'), 'dn:'+self.server.root_dn.lower())
+            self.assertEqual(l.whoami_s().decode('utf-8'), 'dn:'+self.server.root_dn.lower())
         authz_id = 'dn:cn=Foo2,%s' % (self.server.suffix)
         with self.ldap_object_class(self.server.ldapi_uri) as l:
-            l.sasl_non_interactive_bind_s('EXTERNAL')
+            l.sasl_non_interactive_bind_s(b'EXTERNAL')
             self.assertEqual(
-                l.whoami_s([ProxyAuthzControl(authzId='')]),
-                '',
+                l.whoami_s([ProxyAuthzControl(authzId=b'')]),
+                b'',
             )
             self.assertEqual(
-                l.whoami_s([ProxyAuthzControl(authzId=authz_id)]),
+                l.whoami_s(
+                    [ProxyAuthzControl(authzId=authz_id.encode('utf-8'))]
+                ).decode('utf-8'),
                 authz_id.lower(),
             )
         with self.ldap_object_class(self.server.ldapi_uri) as l:
-            l.simple_bind_s('', '')
+            l.simple_bind_s(b'', b'')
             wai = l.extop_s(
                 WhoAmIRequest(),
                 extop_resp_class=WhoAmIResponse,
             )
-            self.assertEqual(wai.responseValue, '')
-            self.assertEqual(l.whoami_s(), '')
+            self.assertEqual(wai.responseValue, b'')
+            self.assertEqual(l.whoami_s().decode('utf-8'), '')
 
     def test015_passwd(self):
         # first, create a user to change password on
         dn = "cn=PasswordTest," + self.server.suffix
         self._ldap_conn.add_s(
-            dn,
+            dn.encode('utf-8'),
             [
-                ('objectClass', ['person']),
-                ('sn', ['PasswordTest']),
-                ('cn', ['PasswordTest']),
-                ('userPassword', ['initial']),
+                (b'objectClass', [b'person']),
+                (b'sn', [b'PasswordTest']),
+                (b'cn', [b'PasswordTest']),
+                (b'userPassword', [b'initial']),
             ]
         )
         # try changing password with a wrong old-pw
-        try:
-            res = self._ldap_conn.passwd_s(dn, 'bogus', 'ignored')
-        except ldap0.UNWILLING_TO_PERFORM:
-            pass
-        else:
-            self.fail('expected UNWILLING_TO_PERFORM, got %r' % (res))
+        with self.assertRaises(ldap0.UNWILLING_TO_PERFORM):
+            res = self._ldap_conn.passwd_s(dn.encode('utf-8'), b'bogus', b'ignored')
         # try changing password with a correct old-pw
-        new_pwd = self._ldap_conn.passwd_s(dn, 'initial', 'changed')
+        new_pwd = self._ldap_conn.passwd_s(dn.encode('utf-8'), b'initial', b'changed')
         self.assertEqual(new_pwd, None)
         with self.ldap_object_class(self.server.ldapi_uri) as l:
-            l.simple_bind_s(dn, 'changed')
+            l.simple_bind_s(dn.encode('utf-8'), 'changed')
         # let server set new random password
-        new_pwd = self._ldap_conn.passwd_s(dn, 'changed', None)
+        new_pwd = self._ldap_conn.passwd_s(dn.encode('utf-8'), b'changed', None)
         self.assertIsInstance(new_pwd, bytes)
-        self.assertEqual(len(new_pwd)>0, True)
+        self.assertTrue(len(new_pwd)>0)
         with self.ldap_object_class(self.server.ldapi_uri) as l:
-            l.simple_bind_s(dn, new_pwd)
+            l.simple_bind_s(dn.encode('utf-8'), new_pwd)
 
     def test016_cancel(self):
         try:
@@ -548,10 +548,10 @@ class Test00_LDAPObject(SlapdTestCase):
             self.fail("expected ldap0.NO_SUCH_OPERATION to be raised")
         # start a "long-lasting" search
         msg_id = self._ldap_conn.search(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(objectClass=*)',
-            attrlist=['*', '+'],
+            b'(objectClass=*)',
+            attrlist=[b'*', b'+'],
         )
         time.sleep(1.0)
         try:
@@ -564,131 +564,134 @@ class Test00_LDAPObject(SlapdTestCase):
     def test017_relax_rules(self):
         dn = "cn=RelaxRules," + self.server.suffix
         entry = {
-            'objectClass': ['person'],
-            'sn': ['RelaxRules'],
-            'cn': ['RelaxRules'],
-            'createTimestamp': ['19680208115125Z'],
+            b'objectClass': [b'person'],
+            b'sn': [b'RelaxRules'],
+            b'cn': [b'RelaxRules'],
+            b'createTimestamp': [b'19680208115125Z'],
         }
         try:
-            self._ldap_conn.add_s(dn, entry)
+            self._ldap_conn.add_s(dn.encode('utf-8'), entry)
         except ldap0.CONSTRAINT_VIOLATION:
             pass
         else:
             self.fail("should have raised ldap0.CONSTRAINT_VIOLATION")
         self._ldap_conn.add_s(
-            dn,
+            dn.encode('utf-8'),
             entry,
-            serverctrls=[RelaxRulesControl()],
+            req_ctrls=[RelaxRulesControl()],
         )
 
     def test018_referrals(self):
         opt_ref_old = self._ldap_conn.get_option(ldap0.OPT_REFERRALS)
-        self._ldap_conn.set_option(ldap0.OPT_REFERRALS, ldap0.OPT_OFF)
+        self._ldap_conn.set_option(ldap0.OPT_REFERRALS, False)
         dn = "dc=relax-rules," + self.server.suffix
         entry = {
-            'objectClass': ['dcObject', 'referral'],
-            'dc': ['relax-rules'],
-            'ref': ['ldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'],
+            b'objectClass': [b'dcObject', b'referral'],
+            b'dc': [b'relax-rules'],
+            b'ref': [b'ldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'],
         }
-        self._ldap_conn.add_s(dn, entry)
+        self._ldap_conn.add_s(dn.encode('utf-8'), entry)
         try:
-            ldap_result = self._ldap_conn.search_s(dn, ldap0.SCOPE_BASE, attrlist=['*', 'ref'])
+            ldap_result = self._ldap_conn.search_s(
+                dn.encode('utf-8'),
+                ldap0.SCOPE_BASE,
+                attrlist=[b'*', b'ref']
+            )
         except ldap0.REFERRAL as ldap_ref:
             self.assertEqual(
                 ldap_ref.args[0]['desc'],
-                'Referral'
+                b'Referral'
             )
             self.assertEqual(
                 ldap_ref.args[0]['matched'],
-                'dc=relax-rules,dc=slapd-test,dc=example,dc=org'
+                dn.encode('utf-8')
             )
             self.assertEqual(
                 ldap_ref.args[0]['info'],
-                'Referral:\nldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'
+                b'Referral:\nldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'
             )
         else:
             self.fail("should have raised ldap0.REFERRAL")
         ldap_result = self._ldap_conn.search_s(
-            dn,
+            dn.encode('utf-8'),
             ldap0.SCOPE_BASE,
-            attrlist=['*', 'ref'],
-            serverctrls=[ManageDSAITControl()],
+            attrlist=[b'*', b'ref'],
+            req_ctrls=[ManageDSAITControl()],
         )
-        self.assertEqual(ldap_result, [(dn, entry)])
+        self.assertEqual(ldap_result, [(dn.encode('utf-8'), entry)])
         ldap_result = self._ldap_conn.search_s(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(dc=relax-rules)',
-            attrlist=['*', 'ref'],
+            b'(dc=relax-rules)',
+            attrlist=[b'*', b'ref'],
         )
         self.assertEqual(
             ldap_result,
-            [(None, ['ldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'])]
+            [(None, [b'ldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'])]
         )
         ldap_result = self._ldap_conn.search_s(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(dc=relax-rules)',
-            attrlist=['*', 'ref'],
-            serverctrls=[ManageDSAITControl()],
+            b'(dc=relax-rules)',
+            attrlist=[b'*', b'ref'],
+            req_ctrls=[ManageDSAITControl()],
         )
-        self.assertEqual(ldap_result, [(dn, entry)])
+        self.assertEqual(ldap_result, [(dn.encode('utf-8'), entry)])
         self._ldap_conn.set_option(ldap0.OPT_REFERRALS, opt_ref_old)
         self._ldap_conn.delete_s(
-            dn,
-            serverctrls=[ManageDSAITControl()],
+            dn.encode('utf-8'),
+            req_ctrls=[ManageDSAITControl()],
         )
 
     def test019_assertion_control(self):
         dn = "cn=AssertionControl," + self.server.suffix
         entry = {
-            'objectClass': ['person'],
-            'sn': ['AssertionControl'],
-            'cn': ['AssertionControl'],
+            b'objectClass': [b'person'],
+            b'sn': [b'AssertionControl'],
+            b'cn': [b'AssertionControl'],
         }
-        self._ldap_conn.add_s(dn, entry)
-        old_entry = self._ldap_conn.read_s(dn, attrlist=['modifyTimestamp', 'entryCSN'])
+        self._ldap_conn.add_s(dn.encode('utf-8'), entry)
+        old_entry = self._ldap_conn.read_s(
+            dn.encode('utf-8'),
+            attrlist=[b'modifyTimestamp', b'entryCSN'],
+        )
         assertion_filter = b'(&(modifyTimestamp=%s)(entryCSN=%s))' % (
-            old_entry['modifyTimestamp'][0],
-            old_entry['entryCSN'][0],
+            old_entry[b'modifyTimestamp'][0],
+            old_entry[b'entryCSN'][0],
         )
         self._ldap_conn.modify_s(
-            dn,
-            [(ldap0.MOD_REPLACE, 'description', ['test modification #1'])],
-            serverctrls=[AssertionControl(filterstr=assertion_filter)],
+            dn.encode('utf-8'),
+            [(ldap0.MOD_REPLACE, b'description', [b'test modification #1'])],
+            req_ctrls=[AssertionControl(filterstr=assertion_filter)],
         )
-        try:
+        with self.assertRaises(ldap0.ASSERTION_FAILED):
             self._ldap_conn.modify_s(
-                dn,
-                [(ldap0.MOD_REPLACE, 'description', ['test modification #2'])],
-                serverctrls=[AssertionControl(filterstr=assertion_filter)],
+                dn.encode('utf-8'),
+                [(ldap0.MOD_REPLACE, b'description', [b'test modification #2'])],
+                req_ctrls=[AssertionControl(filterstr=assertion_filter)],
             )
-        except ldap0.ASSERTION_FAILED:
-            pass
-        else:
-            self.fail("should have raised ldap0.ASSERTION_FAILED")
 
     def test020_matched_values(self):
         dn = "sn=MatchedValues," + self.server.suffix
         entry = {
-            'objectClass': ['person', 'dcObject'],
-            'dc': ['matched-values'],
-            'sn': ['MatchedValues'],
-            'cn': [
-                'MatchedValues0',
-                'MatchedValues1',
-                'MatchedValues2',
-                'MatchedValues3',
-                'MatchedValues4',
-                'MatchedValues5',
+            b'objectClass': [b'person', b'dcObject'],
+            b'dc': [b'matched-values'],
+            b'sn': [b'MatchedValues'],
+            b'cn': [
+                b'MatchedValues0',
+                b'MatchedValues1',
+                b'MatchedValues2',
+                b'MatchedValues3',
+                b'MatchedValues4',
+                b'MatchedValues5',
             ],
         }
-        self._ldap_conn.add_s(dn, entry)
-        for val in entry['cn']:
+        self._ldap_conn.add_s(dn.encode('utf-8'), entry)
+        for val in entry[b'cn']:
             mv_entry = self._ldap_conn.read_s(
-                dn,
-                attrlist=['objectClass', 'cn'],
-                serverctrls=[
+                dn.encode('utf-8'),
+                attrlist=[b'objectClass', b'cn'],
+                req_ctrls=[
                     MatchedValuesControl(
                         filterstr=b'((objectClass=person)(cn=%s))' % (val,)
                     ),
@@ -696,149 +699,156 @@ class Test00_LDAPObject(SlapdTestCase):
             )
             self.assertEqual(
                 mv_entry,
-                {'cn': [val], 'objectClass': ['person']}
+                {b'cn': [val], b'objectClass': [b'person']}
             )
 
     def test021_compare(self):
         self.assertTrue(
             self._ldap_conn.compare_s(
-                self.server.root_dn,
-                'userPassword',
-                self.server.root_pw,
+                self.server.root_dn.encode('utf-8'),
+                b'userPassword',
+                self.server.root_pw.encode('utf-8'),
             )
         )
         self.assertFalse(
             self._ldap_conn.compare_s(
-                self.server.root_dn,
-                'userPassword',
-                self.server.root_pw+'1',
+                self.server.root_dn.encode('utf-8'),
+                b'userPassword',
+                (self.server.root_pw+'1').encode('utf-8'),
             )
         )
         with self.assertRaises(ldap0.NO_SUCH_OBJECT):
-            self._ldap_conn.compare_s('cn=foobar', 'cn', 'foobar')
+            self._ldap_conn.compare_s(b'cn=foobar', b'cn', b'foobar')
         with self.assertRaises(ldap0.UNDEFINED_TYPE):
-            self._ldap_conn.compare_s('cn=foobar', 'foo', 'bar')
+            self._ldap_conn.compare_s(b'cn=foobar', b'foo', b'bar')
 
     def test022_get_whoami_dn(self):
         self.assertEqual(
-            self._ldap_conn.get_whoami_dn(),
+            self._ldap_conn.get_whoami_dn().decode('utf-8'),
             self.server.root_dn,
         )
         # repeated (cached)
         self.assertEqual(
-            self._ldap_conn.get_whoami_dn(),
+            self._ldap_conn.get_whoami_dn().decode('utf-8'),
             self.server.root_dn,
         )
         with self.ldap_object_class(self.server.ldapi_uri) as l:
             self.assertEqual(l._whoami_dn, None)
-            l.simple_bind_s('', '')
-            self.assertEqual(l.whoami_s(),'')
-            self.assertEqual(l.get_whoami_dn(),'')
+            l.simple_bind_s(b'', b'')
+            self.assertEqual(l.whoami_s().decode('utf-8'), '')
+            self.assertEqual(l.get_whoami_dn().decode('utf-8'), '')
             bind_dn = 'cn=user1,'+self.server.suffix
-            l.simple_bind_s(bind_dn, 'user1_pw')
+            l.simple_bind_s(bind_dn.encode('utf-8'), b'user1_pw')
             self.assertEqual(
-                l.get_whoami_dn(),
+                l.get_whoami_dn().decode('utf-8'),
                 bind_dn,
             )
 
     def test023_find_unique_entry(self):
         dn, entry = self._ldap_conn.find_unique_entry(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(cn=user1)',
+            b'(cn=user1)',
         )
-        self.assertEqual(dn, 'cn=user1,dc=slapd-test,dc=example,dc=org')
-        self.assertEqual(entry, {'cn': ['user1'], 'userPassword': ['user1_pw'], 'objectClass': ['applicationProcess', 'simpleSecurityObject']})
+        self.assertEqual(dn, b'cn=user1,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org')
+        self.assertEqual(
+            entry,
+            {
+                b'cn': [b'user1'],
+                b'userPassword': [b'user1_pw'],
+                b'objectClass': [b'applicationProcess', b'simpleSecurityObject'],
+            }
+        )
         dn, entry = self._ldap_conn.find_unique_entry(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(cn=user1)',
-            attrlist=['1.1'],
+            b'(cn=user1)',
+            attrlist=[b'1.1'],
         )
-        self.assertEqual(dn, 'cn=user1,dc=slapd-test,dc=example,dc=org')
+        self.assertEqual(dn, b'cn=user1,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org')
         self.assertEqual(entry, {})
         dn, entry = self._ldap_conn.find_unique_entry(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(cn=user1)',
-            attrlist=['cn', 'userPassword'],
+            b'(cn=user1)',
+            attrlist=[b'cn', b'userPassword'],
         )
-        self.assertEqual(dn, 'cn=user1,dc=slapd-test,dc=example,dc=org')
-        self.assertEqual(entry, {'cn': ['user1'], 'userPassword': ['user1_pw']})
+        self.assertEqual(dn, b'cn=user1,o=\xc3\xb6\xc3\xa4\xc3\xbc,dc=example,dc=org')
+        self.assertEqual(entry, {b'cn': [b'user1'], b'userPassword': [b'user1_pw']})
         with self.assertRaises(ldap0.NO_UNIQUE_ENTRY):
             self._ldap_conn.find_unique_entry(
-                self.server.suffix,
+                self.server.suffix.encode('utf-8'),
                 ldap0.SCOPE_SUBTREE,
-                '(objectClass=foobar)',
+                b'(objectClass=foobar)',
             )
         with self.assertRaises(ldap0.NO_UNIQUE_ENTRY):
             self._ldap_conn.find_unique_entry(
-                self.server.suffix,
+                self.server.suffix.encode('utf-8'),
                 ldap0.SCOPE_SUBTREE,
-                '(objectClass=*)',
+                b'(objectClass=*)',
             )
 
     def test024_umlauts(self):
         result = self._ldap_conn.search_s(
-            self.server.suffix,
+            self.server.suffix.encode('utf-8'),
             ldap0.SCOPE_SUBTREE,
-            '(ou=*ö*)',
-            attrlist=['ou'],
+            '(ou=*ö*)'.encode('utf-8'),
+            attrlist=[b'ou'],
         )
         self.assertEqual(
             result,
             [
                 (
-                    'ou=äöüÄÖUß,ou=Container,%s' % (self.server.suffix),
-                    {'ou': ['äöüÄÖUß']}
+                    ('ou=äöüÄÖUß,ou=Container,%s' % (self.server.suffix)).encode('utf-8'),
+                    {b'ou': ['äöüÄÖUß'.encode('utf-8')]}
                 )
             ]
         )
         self.assertTrue(
             self._ldap_conn.compare_s(
-                'ou=äöüÄÖUß,ou=Container,%s' % (self.server.suffix),
-                'ou',
-                'äöüÄÖUß',
+                ('ou=äöüÄÖUß,ou=Container,%s' % (self.server.suffix)).encode('utf-8'),
+                b'ou',
+                'äöüÄÖUß'.encode('utf-8'),
             )
         )
         add_dn = 'ou=ßÜÖÄüöä,ou=Container,%s' % (self.server.suffix)
         self._ldap_conn.add_s(
-            add_dn,
+            add_dn.encode('utf-8'),
             {
-                'objectClass': ['organizationalUnit'],
-                'ou': ['ßÜÖÄüöä'],
+                b'objectClass': [b'organizationalUnit'],
+                b'ou': ['ßÜÖÄüöä'.encode('utf-8')],
             },
         )
         self.assertTrue(
             self._ldap_conn.compare_s(
-                add_dn,
-                'ou',
-                'ßÜÖÄüöä',
+                add_dn.encode('utf-8'),
+                b'ou',
+                'ßÜÖÄüöä'.encode('utf-8'),
             )
         )
-        self._ldap_conn.delete_s(add_dn)
+        self._ldap_conn.delete_s(add_dn.encode('utf-8'))
 
     def test025_search_subschemasubentry_s(self):
         self.assertEqual(
             self._ldap_conn.search_subschemasubentry_s(),
-            'cn=Subschema',
+            b'cn=Subschema',
         )
         self.assertEqual(
-            self._ldap_conn.search_subschemasubentry_s(dn=''),
-            'cn=Subschema',
+            self._ldap_conn.search_subschemasubentry_s(dn=b''),
+            b'cn=Subschema',
         )
         self.assertEqual(
-            self._ldap_conn.search_subschemasubentry_s(dn=self.server.suffix),
-            'cn=Subschema',
+            self._ldap_conn.search_subschemasubentry_s(dn=self.server.suffix.encode('utf-8')),
+            b'cn=Subschema',
         )
         # this will cause fall back reading attribute subschemaSubentry from rootDSE
         self.assertEqual(
-            self._ldap_conn.search_subschemasubentry_s('cn=doesnotexist'),
-            'cn=Subschema',
+            self._ldap_conn.search_subschemasubentry_s(b'cn=doesnotexist'),
+            b'cn=Subschema',
         )
         # DN of subschema subentry cannot be determined and will return None
         self.assertEqual(
-            self._ldap_conn.search_subschemasubentry_s('cn=doesnotexist', rootdse=False),
+            self._ldap_conn.search_subschemasubentry_s(b'cn=doesnotexist', rootdse=False),
             None,
         )
 
@@ -847,23 +857,27 @@ class Test00_LDAPObject(SlapdTestCase):
         rdn2 = 'cn=LaLeLu4711'
         dn2 = ','.join((rdn2, self.server.suffix))
         entry = {
-            'objectClass': ['applicationProcess'],
-            'cn': ['äöüÄÖÜß'],
+            b'objectClass': [b'applicationProcess'],
+            b'cn': ['äöüÄÖÜß'.encode('utf-8')],
         }
-        add_result = self._ldap_conn.add_s(dn1, entry)
+        add_result = self._ldap_conn.add_s(dn1.encode('utf-8'), entry)
         self.assertEqual(tuple(add_result), (_libldap0.RES_ADD, [], 2, []))
         with self.assertRaises(_libldap0.ALREADY_EXISTS):
-            self._ldap_conn.add_s(dn1, entry)
-        rename_result = self._ldap_conn.rename_s(dn1, rdn2, newsuperior=self.server.suffix)
+            self._ldap_conn.add_s(dn1.encode('utf-8'), entry)
+        rename_result = self._ldap_conn.rename_s(
+            dn1.encode('utf-8'),
+            rdn2.encode('utf-8'),
+            newsuperior=self.server.suffix.encode('utf-8'),
+        )
         self.assertEqual(tuple(rename_result), (_libldap0.RES_MODRDN, [], 4, []))
-        read_result = self._ldap_conn.read_s(dn2)
-        self.assertEqual(read_result, {'cn': ['LaLeLu4711'], 'objectClass': ['applicationProcess']})
+        read_result = self._ldap_conn.read_s(dn2.encode('utf-8'))
+        self.assertEqual(read_result, {b'cn': [b'LaLeLu4711'], b'objectClass': [b'applicationProcess']})
         with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
-            self._ldap_conn.rename_s(dn1, rdn2)
-        delete_result = self._ldap_conn.delete_s(dn2)
+            self._ldap_conn.rename_s(dn1.encode('utf-8'), rdn2.encode('utf-8'))
+        delete_result = self._ldap_conn.delete_s(dn2.encode('utf-8'))
         self.assertEqual(tuple(delete_result), (_libldap0.RES_DELETE, [], 7, []))
         with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
-            self._ldap_conn.delete_s(dn2)
+            self._ldap_conn.delete_s(dn2.encode('utf-8'))
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
@@ -874,19 +888,19 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
 
     def test101_reconnect_sasl_external(self):
         with self.ldap_object_class(self.server.ldapi_uri) as l:
-            l.sasl_non_interactive_bind_s('EXTERNAL')
-            authz_id = l.whoami_s()
+            l.sasl_non_interactive_bind_s(b'EXTERNAL')
+            authz_id = l.whoami_s().decode('utf-8')
             self.assertEqual(authz_id, 'dn:'+self.server.root_dn.lower())
             self.server.restart()
-            self.assertEqual(l.whoami_s(), authz_id)
+            self.assertEqual(l.whoami_s().decode('utf-8'), authz_id)
 
     def test102_reconnect_simple_bind(self):
         with self.ldap_object_class(self.server.ldapi_uri) as l:
             bind_dn = 'cn=user1,'+self.server.suffix
-            l.simple_bind_s(bind_dn, 'user1_pw')
-            self.assertEqual(l.whoami_s(), 'dn:'+bind_dn)
+            l.simple_bind_s(bind_dn.encode('utf-8'), b'user1_pw')
+            self.assertEqual(l.whoami_s().decode('utf-8'), 'dn:'+bind_dn)
             self.server.restart()
-            self.assertEqual(l.whoami_s(), 'dn:'+bind_dn)
+            self.assertEqual(l.whoami_s().decode('utf-8'), 'dn:'+bind_dn)
 
     def test103_reconnect_get_state(self):
         bind_dn = 'cn=user1,'+self.server.suffix
@@ -896,60 +910,60 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             '_cache_misses': 0,
             '_last_bind': (
                 'simple_bind_s',
-                (bind_dn, 'user1_pw'),
+                (bind_dn.encode('utf-8'), b'user1_pw'),
                 {}
             ),
             '_options': [
                 # default options set in LDAPObject.__init__()
                 (_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION3),
-                (_libldap0.OPT_RESTART, _libldap0.OPT_OFF),
-                (_libldap0.OPT_DEREF, _libldap0.OPT_OFF),
-                (_libldap0.OPT_REFERRALS, _libldap0.OPT_OFF),
+                (_libldap0.OPT_RESTART, False),
+                (_libldap0.OPT_DEREF, False),
+                (_libldap0.OPT_REFERRALS, False),
                 (_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_HARD),
             ],
             '_reconnects_done': 0,
             '_retry_delay': 60.0,
             '_retry_max': 1,
             '_start_tls': 0,
-            '_uri': self.server.ldapi_uri,
-            'uri': self.server.ldapi_uri,
+            '_uri': self.server.ldapi_uri.encode('ascii'),
+            'uri': self.server.ldapi_uri.encode('ascii'),
             'cache_ttl': 0.0,
             'timeout': -1,
             '_trace_level': 0,
-            '_whoami_dn': bind_dn,
+            '_whoami_dn': bind_dn.encode('utf-8'),
         }
         with self.ldap_object_class(self.server.ldapi_uri) as l1:
-            l1.simple_bind_s(bind_dn, 'user1_pw')
-            self.assertEqual(l1.whoami_s(), 'dn:'+bind_dn)
-            self.assertEqual(l1.get_whoami_dn(), bind_dn)
+            l1.simple_bind_s(bind_dn.encode('utf-8'), b'user1_pw')
+            self.assertEqual(l1.whoami_s().decode('utf-8'), 'dn:'+bind_dn)
+            self.assertEqual(l1.get_whoami_dn().decode('utf-8'), bind_dn)
             self.assertEqual(l1.__getstate__(), expected_state)
 
     def test104_reconnect_restore(self):
         with self.ldap_object_class(self.server.ldapi_uri) as l1:
             l1 = self.ldap_object_class(self.server.ldapi_uri)
             bind_dn = 'cn=user1,'+self.server.suffix
-            l1.simple_bind_s(bind_dn, 'user1_pw')
-            self.assertEqual(l1.whoami_s(), 'dn:'+bind_dn)
+            l1.simple_bind_s(bind_dn.encode('utf-8'), 'user1_pw')
+            self.assertEqual(l1.whoami_s().decode('utf-8'), 'dn:'+bind_dn)
             l1_state = pickle.dumps(l1)
         with pickle.loads(l1_state) as l2:
-            self.assertEqual(l2.whoami_s(), 'dn:'+bind_dn)
+            self.assertEqual(l2.whoami_s().decode('utf-8'), 'dn:'+bind_dn)
 
     def test105_null_reconnect(self):
         with self.ldap_object_class(self.server.ldapi_uri, retry_max=0) as l:
-            l.sasl_non_interactive_bind_s('EXTERNAL')
+            l.sasl_non_interactive_bind_s(b'EXTERNAL')
             authz_id = l.whoami_s()
-            self.assertEqual(authz_id, 'dn:'+self.server.root_dn.lower())
+            self.assertEqual(authz_id.decode('utf-8'), 'dn:'+self.server.root_dn.lower())
             self.server.restart()
             with self.assertRaises(_libldap0.SERVER_DOWN):
-                self.assertEqual(l.whoami_s(), authz_id)
+                self.assertEqual(l.whoami_s().decode('utf-8'), authz_id)
 
     def test106_reconnect_reset_last_bind(self):
         with self.ldap_object_class(self.server.ldapi_uri, retry_max=1) as l:
-            l.sasl_non_interactive_bind_s('EXTERNAL')
-            self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
+            l.sasl_non_interactive_bind_s(b'EXTERNAL')
+            self.assertEqual(l.whoami_s().decode('utf-8'), 'dn:'+self.server.root_dn.lower())
             # now force reconnect with anon bind
             l.reconnect(l.uri, reset_last_bind=True)
-            self.assertEqual(l.whoami_s(), '')
+            self.assertEqual(l.whoami_s(), b'')
 
 
 class TestSchemaUrlFetchLDAP(SlapdTestCase):
@@ -959,7 +973,7 @@ class TestSchemaUrlFetchLDAP(SlapdTestCase):
         test ldap0.schema.util.urlfetch() which requires a running slapd instance
         """
         schema_dn, sub_schema = ldap0.schema.util.urlfetch(self.server.ldapi_uri, check_uniqueness=True)
-        self.assertEqual(schema_dn, 'cn=Subschema')
+        self.assertEqual(schema_dn, b'cn=Subschema')
         oid = sub_schema.name2oid[ldap0.schema.models.AttributeType]['cn']
         self.assertEqual(oid, '2.5.4.3')
         self.assertEqual(oid, sub_schema.name2oid[ldap0.schema.models.AttributeType]['commonName'])

@@ -4,8 +4,6 @@ ldap0.controls.sss - classes for Server Side Sorting
 (see RFC 2891)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
@@ -69,19 +67,19 @@ class SSSRequestControl(RequestControl):
         RequestControl.__init__(self, self.controlType, criticality)
         self.ordering_rules = ordering_rules
         for rule in ordering_rules:
-            rule = rule.split(':')
+            rule = rule.split(b':')
             assert len(rule) < 3, 'syntax for ordering rule: [-]<attribute-type>[:ordering-rule]'
 
     def asn1(self):
         p = SortKeyListType()
         for i, rule in enumerate(self.ordering_rules):
             q = SortKeyType()
-            reverse_order = rule.startswith('-')
+            reverse_order = rule.startswith(b'-')
             if reverse_order:
                 rule = rule[1:]
-            if ':' in rule:
-                attribute_type, ordering_rule = rule.split(':')
-            else:
+            try:
+                attribute_type, ordering_rule = rule.split(b':')
+            except ValueError:
                 attribute_type, ordering_rule = rule, None
             q.setComponentByName('attributeType', attribute_type)
             if ordering_rule:

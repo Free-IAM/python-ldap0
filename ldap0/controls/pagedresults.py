@@ -4,8 +4,6 @@ ldap0.controls.pagedresults - classes for Simple Paged control
 (see RFC 2696)
 """
 
-from __future__ import absolute_import
-
 from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
@@ -30,7 +28,7 @@ class SimplePagedResultsControl(RequestControl, ResponseControl):
     def __init__(self, criticality=False, size=10, cookie=''):
         RequestControl.__init__(self, criticality=criticality)
         self.size = size
-        self.cookie = cookie or ''
+        self.cookie = cookie or b''
 
     def encodeControlValue(self):
         pc = self.PagedResultsControlValue()
@@ -44,6 +42,6 @@ class SimplePagedResultsControl(RequestControl, ResponseControl):
             asn1Spec=self.PagedResultsControlValue(),
         )
         self.size = int(decodedValue.getComponentByName('size'))
-        self.cookie = str(decodedValue.getComponentByName('cookie'))
+        self.cookie = decodedValue.getComponentByName('cookie')
 
 KNOWN_RESPONSE_CONTROLS.reg(SimplePagedResultsControl)

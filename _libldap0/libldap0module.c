@@ -4,7 +4,7 @@
 #include "functions.h"
 #include "ldapcontrol.h"
 
-#include "LDAPObject.h"
+#include "ldapobject.h"
 
 #define _STR(x) #x
 #define STR(x) _STR(x)
@@ -41,9 +41,6 @@ PyObject* init_libldap0(void)
     PyObject *m, *d;
 
     /* Create the module and add the functions */
-#if PY_MAJOR_VERSION < 3
-    m = Py_InitModule("_libldap0", methods);
-#else
     static struct PyModuleDef ldap_moduledef = {
             PyModuleDef_HEAD_INIT,
             "_libldap0",          /* m_name */
@@ -52,7 +49,6 @@ PyObject* init_libldap0(void)
             methods,              /* m_methods */
     };
     m = PyModule_Create(&ldap_moduledef);
-#endif
     if (PyType_Ready(&LDAP_Type) < 0) {
         Py_DECREF(m);
         return NULL;
@@ -74,12 +70,6 @@ PyObject* init_libldap0(void)
     return m;
 }
 
-#if PY_MAJOR_VERSION < 3
-PyMODINIT_FUNC init__libldap0() {
-    init_libldap0();
-}
-#else
 PyMODINIT_FUNC PyInit__libldap0() {
     return init_libldap0();
 }
-#endif

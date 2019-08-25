@@ -3,8 +3,6 @@
 ldap0.schema.subentry -  subschema subentry handling
 """
 
-from __future__ import absolute_import
-
 from itertools import combinations
 
 from ..__about__ import __version__, __author__, __license__
@@ -18,8 +16,8 @@ from .models import \
     NameForm, \
     ObjectClass, \
     SchemaElementOIDSet
-from ..cidict import cidict
-from ..dn import str2dn
+from ..cidict import CIDict
+from ..dn import DNObj
 
 
 __all__ = [
@@ -41,7 +39,7 @@ SCHEMA_ATTR_MAPPING = {
     NameForm: NameForm.schema_attribute,
     ObjectClass: ObjectClass.schema_attribute,
 }
-SCHEMA_CLASS_MAPPING = cidict({
+SCHEMA_CLASS_MAPPING = CIDict({
     AttributeType.schema_attribute: AttributeType,
     DITContentRule.schema_attribute: DITContentRule,
     DITStructureRule.schema_attribute: DITStructureRule,
@@ -76,7 +74,7 @@ class NameNotUnique(SubschemaError):
         return 'NAME not unique for %s' % (self.desc)
 
 
-class SubSchema(object):
+class SubSchema:
     """
     Arguments:
 
@@ -121,12 +119,12 @@ class SubSchema(object):
         self.non_unique_oids = {}
         self.non_unique_names = {}
         for c in SCHEMA_CLASS_MAPPING.values():
-            self.name2oid[c] = cidict()
+            self.name2oid[c] = CIDict(keytype=str)
             self.sed[c] = {}
-            self.non_unique_names[c] = cidict()
+            self.non_unique_names[c] = CIDict(keytype=str)
 
         # Transform entry dict to case-insensitive dict
-        e = cidict(sub_schema_sub_entry)
+        e = CIDict(sub_schema_sub_entry, keytype=str)
 
         # Build the schema registry in dictionaries
         for attr_type in SCHEMA_ATTRS:
@@ -155,7 +153,7 @@ class SubSchema(object):
                 self.sed[se_class][se_id] = se_instance
 
                 if hasattr(se_instance, 'names'):
-                    for name in cidict({}.fromkeys(se_instance.names)).keys():
+                    for name in CIDict({}.fromkeys(se_instance.names)).keys():
                         if check_uniqueness and name in self.name2oid[se_class]:
                             self.non_unique_names[se_class][se_id] = None
                             raise NameNotUnique(attr_value)
@@ -210,13 +208,13 @@ class SubSchema(object):
 
     def tree(self, schema_element_class, schema_element_filters=None):
         """
-        Returns a ldap0.cidict.cidict dictionary representing the
+        Returns a ldap0.cidict.CIDict dictionary representing the
         tree structure of the schema elements.
         """
         assert schema_element_class in [ObjectClass, AttributeType]
         avail_se = self.listall(schema_element_class, schema_element_filters)
         top_node = '_'
-        tree = cidict({top_node:[]})
+        tree = CIDict({top_node:[]})
         # 1. Pass: Register all nodes
         for se in avail_se:
             tree[se] = []
@@ -235,15 +233,14 @@ class SubSchema(object):
                 )
             )
             for s in se_obj.sup or ('_',):
-                sup_oid = self.getoid(schema_element_class, s)
+                sup_oid = self.get_oid(schema_element_class, s)
                 try:
                     tree[sup_oid].append(se_oid)
                 except:
                     pass
         return tree
 
-
-    def getoid(self, se_class, nameoroid, raise_keyerror=0):
+    def get_oid(self, se_class, nameoroid, raise_keyerror=0):
         """
         Get an OID by name or OID
         """
@@ -251,21 +248,21 @@ class SubSchema(object):
         if nameoroid_stripped in self.sed[se_class]:
             # name_or_oid is already a registered OID
             return nameoroid_stripped
-        else:
-            try:
-                result_oid = self.name2oid[se_class][nameoroid_stripped]
-            except KeyError:
-                if raise_keyerror:
-                    raise KeyError(
-                        'No registered %s-OID for nameoroid %r' % (
-                            se_class.__name__,
-                            nameoroid_stripped
-                        )
+        try:
+            # try to look up OID by name
+            result_oid = self.name2oid[se_class][nameoroid_stripped]
+        except KeyError:
+            if raise_keyerror:
+                # raise error so zhe caller has to deal with it
+                raise KeyError(
+                    'No registered %s-OID for nameoroid %r' % (
+                        se_class.__name__,
+                        nameoroid_stripped
                     )
-                else:
-                    result_oid = nameoroid_stripped
+                )
+            # just return the name
+            result_oid = nameoroid_stripped
         return result_oid
-
 
     def get_inheritedattr(self, se_class, nameoroid, name):
         """
@@ -275,7 +272,7 @@ class SubSchema(object):
 
         Raises KeyError if no schema element is found by nameoroid.
         """
-        se = self.sed[se_class][self.getoid(se_class, nameoroid)]
+        se = self.sed[se_class][self.get_oid(se_class, nameoroid)]
         try:
             result = getattr(se, name)
         except AttributeError:
@@ -288,7 +285,7 @@ class SubSchema(object):
         """
         Get a schema element by name or OID
         """
-        se_oid = self.getoid(se_class, nameoroid)
+        se_oid = self.get_oid(se_class, nameoroid)
         try:
             se_obj = self.sed[se_class][se_oid]
         except KeyError:
@@ -311,7 +308,7 @@ class SubSchema(object):
         """
         import copy
         inherited = inherited or []
-        se = copy.copy(self.sed[se_class].get(self.getoid(se_class, nameoroid)))
+        se = copy.copy(self.sed[se_class].get(self.get_oid(se_class, nameoroid)))
         if se and hasattr(se, 'sup'):
             for class_attr_name in inherited:
                 setattr(
@@ -345,11 +342,11 @@ class SubSchema(object):
             if oc_se and oc_se.kind == 0:
                 struct_ocs[oc_se.oid] = None
         result = None
-        struct_oc_list = struct_ocs.keys()
+        struct_oc_list = list(struct_ocs.keys())
         while struct_oc_list:
             oid = struct_oc_list.pop()
             for child_oid in oc_tree[oid]:
-                if self.getoid(ObjectClass, child_oid) in struct_ocs:
+                if self.get_oid(ObjectClass, child_oid) in struct_ocs:
                     break
             else:
                 result = oid
@@ -382,7 +379,7 @@ class SubSchema(object):
         all inherited attributes of superior object classes
         by walking up classes along the SUP attribute.
 
-        The attributes are stored in a ldap0.cidict.cidict dictionary.
+        The attributes are stored in a ldap0.cidict.CIDict dictionary.
 
         object_class_list
             list of strings specifying object class names or OIDs
@@ -399,13 +396,13 @@ class SubSchema(object):
 
         # Map object_class_list to object_class_oids (list of OIDs)
         object_class_oids = [
-            self.getoid(ObjectClass, o)
+            self.get_oid(ObjectClass, o)
             for o in object_class_list
         ]
         # Initialize
         oid_cache = {}
 
-        r_must, r_may = cidict(), cidict()
+        r_must, r_may = CIDict(), CIDict()
         if '1.3.6.1.4.1.1466.101.120.111' in object_class_oids:
             # Object class 'extensibleObject' MAY carry every attribute type
             for at_obj in self.sed[AttributeType].values():
@@ -431,14 +428,14 @@ class SubSchema(object):
             assert hasattr(object_class, 'must'), ValueError(object_class_oid)
             assert hasattr(object_class, 'may'), ValueError(object_class_oid)
             for a in object_class.must:
-                se_oid = self.getoid(AttributeType, a, raise_keyerror=raise_keyerror)
+                se_oid = self.get_oid(AttributeType, a, raise_keyerror=raise_keyerror)
                 r_must[se_oid] = self.get_obj(AttributeType, se_oid, raise_keyerror=raise_keyerror)
             for a in object_class.may:
-                se_oid = self.getoid(AttributeType, a, raise_keyerror=raise_keyerror)
+                se_oid = self.get_oid(AttributeType, a, raise_keyerror=raise_keyerror)
                 r_may[se_oid] = self.get_obj(AttributeType, se_oid, raise_keyerror=raise_keyerror)
 
             object_class_oids.extend([
-                self.getoid(ObjectClass, o)
+                self.get_oid(ObjectClass, o)
                 for o in object_class.sup
             ])
 
@@ -454,21 +451,21 @@ class SubSchema(object):
                     pass
                 else:
                     for a in dit_content_rule.must:
-                        se_oid = self.getoid(AttributeType, a, raise_keyerror=raise_keyerror)
+                        se_oid = self.get_oid(AttributeType, a, raise_keyerror=raise_keyerror)
                         r_must[se_oid] = self.get_obj(
                             AttributeType,
                             se_oid,
                             raise_keyerror=raise_keyerror
                         )
                     for a in dit_content_rule.may:
-                        se_oid = self.getoid(AttributeType, a, raise_keyerror=raise_keyerror)
+                        se_oid = self.get_oid(AttributeType, a, raise_keyerror=raise_keyerror)
                         r_may[se_oid] = self.get_obj(
                             AttributeType,
                             se_oid,
                             raise_keyerror=raise_keyerror
                         )
                     for a in dit_content_rule.nots:
-                        a_oid = self.getoid(AttributeType, a, raise_keyerror=raise_keyerror)
+                        a_oid = self.get_oid(AttributeType, a, raise_keyerror=raise_keyerror)
                         try:
                             del r_may[a_oid]
                         except KeyError:
@@ -483,7 +480,7 @@ class SubSchema(object):
         # Apply attr_type_filter to results
         if attr_type_filter:
             for l in [r_must, r_may]:
-                for a in l.keys():
+                for a in list(l.keys()):
                     for afk, afv in attr_type_filter:
                         try:
                             schema_attr_type = self.sed[AttributeType][a]
@@ -585,7 +582,7 @@ class SubSchema(object):
         object class of this entry and matching the current RDN.
         """
         if dn:
-            rdn_list = str2dn(dn)[0]
+            rdn_list = DNObj.fromstring(dn)[0]
             current_rdn_attrs = [attr_type.lower() for attr_type, _, _ in rdn_list]
             current_rdn_attrs.sort()
         else:
@@ -599,7 +596,7 @@ class SubSchema(object):
         return result # get_applicable_name_form_objs()
 
     def get_possible_dit_structure_rules(self, dn, structural_object_class_oid):
-        name_form_identifiers = cidict({})
+        name_form_identifiers = CIDict()
         for name_form_obj in self.get_applicable_name_form_objs(dn, structural_object_class_oid):
             name_form_identifiers[name_form_obj.oid] = None
         dit_struct_ruleids = {}
@@ -607,7 +604,7 @@ class SubSchema(object):
             name_form_obj = self.get_obj(NameForm, dit_struct_rule_obj.form)
             if name_form_obj != None and \
                (name_form_obj.oid in name_form_identifiers) and \
-               (self.getoid(ObjectClass, name_form_obj.oc) == structural_object_class_oid):
+               (self.get_oid(ObjectClass, name_form_obj.oc) == structural_object_class_oid):
                 dit_struct_ruleids[dit_struct_rule_obj.ruleid] = dit_struct_rule_obj
         return dit_struct_ruleids.keys() # get_possible_dit_structure_rules()
 
@@ -623,7 +620,7 @@ class SubSchema(object):
                         dit_struct_rule_obj.form,
                     )
                     if name_form_obj:
-                        subord_structural_oc_oids[self.getoid(ObjectClass, name_form_obj.oc)] = None
+                        subord_structural_oc_oids[self.get_oid(ObjectClass, name_form_obj.oc)] = None
         result = []
         for oc_oid in subord_structural_oc_oids.keys():
             oc_obj = self.get_obj(ObjectClass, oc_oid)

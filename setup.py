@@ -6,10 +6,7 @@ package/install module package ldap0
 import sys
 import os
 import textwrap
-try:
-    from ConfigParser import ConfigParser
-except ImportError:
-    from configparser import ConfigParser
+from configparser import ConfigParser
 from setuptools import setup, Extension, find_packages
 
 PKG_NAME = 'ldap0'
@@ -84,7 +81,7 @@ setup(
         Extension(
             name='_libldap0',
             sources=[
-                '_libldap0/LDAPObject.c',
+                '_libldap0/ldapobject.c',
                 '_libldap0/ldapcontrol.c',
                 '_libldap0/common.c',
                 '_libldap0/constants.c',
@@ -93,13 +90,10 @@ setup(
                 '_libldap0/libldap0module.c',
                 '_libldap0/message.c',
                 '_libldap0/options.c',
-                '_libldap0/berval.c',
             ],
             depends = [
-                '_libldap0/LDAPObject.h',
-                '_libldap0/berval.h',
+                '_libldap0/ldapobject.h',
                 '_libldap0/common.h',
-                '_libldap0/constants_generated.h',
                 '_libldap0/constants.h',
                 '_libldap0/functions.h',
                 '_libldap0/ldapcontrol.h',
@@ -119,12 +113,12 @@ setup(
     packages=find_packages(exclude=['tests']),
     package_dir={'': '.'},
     test_suite='tests',
-    python_requires='==2.7.*',
+    python_requires='>=3.6',
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'pyasn1>=0.3.7',
-        'pyasn1_modules>=0.1.5',
+        'pyasn1>=0.4.5',
+        'pyasn1_modules>=0.2.5',
     ],
     zip_safe=True,
 )

@@ -24,8 +24,7 @@
 
 void LDAPadd_methods( PyObject*d, PyMethodDef*methods );
 
-#if PY_MAJOR_VERSION >= 3
-#define PyInt_FromLong PyLong_FromLong
-#endif
-
 #endif /* __h_common_ */
+
+#include "lber.h"
+PyObject *LDAPberval_to_object(const struct berval *bv);
