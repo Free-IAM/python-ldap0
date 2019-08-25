@@ -22,6 +22,7 @@ Installing this module is required for running this software:
 
 Further notes:
 
+  * This module only works with Python 3.6 or newer!
   * This module is of no general use!
   * Don't use it for your own project!
   * The API may change at any time without further notice!
