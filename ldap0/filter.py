@@ -15,7 +15,7 @@ def escape_bytes(assertion_value):
     """
     escape all bytes and return str (unicode)
     """
-    return ''.join([ '\\%02x' % char_code for char_code in assertion_value])
+    return ''.join(['\\%02x' % char_code for char_code in assertion_value])
 
 
 def escape_str(assertion_value):
@@ -27,16 +27,16 @@ def escape_str(assertion_value):
         'Expected assertion_value to be unicode (str), got %r' % (assertion_value,)
     )
     return assertion_value.replace(
-            '\\', '\\5c'
-        ).replace(
-            '*', '\\2a'
-        ).replace(
-            '(', '\\28'
-        ).replace(
-            ')', '\\29'
-        ).replace(
-            '\x00', '\\00'
-        )
+        '\\', '\\5c'
+    ).replace(
+        '*', '\\2a'
+    ).replace(
+        '(', '\\28'
+    ).replace(
+        ')', '\\29'
+    ).replace(
+        '\x00', '\\00'
+    )
     # end of escape_str()
 
 
