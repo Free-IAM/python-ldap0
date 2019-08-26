@@ -775,9 +775,9 @@ class Entry(UserDict):
             return self.data[key]
         except KeyError as err:
             if (
-                key[0] == '1.3.6.1.1.20' and
-                self.dn is not None
-            ):
+                    key[0] == '1.3.6.1.1.20' and
+                    self.dn is not None
+                ):
                 return [self.dn]
             raise err
 

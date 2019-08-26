@@ -74,7 +74,7 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
             except KeyError:
                 subschemasubentry_entry[atype] = aval
     # Finally parse the schema
-    if subschemasubentry_dn != None:
+    if subschemasubentry_dn is not None:
         parsed_sub_schema = SubSchema(
             subschemasubentry_entry,
             check_uniqueness=check_uniqueness,
