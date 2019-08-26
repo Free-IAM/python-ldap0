@@ -6,7 +6,7 @@ ldap0.openldap -- OpenLDAP-specific stuff
 from .__about__ import __version__, __author__, __license__
 from .ldapurl import LDAPUrl
 from .ldapurl import SEARCH_SCOPE as LDAPURL_SEARCH_SCOPE
-from ldap0.functions import attr_set
+from .functions import attr_set
 
 __all__ = [
     'SyncReplDesc',

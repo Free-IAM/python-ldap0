@@ -4,12 +4,13 @@ ldap0.controls.sessiontrack - class for session tracking control
 (see draft-wahl-ldap-session)
 """
 
-from ..__about__ import __version__, __author__, __license__
-from . import RequestControl
-
 from pyasn1.type import namedtype, univ
 from pyasn1.codec.ber import encoder
 from pyasn1_modules.rfc2251 import LDAPString, LDAPOID
+
+from ..__about__ import __version__, __author__, __license__
+from . import RequestControl
+
 
 __all__ = [
     'SessionTrackingControl',

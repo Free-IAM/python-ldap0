@@ -16,10 +16,9 @@ import _libldap0
 
 from .__about__ import __version__, __author__, __license__
 from .base import encode_entry_dict
-import ldap0.ldapobject
+from .ldapobject import LDAPObject
 from .functions import escape_format
 from .filter import escape_str as escape_ldap_str
-import ldap0.modlist
 from .ldif import LDIFParser
 
 # a template string for generating simple slapd.conf file
@@ -383,7 +382,7 @@ class SlapdTestCase(unittest.TestCase):
     """
 
     server_class = SlapdObject
-    ldap_object_class = ldap0.ldapobject.LDAPObject
+    ldap_object_class = LDAPObject
     server = None
     trace_level = int(os.environ.get('LDAP0_TRACE_LEVEL', '0'))
 

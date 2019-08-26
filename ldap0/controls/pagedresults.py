@@ -4,13 +4,14 @@ ldap0.controls.pagedresults - classes for Simple Paged control
 (see RFC 2696)
 """
 
-from ..__about__ import __version__, __author__, __license__
-from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
-
 # Imports from pyasn1
 from pyasn1.type import namedtype, univ
 from pyasn1.codec.ber import encoder, decoder
 from pyasn1_modules.rfc2251 import LDAPString
+
+from ..__about__ import __version__, __author__, __license__
+from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
+
 
 __all__ = [
     'SimplePagedResultsControl'

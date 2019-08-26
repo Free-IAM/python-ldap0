@@ -4,11 +4,11 @@ ldap0.controls.sss - classes for Server Side Sorting
 (see RFC 2891)
 """
 
-from ..__about__ import __version__, __author__, __license__
-from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
-
 from pyasn1.type import univ, namedtype, tag, namedval, constraint
 from pyasn1.codec.ber import encoder, decoder
+
+from ..__about__ import __version__, __author__, __license__
+from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 
 __all__ = [

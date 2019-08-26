@@ -3,10 +3,9 @@
 ldap0.filters - misc stuff for handling LDAP filter strings (see RFC 4515)
 """
 
-from .__about__ import __version__, __author__, __license__
-
 import time
 
+from .__about__ import __version__, __author__, __license__
 from .functions import strf_secs
 
 FILTER_SPECIAL_CHARS = set('\\*()')

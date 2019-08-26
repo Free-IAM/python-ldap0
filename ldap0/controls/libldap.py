@@ -4,9 +4,10 @@ ldap0.controls.libldap - LDAP controls wrapper classes with en-/decoding done
 by OpenLDAP functions
 """
 
-from ..__about__ import __version__, __author__, __license__
-from . import RequestControl, LDAPControl, KNOWN_RESPONSE_CONTROLS
 import _libldap0
+
+from ..__about__ import __version__, __author__, __license__
+from . import RequestControl
 
 
 class AssertionControl(RequestControl):

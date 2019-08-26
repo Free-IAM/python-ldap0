@@ -3,8 +3,6 @@
 ldap0.dn - misc stuff for handling distinguished names (see RFC 4514)
 """
 
-import sys
-
 import _libldap0
 
 from .__about__ import __version__, __author__, __license__

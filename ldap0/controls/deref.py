@@ -4,14 +4,14 @@ ldap0.controls.deref - classes for
 (see https://tools.ietf.org/html/draft-masarati-ldap-deref)
 """
 
-from ..__about__ import __version__, __author__, __license__
-
-from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
-
 from pyasn1.type import namedtype, univ, tag
 from pyasn1.codec.ber import encoder, decoder
 from pyasn1_modules.rfc2251 import \
     LDAPDN, AttributeDescription, AttributeDescriptionList, AttributeValue
+
+from ..__about__ import __version__, __author__, __license__
+from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
+
 
 __all__ = [
     'DereferenceControl',

@@ -4,16 +4,15 @@ ldap0.controls.readentry - classes for the Read Entry controls
 (see RFC 4527)
 """
 
-from ..__about__ import __version__, __author__, __license__
-from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
-import _libldap0
-
 from pyasn1.type import namedtype, univ
 from pyasn1.codec.ber import encoder, decoder
 from pyasn1.error import PyAsn1Error
 
 from pyasn1_modules.rfc2251 import AttributeDescriptionList, SearchResultEntry
 from pyasn1_modules.rfc2251 import LDAPDN, PartialAttributeList
+
+from ..__about__ import __version__, __author__, __license__
+from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 
 
 class OpenLDAPITS6899SearchResultEntry(univ.Sequence):

@@ -3,6 +3,12 @@
 ldap0.ldapurl - handling of LDAP URLs as described in RFC 4516
 """
 
+from urllib.parse import (
+    quote as url_quote,
+    unquote as url_unquote,
+)
+from collections import UserDict
+
 from .__about__ import __version__, __author__, __license__
 
 __all__ = [
@@ -19,13 +25,6 @@ __all__ = [
     'LDAPUrlExtensions',
     'LDAPUrl'
 ]
-
-from urllib.parse import (
-    quote as url_quote,
-    unquote as url_unquote,
-)
-
-from collections import UserDict
 
 LDAP_SCOPE_BASE = 0
 LDAP_SCOPE_ONELEVEL = 1

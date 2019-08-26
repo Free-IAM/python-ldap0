@@ -6,11 +6,11 @@ The ldap0.controls module provides LDAPControl classes.
 Each class provides support for a certain control.
 """
 
-from ..__about__ import __version__, __author__, __license__
-
 from pyasn1.error import PyAsn1Error
 
 import _libldap0
+
+from ..__about__ import __version__, __author__, __license__
 
 
 __all__ = [

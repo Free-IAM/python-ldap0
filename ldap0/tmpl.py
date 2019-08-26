@@ -5,7 +5,7 @@ ldap0.tmpl - templating
 
 from .__about__ import __version__, __author__, __license__
 
-from .base import decode_entry_dict, encode_entry_dict
+from .base import decode_entry_dict
 
 
 class TemplateEntry:
