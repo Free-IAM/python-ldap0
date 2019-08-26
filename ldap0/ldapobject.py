@@ -376,7 +376,7 @@ class LDAPObject:
         return res
 
     def extop(self, extreq, req_ctrls=None):
-        extop_req_value = extreq.encodedRequestValue()
+        extop_req_value = extreq.encode()
         assert extop_req_value is None or isinstance(extop_req_value, bytes), TypeError(
             'Expected extop_req_value to be bytes or None, got %r' % (extop_req_value,)
         )

@@ -76,7 +76,7 @@ class PassmodRequest(ExtendedRequest):
         self.oldPasswd = oldPasswd
         self.newPasswd = newPasswd
 
-    def encodedRequestValue(self):
+    def encode(self):
         req_value = self.PasswdModifyRequestValue()
         req_value.setComponentByName(
             'userIdentity',
@@ -129,7 +129,7 @@ class PassmodResponse(ExtendedResponse):
 
     responseName = None
 
-    def decodeResponseValue(self, value):
+    def decode(self, value):
         self.genPasswd = None
         if value is None:
             return

@@ -28,7 +28,7 @@ class TestExtOpRequest(unittest.TestCase):
         self.assertEqual(er.requestName, '1.2.3.4')
         self.assertEqual(er.requestValue, 'foobar')
         self.assertEqual(repr(er), "ExtendedRequest(requestName='1.2.3.4', requestValue='foobar')")
-        self.assertEqual(er.encodedRequestValue(), 'foobar')
+        self.assertEqual(er.encode(), 'foobar')
 
 
 class TestExtOpResponse(unittest.TestCase):
@@ -49,12 +49,12 @@ class TestExtOpResponse(unittest.TestCase):
         self.assertEqual(er.responseName, '1.2.3.4')
         self.assertEqual(er.responseValue, 'foobar')
         self.assertEqual(repr(er), "ExtendedResponse(responseName='1.2.3.4', responseValue='foobar')")
-        er.decodeResponseValue('foobar42')
+        er.decode('foobar42')
         self.assertEqual(er.responseValue, 'foobar42')
 
     def test_passmod(self):
         er = PassmodResponse()
-        er.decodeResponseValue(None)
+        er.decode(None)
         self.assertEqual(er.responseValue, None)
 
 

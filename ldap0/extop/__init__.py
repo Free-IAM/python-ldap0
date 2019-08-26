@@ -25,7 +25,7 @@ class ExtendedRequest:
     def __repr__(self):
         return '%s(requestName=%r, requestValue=%r)' % (self.__class__.__name__, self.requestName, self.requestValue)
 
-    def encodedRequestValue(self):
+    def encode(self):
         """
         returns the BER-encoded ASN.1 request value composed by class attributes
         set before
@@ -50,7 +50,7 @@ class ExtendedResponse:
             self.responseName = responseName
         self.responseValue = encodedResponseValue
         if encodedResponseValue is not None:
-            self.decodeResponseValue(encodedResponseValue)
+            self.decode(encodedResponseValue)
 
     def __repr__(self):
         return '%s(responseName=%r, responseValue=%r)' % (self.__class__.__name__, self.responseName, self.responseValue)
@@ -62,7 +62,7 @@ class ExtendedResponse:
         """
         return name == cls.responseName
 
-    def decodeResponseValue(self, value):
+    def decode(self, value):
         """
         decodes the BER-encoded ASN.1 extended operation response value and
         sets the appropriate class attributes

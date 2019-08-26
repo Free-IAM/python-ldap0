@@ -35,7 +35,7 @@ class CancelRequest(ExtendedRequest):
         ExtendedRequest.__init__(self)
         self.cancelID = cancelID
 
-    def encodedRequestValue(self):
+    def encode(self):
         req_value = self.CancelRequestValue()
         req_value.setComponentByName(
             'cancelID',

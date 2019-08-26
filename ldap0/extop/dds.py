@@ -39,7 +39,7 @@ class RefreshRequest(ExtendedRequest):
         self.entryName = entryName
         self.requestTtl = requestTtl or self.defaultRequestTtl
 
-    def encodedRequestValue(self):
+    def encode(self):
         req_value = self.RefreshRequestValue()
         req_value.setComponentByName(
             'entryName',
@@ -70,7 +70,7 @@ class RefreshResponse(ExtendedResponse):
             )
         )
 
-    def decodeResponseValue(self, value):
+    def decode(self, value):
         refresh_response, _ = decoder.decode(
             value,
             asn1Spec=self.RefreshResponseValue(),
