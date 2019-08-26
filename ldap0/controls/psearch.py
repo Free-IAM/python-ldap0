@@ -82,7 +82,7 @@ class PersistentSearchControl(RequestControl):
                 self.changeTypes = self.changeTypes|CHANGE_TYPES_INT.get(chtype, chtype)
         return
 
-    def encodeControlValue(self):
+    def encode(self):
         pval = self.PersistentSearchControlValue()
         pval.setComponentByName('changeTypes', univ.Integer(self.changeTypes))
         pval.setComponentByName('changesOnly', univ.Boolean(self.changesOnly))
@@ -139,7 +139,7 @@ class EntryChangeNotificationControl(ResponseControl):
     """
     controlType = b'2.16.840.1.113730.3.4.7'
 
-    def decodeControlValue(self, encodedControlValue):
+    def decode(self, encodedControlValue):
         ecncValue, _ = decoder.decode(
             encodedControlValue,
             asn1Spec=EntryChangeNotificationValue(),

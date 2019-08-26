@@ -64,7 +64,7 @@ class RequestControl:
         self.criticality = criticality
         self.encodedControlValue = encodedControlValue
 
-    def encodeControlValue(self):
+    def encode(self):
         """
         sets class attribute encodedControlValue to the BER-encoded ASN.1
         control value composed by class attributes set before
@@ -87,7 +87,7 @@ class ResponseControl:
             self.controlType = controlType
         self.criticality = criticality
 
-    def decodeControlValue(self, encodedControlValue):
+    def decode(self, encodedControlValue):
         """
         decodes the BER-encoded ASN.1 control value and sets the appropriate
         class attributes
@@ -120,7 +120,7 @@ def encode_request_ctrls(ctrls):
     if ctrls is None:
         return None
     return [
-        (c.controlType, c.criticality, c.encodeControlValue())
+        (c.controlType, c.criticality, c.encode())
         for c in ctrls
     ]
 
@@ -151,7 +151,7 @@ def decode_response_ctrls(ldapControlTuples, knownLDAPControls=None):
         else:
             control = control_class(criticality=criticality)
             try:
-                control.decodeControlValue(encodedControlValue)
+                control.decode(encodedControlValue)
             except PyAsn1Error as err:
                 if criticality:
                     raise err

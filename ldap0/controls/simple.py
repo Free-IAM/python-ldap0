@@ -42,7 +42,7 @@ class ValueLessRequestControl(RequestControl):
             criticality=criticality,
         )
 
-    def encodeControlValue(self):
+    def encode(self):
         return None
 
 
@@ -62,10 +62,10 @@ class OctetStringInteger(LDAPControl):
         )
         self.integerValue = integerValue
 
-    def encodeControlValue(self):
+    def encode(self):
         return struct.pack('!Q', self.integerValue)
 
-    def decodeControlValue(self, encodedControlValue):
+    def decode(self, encodedControlValue):
         self.integerValue = struct.unpack('!Q', encodedControlValue)[0]
 
 
@@ -95,10 +95,10 @@ class BooleanControl(LDAPControl):
         )
         self.booleanValue = booleanValue
 
-    def encodeControlValue(self):
+    def encode(self):
         return self.boolean2ber[int(self.booleanValue)]
 
-    def decodeControlValue(self, encodedControlValue):
+    def decode(self, encodedControlValue):
         self.booleanValue = bool(self.ber2boolean[encodedControlValue])
 
 
@@ -174,7 +174,7 @@ class AuthorizationIdentityResponseControl(ResponseControl):
     """
     controlType = b'2.16.840.1.113730.3.4.15'
 
-    def decodeControlValue(self, encodedControlValue):
+    def decode(self, encodedControlValue):
         self.authzId = encodedControlValue
 
 KNOWN_RESPONSE_CONTROLS.reg(AuthorizationIdentityResponseControl)

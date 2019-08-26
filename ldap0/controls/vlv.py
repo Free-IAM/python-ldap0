@@ -75,7 +75,7 @@ class VLVRequestControl(RequestControl):
         self.greater_than_or_equal = greater_than_or_equal
         self.context_id = context_id
 
-    def encodeControlValue(self):
+    def encode(self):
         vlv = VirtualListViewRequestType()
         vlv.setComponentByName('beforeCount', self.before_count)
         vlv.setComponentByName('afterCount', self.after_count)
@@ -126,7 +126,7 @@ class VLVResponseControl(ResponseControl):
     def __init__(self, criticality=False):
         ResponseControl.__init__(self, self.controlType, criticality)
 
-    def decodeControlValue(self, encodedControlValue):
+    def decode(self, encodedControlValue):
         drv, rest = decoder.decode(
             encodedControlValue,
             asn1Spec=VirtualListViewResponseType(),

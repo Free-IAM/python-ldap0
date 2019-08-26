@@ -31,7 +31,7 @@ class TestRequestControls(unittest.TestCase):
             b'tracking-ID',
         )
         stc_encoded = b'0G\x04\x0b12.34.56.78\x04\rtracking-NAME\x04\x1c1.3.6.1.4.1.21008.108.63.1.1\x04\x0btracking-ID'
-        self.assertEqual(stc.encodeControlValue(), stc_encoded)
+        self.assertEqual(stc.encode(), stc_encoded)
         self.assertEqual(
             encode_request_ctrls([stc]),
             [(
@@ -49,7 +49,7 @@ class TestRequestControls(unittest.TestCase):
             returnECs=True,
         )
         psc_encoded = b'0\t\x02\x01\x0f\x01\x01\x00\x01\x01\x01'
-        self.assertEqual(psc.encodeControlValue(), psc_encoded)
+        self.assertEqual(psc.encode(), psc_encoded)
         self.assertEqual(
             encode_request_ctrls([psc]),
             [(
@@ -67,7 +67,7 @@ class TestResponseControls(unittest.TestCase):
 
     def test_base(self):
         rc = ResponseControl()
-        rc.decodeControlValue(b'foo')
+        rc.decode(b'foo')
         self.assertEqual(rc.controlValue, b'foo')
         with self.assertRaises(_libldap0.UNAVAILABLE_CRITICAL_EXTENSION):
             decode_response_ctrls(
@@ -91,25 +91,25 @@ class TestResponseControls(unittest.TestCase):
 
     def test_pwdpolicy(self):
         pec = PasswordExpiringControl()
-        pec.decodeControlValue(b'0')
+        pec.decode(b'0')
         self.assertEqual(pec.gracePeriod, 0)
         with self.assertRaises(ValueError):
-            pec.decodeControlValue(b'x')
+            pec.decode(b'x')
         pec = PasswordExpiredControl()
-        pec.decodeControlValue(b'0')
+        pec.decode(b'0')
         self.assertEqual(pec.passwordExpired, True)
-        pec.decodeControlValue(b'x')
+        pec.decode(b'x')
         self.assertEqual(pec.passwordExpired, False)
 
     def test_readentry(self):
         # test fall-back decoding caused by old OpenLDAP issue ITS#6899
         broken_ber = b'0c\x043cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de0,0\x14\x04\tuidNumber1\x07\x04\x05100050\x14\x04\tgidNumber1\x07\x04\x0510005'
         rec = ReadEntryControl()
-        rec.decodeControlValue(broken_ber)
+        rec.decode(broken_ber)
         self.assertEqual(rec.dn, b'cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de')
         self.assertEqual(rec.entry, {b'gidNumber': [b'10005'], b'uidNumber': [b'10005']})
         with self.assertRaises(PyAsn1Error):
-            rec.decodeControlValue(b'\xFF')
+            rec.decode(b'\xFF')
 
 
 class TestVirtualListView(unittest.TestCase):
@@ -128,7 +128,7 @@ class TestVirtualListView(unittest.TestCase):
             greater_than_or_equal=None,
             context_id=None,
         )
-        self.assertEqual(vrc.encodeControlValue(), b'0\x0e\x02\x01\n\x02\x01\x14\xa0\x06\x02\x01\n\x02\x01\n')
+        self.assertEqual(vrc.encode(), b'0\x0e\x02\x01\n\x02\x01\x14\xa0\x06\x02\x01\n\x02\x01\n')
         vrc = VLVRequestControl(
             criticality=True,
             before_count=10,
@@ -138,19 +138,19 @@ class TestVirtualListView(unittest.TestCase):
             greater_than_or_equal=10,
             context_id=None,
         )
-        self.assertEqual(vrc.encodeControlValue(), b'0\n\x02\x01\n\x02\x01\x14\x81\x0210')
+        self.assertEqual(vrc.encode(), b'0\n\x02\x01\n\x02\x01\x14\x81\x0210')
 
     def test002_vlv_response_control(self):
         vrc = VLVResponseControl(criticality=True)
         with self.assertRaises(PyAsn1Error):
-            vrc.decodeControlValue(b'\xFF')
+            vrc.decode(b'\xFF')
 
 
 class TestPPolicy(unittest.TestCase):
 
     def _check_decoded_val(self, pp_buf, timeBeforeExpiration=None, graceAuthNsRemaining=None, error=None):
         pp = PasswordPolicyControl()
-        pp.decodeControlValue(pp_buf)
+        pp.decode(pp_buf)
         self.assertEqual(pp.timeBeforeExpiration, timeBeforeExpiration)
         self.assertEqual(pp.graceAuthNsRemaining, graceAuthNsRemaining)
         self.assertEqual(pp.error, error)

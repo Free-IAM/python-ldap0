@@ -24,7 +24,7 @@ class AssertionControl(RequestControl):
         RequestControl.__init__(self, criticality=criticality)
         self.filterstr = filterstr
 
-    def encodeControlValue(self):
+    def encode(self):
         return _libldap0.encode_assertion_control(self.filterstr)
 
 
@@ -42,5 +42,5 @@ class MatchedValuesControl(RequestControl):
         RequestControl.__init__(self, criticality=criticality)
         self.filterstr = filterstr
 
-    def encodeControlValue(self):
+    def encode(self):
         return _libldap0.encode_valuesreturnfilter_control(self.filterstr)
