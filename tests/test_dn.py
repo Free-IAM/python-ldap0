@@ -54,11 +54,20 @@ class TestDNObj(unittest.TestCase):
     def test_dnobj_simple(self):
         self.assertEqual(DNObj.fromstring(''), DNObj((())))
         self.assertEqual(DNObj.fromstring('').rdn(), DNObj((())))
+        self.assertEqual(DNObj.fromstring('').rdn_attrs(), {})
         self.assertEqual(len(DNObj.fromstring('')), 0)
         self.assertEqual(len(DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')), 3)
         self.assertEqual(
             str(DNObj.fromstring('ou=dept1  ,  dc=example, dc=com').rdn()),
             'ou=dept1'
+        )
+        self.assertEqual(
+            DNObj.fromstring('ou=dept1  ,  dc=example, dc=com').rdn_attrs(),
+            {'ou': 'dept1'}
+        )
+        self.assertEqual(
+            DNObj.fromstring('ou=dept1 + mail=test@example.com ,  dc=example, dc=com').rdn_attrs(),
+            {'mail': 'test@example.com', 'ou': 'dept1'}
         )
         self.assertEqual(
             str(DNObj.fromstring('ou=dept1,  dc=example, dc=com').parent()),

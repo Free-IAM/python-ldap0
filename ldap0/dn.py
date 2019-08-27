@@ -118,6 +118,14 @@ class DNObj(tuple):
         """
         return self.__class__(self[:1])
 
+    def rdn_attrs(self):
+        """
+        returns the RDN attributes as string-keyed dict
+        """
+        if not self:
+            return {}
+        return dict([(at, av) for at, av, _ in self[0]])
+
     def parent(self):
         """
         returns the parent's DN as DNObj instance
