@@ -51,7 +51,7 @@ class TestDNObj(unittest.TestCase):
     test class ldap0.dn.DNObj
     """
 
-    def test_simple(self):
+    def test001_simple(self):
         self.assertEqual(DNObj.fromstring(''), DNObj((())))
         self.assertEqual(DNObj.fromstring('').rdn(), DNObj((())))
         self.assertEqual(DNObj.fromstring('').rdn_attrs(), {})
@@ -84,7 +84,7 @@ class TestDNObj(unittest.TestCase):
             self.assertEqual(bytes(dn_obj), dn_str.encode('utf-8'))
             self.assertEqual(dn_obj.__str__(), dn_str)
 
-    def test_weird_whitespaces(self):
+    def test002_weird_whitespaces(self):
         self.assertEqual(
             DNObj.fromstring('uid = test42 + uidNumber = 42, dc = example , dc = com'),
             DNObj((
@@ -97,7 +97,7 @@ class TestDNObj(unittest.TestCase):
             ))
         )
 
-    def test_repr(self):
+    def test003_repr(self):
         if sys.version_info.major >= 3:
             correct_repr = "DNObj(((('uid', 'test42', 1), ('uidNumber', '42', 1)), (('dc', 'example', 1),), (('dc', 'com', 1),)))"
         else:
@@ -114,7 +114,7 @@ class TestDNObj(unittest.TestCase):
             correct_repr
         )
 
-    def test_hashable(self):
+    def test004_hashable(self):
         dn = DNObj((
             (
                 ('uid', 'test42', 1),
@@ -126,7 +126,7 @@ class TestDNObj(unittest.TestCase):
         data = {dn: 'foo'}
         self.assertEqual(data[dn], 'foo')
 
-    def test_slicing(self):
+    def test005_slicing(self):
         dn = DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')
         self.assertEqual(dn[0], (('ou', 'dept1', 1),))
         self.assertEqual(dn[1], (('dc', 'example', 1),))
@@ -162,7 +162,7 @@ class TestDNObj(unittest.TestCase):
             self.assertEqual(dn_comp[0][1], dns_labels[i])
             self.assertEqual(dno[i], dn_comp)
 
-    def test_domain(self):
+    def test006_domain(self):
         self.assertEqual(
             str(DNObj.fromdomain('example.com')),
             'dc=example,dc=com'
@@ -187,7 +187,7 @@ class TestDNObj(unittest.TestCase):
             DNObj.fromstring('ou=foo+dc=example,dc=com').domain()
 
 
-    def test_add(self):
+    def test007_add(self):
         self.assertEqual(
             DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com'),
             DNObj.fromdomain('dept1.example.com'),
@@ -201,7 +201,7 @@ class TestDNObj(unittest.TestCase):
             'dept1.example.com',
         )
 
-    def test_match(self):
+    def test008_match(self):
         dn_obj = DNObj.fromdomain('example.com')
         self.assertEqual(
             dn_obj.match([DNObj.fromdomain('example.com')]),
