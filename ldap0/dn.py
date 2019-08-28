@@ -82,6 +82,9 @@ class DNObj(tuple):
         domain = domain.encode('idna').decode('ascii')
         return cls([(('dc', d, 1),) for d in domain.split('.')])
 
+    def encode(self, charset=None):
+        return self.__str__().encode(charset or self.charset)
+
     def __str__(self):
         return ','.join([
             '+'.join([
@@ -92,10 +95,10 @@ class DNObj(tuple):
         ])
 
     def __bytes__(self):
-        return self.__str__().encode(self.charset)
+        return self.encode()
 
     def __hash__(self):
-        return hash(self.__bytes__())
+        return hash(self.__str__())
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, tuple.__repr__(self))
