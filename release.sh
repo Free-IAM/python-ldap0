@@ -2,13 +2,14 @@
 
 # Don't use uninitialized vars
 set -o nounset
-# After here exit on any error
-set -e
 # Set strict umask
 umask 077
 
 # remove all temporary stuff
 ./clean.sh
+
+# After here exit on any error
+set -e
 
 # first run the test suite isolated just to be sure
 tox-3.7
@@ -20,6 +21,7 @@ echo "Will tag and publish ${RELEASE} now..."
 
 # tag the git repo
 git tag -s -m "release ${RELEASE}" "v${RELEASE}"
+git push --tags
 
 # build source distribution and push to PyPI
 # (release defined in setup.cfg)
