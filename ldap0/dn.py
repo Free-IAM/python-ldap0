@@ -135,6 +135,19 @@ class DNObj(tuple):
         """
         return self.__class__(self[1:])
 
+    def parents(self):
+        """
+        returns the parent's DN as DNObj instance
+        """
+        if len(self) <= 0:
+            return []
+        elif len(self) == 1:
+            return [self.__class__((()))]
+        return [
+            self.__class__(self[i:])
+            for i in range(1, len(self))
+        ]
+
     def match(self, dn_list) -> str:
         """
         returns best matching parent DN found in dn_list

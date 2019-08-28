@@ -257,5 +257,18 @@ class TestDNObj(unittest.TestCase):
             DNObj((()))
         )
 
+    def test009_parents(self):
+        self.assertEqual(
+            DNObj.fromdomain('example.com').parents(),
+            [DNObj.fromdomain('com')]
+        )
+        self.assertEqual(
+            DNObj.fromdomain('sub1.example.com').parents(),
+            [
+                DNObj.fromdomain('example.com'),
+                DNObj.fromdomain('com'),
+            ]
+        )
+
 if __name__ == '__main__':
     unittest.main()
