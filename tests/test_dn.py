@@ -51,7 +51,7 @@ class TestDNObj(unittest.TestCase):
     test class ldap0.dn.DNObj
     """
 
-    def test_dnobj_simple(self):
+    def test_simple(self):
         self.assertEqual(DNObj.fromstring(''), DNObj((())))
         self.assertEqual(DNObj.fromstring('').rdn(), DNObj((())))
         self.assertEqual(DNObj.fromstring('').rdn_attrs(), {})
@@ -126,7 +126,7 @@ class TestDNObj(unittest.TestCase):
         data = {dn: 'foo'}
         self.assertEqual(data[dn], 'foo')
 
-    def test_dnobj_slicing(self):
+    def test_slicing(self):
         dn = DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')
         self.assertEqual(dn[0], (('ou', 'dept1', 1),))
         self.assertEqual(dn[1], (('dc', 'example', 1),))
@@ -162,7 +162,7 @@ class TestDNObj(unittest.TestCase):
             self.assertEqual(dn_comp[0][1], dns_labels[i])
             self.assertEqual(dno[i], dn_comp)
 
-    def test_dnobj_domain(self):
+    def test_domain(self):
         self.assertEqual(
             str(DNObj.fromdomain('example.com')),
             'dc=example,dc=com'
@@ -187,7 +187,7 @@ class TestDNObj(unittest.TestCase):
             DNObj.fromstring('ou=foo+dc=example,dc=com').domain()
 
 
-    def test_dnobj_add(self):
+    def test_add(self):
         self.assertEqual(
             DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com'),
             DNObj.fromdomain('dept1.example.com'),
@@ -201,7 +201,7 @@ class TestDNObj(unittest.TestCase):
             'dept1.example.com',
         )
 
-    def test_dnobj_match(self):
+    def test_match(self):
         dn_obj = DNObj.fromdomain('example.com')
         self.assertEqual(
             dn_obj.match([DNObj.fromdomain('example.com')]),
