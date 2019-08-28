@@ -201,6 +201,40 @@ class TestDNObj(unittest.TestCase):
             'dept1.example.com',
         )
 
+    def test_dnobj_match(self):
+        dn_obj = DNObj.fromdomain('example.com')
+        self.assertEqual(
+            dn_obj.match([DNObj.fromdomain('example.com')]),
+            DNObj.fromdomain('example.com')
+        )
+        self.assertEqual(
+            dn_obj.match([DNObj.fromdomain('sub1.example.com')]),
+            DNObj((()))
+        )
+        self.assertEqual(
+            dn_obj.match([
+                DNObj.fromdomain('example.com'),
+                DNObj.fromdomain('example.net'),
+            ]),
+            DNObj.fromdomain('example.com')
+        )
+        # sub entry match
+        dn_obj = DNObj.fromdomain('sub1.example.com')
+        self.assertEqual(
+            dn_obj.match([DNObj.fromdomain('example.com')]),
+            DNObj.fromdomain('example.com')
+        )
+        # no match
+        dn_obj = DNObj.fromdomain('example.net')
+        self.assertEqual(
+            dn_obj.match([DNObj.fromdomain('example.com')]),
+            DNObj((()))
+        )
+        # empty
+        self.assertEqual(
+            DNObj((())).match([DNObj((()))]),
+            DNObj((()))
+        )
 
 if __name__ == '__main__':
     unittest.main()

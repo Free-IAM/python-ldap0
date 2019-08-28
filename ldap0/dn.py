@@ -132,6 +132,28 @@ class DNObj(tuple):
         """
         return self.__class__(self[1:])
 
+    def match(self, dn_list) -> str:
+        """
+        returns best matching parent DN found in dn_list
+        """
+        max_match_level = 0
+        max_match_dn = self.__class__((()))
+        if not self or not dn_list:
+            return max_match_dn
+        self_len = len(self)
+        for dn_obj in dn_list:
+            if len(dn_obj) > self_len:
+                # can't match
+                continue
+            match_level = 0
+            dn_len = len(dn_obj)
+            while match_level <= self_len and self[self_len-match_level-1] == dn_obj[dn_len-match_level-1]:
+                match_level += 1
+            if match_level > max_match_level:
+                max_match_level = match_level
+                max_match_dn = self.slice(-match_level, None)
+        return max_match_dn
+
     def domain(self, only_dc=True):
         """
         Convert dc-style DN to DNS domain name (see RFC 2247)
