@@ -583,7 +583,7 @@ class SubSchema:
         """
         if dn:
             rdn_list = DNObj.fromstring(dn)[0]
-            current_rdn_attrs = [attr_type.lower() for attr_type, _, _ in rdn_list]
+            current_rdn_attrs = [attr_type.lower() for attr_type, _ in rdn_list]
             current_rdn_attrs.sort()
         else:
             current_rdn_attrs = []

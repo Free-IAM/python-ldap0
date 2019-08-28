@@ -67,8 +67,8 @@ class DNObj(tuple):
         else:
             dn_t = tuple([
                 tuple([
-                    (at.decode('ascii'), av.decode(cls.charset), flags)
-                    for at, av, flags in dn_comp
+                    (at.decode('ascii'), av.decode(cls.charset))
+                    for at, av, _ in dn_comp
                 ])
                 for dn_comp in _libldap0_function_call(_libldap0.str2dn, dn.encode(cls.charset), flags)
             ])
@@ -80,7 +80,7 @@ class DNObj(tuple):
         create a new DNObj instance from dot-separated DNS domain name
         """
         domain = domain.encode('idna').decode('ascii')
-        return cls([(('dc', d, 1),) for d in domain.split('.')])
+        return cls([(('dc', d),) for d in domain.split('.')])
 
     def encode(self, charset=None):
         return self.__str__().encode(charset or self.charset)
@@ -89,7 +89,7 @@ class DNObj(tuple):
         return ','.join([
             '+'.join([
                 '='.join((atype, escape_str(avalue or '')))
-                for atype, avalue, _ in rdn
+                for atype, avalue in rdn
             ])
             for rdn in self
         ])
@@ -127,7 +127,7 @@ class DNObj(tuple):
         """
         if not self:
             return {}
-        return dict([(at, av) for at, av, _ in self[0]])
+        return dict([(at, av) for at, av in self[0]])
 
     def parent(self):
         """
@@ -166,7 +166,7 @@ class DNObj(tuple):
             dn_comp = self[ind]
             if len(dn_comp) != 1:
                 raise ValueError('multi-valued RDN not allowed for domain, was %r' % (dn_comp,))
-            attr_type, attr_value, _ = dn_comp[0]
+            attr_type, attr_value = dn_comp[0]
             if attr_type.lower() != 'dc':
                 if only_dc:
                     raise ValueError('Only dc allowed as RDN attribute, was %r' % (attr_type,))

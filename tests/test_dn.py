@@ -89,27 +89,27 @@ class TestDNObj(unittest.TestCase):
             DNObj.fromstring('uid = test42 + uidNumber = 42, dc = example , dc = com'),
             DNObj((
                 (
-                    ('uid', 'test42', 1),
-                    ('uidNumber', '42', 1)
+                    ('uid', 'test42'),
+                    ('uidNumber', '42')
                 ),
-                (('dc', 'example', 1),),
-                (('dc', 'com', 1),)
+                (('dc', 'example'),),
+                (('dc', 'com'),)
             ))
         )
 
     def test003_repr(self):
         if sys.version_info.major >= 3:
-            correct_repr = "DNObj(((('uid', 'test42', 1), ('uidNumber', '42', 1)), (('dc', 'example', 1),), (('dc', 'com', 1),)))"
+            correct_repr = "DNObj(((('uid', 'test42'), ('uidNumber', '42')), (('dc', 'example'),), (('dc', 'com'),)))"
         else:
-            correct_repr = "DNObj(((('uid', 'test42', 1), ('uidNumber', '42', 1)), (('dc', 'example', 1),), (('dc', 'com', 1),)))"
+            correct_repr = "DNObj(((('uid', 'test42'), ('uidNumber', '42')), (('dc', 'example'),), (('dc', 'com'),)))"
         self.assertEqual(
             repr(DNObj((
                 (
-                    ('uid', 'test42', 1),
-                    ('uidNumber', '42', 1)
+                    ('uid', 'test42'),
+                    ('uidNumber', '42')
                 ),
-                (('dc', 'example', 1),),
-                (('dc', 'com', 1),)
+                (('dc', 'example'),),
+                (('dc', 'com'),)
             ))),
             correct_repr
         )
@@ -117,11 +117,11 @@ class TestDNObj(unittest.TestCase):
     def test004_hashable(self):
         dn = DNObj((
             (
-                ('uid', 'test42', 1),
-                ('uidNumber', '42', 1)
+                ('uid', 'test42'),
+                ('uidNumber', '42')
             ),
-            (('dc', 'example', 1),),
-            (('dc', 'com', 1),)
+            (('dc', 'example'),),
+            (('dc', 'com'),)
         ))
         data = {dn: 'foo'}
         self.assertEqual(data[dn], 'foo')
@@ -129,9 +129,9 @@ class TestDNObj(unittest.TestCase):
 
     def test005_slicing(self):
         dn = DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')
-        self.assertEqual(dn[0], (('ou', 'dept1', 1),))
-        self.assertEqual(dn[1], (('dc', 'example', 1),))
-        self.assertEqual(dn[2], (('dc', 'com', 1),))
+        self.assertEqual(dn[0], (('ou', 'dept1'),))
+        self.assertEqual(dn[1], (('dc', 'example'),))
+        self.assertEqual(dn[2], (('dc', 'com'),))
         self.assertEqual(DNObj(dn[:]), dn)
         with self.assertRaises(IndexError):
             self.assertEqual(dn[3], ())
