@@ -221,13 +221,33 @@ class TestDNObj(unittest.TestCase):
         # sub entry match
         dn_obj = DNObj.fromdomain('sub1.example.com')
         self.assertEqual(
-            dn_obj.match([DNObj.fromdomain('example.com')]),
+            dn_obj.match([
+                DNObj.fromdomain('sub2.example.com'),
+                DNObj.fromdomain('example.com'),
+                DNObj.fromdomain('example.net'),
+            ]),
             DNObj.fromdomain('example.com')
+        )
+        self.assertEqual(
+            dn_obj.match([
+                DNObj.fromdomain('sub1.example.com'),
+                DNObj.fromdomain('example.com'),
+            ]),
+            DNObj.fromdomain('sub1.example.com')
         )
         # no match
         dn_obj = DNObj.fromdomain('example.net')
         self.assertEqual(
-            dn_obj.match([DNObj.fromdomain('example.com')]),
+            dn_obj.match([
+                DNObj.fromdomain('example.com'),
+            ]),
+            DNObj((()))
+        )
+        self.assertEqual(
+            dn_obj.match([
+                DNObj.fromdomain('sub2.example.net'),
+                DNObj.fromdomain('example.com'),
+            ]),
             DNObj((()))
         )
         # empty
