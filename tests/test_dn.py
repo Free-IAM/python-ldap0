@@ -125,6 +125,7 @@ class TestDNObj(unittest.TestCase):
         ))
         data = {dn: 'foo'}
         self.assertEqual(data[dn], 'foo')
+        self.assertEqual(set([dn]), set([dn, dn]))
 
     def test005_slicing(self):
         dn = DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')
