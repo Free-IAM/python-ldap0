@@ -27,6 +27,8 @@ class TestDNFunctions(unittest.TestCase):
         self.assertEqual(ldap0.dn.is_dn('cn=foobar,dc=example,dc=com,'), False)
         self.assertEqual(ldap0.dn.is_dn('uid=xkcd,cn=foobar,dc=example,dc=com'), True)
         self.assertEqual(ldap0.dn.is_dn('cn=äöüÄÖÜß'), True)
+        self.assertEqual(ldap0.dn.is_dn('-'), False)
+        self.assertEqual(ldap0.dn.is_dn(''), True)
 
     def test_escape_str(self):
         """

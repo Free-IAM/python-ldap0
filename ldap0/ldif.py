@@ -343,7 +343,7 @@ class LDIFParser:
                     )
                 )
             try:
-                _libldap0_function_call(_libldap0.str2dn, val, 0)
+                _libldap0_function_call(_libldap0.str2dn, val, 1)
             except Exception:
                 raise ValueError(
                     'Line %d: Not a valid string-representation for dn: %r' % (

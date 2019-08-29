@@ -39,6 +39,10 @@ def is_dn(val, flags=0):
     distinguished host_name (DN), otherwise False is returned.
     """
     assert isinstance(val, str), TypeError('Expected str (unicode) for val, got %r' % (val,))
+    if not val:
+        # _libldap0.str2dn() seg faults on empty bytes sequence
+        # => return immediaetly here
+        return True
     try:
         _libldap0_function_call(_libldap0.str2dn, val.encode('utf-8'), flags)
     except Exception:
