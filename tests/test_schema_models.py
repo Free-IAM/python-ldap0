@@ -518,7 +518,7 @@ class TestEntry(SubschemaTest):
             b'cn=Michael Str\303\266der,ou=test',
             ldap_entry,
         )
-        self.assertEqual(sorted(e1.keys()), ['c', 'cn', 'givenName', 'objectClass', 'sn'])
+        self.assertEqual(sorted(e1.keys()), [b'c', b'cn', b'givenName', b'objectClass', b'sn'])
         self.assertEqual('2.5.4.3' in e1, True)
         self.assertEqual('cn' in e1, True)
         self.assertEqual(e1['cn'], [b'Michael Str\xc3\xb6der', b'Michael Stroeder'])
@@ -527,8 +527,9 @@ class TestEntry(SubschemaTest):
         self.assertEqual('mail' in e1, False)
         with self.assertRaises(KeyError):
             e1['mail']
-        e1.update({'mail': ['michael@example.com']})
+        e1.update({b'mail': [b'michael@example.com']})
         self.assertEqual('mail' in e1, True)
+        self.assertEqual(e1['mail'], [b'michael@example.com'])
         self.assertEqual(e1['mail'], e1['0.9.2342.19200300.100.1.3'])
         del e1['mail']
         with self.assertRaises(KeyError):

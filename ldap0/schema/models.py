@@ -742,10 +742,7 @@ class Entry(UserDict):
         self._s = schema
         self.dn = dn
         UserDict.__init__(self, {})
-        self.update([
-            (at.decode('ascii'), avs)
-            for at, avs in entry.items()
-        ])
+        self.update(entry)
 
     def _name2key(self, nameoroid):
         """
@@ -754,6 +751,8 @@ class Entry(UserDict):
         """
         if isinstance(nameoroid, tuple):
             return nameoroid
+        if isinstance(nameoroid, bytes):
+            nameoroid = nameoroid.decode('ascii')
         try:
             # Mapping already in cache
             return self._attrtype2keytuple[nameoroid]
