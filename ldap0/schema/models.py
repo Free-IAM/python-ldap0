@@ -751,8 +751,6 @@ class Entry(UserDict):
         """
         if isinstance(nameoroid, tuple):
             return nameoroid
-        if isinstance(nameoroid, bytes):
-            nameoroid = nameoroid.decode('ascii')
         try:
             # Mapping already in cache
             return self._attrtype2keytuple[nameoroid]
@@ -781,6 +779,8 @@ class Entry(UserDict):
             raise err
 
     def __setitem__(self, nameoroid, attr_values):
+        if isinstance(nameoroid, bytes):
+            nameoroid = nameoroid.decode('ascii')
         key = self._name2key(nameoroid)
         self._keytuple2attrtype[key] = nameoroid
         self.data[key] = attr_values
