@@ -59,7 +59,7 @@ def random_string(alphabet=PWD_ALPHABET, length=PWD_LENGTH):
     for _ in range(length):
         pos = sys_rand.randint(0, random_upper_bound)
         res.append(alphabet[pos:pos+1])
-    return b''.join(res)
+    return {str: '', bytes: b''}[type(alphabet)].join(res)
 
 
 def unicode_pwd(password=None, alphabet=PWD_ALPHABET, length=PWD_LENGTH):

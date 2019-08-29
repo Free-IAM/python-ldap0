@@ -28,6 +28,7 @@ class TestPasswordFunctions(unittest.TestCase):
     def test_random_string(self):
         self.assertEqual(len(random_string()), PWD_LENGTH)
         self.assertEqual(random_string(b'1', 4), 4*b'1')
+        self.assertEqual(random_string('1', 4), 4*'1')
 
     def test_unicode_pwd(self):
         self.assertEqual(len(unicode_pwd()), (PWD_LENGTH+2)*2)
