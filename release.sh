@@ -19,7 +19,8 @@ RELEASE=$(PYTHONPATH=ldap0 python3 -c 'from __about__ import __version__ ; print
 
 echo "Will tag and publish ${RELEASE} now..."
 
-# tag the git repo
+# push and tag the git repo
+git push
 git tag -s -m "release ${RELEASE}" "v${RELEASE}"
 git push --tags
 
