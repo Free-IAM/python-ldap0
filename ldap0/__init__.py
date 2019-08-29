@@ -33,7 +33,9 @@ _libldap0.set_option(_libldap0.OPT_DEREF, False)
 _libldap0.set_option(_libldap0.OPT_REFERRALS, False)
 _libldap0.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_HARD)
 
-OPT_NAMES_DICT = {}
-for key, val in vars(_libldap0).items():
-    if key.startswith('OPT_'):
-        OPT_NAMES_DICT[val] = key
+
+OPT_NAMES = {
+    val: key
+    for key, val in vars(_libldap0).items()
+    if key.startswith('OPT_')
+}
