@@ -744,7 +744,7 @@ class Entry(UserDict):
         UserDict.__init__(self, {})
         self.update(entry)
 
-    def _name2key(self, nameoroid):
+    def name2key(self, nameoroid):
         """
         Return tuple of OID and all sub-types of attribute type specified
         in nameoroid.
@@ -764,10 +764,10 @@ class Entry(UserDict):
             return self._attrtype2keytuple[nameoroid]
 
     def __contains__(self, nameoroid):
-        return self._name2key(nameoroid) in self.data
+        return self.name2key(nameoroid) in self.data
 
     def __getitem__(self, nameoroid):
-        key = self._name2key(nameoroid)
+        key = self.name2key(nameoroid)
         try:
             return self.data[key]
         except KeyError as err:
@@ -781,12 +781,12 @@ class Entry(UserDict):
     def __setitem__(self, nameoroid, attr_values):
         if isinstance(nameoroid, bytes):
             nameoroid = nameoroid.decode('ascii')
-        key = self._name2key(nameoroid)
+        key = self.name2key(nameoroid)
         self._keytuple2attrtype[key] = nameoroid
         self.data[key] = attr_values
 
     def __delitem__(self, nameoroid):
-        key = self._name2key(nameoroid)
+        key = self.name2key(nameoroid)
         del self._keytuple2attrtype[key]
         del self.data[key]
 
