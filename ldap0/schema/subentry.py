@@ -49,7 +49,7 @@ SCHEMA_CLASS_MAPPING = CIDict({
     NameForm.schema_attribute: NameForm,
     ObjectClass.schema_attribute: ObjectClass,
 })
-SCHEMA_ATTRS = SCHEMA_CLASS_MAPPING.keys()
+SCHEMA_ATTRS = list(SCHEMA_CLASS_MAPPING.keys())
 
 
 class SubschemaError(ValueError):
