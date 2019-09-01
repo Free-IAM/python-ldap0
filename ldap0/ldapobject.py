@@ -668,7 +668,7 @@ class LDAPObject:
                 tuple(attrlist or []),
                 attrsonly,
                 tuple([
-                    c.encodeControlValue()
+                    c.encode()
                     for c in req_ctrls or []
                 ]),
                 timeout,
