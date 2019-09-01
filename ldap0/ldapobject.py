@@ -654,9 +654,6 @@ class LDAPObject:
             cache_ttl=None,
             add_ctrls=False,
         ):
-        """
-        caching variant of LDAPObject.search_ext_s()
-        """
         if cache_ttl is None:
             cache_ttl = self.cache_ttl
         current_time = time.time()
