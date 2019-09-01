@@ -158,6 +158,7 @@ class TestDeRef(ExtensionTestCase):
                     {b'roleOccupant': [b'cn', b'uid']},
                 )
             ],
+            cache_ttl=1.0,
             add_ctrls=True,
         )
         dn, entry, crtls = ldap_result[0]
