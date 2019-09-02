@@ -168,7 +168,7 @@ class TestSubschema(SubschemaTest):
             b'cn': [b'test-srvgroup-1'],
             b'description': [b'testing...'],
         }
-        ae_dn = DNObj.fromstring('cn=test-srvgroup-1,ou=ae-dir')
+        ae_dn = DNObj.from_str('cn=test-srvgroup-1,ou=ae-dir')
         ae_entry = Entry(self.sub_schema, bytes(ae_dn), ldap_entry)
         self.assertIn('cn', ae_entry)
         self.assertIn('2.5.4.3', ae_entry)

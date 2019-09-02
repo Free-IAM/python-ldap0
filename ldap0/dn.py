@@ -55,14 +55,14 @@ class DNObj(tuple):
     """
     Class for handling LDAPv3 distinguished name string representations
     """
-    charset = 'utf-8'
+    encoding = 'utf-8'
 
     def __init__(self, dn_t):
         tuple.__init__(self)
         self = dn_t
 
     @classmethod
-    def fromstring(cls, dn, flags=0):
+    def from_str(cls, dn, flags=0):
         """
         create a new DNObj instance from DN string representation
         """
@@ -71,23 +71,23 @@ class DNObj(tuple):
         else:
             dn_t = tuple([
                 tuple([
-                    (at.decode('ascii'), av.decode(cls.charset))
+                    (at.decode('ascii'), av.decode(cls.encoding))
                     for at, av, _ in dn_comp
                 ])
-                for dn_comp in _libldap0_function_call(_libldap0.str2dn, dn.encode(cls.charset), flags)
+                for dn_comp in _libldap0_function_call(_libldap0.str2dn, dn.encode(cls.encoding), flags)
             ])
         return cls(dn_t)
 
     @classmethod
-    def fromdomain(cls, domain):
+    def from_domain(cls, domain):
         """
         create a new DNObj instance from dot-separated DNS domain name
         """
         domain = domain.encode('idna').decode('ascii')
         return cls([(('dc', d),) for d in domain.split('.')])
 
-    def encode(self, charset=None):
-        return self.__str__().encode(charset or self.charset)
+    def encode(self, encoding=None, errors='strict'):
+        return self.__str__().encode(encoding or self.encoding, errors=errors)
 
     def __str__(self):
         return ','.join([

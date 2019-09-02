@@ -54,25 +54,25 @@ class TestDNObj(unittest.TestCase):
     """
 
     def test001_simple(self):
-        self.assertEqual(DNObj.fromstring(''), DNObj((())))
-        self.assertEqual(DNObj.fromstring('').rdn(), DNObj((())))
-        self.assertEqual(DNObj.fromstring('').rdn_attrs(), {})
-        self.assertEqual(len(DNObj.fromstring('')), 0)
-        self.assertEqual(len(DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')), 3)
+        self.assertEqual(DNObj.from_str(''), DNObj((())))
+        self.assertEqual(DNObj.from_str('').rdn(), DNObj((())))
+        self.assertEqual(DNObj.from_str('').rdn_attrs(), {})
+        self.assertEqual(len(DNObj.from_str('')), 0)
+        self.assertEqual(len(DNObj.from_str('ou=dept1  ,  dc=example, dc=com')), 3)
         self.assertEqual(
-            str(DNObj.fromstring('ou=dept1  ,  dc=example, dc=com').rdn()),
+            str(DNObj.from_str('ou=dept1  ,  dc=example, dc=com').rdn()),
             'ou=dept1'
         )
         self.assertEqual(
-            DNObj.fromstring('ou=dept1  ,  dc=example, dc=com').rdn_attrs(),
+            DNObj.from_str('ou=dept1  ,  dc=example, dc=com').rdn_attrs(),
             {'ou': 'dept1'}
         )
         self.assertEqual(
-            DNObj.fromstring('ou=dept1 + mail=test@example.com ,  dc=example, dc=com').rdn_attrs(),
+            DNObj.from_str('ou=dept1 + mail=test@example.com ,  dc=example, dc=com').rdn_attrs(),
             {'mail': 'test@example.com', 'ou': 'dept1'}
         )
         self.assertEqual(
-            str(DNObj.fromstring('ou=dept1,  dc=example, dc=com').parent()),
+            str(DNObj.from_str('ou=dept1,  dc=example, dc=com').parent()),
             'dc=example,dc=com'
         )
         for dn_str in (
@@ -82,13 +82,13 @@ class TestDNObj(unittest.TestCase):
                 'cn=äöüÄÖÜß',
                 'cn=Michael Ströder,dc=example,dc=com',
             ):
-            dn_obj = DNObj.fromstring(dn_str, flags=0)
+            dn_obj = DNObj.from_str(dn_str, flags=0)
             self.assertEqual(bytes(dn_obj), dn_str.encode('utf-8'))
             self.assertEqual(dn_obj.__str__(), dn_str)
 
     def test002_weird_whitespaces(self):
         self.assertEqual(
-            DNObj.fromstring('uid = test42 + uidNumber = 42, dc = example , dc = com'),
+            DNObj.from_str('uid = test42 + uidNumber = 42, dc = example , dc = com'),
             DNObj((
                 (
                     ('uid', 'test42'),
@@ -130,7 +130,7 @@ class TestDNObj(unittest.TestCase):
         self.assertEqual(set([dn]), set([dn, dn]))
 
     def test005_slicing(self):
-        dn = DNObj.fromstring('ou=dept1  ,  dc=example, dc=com')
+        dn = DNObj.from_str('ou=dept1  ,  dc=example, dc=com')
         self.assertEqual(dn[0], (('ou', 'dept1'),))
         self.assertEqual(dn[1], (('dc', 'example'),))
         self.assertEqual(dn[2], (('dc', 'com'),))
@@ -138,28 +138,28 @@ class TestDNObj(unittest.TestCase):
         with self.assertRaises(IndexError):
             self.assertEqual(dn[3], ())
         self.assertEqual(
-            reversed(DNObj.fromstring('ou=dept1,dc=example,dc=com')),
-            DNObj.fromstring('dc=com,dc=example,ou=dept1')
+            reversed(DNObj.from_str('ou=dept1,dc=example,dc=com')),
+            DNObj.from_str('dc=com,dc=example,ou=dept1')
         )
         self.assertEqual(
-            DNObj.fromstring('ou=dept1,dc=example,dc=com')[1:],
-            DNObj.fromstring('dc=example,dc=com')[:]
+            DNObj.from_str('ou=dept1,dc=example,dc=com')[1:],
+            DNObj.from_str('dc=example,dc=com')[:]
         )
         self.assertEqual(
-            DNObj.fromstring('ou=dept1,dc=example,dc=com')[:2],
-            DNObj.fromstring('ou=dept1,dc=example')[:]
+            DNObj.from_str('ou=dept1,dc=example,dc=com')[:2],
+            DNObj.from_str('ou=dept1,dc=example')[:]
         )
         self.assertEqual(
-            DNObj.fromstring('ou=dept1,dc=example,dc=com').slice(1, None),
-            DNObj.fromstring('dc=example,dc=com')
+            DNObj.from_str('ou=dept1,dc=example,dc=com').slice(1, None),
+            DNObj.from_str('dc=example,dc=com')
         )
         self.assertEqual(
-            DNObj.fromstring('ou=dept1,dc=example,dc=com').slice(None, 2),
-            DNObj.fromstring('ou=dept1,dc=example')
+            DNObj.from_str('ou=dept1,dc=example,dc=com').slice(None, 2),
+            DNObj.from_str('ou=dept1,dc=example')
         )
         domain = 'sub3.sub2.sub1.example.com'
         dns_labels = domain.split('.')
-        dno = DNObj.fromdomain(domain)
+        dno = DNObj.from_domain(domain)
         for i, dn_comp in enumerate(dno):
             self.assertEqual(dn_comp[0][0], 'dc')
             self.assertEqual(dn_comp[0][1], dns_labels[i])
@@ -167,89 +167,89 @@ class TestDNObj(unittest.TestCase):
 
     def test006_domain(self):
         self.assertEqual(
-            str(DNObj.fromdomain('example.com')),
+            str(DNObj.from_domain('example.com')),
             'dc=example,dc=com'
         )
         self.assertEqual(
-            DNObj.fromdomain('example.com').domain(),
+            DNObj.from_domain('example.com').domain(),
             'example.com'
         )
         self.assertEqual(
-            DNObj.fromdomain(u'ströder.de').domain(),
+            DNObj.from_domain(u'ströder.de').domain(),
             u'ströder.de'.encode('idna').decode('ascii')
         )
         self.assertEqual(
-            DNObj.fromstring('ou=dept1,  dc=example, dc=com').domain(only_dc=False),
+            DNObj.from_str('ou=dept1,  dc=example, dc=com').domain(only_dc=False),
             'example.com'
         )
         with self.assertRaises(ValueError):
-            DNObj.fromstring('ou=dept1,dc=example,dc=com').domain(only_dc=True)
+            DNObj.from_str('ou=dept1,dc=example,dc=com').domain(only_dc=True)
         with self.assertRaises(ValueError):
-            DNObj.fromstring('ou=dept1,dc=example,dc=com+dc=net').domain()
+            DNObj.from_str('ou=dept1,dc=example,dc=com+dc=net').domain()
         with self.assertRaises(ValueError):
-            DNObj.fromstring('ou=foo+dc=example,dc=com').domain()
+            DNObj.from_str('ou=foo+dc=example,dc=com').domain()
 
 
     def test007_add(self):
         self.assertEqual(
-            DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com'),
-            DNObj.fromdomain('dept1.example.com'),
+            DNObj.from_domain('dept1')+DNObj.from_domain('example.com'),
+            DNObj.from_domain('dept1.example.com'),
         )
         self.assertEqual(
-            bytes(DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com')),
+            bytes(DNObj.from_domain('dept1')+DNObj.from_domain('example.com')),
             b'dc=dept1,dc=example,dc=com',
         )
         self.assertEqual(
-            (DNObj.fromdomain('dept1')+DNObj.fromdomain('example.com')).domain(),
+            (DNObj.from_domain('dept1')+DNObj.from_domain('example.com')).domain(),
             'dept1.example.com',
         )
 
     def test008_match(self):
-        dn_obj = DNObj.fromdomain('example.com')
+        dn_obj = DNObj.from_domain('example.com')
         self.assertEqual(
-            dn_obj.match([DNObj.fromdomain('example.com')]),
-            DNObj.fromdomain('example.com')
+            dn_obj.match([DNObj.from_domain('example.com')]),
+            DNObj.from_domain('example.com')
         )
         self.assertEqual(
-            dn_obj.match([DNObj.fromdomain('sub1.example.com')]),
+            dn_obj.match([DNObj.from_domain('sub1.example.com')]),
             DNObj((()))
         )
         self.assertEqual(
             dn_obj.match([
-                DNObj.fromdomain('example.com'),
-                DNObj.fromdomain('example.net'),
+                DNObj.from_domain('example.com'),
+                DNObj.from_domain('example.net'),
             ]),
-            DNObj.fromdomain('example.com')
+            DNObj.from_domain('example.com')
         )
         # sub entry match
-        dn_obj = DNObj.fromdomain('sub1.example.com')
+        dn_obj = DNObj.from_domain('sub1.example.com')
         self.assertEqual(
             dn_obj.match([
-                DNObj.fromdomain('sub2.example.com'),
-                DNObj.fromdomain('example.com'),
-                DNObj.fromdomain('example.net'),
+                DNObj.from_domain('sub2.example.com'),
+                DNObj.from_domain('example.com'),
+                DNObj.from_domain('example.net'),
             ]),
-            DNObj.fromdomain('example.com')
+            DNObj.from_domain('example.com')
         )
         self.assertEqual(
             dn_obj.match([
-                DNObj.fromdomain('sub1.example.com'),
-                DNObj.fromdomain('example.com'),
+                DNObj.from_domain('sub1.example.com'),
+                DNObj.from_domain('example.com'),
             ]),
-            DNObj.fromdomain('sub1.example.com')
+            DNObj.from_domain('sub1.example.com')
         )
         # no match
-        dn_obj = DNObj.fromdomain('example.net')
+        dn_obj = DNObj.from_domain('example.net')
         self.assertEqual(
             dn_obj.match([
-                DNObj.fromdomain('example.com'),
+                DNObj.from_domain('example.com'),
             ]),
             DNObj((()))
         )
         self.assertEqual(
             dn_obj.match([
-                DNObj.fromdomain('sub2.example.net'),
-                DNObj.fromdomain('example.com'),
+                DNObj.from_domain('sub2.example.net'),
+                DNObj.from_domain('example.com'),
             ]),
             DNObj((()))
         )
@@ -261,14 +261,14 @@ class TestDNObj(unittest.TestCase):
 
     def test009_parents(self):
         self.assertEqual(
-            DNObj.fromdomain('example.com').parents(),
-            [DNObj.fromdomain('com')]
+            DNObj.from_domain('example.com').parents(),
+            [DNObj.from_domain('com')]
         )
         self.assertEqual(
-            DNObj.fromdomain('sub1.example.com').parents(),
+            DNObj.from_domain('sub1.example.com').parents(),
             [
-                DNObj.fromdomain('example.com'),
-                DNObj.fromdomain('com'),
+                DNObj.from_domain('example.com'),
+                DNObj.from_domain('com'),
             ]
         )
 
