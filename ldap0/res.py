@@ -27,10 +27,10 @@ class SearchReference:
         self.ctrls = ctrls
 
     def __repr__(self):
-        return '%s((&r, %r, encoding=%r))' % (
+        return '%s((%r, %r, encoding=%r))' % (
             self.__class__.__name__,
             self._ref_urls_b,
-            self.crtls,
+            self.ctrls,
             self.encoding,
         )
 
@@ -63,7 +63,7 @@ class SearchResultEntry:
     def __repr__(self):
         return '%s(%r, %r, %r, encoding=%r)' % (
             self.__class__.__name__,
-            self._dn_b,
+            self.dn_b,
             self._entry_b,
             self.ctrls,
             self.encoding,
@@ -98,7 +98,7 @@ class SearchResultEntry:
     def entry_s(self):
         if self._entry_s is None:
             self._entry_s =  {
-                at.decode('ascii'): [avs.decode(self.encoding) for av in avs]
+                at.decode('ascii'): [av.decode(self.encoding) for av in avs]
                 for at, avs in self._entry_b.items()
             }
         return self._entry_s
@@ -116,9 +116,9 @@ class LDAPResult:
             data = []
             for dn, entry, ctrls in rdata:
                 if dn is None:                    
-                    data.append(LDAPSearchReference(entry, ctrls))
+                    data.append(SearchReference(entry, ctrls, encoding=encoding))
                 else:
-                    data.append(SearchResultEntry(dn, entry, ctrls))
+                    data.append(SearchResultEntry(dn, entry, ctrls, encoding=encoding))
         self.rtype = rtype
         self.rdata = data
         self.msgid = msgid

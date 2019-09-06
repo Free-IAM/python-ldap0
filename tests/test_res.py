@@ -7,6 +7,7 @@ Automatic tests for module ldap0.base
 import unittest
 
 from ldap0.dn import DNObj
+from ldap0.base import decode_entry_dict
 from ldap0.res import SearchReference, SearchResultEntry, LDAPResult
 from ldap0.ldapurl import LDAPUrl
 
@@ -52,19 +53,37 @@ class Test002SearchResultEntry(unittest.TestCase):
     tests for class ldap0.res.SearchResultEntry
     """
 
-    def test001_dn_properties(self):
+    def test001_simple(self):
         dn_b = 'o=äöüÄÖÜß,dc=example,dc=com'.encode('utf-8')
-        sere = SearchResultEntry(dn_b, {}, [])
+        entry_b = {
+            b'objectClass': [b'organization'],
+            b'o': ['äöüÄÖÜß'.encode('utf-8')],
+            b'description': ['ÄÖÜßäöü'.encode('utf-8')],
+        }
+        sere = SearchResultEntry(dn_b, entry_b, [])
         self.assertEqual(sere.dn_b, dn_b)
+        self.assertEqual(sere.entry_b, entry_b)
         self.assertEqual(sere.dn_s, dn_b.decode('utf-8'))
+        self.assertEqual(sere.entry_as, {at.decode('ascii'): avs for at, avs in entry_b.items()})
+        self.assertEqual(sere.entry_s, decode_entry_dict(entry_b, encoding='utf-8'))
         self.assertEqual(sere.dn_o, DNObj(dn_b.decode('utf-8')))
         sere = SearchResultEntry('o=äöüÄÖÜß,dc=example,dc=com'.encode('iso-8859-1'), {}, [], encoding='iso-8859-1')
         self.assertEqual(sere.dn_s, sere.dn_b.decode('iso-8859-1'))
 
     def test002_dn_unicode_error(self):
-        sere = SearchResultEntry('o=äöüÄÖÜß,dc=example,dc=com'.encode('iso-8859-1'), {}, [])
+        sere = SearchResultEntry(
+            'o=äöüÄÖÜß,dc=example,dc=com'.encode('iso-8859-1'),
+            {
+                b'objectClass': [b'organization'],
+                b'o': ['äöüÄÖÜß'.encode('iso-8859-1')],
+                b'description': ['ÄÖÜßäöü'.encode('iso-8859-1')],
+            },
+            []
+        )
         with self.assertRaises(UnicodeDecodeError):
             sere.dn_s
+        with self.assertRaises(UnicodeDecodeError):
+            sere.entry_s
 
 
 class Test004LDAPResult(unittest.TestCase):
