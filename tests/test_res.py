@@ -6,6 +6,7 @@ Automatic tests for module ldap0.base
 # from Python's standard lib
 import unittest
 
+from ldap0.dn import DNObj
 from ldap0.res import SearchReference, SearchResultEntry, LDAPResult
 from ldap0.ldapurl import LDAPUrl
 
@@ -51,9 +52,19 @@ class Test002SearchResultEntry(unittest.TestCase):
     tests for class ldap0.res.SearchResultEntry
     """
 
-    def test001_simple(self):
-        pass
+    def test001_dn_properties(self):
+        dn_b = 'o=äöüÄÖÜß,dc=example,dc=com'.encode('utf-8')
+        sere = SearchResultEntry(dn_b, {}, [])
+        self.assertEqual(sere.dn_b, dn_b)
+        self.assertEqual(sere.dn_s, dn_b.decode('utf-8'))
+        self.assertEqual(sere.dn_o, DNObj(dn_b.decode('utf-8')))
+        sere = SearchResultEntry('o=äöüÄÖÜß,dc=example,dc=com'.encode('iso-8859-1'), {}, [], encoding='iso-8859-1')
+        self.assertEqual(sere.dn_s, sere.dn_b.decode('iso-8859-1'))
 
+    def test002_dn_unicode_error(self):
+        sere = SearchResultEntry('o=äöüÄÖÜß,dc=example,dc=com'.encode('iso-8859-1'), {}, [])
+        with self.assertRaises(UnicodeDecodeError):
+            sere.dn_s
 
 
 class Test004LDAPResult(unittest.TestCase):
