@@ -16,12 +16,12 @@ class Test001AddModlist(unittest.TestCase):
     add_modlist_tests = [
         (
             {
-                b'objectClass':[b'person', b'pilotPerson'],
-                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
-                b'sn':[b'Str\303\266der'],
-                b'dummy1':[],
-                b'dummy2':[b'2'],
-                b'dummy3':[b''],
+                'objectClass':[b'person', b'pilotPerson'],
+                'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                'sn':[b'Str\303\266der'],
+                'dummy1':[],
+                'dummy2':[b'2'],
+                'dummy3':[b''],
             },
             [
                 (b'objectClass', [b'person', b'pilotPerson']),
@@ -34,12 +34,12 @@ class Test001AddModlist(unittest.TestCase):
         ),
         (
             {
-                b'objectClass':[b'person', b'pilotPerson'],
-                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
-                b'sn':[b'Str\303\266der'],
-                b'dummy1':[],
-                b'dummy2':[b'2'],
-                b'dummy3':[b''],
+                'objectClass':[b'person', b'pilotPerson'],
+                'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                'sn':[b'Str\303\266der'],
+                'dummy1':[],
+                'dummy2':[b'2'],
+                'dummy3':[b''],
             },
             [
                 (b'objectClass', [b'person', b'pilotPerson']),
@@ -47,7 +47,7 @@ class Test001AddModlist(unittest.TestCase):
                 (b'dummy2', [b'2']),
                 (b'dummy3', [b'']),
             ],
-            (b'cn',),
+            ('cn',),
         ),
     ]
 
@@ -68,18 +68,18 @@ class Test002ModifyModlist(unittest.TestCase):
     modify_modlist_tests = [
         (
             {
-                b'objectClass':[b'person', b'pilotPerson'],
-                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
-                b'sn':[b'Str\303\266der'],
-                b'enum':[b'a', b'b', b'c'],
-                b'c':[b'DE'],
+                'objectClass':[b'person', b'pilotPerson'],
+                'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                'sn':[b'Str\303\266der'],
+                'enum':[b'a', b'b', b'c'],
+                'c':[b'DE'],
             },
             {
-                b'objectClass':[b'person', b'inetOrgPerson'],
-                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
-                b'sn':[],
-                b'enum':[b'a', b'b', b'd'],
-                b'mail':[b'michael@stroeder.com'],
+                'objectClass':[b'person', b'inetOrgPerson'],
+                'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                'sn':[],
+                'enum':[b'a', b'b', b'd'],
+                'mail':[b'michael@stroeder.com'],
             },
             [],
             [],
@@ -96,10 +96,10 @@ class Test002ModifyModlist(unittest.TestCase):
 
         (
             {
-                b'c':[b'DE'],
+                'c':[b'DE'],
             },
             {
-                b'c':[b'FR'],
+                'c':[b'FR'],
             },
             [],
             [],
@@ -113,15 +113,15 @@ class Test002ModifyModlist(unittest.TestCase):
         # of removing an attribute with MOD_DELETE,attr_type, None
         (
             {
-                b'objectClass':[b'person'],
-                b'cn':[None],
-                b'sn':[b''],
-                b'c':[b'DE'],
+                'objectClass':[b'person'],
+                'cn':[None],
+                'sn':[b''],
+                'c':[b'DE'],
             },
             {
-                b'objectClass':[],
-                b'cn':[],
-                b'sn':[None],
+                'objectClass':[],
+                'cn':[],
+                'sn':[None],
             },
             [],
             [],
@@ -134,19 +134,19 @@ class Test002ModifyModlist(unittest.TestCase):
 
         (
             {
-                b'objectClass':[b'person'],
-                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
-                b'sn':[b'Str\303\266der'],
-                b'enum':[b'a', b'b', b'C'],
+                'objectClass':[b'person'],
+                'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                'sn':[b'Str\303\266der'],
+                'enum':[b'a', b'b', b'C'],
             },
             {
-                b'objectClass':[b'Person'],
-                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
-                b'sn':[],
-                b'enum':[b'a', b'b', b'c'],
+                'objectClass':[b'Person'],
+                'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                'sn':[],
+                'enum':[b'a', b'b', b'c'],
             },
             [],
-            [b'objectClass'],
+            ['objectClass'],
             [
                 (ldap0.MOD_DELETE, b'sn', None),
                 (ldap0.MOD_DELETE, b'enum', None),
@@ -156,18 +156,18 @@ class Test002ModifyModlist(unittest.TestCase):
 
         (
             {
-                b'objectClass':[b'person'],
-                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
-                b'sn':[b'Str\303\266der'],
-                b'enum':[b'a', b'b', b'C'],
+                'objectClass':[b'person'],
+                'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                'sn':[b'Str\303\266der'],
+                'enum':[b'a', b'b', b'C'],
             },
             {
-                b'objectClass':[b'inetOrgPerson'],
-                b'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
-                b'sn':[],
-                b'enum':[b'a', b'b', b'c'],
+                'objectClass':[b'inetOrgPerson'],
+                'cn':[b'Michael Str\303\266der', b'Michael Stroeder'],
+                'sn':[],
+                'enum':[b'a', b'b', b'c'],
             },
-            [b'objectClass'],
+            ['objectClass'],
             [],
             [
                 (ldap0.MOD_DELETE, b'sn', None),
