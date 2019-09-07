@@ -56,6 +56,7 @@ class RequestControl:
         control value of the LDAPv3 extended request control
         (here it is the BER-encoded ASN.1 control value)
     """
+    encoding = 'utf-8'
     controlType = None
 
     def __init__(self, controlType=None, criticality=False, encodedControlValue=None):
@@ -81,6 +82,7 @@ class ResponseControl:
     criticality
         sets the criticality of the received control (boolean)
     """
+    encoding = 'utf-8'
 
     def __init__(self, controlType=None, criticality=False):
         if controlType is not None:
@@ -99,6 +101,7 @@ class LDAPControl(RequestControl, ResponseControl):
     """
     Base class for combined request/response controls
     """
+    encoding = 'utf-8'
 
     def __init__(self, controlType=None, criticality=False, encodedControlValue=None):
         RequestControl.__init__(
@@ -120,7 +123,7 @@ def encode_request_ctrls(ctrls):
     if ctrls is None:
         return None
     return [
-        (c.controlType, c.criticality, c.encode())
+        (c.controlType.encode('ascii'), c.criticality, c.encode())
         for c in ctrls
     ]
 
@@ -141,6 +144,7 @@ def decode_response_ctrls(ldapControlTuples, knownLDAPControls=None):
         knownLDAPControls = KNOWN_RESPONSE_CONTROLS
     result = []
     for controlType, criticality, encodedControlValue in ldapControlTuples or []:
+        controlType = controlType.decode('ascii')
         try:
             control_class = knownLDAPControls.get(controlType)
         except KeyError:

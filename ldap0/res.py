@@ -20,14 +20,14 @@ class SearchReference:
     LDAP search continuation objects
     """
 
-    def __init__(self, entry, ctrls, encoding='utf-8'):
+    def __init__(self, entry, ctrls=None, encoding='utf-8'):
         self.encoding = encoding
         self._ref_urls_b = entry
         self._ref_urls_s = self._ref_urls_o = None
         self.ctrls = ctrls
 
     def __repr__(self):
-        return '%s((%r, %r, encoding=%r))' % (
+        return '%s(%r, %r, encoding=%r)' % (
             self.__class__.__name__,
             self._ref_urls_b,
             self.ctrls,
@@ -52,7 +52,7 @@ class SearchResultEntry:
     LDAP search result objects
     """
 
-    def __init__(self, dn, entry, ctrls, encoding='utf-8'):
+    def __init__(self, dn, entry, ctrls=None, encoding='utf-8'):
         self.encoding = encoding
         self.dn_b = dn
         self._dn_s = self._dn_o = None
@@ -67,6 +67,13 @@ class SearchResultEntry:
             self._entry_b,
             self.ctrls,
             self.encoding,
+        )
+
+    def __eq__(self, other):
+        return (
+            self.dn_s == other.dn_s
+            and self.entry_as == other.entry_as
+            and self.ctrls == other.ctrls
         )
 
     @property

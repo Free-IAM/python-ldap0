@@ -18,7 +18,7 @@ class CancelRequest(ExtendedRequest):
     Cancel Operation Request
     """
 
-    requestName = b'1.3.6.1.1.8'
+    requestName = '1.3.6.1.1.8'
 
     class CancelRequestValue(univ.Sequence):
         """

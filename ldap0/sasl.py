@@ -45,6 +45,7 @@ class SaslAuth:
     """
     This class handles SASL interactions for authentication.
     """
+    encoding = 'utf-8'
 
     def __init__(self, cb_value_dict, trace_level=0):
         self.cb_value_dict = {}
@@ -80,15 +81,15 @@ class SaslPasswordAuth(SaslAuth):
             self,
             authc_id,
             password,
-            authz_id=b'',
+            authz_id='',
             trace_level=0,
         ):
         SaslAuth.__init__(
             self,
             {
-                CB_AUTHNAME: authc_id,
+                CB_AUTHNAME: authc_id.encode(self.encoding),
                 CB_PASS: password,
-                CB_USER: authz_id,
+                CB_USER: authz_id.encode(self.encoding),
             },
             trace_level=trace_level,
         )
@@ -108,7 +109,7 @@ class SaslNoninteractiveAuth(SaslAuth):
         SaslAuth.__init__(
             self,
             {
-                CB_USER: authz_id,
+                CB_USER: authz_id.encode(self.encoding),
             },
             trace_level=trace_level,
         )

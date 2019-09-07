@@ -13,7 +13,7 @@ class WhoAmIRequest(ExtendedRequest):
     Who Am I? extended request
     """
 
-    requestName = b'1.3.6.1.4.1.4203.1.11.3'
+    requestName = '1.3.6.1.4.1.4203.1.11.3'
 
 
 class WhoAmIResponse(ExtendedResponse):
@@ -29,3 +29,6 @@ class WhoAmIResponse(ExtendedResponse):
         work around MS AD returning obscure OID as responseName
         """
         return name == cls.responseName or name == WhoAmIRequest.requestName
+
+    def decode(self, value):
+        self.responseValue = value.decode(self.encoding, errors='strict')

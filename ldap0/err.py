@@ -10,7 +10,7 @@ from .__about__ import __version__, __author__, __license__
 
 __all__ = [
     'LIMIT_EXCEPTIONS',
-    'NO_UNIQUE_ENTRY',
+    'NoUniqueEntry',
     'PasswordPolicyException',
     'PasswordPolicyChangeAfterReset',
     'PasswordPolicyExpirationWarning',
@@ -72,7 +72,7 @@ class PasswordPolicyExpiredError(PasswordPolicyException):
 # Some custom exception classes for search errors
 #-----------------------------------------------------------------------
 
-class NO_UNIQUE_ENTRY(_libldap0.NO_SUCH_OBJECT):
+class NoUniqueEntry(_libldap0.NO_SUCH_OBJECT):
     """
     Exception raised if a LDAP search returned more than entry entry
     although assumed to return a unique single search result.

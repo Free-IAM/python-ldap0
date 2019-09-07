@@ -15,7 +15,7 @@ from . import ExtendedRequest, ExtendedResponse
 
 class RefreshRequest(ExtendedRequest):
 
-    requestName = b'1.3.6.1.4.1.1466.101.119.1'
+    requestName = '1.3.6.1.4.1.1466.101.119.1'
     defaultRequestTtl = 86400
 
     class RefreshRequestValue(univ.Sequence):
@@ -43,7 +43,7 @@ class RefreshRequest(ExtendedRequest):
         req_value = self.RefreshRequestValue()
         req_value.setComponentByName(
             'entryName',
-            LDAPDN(self.entryName).subtype(
+            LDAPDN(self.entryName.encode(self.encoding)).subtype(
                 implicitTag=tag.Tag(tag.tagClassContext, tag.tagFormatSimple, 0)
             )
         )

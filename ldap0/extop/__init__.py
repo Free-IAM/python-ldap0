@@ -16,6 +16,7 @@ class ExtendedRequest:
         value of the LDAPv3 extended operation request
         (here it is the BER-encoded ASN.1 request value)
     """
+    encoding = 'utf-8'
 
     def __init__(self, requestName=None, requestValue=None):
         if requestName is not None:
@@ -42,6 +43,7 @@ class ExtendedResponse:
     encodedResponseValue
         BER-encoded ASN.1 value of the LDAPv3 extended operation response
     """
+    encoding = 'utf-8'
 
     responseName = None
 

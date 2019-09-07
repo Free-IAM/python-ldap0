@@ -23,7 +23,7 @@ def add_modlist(entry, ignore_attr_types=None):
             if val is not None
         ]
         if attrvaluelist:
-            modlist.append((attrtype, entry[attrtype]))
+            modlist.append((attrtype.encode('ascii'), entry[attrtype]))
     return modlist # add_modlist()
 
 

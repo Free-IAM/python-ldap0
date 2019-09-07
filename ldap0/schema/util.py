@@ -38,11 +38,11 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
         ldap_url = LDAPUrl(uri)
         ldap_conn = LDAPObject(ldap_url, trace_level)
         ldap_conn.simple_bind_s(
-            (ldap_url.who or '').encode('utf-8'),
-            (ldap_url.cred or '').encode('utf-8'),
+            ldap_url.who or '',
+            (ldap_url.cred or '').encode(ldap_conn.encoding),
         )
         subschemasubentry_dn = ldap_conn.search_subschemasubentry_s(
-            ldap_url.dn.encode('utf-8'),
+            ldap_url.dn,
             rootdse=rootdse,
         )
         if subschemasubentry_dn is None:
@@ -54,7 +54,7 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
                 schema_attrs = ldap_url.attrs
             s_temp = ldap_conn.read_subschemasubentry_s(
                 subschemasubentry_dn,
-                attrs=[at.encode('ascii') for at in schema_attrs],
+                attrs=schema_attrs,
             )
         ldap_conn.unbind_s()
         del ldap_conn
@@ -64,7 +64,10 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
         ldif_res = ldif_parser.list_entry_records()
         subschemasubentry_dn, s_temp = ldif_res[0]
     # SubSchema() takes Unicode strings => decode first
-    s_temp = decode_entry_dict(s_temp or {}, encoding='utf-8')
+    s_temp = {
+        at: [av.decode('utf-8') for av in avs]
+        for at, avs in (s_temp or {}).items()
+    }
     # Work-around for mixed-cased schema attribute names
     subschemasubentry_entry = CIDict()
     for atype, aval in s_temp.items():

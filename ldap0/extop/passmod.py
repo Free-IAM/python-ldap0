@@ -55,7 +55,7 @@ class PassmodRequest(ExtendedRequest):
     Password Modify extended request
     """
 
-    requestName = b'1.3.6.1.4.1.4203.1.11.1'
+    requestName = '1.3.6.1.4.1.4203.1.11.1'
 
     class PasswdModifyRequestValue(univ.Sequence):
         """
@@ -80,7 +80,7 @@ class PassmodRequest(ExtendedRequest):
         req_value = self.PasswdModifyRequestValue()
         req_value.setComponentByName(
             'userIdentity',
-            UserIdentity(self.userIdentity),
+            UserIdentity(self.userIdentity.encode(self.encoding)),
         )
         if self.oldPasswd is not None:
             req_value.setComponentByName(

@@ -15,10 +15,10 @@ from urllib.parse import quote_plus
 import _libldap0
 
 from .__about__ import __version__, __author__, __license__
-from .base import encode_entry_dict
+from .base import encode_list
 from .ldapobject import LDAPObject
 from .functions import escape_format
-from .filter import escape_str as escape_ldap_str
+from .filter import escape_str as escape_filter_str
 from .ldif import LDIFParser
 
 # a template string for generating simple slapd.conf file
@@ -397,7 +397,7 @@ class SlapdTestCase(unittest.TestCase):
         ldap_conn.protocol_version = 3
         #ldap_conn.set_option(ldap0.OPT_REFERRALS, 0)
         ldap_conn.simple_bind_s(
-            (who or self.server.root_dn).encode('utf-8'),
+            (who or self.server.root_dn),
             (cred or self.server.root_pw).encode('utf-8'),
         )
         return ldap_conn
@@ -418,20 +418,20 @@ class SlapdTestCase(unittest.TestCase):
         except AttributeError:
             # open local LDAP connection
             self._ldap_conn = self._open_ldap_conn()
-            self.mdb_config_dn, _ = self._ldap_conn.search_s(
-                b'cn=config',
+            self.mdb_config_dn = self._ldap_conn.search_s(
+                'cn=config',
                 _libldap0.SCOPE_SUBTREE,
-                escape_format(escape_ldap_str, '(olcSuffix={0})', self.server.suffix).encode('utf-8'),
-            )[0]
+                escape_format(escape_filter_str, '(olcSuffix={0})', self.server.suffix),
+            )[0].dn_s
 
     def enable_overlay(self, slapo_entry, schema_files=None):
         olc_overlay = slapo_entry['olcOverlay'][0]
         enabled_overlays = [
-            val.split(b'}', 1)[1].decode('utf-8')
+            val.decode(self._ldap_conn.encoding).split('}', 1)[1]
             for val in self._ldap_conn.read_s(
-                b'cn=module{0},cn=config',
-                attrlist=[b'olcModuleLoad'],
-            )[b'olcModuleLoad']
+                'cn=module{0},cn=config',
+                attrlist=['olcModuleLoad'],
+            )['olcModuleLoad']
         ]
         if olc_overlay in enabled_overlays:
             return
@@ -444,15 +444,18 @@ class SlapdTestCase(unittest.TestCase):
             for dn, entry in schema_entries:
                 self._ldap_conn.add_s(dn, entry)
             self._ldap_conn.modify_s(
-                b'cn=module{0},cn=config',
+                'cn=module{0},cn=config',
                 [(_libldap0.MOD_ADD, b'olcModuleLoad', [olc_overlay.encode('utf-8')])]
             )
             self._ldap_conn.add_s(
                 'olcOverlay={{0}}{0},{1}'.format(
                     olc_overlay,
-                    self.mdb_config_dn.decode('utf-8'),
-                ).encode('utf-8'),
-                encode_entry_dict(slapo_entry, encoding='utf-8'),
+                    self.mdb_config_dn,
+                ),
+                {
+                    at: encode_list(avs)
+                    for at, avs in slapo_entry.items()
+                },
             )
         except _libldap0.OTHER as ldap_err:
             self.skipTest(

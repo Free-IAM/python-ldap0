@@ -17,7 +17,7 @@ os.environ['LDAPNOINIT'] = '1'
 import ldap0
 from ldap0 import LDAPError
 from ldap0.ldapobject import LDAPObject
-
+from ldap0.res import SearchResultEntry
 from ldap0.controls.simple import ManageDSAITControl
 from ldap0.controls.deref import DereferenceControl
 from ldap0.controls.openldap import SearchNoOpControl
@@ -150,81 +150,81 @@ class TestDeRef(ExtensionTestCase):
             'objectClass': ['olcOverlayConfig'],
         })
         ldap_result = self._ldap_conn.search_s(
-            ('cn=Foo7,ou=Container,%s' % (self.server.suffix)).encode('utf-8'),
+            'cn=Foo7,ou=Container,%s' % (self.server.suffix),
             ldap0.SCOPE_BASE,
             req_ctrls=[
                 DereferenceControl(
                     True,
-                    {b'roleOccupant': [b'cn', b'uid']},
+                    {'roleOccupant': ['cn', 'uid']},
                 )
             ],
             cache_ttl=1.0,
             add_ctrls=True,
         )
-        dn, entry, crtls = ldap_result[0]
+
         self.assertEqual(
-            dn.decode('utf-8'),
+            ldap_result[0].dn_s,
             'cn=Foo7,ou=Container,%s' % (self.server.suffix)
         )
         self.assertEqual(
-            entry,
+            ldap_result[0].entry_as,
             {
-                b'cn': [b'Foo7'],
-                b'objectClass': [b'organizationalRole'],
-                b'roleOccupant': [
+                'cn': [b'Foo7'],
+                'objectClass': [b'organizationalRole'],
+                'roleOccupant': [
                     b'cn=user1,%s' % (self.server.suffix.encode('utf-8')),
                     b'cn=Foo1,%s' % (self.server.suffix.encode('utf-8')),
                     b'cn=Foo6,ou=Container,%s' % (self.server.suffix.encode('utf-8'))
                 ],
             },
         )
-        deref_crtl = crtls[0]
-        self.assertEqual(isinstance(deref_crtl, DereferenceControl), True)
+        deref_ctrl = ldap_result[0].ctrls[0]
+        self.assertEqual(isinstance(deref_ctrl, DereferenceControl), True)
         self.assertEqual(
-            deref_crtl.derefRes,
+            deref_ctrl.derefRes,
             {
-                b'roleOccupant': [
-                    (b'cn=user1,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'user1']}),
-                    (b'cn=Foo1,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'Foo1']}),
-                    (b'cn=Foo6,ou=Container,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'Foo6']}),
+                'roleOccupant': [
+                    SearchResultEntry(b'cn=user1,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'user1']}),
+                    SearchResultEntry(b'cn=Foo1,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'Foo1']}),
+                    SearchResultEntry(b'cn=Foo6,ou=Container,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'Foo6']}),
                 ]
             }
         )
-        del dn; del entry; del crtls; del deref_crtl
-        dn, entry, crtls = self._ldap_conn.find_unique_entry(
-            self.server.suffix.encode('utf-8'),
+        del ldap_result; del deref_ctrl
+        ldap_result = self._ldap_conn.find_unique_entry(
+            self.server.suffix,
             ldap0.SCOPE_SUBTREE,
-            b'(cn=Foo7)',
+            '(cn=Foo7)',
             req_ctrls=[
                 DereferenceControl(
                     True,
-                    {b'roleOccupant': [b'cn', b'uid']},
+                    {'roleOccupant': ['cn', 'uid']},
                 )
             ],
             add_ctrls=True,
         )
-        self.assertEqual(dn.decode('utf-8'), 'cn=Foo7,ou=Container,%s' % (self.server.suffix))
+        self.assertEqual(ldap_result.dn_s, 'cn=Foo7,ou=Container,%s' % (self.server.suffix))
         self.assertEqual(
-            entry,
+            ldap_result.entry_as,
             {
-                b'cn': [b'Foo7'],
-                b'objectClass': [b'organizationalRole'],
-                b'roleOccupant': [
+                'cn': [b'Foo7'],
+                'objectClass': [b'organizationalRole'],
+                'roleOccupant': [
                     b'cn=user1,%s' % (self.server.suffix.encode('utf-8')),
                     b'cn=Foo1,%s' % (self.server.suffix.encode('utf-8')),
                     b'cn=Foo6,ou=Container,%s' % (self.server.suffix.encode('utf-8'))
                 ],
             },
         )
-        deref_crtl = crtls[0]
-        self.assertEqual(isinstance(deref_crtl, DereferenceControl), True)
+        deref_ctrl = ldap_result.ctrls[0]
+        self.assertEqual(isinstance(deref_ctrl, DereferenceControl), True)
         self.assertEqual(
-            deref_crtl.derefRes,
+            deref_ctrl.derefRes,
             {
-                b'roleOccupant': [
-                    (b'cn=user1,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'user1']}),
-                    (b'cn=Foo1,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'Foo1']}),
-                    (b'cn=Foo6,ou=Container,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'Foo6']}),
+                'roleOccupant': [
+                    SearchResultEntry(b'cn=user1,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'user1']}),
+                    SearchResultEntry(b'cn=Foo1,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'Foo1']}),
+                    SearchResultEntry(b'cn=Foo6,ou=Container,%s' % (self.server.suffix.encode('utf-8')), {b'cn': [b'Foo6']}),
                 ]
             }
         )
@@ -240,20 +240,20 @@ class TestNoopSrch(ExtensionTestCase):
         expected_num_refs = LDIF_TEMPLATE.count('objectClass: referral')
         expected_num_entries = LDIF_TEMPLATE.count('dn: ') - expected_num_refs
         num_entries, num_refs = self._ldap_conn.noop_search(
-            self.server.suffix.encode('utf-8'),
+            self.server.suffix,
             ldap0.SCOPE_SUBTREE,
         )
         self.assertEqual(num_entries, expected_num_entries)
         self.assertEqual(num_refs, expected_num_refs)
         num_entries, num_refs = self._ldap_conn.noop_search(
-            self.server.suffix.encode('utf-8'),
+            self.server.suffix,
             ldap0.SCOPE_SUBTREE,
-            b'(objectClass=organizationalRole)',
+            '(objectClass=organizationalRole)',
         )
         self.assertEqual(num_entries, LDIF_TEMPLATE.count('objectClass: organizationalRole'))
         self.assertEqual(num_refs, LDIF_TEMPLATE.count('objectClass: referral'))
         num_entries, num_refs = self._ldap_conn.noop_search(
-            self.server.suffix.encode('utf-8'),
+            self.server.suffix,
             ldap0.SCOPE_SUBTREE,
             req_ctrls=[ManageDSAITControl()]
         )
@@ -272,29 +272,29 @@ class TestDDS(ExtensionTestCase):
             'olcDDSminTtl': ['1m'],
             'olcDDSstate': ['TRUE'],
         })
-        root_dse = self._ldap_conn.read_rootdse_s(attrlist=[b'dynamicSubtrees'])
-        if b'dynamicSubtrees' not in root_dse:
+        root_dse = self._ldap_conn.read_rootdse_s(attrlist=['dynamicSubtrees'])
+        if 'dynamicSubtrees' not in root_dse:
             self.skipTest('slapo-dds not enabled in rootDSE')
-        self.assertEqual(root_dse[b'dynamicSubtrees'][0].decode('utf-8'), self.server.suffix)
+        self.assertEqual(root_dse['dynamicSubtrees'][0].decode('utf-8'), self.server.suffix)
         dds_entry_dn = 'cn=dds-1,'+self.server.suffix
         self._ldap_conn.add_s(
-            dds_entry_dn.encode('utf-8'),
+            dds_entry_dn,
             {
-                b'objectClass': [b'applicationProcess', b'dynamicObject'],
-                b'cn': [b'dds-1'],
+                'objectClass': [b'applicationProcess', b'dynamicObject'],
+                'cn': [b'dds-1'],
             },
         )
         refresh_response = self._ldap_conn.extop_s(
             RefreshRequest(
-                entryName=dds_entry_dn.encode('utf-8'),
+                entryName=dds_entry_dn,
                 requestTtl=247,
             ),
             extop_resp_class=RefreshResponse,
         )
         self.assertEqual(refresh_response.responseTtl, 247)
-        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn.encode('utf-8'), ttl=178), 178)
-        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn.encode('utf-8'), ttl=42), 60)
-        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn.encode('utf-8')), 86400)
+        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn, ttl=178), 178)
+        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn, ttl=42), 60)
+        self.assertEqual(self._ldap_conn.refresh_s(dds_entry_dn), 86400)
 
 
 class TestSssVlv(ExtensionTestCase):
@@ -311,52 +311,52 @@ class TestSssVlv(ExtensionTestCase):
         )
         wanted_results = [
             (
-                ('cn=Bar%d,ou=Groups,%s' % (i, self.server.suffix)).encode('utf-8'),
-                {b'cn': [b'Bar%d' % i]},
+                'cn=Bar%d,ou=Groups,%s' % (i, self.server.suffix),
+                {'cn': [b'Bar%d' % i]},
             )
             for i in range(4, 0, -1)
         ]
 
         for ordr in (
-            (b'-cn:caseExactOrderingMatch',),
-            (b'-cn:caseExactOrderingMatch',),
-            (b'-gidNumber:integerOrderingMatch',),
-            (b'-gidNumber',),
-            (b'-gidNumber', b'createTimestamp',),
+            ('-cn:caseExactOrderingMatch',),
+            ('-cn:caseExactOrderingMatch',),
+            ('-gidNumber:integerOrderingMatch',),
+            ('-gidNumber',),
+            ('-gidNumber', 'createTimestamp',),
         ):
             ldap_result = self._ldap_conn.search_s(
-                self.server.suffix.encode('utf-8'),
+                self.server.suffix,
                 ldap0.SCOPE_SUBTREE,
-                b'(objectClass=posixGroup)',
-                attrlist=[b'cn'],
+                '(objectClass=posixGroup)',
+                attrlist=['cn'],
                 req_ctrls=[SSSRequestControl(criticality=True, ordering_rules=ordr)],
             )
-            self.assertEqual(ldap_result, wanted_results)
+            self.assertEqual([(lr.dn_s, lr.entry_as) for lr in ldap_result], wanted_results)
         msg_id = self._ldap_conn.search(
-            self.server.suffix.encode('utf-8'),
+            self.server.suffix,
             ldap0.SCOPE_SUBTREE,
-            b'(objectClass:=organizationalRole)',
-            attrlist=[b'cn'],
+            '(objectClass:=organizationalRole)',
+            attrlist=['cn'],
             req_ctrls=[
                 SSSRequestControl(
                     criticality=True,
-                    ordering_rules=[b'cn:caseExactOrderingMatch']
+                    ordering_rules=['cn:caseExactOrderingMatch']
                 )
             ],
             sizelimit=1,
         )
         ldap_result = []
         try:
-            for _, res_data, _, res_controls in self._ldap_conn.results(msg_id):
-                ldap_result.extend(res_data)
+            for ldap_res in self._ldap_conn.results(msg_id):
+                ldap_result.extend(ldap_res.rdata)
         except ldap0.SIZELIMIT_EXCEEDED:
             pass
         self.assertEqual(
-            ldap_result,
+            [(lr.dn_s, lr.entry_as) for lr in ldap_result],
             [
                 (
-                    ('cn=Foo1,%s' % (self.server.suffix)).encode('utf-8'),
-                    {b'cn': [b'Foo1']}
+                    'cn=Foo1,%s' % (self.server.suffix),
+                    {'cn': [b'Foo1']}
                 ),
             ]
         )

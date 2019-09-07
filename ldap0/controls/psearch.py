@@ -47,7 +47,7 @@ class PersistentSearchControl(RequestControl):
       Boolean which indicates whether the server should return an
       Entry Change Notication response control
     """
-    controlType = b'2.16.840.1.113730.3.4.3'
+    controlType = '2.16.840.1.113730.3.4.3'
 
     class PersistentSearchControlValue(univ.Sequence):
         """
@@ -137,7 +137,7 @@ class EntryChangeNotificationControl(ResponseControl):
     changeNumber
       A change serial number returned by the server (optional).
     """
-    controlType = b'2.16.840.1.113730.3.4.7'
+    controlType = '2.16.840.1.113730.3.4.7'
 
     def decode(self, encodedControlValue):
         ecncValue, _ = decoder.decode(
