@@ -110,22 +110,22 @@ class TestPPolicy(SlapdTestCase):
         ppolicy_cn = 'ppolicy-%s' % (name)
         ppolicy_dn = 'cn=%s,%s' % (ppolicy_cn, self.server.suffix)
         ppolicy_entry = {
-            'objectClass': ['applicationProcess', 'pwdPolicy'],
-            'cn': [ppolicy_cn],
-            'pwdAttribute': ['userPassword'],
+            'objectClass': [b'applicationProcess', b'pwdPolicy'],
+            'cn': [ppolicy_cn.encode('utf-8')],
+            'pwdAttribute': [b'userPassword'],
         }
         for at, av in ppolicy_attrs.items():
-            ppolicy_entry[at] = [str(av)]
+            ppolicy_entry[at] = [str(av).encode('utf-8')]
         self._ldap_conn.add_s(
-            ppolicy_dn.encode('utf-8'),
-            encode_entry_dict(ppolicy_entry, encoding='utf-8'),
+            ppolicy_dn,
+            ppolicy_entry,
         )
         read_entry = self._ldap_conn.read_s(
-            ppolicy_dn.encode('utf-8'),
-            attrlist=[at.encode('ascii') for at in ppolicy_entry.keys()],
+            ppolicy_dn,
+            attrlist=list(ppolicy_entry.keys()),
         )
         logging.debug('read_entry = %r', read_entry)
-        self.assertEqual(decode_entry_dict(read_entry, encoding='utf-8'), ppolicy_entry)
+        self.assertEqual(read_entry, ppolicy_entry)
 
     def _set_user_password(self, user_password, pwd_reset=False):
         modlist = [(ldap0.MOD_REPLACE, b'userPassword', [user_password.encode('utf-8')])]
@@ -134,50 +134,50 @@ class TestPPolicy(SlapdTestCase):
         else:
             modlist.append((ldap0.MOD_DELETE, b'pwdReset', None))
         self._ldap_conn.modify_s(
-            self.user_dn.encode('utf-8'),
+            self.user_dn,
             [
                 (ldap0.MOD_REPLACE, b'userPassword', [user_password.encode('utf-8')]),
                 (ldap0.MOD_REPLACE, b'pwdReset', [b'TRUE']),
             ]
         )
         return self._ldap_conn.read_s(
-            self.user_dn.encode('utf-8'),
-            attrlist=[b'pwdChangedTime', b'pwdReset'],
+            self.user_dn,
+            attrlist=['pwdChangedTime', 'pwdReset'],
         )
 
     def test001_pwd_reset(self):
         user_password = 'supersecret1'
         user_entry = self._set_user_password(user_password, pwd_reset=True)
-        self.assertEqual(user_entry[b'pwdReset'], [b'TRUE'])
-        pwd_changed_time = strp_secs(user_entry[b'pwdChangedTime'][0].decode('ascii'))
+        self.assertEqual(user_entry['pwdReset'], [b'TRUE'])
+        pwd_changed_time = strp_secs(user_entry['pwdChangedTime'][0].decode('ascii'))
         # check a normal simple bind first
         with self.ldap_object_class(self.server.ldap_uri) as l:
             with self.assertRaises(PasswordPolicyChangeAfterReset) as ctx:
                 l.simple_bind_s(
-                    self.user_dn.encode('utf-8'),
+                    self.user_dn,
                     user_password.encode('utf-8'),
                     req_ctrls=[PasswordPolicyControl()],
                 )
             self.assertEqual(str(ctx.exception), 'Password change is needed after reset!')
             # let the user change his own password
-            l.passwd_s(self.user_dn.encode('utf-8'), None, 'supersecret2')
+            l.passwd_s(self.user_dn, None, 'supersecret2')
         return # end of test001_pwd_reset()
 
     def test002_pwd_expiry_warning(self):
         user_password = b'supersecret2'
         user_entry = self._ldap_conn.read_s(
-            self.user_dn.encode('utf-8'),
-            attrlist=[b'pwdChangedTime', b'pwdReset'],
+            self.user_dn,
+            attrlist=['pwdChangedTime', 'pwdReset'],
         )
         logging.debug('user_entry = %r', user_entry)
-        pwd_changed_time = strp_secs(user_entry[b'pwdChangedTime'][0].decode('utf-8'))
+        pwd_changed_time = strp_secs(user_entry['pwdChangedTime'][0].decode('utf-8'))
         self.assertTrue(b'pwdReset' not in user_entry)
         # wait until grace period and check for PasswordPolicyExpirationWarning
         time.sleep(self.pwd_expire_warning-(time.time()-pwd_changed_time-1.0))
         with self.ldap_object_class(self.server.ldap_uri) as l:
             with self.assertRaises(PasswordPolicyExpirationWarning) as ctx:
                 l.simple_bind_s(
-                    self.user_dn.encode('utf-8'),
+                    self.user_dn,
                     user_password,
                     req_ctrls=[PasswordPolicyControl()],
                 )
@@ -188,17 +188,17 @@ class TestPPolicy(SlapdTestCase):
     def test003_pwd_grace_logins(self):
         user_password = 'supersecret2'
         user_entry = self._ldap_conn.read_s(
-            self.user_dn.encode('utf-8'),
-            attrlist=[b'pwdChangedTime', b'pwdReset'],
+            self.user_dn,
+            attrlist=['pwdChangedTime', 'pwdReset'],
         )
-        pwd_changed_time = strp_secs(user_entry[b'pwdChangedTime'][0].decode('utf-8'))
-        self.assertTrue(b'pwdReset' not in user_entry)
+        pwd_changed_time = strp_secs(user_entry['pwdChangedTime'][0].decode('utf-8'))
+        self.assertTrue('pwdReset' not in user_entry)
         # wait until password expired and check for PasswordPolicyExpiredError
         time.sleep(self.pwd_max_age+1.0-(time.time()-pwd_changed_time))
         with self.ldap_object_class(self.server.ldap_uri) as l:
             with self.assertRaises(PasswordPolicyExpiredError) as ctx:
                 l.simple_bind_s(
-                    self.user_dn.encode('utf-8'),
+                    self.user_dn,
                     user_password.encode('utf-8'),
                     req_ctrls=[PasswordPolicyControl()],
                 )
