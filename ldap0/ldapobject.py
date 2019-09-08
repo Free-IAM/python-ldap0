@@ -11,6 +11,7 @@ from os import strerror
 import _libldap0
 from _libldap0 import LDAPError
 
+import ldap0
 from .__about__ import __version__, __author__, __license__
 from .err import \
     PasswordPolicyChangeAfterReset, \
@@ -218,6 +219,8 @@ class LDAPObject:
         return self.get_option(_libldap0.OPT_DESC)
 
     def abandon(self, msgid, req_ctrls=None):
+        if msgid not in self._outstanding_requests:
+            raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
         res = self._ldap_call(
             self._l.abandon_ext,
             msgid,
@@ -227,6 +230,8 @@ class LDAPObject:
         return res
 
     def cancel(self, cancelid, req_ctrls=None):
+        if cancelid not in self._outstanding_requests:
+            raise ldap0.NO_SUCH_OPERATION('Unexpected cancelid value %s' % (cancelid,))
         return self.extop(
             CancelRequest(cancelid),
             req_ctrls=req_ctrls,
@@ -511,7 +516,7 @@ class LDAPObject:
         LDAPObject.result()
         """
         if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
-            raise KeyError('Unexpected msgid value %s' % (msgid,))
+            raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
         start_time = time.time()
         if timeout >=0:
             end_time = start_time + timeout
