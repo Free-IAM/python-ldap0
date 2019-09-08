@@ -493,12 +493,15 @@ class LDAPObject:
         operation results of the given msgid like retrieved with
         LDAPObject.result()
         """
+        start_time = time.time()
+        if timeout >=0:
+            end_time = start_time + timeout
         while True:
             ldap_result = self._ldap_call(
                 self._l.result,
                 msgid,
-                _libldap0.MSG_ONE,
-                timeout,
+                _libldap0.MSG_RECEIVED,
+                end_time-start_time if timeout >=0 else -1,
                 True,
                 add_intermediates,
                 False
