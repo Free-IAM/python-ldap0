@@ -69,12 +69,12 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
         }
     # Work-around for mixed-cased schema attribute names
     subschemasubentry_entry = CIDict()
-    for atype, aval in s_temp.items():
-        if atype in SCHEMA_CLASS_MAPPING:
-            try:
-                subschemasubentry_entry[atype].extend(aval)
-            except KeyError:
-                subschemasubentry_entry[atype] = aval
+    subschemasubentry_entry.update({
+        at: avs
+        for at, avs in s_temp.items()
+        if at in SCHEMA_CLASS_MAPPING
+    })
+    del s_temp
     # Finally parse the schema
     if subschemasubentry_dn is not None:
         parsed_sub_schema = SubSchema(
