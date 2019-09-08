@@ -264,14 +264,14 @@ class Test00_LDAPObject(SlapdTestCase):
                 '(objectClass=*)',
             )
             with self.assertRaises(ldap0.TIMEOUT):
-                list(l.results(msg_id, timeout=0.001))
+                list(l.results(msg_id, timeout=0.0001))
             l.abandon(msg_id)
             with self.assertRaises(ldap0.TIMEOUT):
                 l.search_s(
                     self.server.suffix,
                     ldap0.SCOPE_SUBTREE,
                     '(objectClass=*)',
-                    timeout=0.001,
+                    timeout=0.0001,
                 )
 
     def test008_sessiontrack_control(self):
