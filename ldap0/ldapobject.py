@@ -87,6 +87,18 @@ class LDAPObject:
         self.uri = None
         conn_uri = ldap_url.connect_uri()
         self._l = _libldap0_function_call(_libldap0.initialize, conn_uri.encode('ascii'))
+        self._msgid_funcs = {
+            self._l.add_ext,
+            self._l.simple_bind,
+            self._l.compare_ext,
+            self._l.delete_ext,
+            self._l.extop,
+            self._l.modify_ext,
+            self._l.rename,
+            self._l.search_ext,
+            self._l.unbind_ext,
+        }
+        self._outstanding_requests = {}
         self.uri = conn_uri
         self._whoami_dn = None
         self.timeout = -1
@@ -137,6 +149,8 @@ class LDAPObject:
                         diag_msg_ok,
                     )
                 logging.debug('-> %s', pprint.pformat(result))
+        if func in self._msgid_funcs:
+            self._outstanding_requests[result] = (func, args, kwargs)
         return result
 
     def __setattr__(self, name, value):
@@ -204,11 +218,13 @@ class LDAPObject:
         return self.get_option(_libldap0.OPT_DESC)
 
     def abandon(self, msgid, req_ctrls=None):
-        return self._ldap_call(
+        res = self._ldap_call(
             self._l.abandon_ext,
             msgid,
             encode_request_ctrls(req_ctrls),
         )
+        del self._outstanding_requests[msgid]
+        return res
 
     def cancel(self, cancelid, req_ctrls=None):
         return self.extop(
@@ -225,6 +241,7 @@ class LDAPObject:
             return res[0]
         except _libldap0.CANCELLED:
             pass
+        del self._outstanding_requests[cancelid]
 
     def add(self, dn, entry, req_ctrls=None):
         self.uncache(dn)
@@ -493,6 +510,8 @@ class LDAPObject:
         operation results of the given msgid like retrieved with
         LDAPObject.result()
         """
+        if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
+            raise KeyError('Unexpected msgid value %s' % (msgid,))
         start_time = time.time()
         if timeout >=0:
             end_time = start_time + timeout
@@ -514,6 +533,7 @@ class LDAPObject:
             yield LDAPResult(res_type, res_data, res_msgid, decode_response_ctrls(res_ctrls, resp_ctrl_classes))
             if not ldap_result or ldap_result[0] not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE}:
                 break
+        del self._outstanding_requests[msgid]
         # end of results()
 
     def search(
@@ -896,6 +916,8 @@ class ReconnectLDAPObject(LDAPObject):
         '_libldap0_lock',
         '_reconnect_lock',
         '_last_bind',
+        '_outstanding_requests',
+        '_msgid_funcs',
     }
 
     def __init__(
@@ -1009,6 +1031,18 @@ class ReconnectLDAPObject(LDAPObject):
                 try:
                     # Do the connect
                     self._l = _libldap0_function_call(_libldap0.initialize, uri.encode(self.encoding))
+                    self._msgid_funcs = {
+                        self._l.add_ext,
+                        self._l.simple_bind,
+                        self._l.compare_ext,
+                        self._l.delete_ext,
+                        self._l.extop,
+                        self._l.modify_ext,
+                        self._l.rename,
+                        self._l.search_ext,
+                        self._l.unbind_ext,
+                    }
+                    self._outstanding_requests = {}
                     self._restore_options()
                     # StartTLS extended operation in case this was called before
                     if self._start_tls:
