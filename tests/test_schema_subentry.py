@@ -168,13 +168,13 @@ class TestSubschema(SubschemaTest):
             b'cn': [b'test-srvgroup-1'],
             b'description': [b'testing...'],
         }
-        ae_dn = DNObj.from_str('cn=test-srvgroup-1,ou=ae-dir')
-        ae_entry = Entry(self.sub_schema, bytes(ae_dn), ldap_entry)
+        ae_dn = 'cn=test-srvgroup-1,ou=ae-dir'
+        ae_entry = Entry(self.sub_schema, ae_dn, ldap_entry)
         self.assertIn('cn', ae_entry)
         self.assertIn('2.5.4.3', ae_entry)
         self.assertNotIn('aeLoginGroups', ae_entry)
         self.assertEqual(
-            list(ae_entry.get_possible_dit_structure_rules(str(ae_dn))),
+            list(ae_entry.get_possible_dit_structure_rules(ae_dn)),
             ['5'],
         )
         self.assertEqual(
@@ -324,8 +324,8 @@ class TestModifyModlist(unittest.TestCase):
         for old_entry, new_entry, ignore_attr_types, test_modlist in self.modify_modlist_tests:
             result_modlist = modify_modlist(
                 sub_schema,
-                ldap0.schema.models.Entry(sub_schema, b'cn=test', old_entry),
-                ldap0.schema.models.Entry(sub_schema, b'cn=test', new_entry),
+                ldap0.schema.models.Entry(sub_schema, 'cn=test', old_entry),
+                ldap0.schema.models.Entry(sub_schema, 'cn=test', new_entry),
                 ignore_attr_types=ignore_attr_types,
             )
             self.assertEqual(

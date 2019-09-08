@@ -55,7 +55,7 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
             s_temp = ldap_conn.read_subschemasubentry_s(
                 subschemasubentry_dn,
                 attrs=schema_attrs,
-            )
+            ).entry_s
         ldap_conn.unbind_s()
         del ldap_conn
     else:
@@ -63,11 +63,10 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
         ldif_parser = LDIFParser(ldif_file, max_entries=1)
         ldif_res = ldif_parser.list_entry_records()
         subschemasubentry_dn, s_temp = ldif_res[0]
-    # SubSchema() takes Unicode strings => decode first
-    s_temp = {
-        at: [av.decode('utf-8') for av in avs]
-        for at, avs in (s_temp or {}).items()
-    }
+        s_temp = {
+            at.decode('ascii'): [av.decode('utf-8') for av in avs]
+            for at, avs in (s_temp or {}).items()
+        }
     # Work-around for mixed-cased schema attribute names
     subschemasubentry_entry = CIDict()
     for atype, aval in s_temp.items():
