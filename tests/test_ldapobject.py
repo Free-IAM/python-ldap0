@@ -345,7 +345,7 @@ class Test00_LDAPObject(SlapdTestCase):
         paged_results_control = SimplePagedResultsControl(
             True,
             size=page_size,
-            cookie=''
+            cookie=b''
         )
         result_pages = 0
         all_paged_results = []
@@ -358,16 +358,19 @@ class Test00_LDAPObject(SlapdTestCase):
                 attrlist=['1.1'],
                 req_ctrls=[paged_results_control],
             )
-            for res in self._ldap_conn.results(msg_id):
+            ldap_results = list(self._ldap_conn.results(msg_id))
+#            self.assertEqual(len(ldap_results), page_size+1)
+            for res in ldap_results:
                 self.assertEqual(res.msgid, msg_id)
-                all_paged_results.extend(res.rdata)
-                result_pages += 1
-                if not res.ctrls or not res.ctrls[0].cookie:
-                    paging_continues = False
-                    break
-                self.assertEqual(res.ctrls[0].controlType, SimplePagedResultsControl.controlType)
-                # Copy cookie from response control to request control
-                paged_results_control.cookie = res.ctrls[0].cookie
+                if res.rtype == ldap0.RES_SEARCH_ENTRY and res.rdata:
+                    all_paged_results.extend(res.rdata)
+                elif res.rtype == ldap0.RES_SEARCH_RESULT:
+                    result_pages += 1
+                    if not res.ctrls or not res.ctrls[0].cookie:
+                        paging_continues = False
+                    self.assertEqual(res.ctrls[0].controlType, SimplePagedResultsControl.controlType)
+                    # Copy cookie from response control to request control
+                    paged_results_control.cookie = res.ctrls[0].cookie
         self.assertEqual(result_pages, expected_num_pages)
         self.assertEqual(sorted(all_paged_results, key=lambda x: x.dn_s), expected_ldap_result)
 
