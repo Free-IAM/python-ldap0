@@ -520,7 +520,7 @@ class LDAPObject:
             False
         )
         assert res_msgid == msgid, ValueError('Expected LDAP result with msgid %d, got %d' % (msgid, res_msgid))
-        if res_type not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE}:
+        if res_type not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE, _libldap0.RES_INTERMEDIATE}:
             del self._outstanding_requests[res_msgid]
         return LDAPResult(
             res_type,
@@ -563,7 +563,7 @@ class LDAPObject:
                     raise _libldap0.TIMEOUT('Timeout of %0.4f secs reached.' % (timeout,))
                 continue
             yield res
-            if res.rtype not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE}:
+            if res.rtype not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE, _libldap0.RES_INTERMEDIATE}:
                 break
         # end of results()
 
