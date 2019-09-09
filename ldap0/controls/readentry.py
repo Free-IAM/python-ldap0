@@ -47,7 +47,6 @@ class ReadEntryControl(LDAPControl):
     def __init__(self, criticality=False, attrList=None):
         LDAPControl.__init__(self, criticality=criticality)
         self.attrList = encode_list(attrList or [], encoding='ascii')
-        self.entry = None
 
     def encode(self):
         attributeSelection = AttributeDescriptionList()
