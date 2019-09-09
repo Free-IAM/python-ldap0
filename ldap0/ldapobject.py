@@ -243,10 +243,9 @@ class LDAPObject:
     def cancel_s(self, cancelid, req_ctrls=None):
         try:
             msgid = self.cancel(cancelid, req_ctrls=req_ctrls)
-            res = list(self.results(msgid, timeout=self.timeout))
-            assert len(res) <= 1, ValueError('Expected exactly one LDAPResult, got %r' % (res,))
-            assert res[0].rtype == _libldap0.RES_EXTENDED, ValueError('Wrong result type %d' % (res[0].rtype,))
-            return res[0]
+            res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
+            assert res.rtype == _libldap0.RES_EXTENDED, ValueError('Wrong result type %d' % (res[0].rtype,))
+            return res
         except _libldap0.CANCELLED:
             pass
         del self._outstanding_requests[cancelid]
@@ -263,10 +262,9 @@ class LDAPObject:
 
     def add_s(self, dn, entry, req_ctrls=None):
         msgid = self.add(dn, entry, req_ctrls)
-        res = list(self.results(msgid, timeout=self.timeout))
-        assert len(res) <= 1, ValueError('Expected exactly one LDAPResult, got %r' % (res,))
-        assert res[0].rtype == _libldap0.RES_ADD, ValueError('Wrong result type %d' % (res[0].rtype,))
-        return res[0]
+        res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
+        assert res.rtype == _libldap0.RES_ADD, ValueError('Wrong result type %d' % (res[0].rtype,))
+        return res
 
     def simple_bind(self, who='', cred=b'', req_ctrls=None):
         self.flush_cache()
@@ -279,15 +277,14 @@ class LDAPObject:
 
     def simple_bind_s(self, who='', cred=b'', req_ctrls=None):
         msgid = self.simple_bind(who, cred, req_ctrls)
-        res = list(self.results(msgid, timeout=self.timeout))
-        assert len(res) <= 1, ValueError('Expected exactly one LDAPResult, got %r' % (res,))
-        assert res[0].rtype == _libldap0.RES_BIND, ValueError('Wrong result type %d' % (res[0].rtype,))
-        if res[0].ctrls:
+        res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
+        assert res.rtype == _libldap0.RES_BIND, ValueError('Wrong result type %d' % (res[0].rtype,))
+        if res.ctrls:
             # Extract the password policy response control and raise
             # appropriate exceptions if needed
             ppolicy_ctrls = [
                 c
-                for c in res[0].ctrls
+                for c in res.ctrls
                 if c.controlType == PasswordPolicyControl.controlType
             ]
             if ppolicy_ctrls and len(ppolicy_ctrls) == 1:
@@ -313,7 +310,7 @@ class LDAPObject:
                         ),
                         graceAuthNsRemaining=ppolicy_ctrl.graceAuthNsRemaining,
                     )
-        return res[0]
+        return res
 
     def sasl_interactive_bind_s(
             self,
@@ -369,7 +366,7 @@ class LDAPObject:
     def compare_s(self, dn, attr, value, req_ctrls=None):
         msgid = self.compare(dn, attr, value, req_ctrls)
         try:
-            res = list(self.results(msgid, timeout=self.timeout))
+            res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         except _libldap0.COMPARE_TRUE:
             return True
         except _libldap0.COMPARE_FALSE:
@@ -388,10 +385,9 @@ class LDAPObject:
 
     def delete_s(self, dn, req_ctrls=None):
         msgid = self.delete(dn, req_ctrls)
-        res = list(self.results(msgid, timeout=self.timeout))
-        assert len(res) <= 1, ValueError('Expected exactly one LDAPResult, got %r' % (res,))
-        assert res[0].rtype == _libldap0.RES_DELETE, ValueError('Wrong result type %d' % (res[0].rtype,))
-        return res[0]
+        res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
+        assert res.rtype == _libldap0.RES_DELETE, ValueError('Wrong result type %d' % (res[0].rtype,))
+        return res
 
     def extop(self, extreq, req_ctrls=None):
         extop_req_value = extreq.encode()
@@ -445,10 +441,9 @@ class LDAPObject:
 
     def modify_s(self, dn, modlist, req_ctrls=None):
         msgid = self.modify(dn, modlist, req_ctrls)
-        res = list(self.results(msgid, timeout=self.timeout))
-        assert len(res) <= 1, ValueError('Expected exactly one LDAPResult, got %r' % (res,))
-        assert res[0].rtype == _libldap0.RES_MODIFY, ValueError('Wrong result type %d' % (res[0].rtype,))
-        return res[0]
+        res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
+        assert res.rtype == _libldap0.RES_MODIFY, ValueError('Wrong result type %d' % (res[0].rtype,))
+        return res
 
     def passwd(self, user=None, oldpw=None, newpw=None, req_ctrls=None):
         self.uncache(user)
@@ -501,10 +496,41 @@ class LDAPObject:
             req_ctrls=None,
         ):
         msgid = self.rename(dn, newrdn, newsuperior, delold, req_ctrls)
-        res = list(self.results(msgid, timeout=self.timeout))
-        assert len(res) <= 1, ValueError('Expected exactly one LDAPResult, got %r' % (res,))
-        assert res[0].rtype == _libldap0.RES_MODRDN, ValueError('Wrong result type %d' % (res[0].rtype,))
-        return res[0]
+        res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
+        assert res.rtype == _libldap0.RES_MODRDN, ValueError('Wrong result type %d' % (res[0].rtype,))
+        return res
+
+    def result(
+            self,
+            msgid,
+            all_results=_libldap0.MSG_ALL,
+            timeout=None,
+            add_intermediates=False,
+            resp_ctrl_classes=None,
+        ):
+        if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
+            raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
+        res_type, res_data, res_msgid, res_ctrls = self._ldap_call(
+            self._l.result,
+            msgid,
+            all_results,
+            timeout,
+            True,
+            add_intermediates,
+            False
+        )
+        assert res_msgid == msgid, ValueError('Expected LDAP result with msgid %d, got %d' % (msgid, res_msgid))
+        if res_type not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE}:
+            del self._outstanding_requests[res_msgid]
+        return LDAPResult(
+            res_type,
+            [
+                (dn, entry, decode_response_ctrls(ctrls, resp_ctrl_classes))
+                for dn, entry, ctrls in res_data
+            ],
+            res_msgid,
+            decode_response_ctrls(res_ctrls, resp_ctrl_classes),
+        )
 
     def results(
             self,
@@ -523,25 +549,22 @@ class LDAPObject:
         start_time = time.time()
         if timeout >=0:
             end_time = start_time + timeout
-        while True:
-            ldap_result = self._ldap_call(
-                self._l.result,
-                msgid,
-                _libldap0.MSG_RECEIVED,
-                end_time-start_time if timeout >=0 else -1,
-                True,
-                add_intermediates,
-                False
-            )
-            res_type, res_data, res_msgid, res_ctrls = ldap_result
-            res_data = [
-                (dn, entry, decode_response_ctrls(ctrls, resp_ctrl_classes))
-                for dn, entry, ctrls in res_data
-            ]
-            yield LDAPResult(res_type, res_data, res_msgid, decode_response_ctrls(res_ctrls, resp_ctrl_classes))
-            if not ldap_result or ldap_result[0] not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE}:
+        while timeout < 0 or time.time() <= end_time:
+            try:
+                res = self.result(
+                    msgid,
+                    all_results=_libldap0.MSG_ONE,
+                    timeout=min(timeout, 0.5),
+                    add_intermediates=add_intermediates,
+                    resp_ctrl_classes=resp_ctrl_classes,
+                )
+            except _libldap0.TIMEOUT:
+                if timeout >= 0 and time.time() > end_time:
+                    raise _libldap0.TIMEOUT('Timeout of %0.4f secs reached.' % (timeout,))
+                continue
+            yield res
+            if res.rtype not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE}:
                 break
-        del self._outstanding_requests[msgid]
         # end of results()
 
     def search(
@@ -744,9 +767,8 @@ class LDAPObject:
         msgid = self.unbind(req_ctrls)
         if msgid is None:
             return None
-        res = list(self.results(msgid, timeout=self.timeout))
-        assert len(res) <= 1, ValueError('Expected exactly one LDAPResult, got %r' % (res,))
-        return res[0]
+        res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
+        return res
 
     def whoami_s(self, req_ctrls=None):
         wai = self.extop_s(

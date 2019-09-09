@@ -258,20 +258,20 @@ class Test00_LDAPObject(SlapdTestCase):
 
     def test007_timeout(self):
         with self.ldap_object_class(self.server.ldap_uri) as l:
-            msg_id = l.search(
-                self.server.suffix,
-                ldap0.SCOPE_SUBTREE,
-                '(objectClass=*)',
-            )
             with self.assertRaises(ldap0.TIMEOUT):
-                list(l.results(msg_id, timeout=0.0001))
+                msg_id = l.search(
+                    self.server.suffix,
+                    ldap0.SCOPE_SUBTREE,
+                    '(objectClass=*)',
+                )
+                l.result(msg_id, all_results=ldap0.MSG_ALL, timeout=0.0001)
             l.abandon(msg_id)
             with self.assertRaises(ldap0.TIMEOUT):
                 l.search_s(
                     self.server.suffix,
                     ldap0.SCOPE_SUBTREE,
                     '(objectClass=*)',
-                    timeout=0.0001,
+                    timeout=0.00001,
                 )
 
     def test008_sessiontrack_control(self):
