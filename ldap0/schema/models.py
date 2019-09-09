@@ -735,7 +735,7 @@ class Entry(UserDict):
             from .subentry import SubSchema
         assert isinstance(schema, SubSchema), \
             TypeError('Expected schema to be instance of SubSchema, was %r' % (schema))
-        assert isinstance(dn, bytes), TypeError('Expected dn to be bytes, was %r' % (dn))
+        assert isinstance(dn, str), TypeError('Expected dn to be str, was %r' % (dn))
         assert isinstance(entry, dict), TypeError('Expected entry to be dict, was %r' % (entry))
         self._keytuple2attrtype = {}
         self._attrtype2keytuple = {}

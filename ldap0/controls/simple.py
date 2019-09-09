@@ -106,7 +106,7 @@ class ManageDSAITControl(ValueLessRequestControl):
     """
     Manage DSA IT Control
     """
-    controlType = _libldap0.CONTROL_MANAGEDSAIT
+    controlType = _libldap0.CONTROL_MANAGEDSAIT.decode('ascii')
 
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(
@@ -121,7 +121,7 @@ class RelaxRulesControl(ValueLessRequestControl):
     """
     Relax Rules Control
     """
-    controlType = _libldap0.CONTROL_RELAX
+    controlType = _libldap0.CONTROL_RELAX.decode('ascii')
 
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(
@@ -140,13 +140,13 @@ class ProxyAuthzControl(RequestControl):
       string containing the authorization ID indicating the identity
       on behalf which the server should process the request
     """
-    controlType = _libldap0.CONTROL_PROXY_AUTHZ
+    controlType = _libldap0.CONTROL_PROXY_AUTHZ.decode('ascii')
 
     def __init__(self, criticality=False, authzId=''):
         RequestControl.__init__(
             self,
             criticality=criticality,
-            encodedControlValue=authzId,
+            encodedControlValue=authzId.encode(self.encoding),
         )
 
 
@@ -154,7 +154,7 @@ class AuthorizationIdentityRequestControl(ValueLessRequestControl):
     """
     Authorization Identity Request and Response Controls
     """
-    controlType = b'2.16.840.1.113730.3.4.16'
+    controlType = '2.16.840.1.113730.3.4.16'
 
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(
@@ -172,7 +172,7 @@ class AuthorizationIdentityResponseControl(ResponseControl):
     authzId
         decoded authorization identity
     """
-    controlType = b'2.16.840.1.113730.3.4.15'
+    controlType = '2.16.840.1.113730.3.4.15'
 
     def decode(self, encodedControlValue):
         self.authzId = encodedControlValue
@@ -185,7 +185,7 @@ class SubentriesControl(BooleanControl):
     Subentries Control (RFC 3672)
     https://tools.ietf.org/html/rfc3672#section-3
     """
-    controlType = b'1.3.6.1.4.1.4203.1.10.1'
+    controlType = '1.3.6.1.4.1.4203.1.10.1'
 
     def __init__(self, criticality=False, booleanValue=False):
         BooleanControl.__init__(

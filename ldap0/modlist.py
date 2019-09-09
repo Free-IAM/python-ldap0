@@ -10,7 +10,7 @@ from .__about__ import __version__, __author__, __license__
 
 def add_modlist(entry, ignore_attr_types=None):
     """Build modify list for call of method LDAPObject.add()"""
-    ignore_attr_types = set(map(bytes.lower, ignore_attr_types or []))
+    ignore_attr_types = set(map(str.lower, ignore_attr_types or []))
     modlist = []
     for attrtype in entry:
         if attrtype.lower() in ignore_attr_types:
@@ -23,7 +23,7 @@ def add_modlist(entry, ignore_attr_types=None):
             if val is not None
         ]
         if attrvaluelist:
-            modlist.append((attrtype, entry[attrtype]))
+            modlist.append((attrtype.encode('ascii'), entry[attrtype]))
     return modlist # add_modlist()
 
 
@@ -53,13 +53,14 @@ def modify_modlist(
         List of attribute type names for which comparison will be made
         case-insensitive
     """
-    ignore_attr_types = set(map(bytes.lower, ignore_attr_types or []))
-    case_ignore_attr_types = set(map(bytes.lower, case_ignore_attr_types or []))
+    ignore_attr_types = set(map(str.lower, ignore_attr_types or []))
+    case_ignore_attr_types = set(map(str.lower, case_ignore_attr_types or []))
     modlist = []
     attrtype_lower_map = {}
     for attr_type in old_entry:
         attrtype_lower_map[attr_type.lower()] = attr_type
     for attrtype in new_entry:
+        attrtype_b = attrtype.encode('ascii')
         attrtype_lower = attrtype.lower()
         if attrtype_lower in ignore_attr_types:
             # This attribute type is ignored
@@ -81,7 +82,7 @@ def modify_modlist(
             old_value = []
         if not old_value and new_value:
             # Add a new attribute to entry
-            modlist.append((MOD_ADD, attrtype, new_value))
+            modlist.append((MOD_ADD, attrtype_b, new_value))
         elif old_value and new_value:
             # Replace existing attribute
             replace_attr_value = len(old_value) != len(new_value)
@@ -94,11 +95,11 @@ def modify_modlist(
                     new_value_set = set(new_value)
                 replace_attr_value = new_value_set != old_value_set
             if replace_attr_value:
-                modlist.append((MOD_DELETE, attrtype, None))
-                modlist.append((MOD_ADD, attrtype, new_value))
+                modlist.append((MOD_DELETE, attrtype_b, None))
+                modlist.append((MOD_ADD, attrtype_b, new_value))
         elif old_value and not new_value:
             # Completely delete an existing attribute
-            modlist.append((MOD_DELETE, attrtype, None))
+            modlist.append((MOD_DELETE, attrtype_b, None))
     if not ignore_oldexistent:
         # Remove all attributes of old_entry which are not present
         # in new_entry at all
@@ -107,5 +108,5 @@ def modify_modlist(
                 # This attribute type is ignored
                 continue
             attrtype = attrtype_lower_map[atl]
-            modlist.append((MOD_DELETE, attrtype, None))
+            modlist.append((MOD_DELETE, attrtype.encode('ascii'), None))
     return modlist # modify_modlist()

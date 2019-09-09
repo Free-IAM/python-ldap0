@@ -22,7 +22,7 @@ class SearchNoOpControl(ValueLessRequestControl, ResponseControl):
 
     see https://www.openldap.org/its/index.cgi?findid=6598#followup4
     """
-    controlType = b'1.3.6.1.4.1.4203.666.5.18'
+    controlType = '1.3.6.1.4.1.4203.666.5.18'
 
     class SearchNoOpControlValue(univ.Sequence):
         pass

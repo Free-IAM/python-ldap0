@@ -12,6 +12,8 @@ from pyasn1_modules.rfc2251 import AttributeDescriptionList, SearchResultEntry
 from pyasn1_modules.rfc2251 import LDAPDN, PartialAttributeList
 
 from ..__about__ import __version__, __author__, __license__
+from ..base import encode_list
+from ..res import SearchResultEntry as LDAPResultSearchResultEntry
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 
 
@@ -44,7 +46,7 @@ class ReadEntryControl(LDAPControl):
 
     def __init__(self, criticality=False, attrList=None):
         LDAPControl.__init__(self, criticality=criticality)
-        self.attrList = attrList or []
+        self.attrList = encode_list(attrList or [], encoding='ascii')
         self.entry = None
 
     def encode(self):
@@ -64,20 +66,22 @@ class ReadEntryControl(LDAPControl):
                 encodedControlValue,
                 asn1Spec=OpenLDAPITS6899SearchResultEntry(),
             )
-        self.dn = bytes(decodedEntry[0])
-        self.entry = {}
-        for attr in decodedEntry[1]:
-            self.entry[bytes(attr[0])] = [
-                bytes(attr_value)
-                for attr_value in attr[1]
-            ]
-
+        self.res = LDAPResultSearchResultEntry(
+            bytes(decodedEntry[0]),
+            {
+                bytes(attr[0]): [
+                    bytes(attr_value)
+                    for attr_value in attr[1]
+                ]
+                for attr in decodedEntry[1]
+            },
+        )
 
 class PreReadControl(ReadEntryControl):
     """
     Class for pre-read control described in RFC 4527
     """
-    controlType = b'1.3.6.1.1.13.1'
+    controlType = '1.3.6.1.1.13.1'
 
 KNOWN_RESPONSE_CONTROLS.reg(PreReadControl)
 
@@ -86,6 +90,6 @@ class PostReadControl(ReadEntryControl):
     """
     Class for post-read control described in RFC 4527
     """
-    controlType = b'1.3.6.1.1.13.2'
+    controlType = '1.3.6.1.1.13.2'
 
 KNOWN_RESPONSE_CONTROLS.reg(PostReadControl)

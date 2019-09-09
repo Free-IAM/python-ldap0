@@ -515,7 +515,7 @@ class TestEntry(SubschemaTest):
         }
         e1 = Entry(
             self.sub_schema,
-            b'cn=Michael Str\303\266der,ou=test',
+            'cn=Michael Ströder,ou=test',
             ldap_entry,
         )
         self.assertEqual(sorted(e1.keys()), ['c', 'cn', 'givenName', 'objectClass', 'sn'])
@@ -565,7 +565,7 @@ class TestEntry(SubschemaTest):
         }
         e2 = Entry(
             self.sub_schema,
-            b'cn=Michael Str\303\266der,ou=test',
+            'cn=Michael Ströder,ou=test',
             ldap_entry,
         )
         must, may = e2.attribute_types(

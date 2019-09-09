@@ -57,7 +57,7 @@ class SSSRequestControl(RequestControl):
 
     >>> s = SSSRequestControl(ordering_rules=['-cn'])
     """
-    controlType = b'1.2.840.113556.1.4.473'
+    controlType = '1.2.840.113556.1.4.473'
 
     def __init__(
             self,
@@ -67,30 +67,27 @@ class SSSRequestControl(RequestControl):
         RequestControl.__init__(self, self.controlType, criticality)
         self.ordering_rules = ordering_rules
         for rule in ordering_rules:
-            rule = rule.split(b':')
+            rule = rule.split(':')
             assert len(rule) < 3, 'syntax for ordering rule: [-]<attribute-type>[:ordering-rule]'
 
-    def asn1(self):
+    def encode(self):
         p = SortKeyListType()
         for i, rule in enumerate(self.ordering_rules):
             q = SortKeyType()
-            reverse_order = rule.startswith(b'-')
+            reverse_order = rule.startswith('-')
             if reverse_order:
                 rule = rule[1:]
             try:
-                attribute_type, ordering_rule = rule.split(b':')
+                attribute_type, ordering_rule = rule.split(':')
             except ValueError:
                 attribute_type, ordering_rule = rule, None
-            q.setComponentByName('attributeType', attribute_type)
+            q.setComponentByName('attributeType', attribute_type.encode(self.encoding))
             if ordering_rule:
-                q.setComponentByName('orderingRule', ordering_rule)
+                q.setComponentByName('orderingRule', ordering_rule.encode(self.encoding))
             if reverse_order:
                 q.setComponentByName('reverseOrder', 1)
             p.setComponentByPosition(i, q)
-        return p
-
-    def encode(self):
-        return encoder.encode(self.asn1())
+        return encoder.encode(p)
 
 
 class SortResultType(univ.Sequence):
@@ -125,7 +122,7 @@ class SortResultType(univ.Sequence):
 
 
 class SSSResponseControl(ResponseControl):
-    controlType = b'1.2.840.113556.1.4.474'
+    controlType = '1.2.840.113556.1.4.474'
 
     def __init__(self, criticality=False):
         ResponseControl.__init__(self, self.controlType, criticality)

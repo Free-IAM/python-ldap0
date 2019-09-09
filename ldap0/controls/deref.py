@@ -11,7 +11,7 @@ from pyasn1_modules.rfc2251 import \
 
 from ..__about__ import __version__, __author__, __license__
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
-
+from ..res import SearchResultEntry
 
 __all__ = [
     'DereferenceControl',
@@ -67,7 +67,7 @@ class DerefResultControlValue(univ.SequenceOf):
 
 
 class DereferenceControl(LDAPControl):
-    controlType = b'1.3.6.1.4.1.4203.666.5.16'
+    controlType = '1.3.6.1.4.1.4203.666.5.16'
 
     def __init__(self, criticality=False, derefSpecs=None):
         LDAPControl.__init__(self, criticality=criticality)
@@ -80,8 +80,8 @@ class DereferenceControl(LDAPControl):
             deref_spec = DerefSpec()
             deref_attributes = AttributeList()
             for j, deref_attribute_name in enumerate(deref_attribute_names):
-                deref_attributes.setComponentByPosition(j, deref_attribute_name)
-            deref_spec.setComponentByName('derefAttr', AttributeDescription(deref_attr))
+                deref_attributes.setComponentByPosition(j, deref_attribute_name.encode(self.encoding))
+            deref_spec.setComponentByName('derefAttr', AttributeDescription(deref_attr.encode(self.encoding)))
             deref_spec.setComponentByName('attributes', deref_attributes)
             deref_specs.setComponentByPosition(i, deref_spec)
             i += 1
@@ -98,14 +98,19 @@ class DereferenceControl(LDAPControl):
         self.derefRes = {}
         for deref_res in decoded_value:
             deref_attr = bytes(deref_res[0])
-            deref_val = bytes(deref_res[1])
+            deref_dn = bytes(deref_res[1])
             deref_vals = deref_res[2]
-            deref_attrs = {}
-            for tv in deref_vals or []:
-                deref_attrs[bytes(tv[0])] = list(map(bytes, tv[1]))
+            deref_res_entry = SearchResultEntry(
+                deref_dn,
+                {
+                    bytes(tv[0]): list(map(bytes, tv[1]))
+                    for tv in deref_vals or []
+                },
+                None,
+            )
             try:
-                self.derefRes[deref_attr].append((deref_val, deref_attrs))
+                self.derefRes[deref_attr.decode(self.encoding)].append(deref_res_entry)
             except KeyError:
-                self.derefRes[deref_attr] = [(deref_val, deref_attrs)]
+                self.derefRes[deref_attr.decode(self.encoding)] = [deref_res_entry]
 
 KNOWN_RESPONSE_CONTROLS.reg(DereferenceControl)

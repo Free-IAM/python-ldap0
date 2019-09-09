@@ -9,6 +9,7 @@ import unittest
 from pyasn1.error import PyAsn1Error
 
 import _libldap0
+from ldap0.res import SearchResultEntry
 from ldap0.controls import encode_request_ctrls, ResponseControl, decode_response_ctrls, ControlRegistry
 from ldap0.controls.sessiontrack import *
 from ldap0.controls.psearch import *
@@ -25,17 +26,17 @@ class TestRequestControls(unittest.TestCase):
 
     def test_sessiontrack(self):
         stc = SessionTrackingControl(
-            b'12.34.56.78',
-            b'tracking-NAME',
+            '12.34.56.78',
+            'tracking-NAME',
             SESSION_TRACKING_FORMAT_OID_RADIUS_ACCT_SESSION_ID,
-            b'tracking-ID',
+            'tracking-ID',
         )
         stc_encoded = b'0G\x04\x0b12.34.56.78\x04\rtracking-NAME\x04\x1c1.3.6.1.4.1.21008.108.63.1.1\x04\x0btracking-ID'
         self.assertEqual(stc.encode(), stc_encoded)
         self.assertEqual(
             encode_request_ctrls([stc]),
             [(
-                SessionTrackingControl.controlType,
+                SessionTrackingControl.controlType.encode('ascii'),
                 False,
                 stc_encoded,
             )],
@@ -53,7 +54,7 @@ class TestRequestControls(unittest.TestCase):
         self.assertEqual(
             encode_request_ctrls([psc]),
             [(
-                PersistentSearchControl.controlType,
+                PersistentSearchControl.controlType.encode('ascii'),
                 True,
                 psc_encoded,
             )],
@@ -75,16 +76,16 @@ class TestResponseControls(unittest.TestCase):
             )
         with self.assertRaises(ValueError):
             decode_response_ctrls(
-                [(PasswordExpiringControl.controlType, False, b'')],
+                [(PasswordExpiringControl.controlType.encode('ascii'), False, b'')],
             )
         with self.assertRaises(PyAsn1Error):
             decode_response_ctrls(
-                [(PasswordPolicyControl.controlType, True, b'\xFF\x00\x00\x00\x00\x01')],
+                [(PasswordPolicyControl.controlType.encode('ascii'), True, b'\xFF\x00\x00\x00\x00\x01')],
             )
         self.assertEqual(
             decode_response_ctrls(
-                [(PasswordExpiringControl.controlType, False, b'')],
-                knownLDAPControls=ControlRegistry(),
+                [(PasswordExpiringControl.controlType.encode('ascii'), False, b'')],
+                ctrl_reg=ControlRegistry(),
             ),
             [],
         )
@@ -106,8 +107,8 @@ class TestResponseControls(unittest.TestCase):
         broken_ber = b'0c\x043cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de0,0\x14\x04\tuidNumber1\x07\x04\x05100050\x14\x04\tgidNumber1\x07\x04\x0510005'
         rec = ReadEntryControl()
         rec.decode(broken_ber)
-        self.assertEqual(rec.dn, b'cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de')
-        self.assertEqual(rec.entry, {b'gidNumber': [b'10005'], b'uidNumber': [b'10005']})
+        self.assertEqual(rec.res.dn_s, 'cn=Samba Unix UID Pool,ou=Testing,dc=stroeder,dc=de')
+        self.assertEqual(rec.res.entry_as, {'gidNumber': [b'10005'], 'uidNumber': [b'10005']})
         with self.assertRaises(PyAsn1Error):
             rec.decode(b'\xFF')
 
