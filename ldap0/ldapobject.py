@@ -151,7 +151,10 @@ class LDAPObject:
                     )
                 logging.debug('-> %s', pprint.pformat(result))
         if func in self._msgid_funcs:
-            self._outstanding_requests[result] = (func, args, kwargs)
+            if __debug__:
+                self._outstanding_requests[result] = (func, args, kwargs)
+            else:
+                self._outstanding_requests[result] = (func,)
         return result
 
     def __setattr__(self, name, value):
