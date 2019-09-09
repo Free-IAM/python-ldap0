@@ -85,7 +85,7 @@ class TestResponseControls(unittest.TestCase):
         self.assertEqual(
             decode_response_ctrls(
                 [(PasswordExpiringControl.controlType.encode('ascii'), False, b'')],
-                knownLDAPControls=ControlRegistry(),
+                ctrl_reg=ControlRegistry(),
             ),
             [],
         )

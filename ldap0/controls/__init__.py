@@ -126,27 +126,28 @@ def encode_request_ctrls(ctrls):
         (c.controlType.encode('ascii'), c.criticality, c.encode())
         for c in ctrls
     ]
+    # end of encode_request_ctrls()
 
 
-def decode_response_ctrls(ldapControlTuples, knownLDAPControls=None):
+def decode_response_ctrls(ldapControlTuples, ctrl_reg=None):
     """
     Returns list of readily decoded ResponseControl objects
 
     ldapControlTuples
         Sequence-type of 3-tuples returned by _libldap0.result() containing
         the encoded ASN.1 control values of response controls.
-    knownLDAPControls
+    ctrl_reg
         Dictionary mapping extended control's OID to ResponseControl class
         of response controls known by the application. If None
         ldap0.controls.KNOWN_RESPONSE_CONTROLS is used here.
     """
-    if knownLDAPControls is None:
-        knownLDAPControls = KNOWN_RESPONSE_CONTROLS
+    if ctrl_reg is None:
+        ctrl_reg = KNOWN_RESPONSE_CONTROLS
     result = []
     for controlType, criticality, encodedControlValue in ldapControlTuples or []:
         controlType = controlType.decode('ascii')
         try:
-            control_class = knownLDAPControls.get(controlType)
+            control_class = ctrl_reg.get(controlType)
         except KeyError:
             if criticality:
                 raise _libldap0.UNAVAILABLE_CRITICAL_EXTENSION(
@@ -162,3 +163,4 @@ def decode_response_ctrls(ldapControlTuples, knownLDAPControls=None):
             else:
                 result.append(control)
     return result
+    # end of decode_response_ctrls()
