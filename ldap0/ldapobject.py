@@ -45,6 +45,7 @@ __all__ = [
     'ReconnectLDAPObject',
 ]
 
+NO_FINAL_RESULT_TYPES = {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE, _libldap0.RES_INTERMEDIATE}
 
 #-----------------------------------------------------------------------
 # the real connection classes
@@ -520,7 +521,7 @@ class LDAPObject:
             False
         )
         assert res_msgid == msgid, ValueError('Expected LDAP result with msgid %d, got %d' % (msgid, res_msgid))
-        if res_type not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE, _libldap0.RES_INTERMEDIATE}:
+        if res_type not in NO_FINAL_RESULT_TYPES:
             del self._outstanding_requests[res_msgid]
         return LDAPResult(
             res_type,
@@ -563,7 +564,7 @@ class LDAPObject:
                     raise _libldap0.TIMEOUT('Timeout of %0.4f secs reached.' % (timeout,))
                 continue
             yield res
-            if res.rtype not in {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE, _libldap0.RES_INTERMEDIATE}:
+            if res.rtype not in NO_FINAL_RESULT_TYPES:
                 break
         # end of results()
 
