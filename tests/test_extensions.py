@@ -159,7 +159,6 @@ class TestDeRef(ExtensionTestCase):
                 )
             ],
             cache_ttl=1.0,
-            add_ctrls=True,
         )
 
         self.assertEqual(
@@ -201,7 +200,6 @@ class TestDeRef(ExtensionTestCase):
                     {'roleOccupant': ['cn', 'uid']},
                 )
             ],
-            add_ctrls=True,
         )
         self.assertEqual(ldap_result.dn_s, 'cn=Foo7,ou=Container,%s' % (self.server.suffix))
         self.assertEqual(

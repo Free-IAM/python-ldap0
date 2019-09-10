@@ -652,7 +652,6 @@ class LDAPObject:
             timeout=-1,
             sizelimit=0,
             cache_ttl=None,
-            add_ctrls=False,
         ):
         if cache_ttl is None:
             cache_ttl = self.cache_ttl
@@ -670,7 +669,6 @@ class LDAPObject:
                 ]),
                 timeout,
                 sizelimit,
-                add_ctrls,
             )
             # first look into cache for non-expired search results
             try:
@@ -868,7 +866,6 @@ class LDAPObject:
             req_ctrls=None,
             timeout=-1,
             cache_ttl=None,
-            add_ctrls=False,
         ):
         try:
             ldap_res = list(self.search_s(
@@ -881,7 +878,6 @@ class LDAPObject:
                 timeout=timeout,
                 sizelimit=2,
                 cache_ttl=cache_ttl,
-                add_ctrls=add_ctrls,
             ))
         except _libldap0.SIZELIMIT_EXCEEDED:
             raise NoUniqueEntry('Size limit exceeded for %r ()' % (filterstr))
