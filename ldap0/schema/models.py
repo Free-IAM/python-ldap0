@@ -775,7 +775,7 @@ class Entry(UserDict):
                     key[0] == '1.3.6.1.1.20' and
                     self.dn is not None
                 ):
-                return [self.dn]
+                return [self.dn.encode('utf-8')]
             raise err
 
     def __setitem__(self, nameoroid, attr_values):
