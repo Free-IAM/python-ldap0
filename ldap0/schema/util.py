@@ -52,10 +52,7 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
                 schema_attrs = SCHEMA_ATTRS
             else:
                 schema_attrs = ldap_url.attrs
-            s_temp = {
-                at: [av.decode('utf-8') for av in avs]
-                for at, avs in (ldap_conn.read_subschemasubentry_s(subschemasubentry_dn, attrs=schema_attrs) or {}).items()
-            }
+            s_temp = ldap_conn.read_subschemasubentry_s(subschemasubentry_dn, attrs=schema_attrs)
         ldap_conn.unbind_s()
         del ldap_conn
     else:

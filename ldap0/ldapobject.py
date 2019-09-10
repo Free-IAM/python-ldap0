@@ -796,7 +796,7 @@ class LDAPObject:
     def search_subschemasubentry_s(self, dn='', rootdse=True):
         res = None
         try:
-            entry = self.read_s(dn, attrlist=['subschemaSubentry'])
+            ldap_res = self.read_s(dn, attrlist=['subschemaSubentry'])
         except (
                 _libldap0.NO_SUCH_OBJECT,
                 _libldap0.INSUFFICIENT_ACCESS,
@@ -806,8 +806,8 @@ class LDAPObject:
             ):
             pass
         else:
-            if entry is not None and 'subschemaSubentry' in entry:
-                res = entry['subschemaSubentry'][0].decode(self.encoding)
+            if ldap_res is not None and 'subschemaSubentry' in ldap_res.entry_s:
+                res = ldap_res.entry_s['subschemaSubentry'][0]
         if res is None and dn and rootdse:
             # fall back reading attribute subschemaSubentry from rootDSE
             res = self.search_subschemasubentry_s(dn='')
@@ -831,14 +831,9 @@ class LDAPObject:
             timeout=timeout,
             cache_ttl=cache_ttl,
         )
-        if ldap_res:
-            if req_ctrls and ldap_res[0].ctrls:
-                res = (ldap_res[0].entry_as, ldap_res[0].ctrls)
-            else:
-                res = ldap_res[0].entry_as
-        else:
-            res = None
-        return res
+        if not ldap_res:
+            return None
+        return ldap_res[0]
 
     def read_subschemasubentry_s(self, subschemasubentry_dn, attrs=None):
         try:
@@ -849,8 +844,7 @@ class LDAPObject:
             )
         except _libldap0.NO_SUCH_OBJECT:
             return None
-        else:
-            return subschemasubentry
+        return subschemasubentry.entry_s
 
     def refresh(self, dn, ttl=None):
         self.uncache(dn)

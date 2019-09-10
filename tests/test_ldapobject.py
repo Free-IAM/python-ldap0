@@ -327,7 +327,7 @@ class Test00_LDAPObject(SlapdTestCase):
                 )
             ],
         )
-        self.assertEqual(add_result.ctrls[0].entry, modify_result.ctrls[0].entry)
+        self.assertEqual(add_result.ctrls[0].res, modify_result.ctrls[0].res)
 
     def test010_pagedresults(self):
         expected_ldap_result = []
@@ -382,8 +382,8 @@ class Test00_LDAPObject(SlapdTestCase):
             'description': [b'Dada!'],
         }
         self._ldap_conn.add_s(new_dn, new_entry)
-        entry = self._ldap_conn.read_s(new_dn, attrlist=new_entry.keys())
-        self.assertEqual(entry, new_entry)
+        read = self._ldap_conn.read_s(new_dn, attrlist=new_entry.keys())
+        self.assertEqual(read.entry_as, new_entry)
         self._ldap_conn.delete_s(new_dn)
 
     def test012_results(self):
@@ -647,13 +647,13 @@ class Test00_LDAPObject(SlapdTestCase):
             'cn': [b'AssertionControl'],
         }
         self._ldap_conn.add_s(dn, entry)
-        old_entry = self._ldap_conn.read_s(
+        old = self._ldap_conn.read_s(
             dn,
             attrlist=['modifyTimestamp', 'entryCSN'],
         )
         assertion_filter = '(&(modifyTimestamp=%s)(entryCSN=%s))' % (
-            old_entry['modifyTimestamp'][0].decode('utf-8'),
-            old_entry['entryCSN'][0].decode('utf-8'),
+            old.entry_s['modifyTimestamp'][0],
+            old.entry_s['entryCSN'][0],
         )
         self._ldap_conn.modify_s(
             dn,
@@ -684,7 +684,7 @@ class Test00_LDAPObject(SlapdTestCase):
         }
         self._ldap_conn.add_s(dn, entry)
         for val in entry['cn']:
-            mv_entry = self._ldap_conn.read_s(
+            mv = self._ldap_conn.read_s(
                 dn,
                 attrlist=['objectClass', 'cn'],
                 req_ctrls=[
@@ -694,7 +694,7 @@ class Test00_LDAPObject(SlapdTestCase):
                 ]
             )
             self.assertEqual(
-                mv_entry,
+                mv.entry_as,
                 {'cn': [val], 'objectClass': [b'person']}
             )
 
@@ -867,7 +867,7 @@ class Test00_LDAPObject(SlapdTestCase):
             (_libldap0.RES_MODRDN, [], 4, [])
         )
         read_result = self._ldap_conn.read_s(dn2)
-        self.assertEqual(read_result, {'cn': [b'LaLeLu4711'], 'objectClass': [b'applicationProcess']})
+        self.assertEqual(read_result.entry_s, {'cn': ['LaLeLu4711'], 'objectClass': ['applicationProcess']})
         with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
             self._ldap_conn.rename_s(dn1, rdn2)
         delete_result = self._ldap_conn.delete_s(dn2)

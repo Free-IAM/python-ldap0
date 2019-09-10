@@ -273,9 +273,9 @@ class TestDDS(ExtensionTestCase):
             'olcDDSstate': ['TRUE'],
         })
         root_dse = self._ldap_conn.read_rootdse_s(attrlist=['dynamicSubtrees'])
-        if 'dynamicSubtrees' not in root_dse:
+        if 'dynamicSubtrees' not in root_dse.entry_s:
             self.skipTest('slapo-dds not enabled in rootDSE')
-        self.assertEqual(root_dse['dynamicSubtrees'][0].decode('utf-8'), self.server.suffix)
+        self.assertEqual(root_dse.entry_s['dynamicSubtrees'][0], self.server.suffix)
         dds_entry_dn = 'cn=dds-1,'+self.server.suffix
         self._ldap_conn.add_s(
             dds_entry_dn,

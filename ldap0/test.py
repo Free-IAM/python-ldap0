@@ -427,11 +427,11 @@ class SlapdTestCase(unittest.TestCase):
     def enable_overlay(self, slapo_entry, schema_files=None):
         olc_overlay = slapo_entry['olcOverlay'][0]
         enabled_overlays = [
-            val.decode(self._ldap_conn.encoding).split('}', 1)[1]
+            val.split('}', 1)[1]
             for val in self._ldap_conn.read_s(
                 'cn=module{0},cn=config',
                 attrlist=['olcModuleLoad'],
-            )['olcModuleLoad']
+            ).entry_s['olcModuleLoad']
         ]
         if olc_overlay in enabled_overlays:
             return
