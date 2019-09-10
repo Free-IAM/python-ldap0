@@ -85,7 +85,7 @@ class SearchResultEntry:
     @property
     def dn_o(self):
         if self._dn_o is None:
-            self._dn_o = DNObj(self.dn_s)
+            self._dn_o = DNObj.from_str(self.dn_s)
         return self._dn_o
 
     @property
