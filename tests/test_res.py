@@ -66,7 +66,7 @@ class Test002SearchResultEntry(unittest.TestCase):
         self.assertEqual(sere.dn_s, dn_b.decode('utf-8'))
         self.assertEqual(sere.entry_as, {at.decode('ascii'): avs for at, avs in entry_b.items()})
         self.assertEqual(sere.entry_s, decode_entry_dict(entry_b, encoding='utf-8'))
-        self.assertEqual(sere.dn_o, DNObj(dn_b.decode('utf-8')))
+        self.assertEqual(sere.dn_o, DNObj.from_str(dn_b.decode('utf-8')))
         sere = SearchResultEntry('o=äöüÄÖÜß,dc=example,dc=com'.encode('iso-8859-1'), {}, [], encoding='iso-8859-1')
         self.assertEqual(sere.dn_s, sere.dn_b.decode('iso-8859-1'))
 
