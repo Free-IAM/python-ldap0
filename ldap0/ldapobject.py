@@ -245,7 +245,7 @@ class LDAPObject:
         try:
             msgid = self.cancel(cancelid, req_ctrls=req_ctrls)
             res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
-            assert res.rtype == _libldap0.RES_EXTENDED, ValueError('Wrong result type %d' % (res[0].rtype,))
+            assert res.rtype == _libldap0.RES_EXTENDED, ValueError('Wrong result type %d' % (res.rtype,))
             return res
         except _libldap0.CANCELLED:
             pass
@@ -264,7 +264,7 @@ class LDAPObject:
     def add_s(self, dn, entry, req_ctrls=None):
         msgid = self.add(dn, entry, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
-        assert res.rtype == _libldap0.RES_ADD, ValueError('Wrong result type %d' % (res[0].rtype,))
+        assert res.rtype == _libldap0.RES_ADD, ValueError('Wrong result type %d' % (res.rtype,))
         return res
 
     def simple_bind(self, who='', cred=b'', req_ctrls=None):
@@ -279,7 +279,7 @@ class LDAPObject:
     def simple_bind_s(self, who='', cred=b'', req_ctrls=None):
         msgid = self.simple_bind(who, cred, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
-        assert res.rtype == _libldap0.RES_BIND, ValueError('Wrong result type %d' % (res[0].rtype,))
+        assert res.rtype == _libldap0.RES_BIND, ValueError('Wrong result type %d' % (res.rtype,))
         if res.ctrls:
             # Extract the password policy response control and raise
             # appropriate exceptions if needed
@@ -387,7 +387,7 @@ class LDAPObject:
     def delete_s(self, dn, req_ctrls=None):
         msgid = self.delete(dn, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
-        assert res.rtype == _libldap0.RES_DELETE, ValueError('Wrong result type %d' % (res[0].rtype,))
+        assert res.rtype == _libldap0.RES_DELETE, ValueError('Wrong result type %d' % (res.rtype,))
         return res
 
     def extop(self, extreq, req_ctrls=None):
@@ -443,7 +443,7 @@ class LDAPObject:
     def modify_s(self, dn, modlist, req_ctrls=None):
         msgid = self.modify(dn, modlist, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
-        assert res.rtype == _libldap0.RES_MODIFY, ValueError('Wrong result type %d' % (res[0].rtype,))
+        assert res.rtype == _libldap0.RES_MODIFY, ValueError('Wrong result type %d' % (res.rtype,))
         return res
 
     def passwd(self, user=None, oldpw=None, newpw=None, req_ctrls=None):
@@ -498,7 +498,7 @@ class LDAPObject:
         ):
         msgid = self.rename(dn, newrdn, newsuperior, delold, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
-        assert res.rtype == _libldap0.RES_MODRDN, ValueError('Wrong result type %d' % (res[0].rtype,))
+        assert res.rtype == _libldap0.RES_MODRDN, ValueError('Wrong result type %d' % (res.rtype,))
         return res
 
     def result(
