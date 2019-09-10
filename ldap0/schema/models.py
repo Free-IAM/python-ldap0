@@ -3,7 +3,7 @@
 ldap0.schema.models - support for subSchemaSubEntry information
 """
 
-from collections import MutableSet
+from collections.abc import MutableSet
 from collections import UserDict
 
 from ..__about__ import __version__, __author__, __license__
