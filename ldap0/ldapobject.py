@@ -844,6 +844,8 @@ class LDAPObject:
             )
         except _libldap0.NO_SUCH_OBJECT:
             return None
+        if subschemasubentry is None:
+            return None
         return subschemasubentry.entry_s
 
     def refresh(self, dn, ttl=None):
