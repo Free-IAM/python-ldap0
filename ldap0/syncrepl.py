@@ -3,12 +3,14 @@
 ldap0.syncrepl - for implementing syncrepl consumer (see RFC 4533)
 """
 
+import logging
 from uuid import UUID
 
 # Imports from pyasn1
 from pyasn1.type import tag, namedtype, namedval, univ, constraint
 from pyasn1.codec.ber import encoder, decoder
 
+import ldap0
 from .__about__ import __version__, __author__, __license__
 from .controls import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 
@@ -76,7 +78,7 @@ class SyncRequestControl(RequestControl):
     The Sync Request Control is only applicable to the SearchRequest
     Message.
     """
-    controlType = b'1.3.6.1.4.1.4203.1.9.1.1'
+    controlType = '1.3.6.1.4.1.4203.1.9.1.1'
 
     def __init__(self, criticality=1, cookie=None, mode='refreshOnly', reloadHint=False):
         self.criticality = criticality
@@ -142,7 +144,7 @@ class SyncStateControl(ResponseControl):
     The Sync State Control is only applicable to SearchResultEntry and
     SearchResultReference Messages.
     """
-    controlType = b'1.3.6.1.4.1.4203.1.9.1.2'
+    controlType = '1.3.6.1.4.1.4203.1.9.1.2'
     opnames = ('present', 'add', 'modify', 'delete')
 
     def decode(self, encodedControlValue):
@@ -183,7 +185,7 @@ class SyncDoneControl(ResponseControl):
     The Sync Done Control is only applicable to the SearchResultDone
     Message.
     """
-    controlType = b'1.3.6.1.4.1.4203.1.9.1.3'
+    controlType = '1.3.6.1.4.1.4203.1.9.1.3'
 
     def decode(self, encodedControlValue):
         d = decoder.decode(encodedControlValue, asn1Spec=SyncDoneValue())
@@ -308,9 +310,9 @@ class SyncInfoMessage:
     def __init__(self, encodedMessage):
         d = decoder.decode(encodedMessage, asn1Spec=SyncInfoValue())
         self.newcookie = None
-        self.refreshDelete = None
-        self.refreshPresent = None
-        self.syncIdSet = None
+        self.refreshDelete = {}
+        self.refreshPresent = {}
+        self.syncIdSet = {}
 
         for attr in ['newcookie', 'refreshDelete', 'refreshPresent', 'syncIdSet']:
             comp = d[0].getComponentByName(attr)
@@ -384,7 +386,7 @@ class SyncreplConsumer:
         self.__refreshDone = False
         return self.search(base, scope, **search_args)
 
-    def syncrepl_poll(self, msgid=-1, timeout=None, all=0):
+    def syncrepl_poll(self, msgid=-1, timeout=None, all_results=False):
         """
         polls for and processes responses to the syncrepl_search() operation.
         Returns False when operation finishes, True if it is in progress, or
@@ -392,58 +394,61 @@ class SyncreplConsumer:
 
         If timeout is specified, raises ldap0.TIMEOUT in the event of a timeout.
 
-        If all is set to a nonzero value, poll() will return only when finished
+        If all_results is set to a nonzero value, poll() will return only when finished
         or when an exception is raised.
-
         """
+        logging.debug(
+            'Entering %s.syncrepl_poll(msgid=%r, timeout=%r, all_results=%r): ',
+            self.__class__.__name__,
+            msgid,
+            timeout,
+            all_results,
+        )
         while True:
-            type, msg, mid, ctrls = self.result(
+            ldap_res = self.result(
                 msgid=msgid,
+                all_results=all_results,
                 timeout=timeout,
-                add_intermediates=1,
-                add_ctrls=1,
-                all=0,
+                add_intermediates=True,
             )
-
-            if type == 101:
+            logging.debug('%s.syncrepl_poll(): ldap_res = %r', self.__class__.__name__, ldap_res)
+            if ldap_res.rtype == ldap0.RES_SEARCH_RESULT:
                 # search result. This marks the end of a refreshOnly session.
                 # look for a SyncDone control, save the cookie, and if necessary
                 # delete non-present entries.
-                for c in ctrls:
-                    if c.__class__.__name__ != 'SyncDoneControl':
+                for ctrl in ldap_res.ctrls:
+                    if not isinstance(ctrl, SyncDoneControl):
                         continue
-                    self.syncrepl_present(None, refreshDeletes=c.refreshDeletes)
-                    if c.cookie is not None:
-                        self.syncrepl_set_cookie(c.cookie)
+                    self.syncrepl_present(None, refreshDeletes=ctrl.refreshDeletes)
+                    if ctrl.cookie is not None:
+                        self.syncrepl_set_cookie(ctrl.cookie)
 
                 return False
 
-            elif type == 100:
+            elif ldap_res.rtype == ldap0.RES_SEARCH_ENTRY:
                 # search entry with associated SyncState control
-                for m in msg:
-                    dn, attrs, ctrls = m
-                    for c in ctrls:
-                        if c.__class__.__name__ != 'SyncStateControl':
+                for sre in ldap_res.rdata:
+                    for ctrl in sre.ctrls:
+                        if not isinstance(ctrl, SyncStateControl):
                             continue
-                        if c.state == 'present':
-                            self.syncrepl_present([c.entryUUID])
-                        elif c.state == 'delete':
-                            self.syncrepl_delete([c.entryUUID])
+                        if ctrl.state == 'present':
+                            self.syncrepl_present([ctrl.entryUUID])
+                        elif ctrl.state == 'delete':
+                            self.syncrepl_delete([ctrl.entryUUID])
                         else:
-                            self.syncrepl_entry(dn, attrs, c.entryUUID)
+                            self.syncrepl_entry(sre.dn_s, sre.entry_b, ctrl.entryUUID)
                             if self.__refreshDone is False:
-                                self.syncrepl_present([c.entryUUID])
-                        if c.cookie is not None:
-                            self.syncrepl_set_cookie(c.cookie)
+                                self.syncrepl_present([ctrl.entryUUID])
+                        if ctrl.cookie is not None:
+                            self.syncrepl_set_cookie(ctrl.cookie)
                         break
 
-            elif type == 121:
+            elif ldap_res.rtype == ldap0.RES_INTERMEDIATE:
                 # Intermediate message. If it is a SyncInfoMessage, parse it
-                for m in msg:
-                    rname, resp, ctrls = m
-                    if rname != SyncInfoMessage.responseName:
+                for sre in ldap_res.rdata:
+                    if sre.dn_s != SyncInfoMessage.responseName:
                         continue
-                    sim = SyncInfoMessage(resp)
+                    sim = SyncInfoMessage(sre.entry_b)
                     if sim.newcookie is not None:
                         self.syncrepl_set_cookie(sim.newcookie)
                     elif sim.refreshPresent is not None:
@@ -468,9 +473,17 @@ class SyncreplConsumer:
                         if 'cookie' in sim.syncIdSet:
                             self.syncrepl_set_cookie(sim.syncIdSet['cookie'])
 
-            if all == 0:
-                return True
+            if not all_results:
+                break
 
+        logging.debug(
+            'Exiting %s.syncrepl_poll(msgid=%r, timeout=%r, all_results=%r): ',
+            self.__class__.__name__,
+            msgid,
+            timeout,
+            all_results,
+        )
+        return True # end of syncrepl_poll()
 
     # virtual methods -- subclass must override these to do useful work
 
