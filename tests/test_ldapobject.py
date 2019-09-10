@@ -256,7 +256,9 @@ class Test00_LDAPObject(SlapdTestCase):
                         SaslPasswordAuth('user1', b'badpassword'),
                     )
 
+    @unittest.skip('Too timing dependent')
     def test007_timeout(self):
+        test_timeout = 0.00001
         with self.ldap_object_class(self.server.ldap_uri) as l:
             with self.assertRaises(ldap0.TIMEOUT):
                 msg_id = l.search(
@@ -264,14 +266,14 @@ class Test00_LDAPObject(SlapdTestCase):
                     ldap0.SCOPE_SUBTREE,
                     '(objectClass=*)',
                 )
-                l.result(msg_id, all_results=ldap0.MSG_ALL, timeout=0.00001)
+                l.result(msg_id, all_results=ldap0.MSG_ALL, timeout=test_timeout)
             l.abandon(msg_id)
             with self.assertRaises(ldap0.TIMEOUT):
                 l.search_s(
                     self.server.suffix,
                     ldap0.SCOPE_SUBTREE,
                     '(objectClass=*)',
-                    timeout=0.00001,
+                    timeout=test_timeout,
                 )
 
     def test008_sessiontrack_control(self):
