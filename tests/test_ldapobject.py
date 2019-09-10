@@ -264,7 +264,7 @@ class Test00_LDAPObject(SlapdTestCase):
                     ldap0.SCOPE_SUBTREE,
                     '(objectClass=*)',
                 )
-                l.result(msg_id, all_results=ldap0.MSG_ALL, timeout=0.0001)
+                l.result(msg_id, all_results=ldap0.MSG_ALL, timeout=0.00001)
             l.abandon(msg_id)
             with self.assertRaises(ldap0.TIMEOUT):
                 l.search_s(
