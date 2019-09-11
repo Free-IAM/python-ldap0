@@ -252,8 +252,41 @@ class TestSubschema(SubschemaTest):
                 SubSchema(non_unique_name_tests, check_uniqueness=2)
 
 
-class TestModifyModlist(unittest.TestCase):
-    schema_uri = 'file:tests/ldif/subschema-openldap-all.ldif'
+class TestSchemaElementOIDSet(SubschemaTest):
+    """
+    Tests for class SchemaElementOIDSet
+    """
+
+    def test001_AttributeType(self):
+        self.assertNotIn('cn', SchemaElementOIDSet(self.sub_schema, AttributeType, []))
+        self.assertNotIn('cn', SchemaElementOIDSet(self.sub_schema, AttributeType, ['objectClass']))
+        self.assertIn('cn', SchemaElementOIDSet(self.sub_schema, AttributeType, ['cn']))
+        self.assertIn('2.5.4.3', SchemaElementOIDSet(self.sub_schema, AttributeType, ['cn']))
+        self.assertIn('cn', SchemaElementOIDSet(self.sub_schema, AttributeType, ['2.5.4.3']))
+        self.assertIn('commonName', SchemaElementOIDSet(self.sub_schema, AttributeType, ['2.5.4.3']))
+        self.assertEqual(len(SchemaElementOIDSet(self.sub_schema, AttributeType, ['2.5.4.3', 'cn', 'commonName'])), 1)
+        self.assertIn('cn', SchemaElementOIDSet(self.sub_schema, AttributeType, ['@person']))
+        with self.assertRaises(KeyError):
+            SchemaElementOIDSet(self.sub_schema, AttributeType, ['foo'])
+        with self.assertRaises(KeyError):
+            SchemaElementOIDSet(self.sub_schema, AttributeType, ['@foo'])
+
+    def test002_ObjectClass(self):
+        self.assertNotIn('person', SchemaElementOIDSet(self.sub_schema, ObjectClass, []))
+        self.assertIn('person', SchemaElementOIDSet(self.sub_schema, ObjectClass, ['person']))
+        self.assertIn('person', SchemaElementOIDSet(self.sub_schema, ObjectClass, ['2.5.6.6']))
+        self.assertEqual(len(SchemaElementOIDSet(self.sub_schema, ObjectClass, ['2.5.6.6', 'person'])), 1)
+        with self.assertRaises(KeyError):
+            SchemaElementOIDSet(self.sub_schema, ObjectClass, ['foo'])
+        with self.assertRaises(ValueError):
+            SchemaElementOIDSet(self.sub_schema, ObjectClass, ['@foo'])
+
+    def test003_names_property(self):
+        self.assertEqual(SchemaElementOIDSet(self.sub_schema, ObjectClass, ['2.5.6.6']).names, ['person'])
+        self.assertEqual(SchemaElementOIDSet(self.sub_schema, AttributeType, ['2.5.4.3', 'cn', 'commonName']).names, ['cn'])
+
+
+class TestModifyModlist(SubschemaTest):
     modify_modlist_tests = [
         (
             {
@@ -320,13 +353,28 @@ class TestModifyModlist(unittest.TestCase):
     ]
 
     def test_modify_modlist(self):
-        _, sub_schema = ldap0.schema.util.urlfetch(self.schema_uri, check_uniqueness=True)
         for old_entry, new_entry, ignore_attr_types, test_modlist in self.modify_modlist_tests:
             result_modlist = modify_modlist(
-                sub_schema,
-                ldap0.schema.models.Entry(sub_schema, 'cn=test', old_entry),
-                ldap0.schema.models.Entry(sub_schema, 'cn=test', new_entry),
+                self.sub_schema,
+                ldap0.schema.models.Entry(self.sub_schema, 'cn=test', old_entry),
+                ldap0.schema.models.Entry(self.sub_schema, 'cn=test', new_entry),
                 ignore_attr_types=ignore_attr_types,
+            )
+            self.assertEqual(
+                sorted(test_modlist),
+                sorted(result_modlist),
+                '\nmodify_modlist(\n%s,\n%s\n)\nreturns\n%s\ninstead of\n%s.' % (
+                    pformat(old_entry),
+                    pformat(new_entry),
+                    pformat(sorted(result_modlist)),
+                    pformat(sorted(test_modlist)),
+                )
+            )
+            result_modlist = modify_modlist(
+                self.sub_schema,
+                ldap0.schema.models.Entry(self.sub_schema, 'cn=test', old_entry),
+                ldap0.schema.models.Entry(self.sub_schema, 'cn=test', new_entry),
+                ignore_attr_types=SchemaElementOIDSet(self.sub_schema, AttributeType, ignore_attr_types),
             )
             self.assertEqual(
                 sorted(test_modlist),
