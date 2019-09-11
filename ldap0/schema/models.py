@@ -687,21 +687,22 @@ class SchemaElementOIDSet(MutableSet):
     def add(self, se_name):
         se_name = se_name.strip()
         if se_name[0] == '@':
-            assert self._se_class == AttributeType, ValueError('@-form only possible with AttributeType')
+            if self._se_class != AttributeType:
+                raise ValueError('@-form only possible with class AttributeType')
             must_attr, may_attr = self._schema.attribute_types(
                 (se_name[1:],),
                 attr_type_filter=None,
-                raise_keyerror=0,
+                raise_keyerror=True,
                 ignore_dit_content_rule=1
             )
             at_list = [
                 (at_oid, (at_obj.names or [at_oid])[0])
-                for at_oid, at_obj in must_attr.items()+may_attr.items()
+                for at_oid, at_obj in list(must_attr.items()) + list(may_attr.items())
             ]
         else:
             at_list = [
                 (
-                    self._schema.get_oid(self._se_class, se_name, raise_keyerror=0).lower(),
+                    self._schema.get_oid(self._se_class, se_name, raise_keyerror=True).lower(),
                     se_name
                 )
             ]
@@ -714,6 +715,7 @@ class SchemaElementOIDSet(MutableSet):
         for item in seq:
             self.add(item)
 
+    @property
     def names(self):
         return [
             self._nameoroid_dict[se_oid]
