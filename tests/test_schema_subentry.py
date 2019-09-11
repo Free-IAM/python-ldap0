@@ -265,9 +265,24 @@ class TestSchemaElementOIDSet(SubschemaTest):
         self.assertIn('cn', SchemaElementOIDSet(self.sub_schema, AttributeType, ['2.5.4.3']))
         self.assertIn('commonName', SchemaElementOIDSet(self.sub_schema, AttributeType, ['2.5.4.3']))
         self.assertEqual(len(SchemaElementOIDSet(self.sub_schema, AttributeType, ['2.5.4.3', 'cn', 'commonName'])), 1)
+        self.assertEqual(len(SchemaElementOIDSet(self.sub_schema, AttributeType, ['', ' ', '  '])), 0)
         self.assertIn('cn', SchemaElementOIDSet(self.sub_schema, AttributeType, ['@person']))
-        with self.assertRaises(KeyError):
-            SchemaElementOIDSet(self.sub_schema, AttributeType, ['foo'])
+        self.assertEqual(
+            sorted(SchemaElementOIDSet(self.sub_schema, AttributeType, ['@person'])),
+            [
+                '2.5.4.0',
+                '2.5.4.13',
+                '2.5.4.20',
+                '2.5.4.3',
+                '2.5.4.34',
+                '2.5.4.35',
+                '2.5.4.4',
+            ]
+        )
+        self.assertEqual(
+            sorted(SchemaElementOIDSet(self.sub_schema, AttributeType, ['foo', 'bar'])),
+            ['bar', 'foo']
+        )
         with self.assertRaises(KeyError):
             SchemaElementOIDSet(self.sub_schema, AttributeType, ['@foo'])
 
@@ -276,14 +291,29 @@ class TestSchemaElementOIDSet(SubschemaTest):
         self.assertIn('person', SchemaElementOIDSet(self.sub_schema, ObjectClass, ['person']))
         self.assertIn('person', SchemaElementOIDSet(self.sub_schema, ObjectClass, ['2.5.6.6']))
         self.assertEqual(len(SchemaElementOIDSet(self.sub_schema, ObjectClass, ['2.5.6.6', 'person'])), 1)
-        with self.assertRaises(KeyError):
-            SchemaElementOIDSet(self.sub_schema, ObjectClass, ['foo'])
+        self.assertEqual(len(SchemaElementOIDSet(self.sub_schema, ObjectClass, ['', ' ', '  '])), 0)
+        self.assertEqual(
+            sorted(SchemaElementOIDSet(self.sub_schema, ObjectClass, ['foo', 'bar'])),
+            ['bar', 'foo']
+        )
         with self.assertRaises(ValueError):
             SchemaElementOIDSet(self.sub_schema, ObjectClass, ['@foo'])
 
     def test003_names_property(self):
-        self.assertEqual(SchemaElementOIDSet(self.sub_schema, ObjectClass, ['2.5.6.6']).names, ['person'])
-        self.assertEqual(SchemaElementOIDSet(self.sub_schema, AttributeType, ['2.5.4.3', 'cn', 'commonName']).names, ['cn'])
+        self.assertEqual(SchemaElementOIDSet(self.sub_schema, ObjectClass, ['person', '2.5.6.6']).names, ['person'])
+        self.assertEqual(SchemaElementOIDSet(self.sub_schema, AttributeType, ['cn', 'commonName', '2.5.4.3']).names, ['cn'])
+        self.assertEqual(
+            sorted(SchemaElementOIDSet(self.sub_schema, AttributeType, ['@person']).names),
+            [
+                'cn',
+                'description',
+                'objectClass',
+                'seeAlso',
+                'sn',
+                'telephoneNumber',
+                'userPassword',
+            ]
+        )
 
 
 class TestModifyModlist(SubschemaTest):

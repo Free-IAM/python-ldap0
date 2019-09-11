@@ -4,7 +4,7 @@ ldap0.schema.models - support for subSchemaSubEntry information
 """
 
 from collections.abc import MutableSet
-from collections import UserDict
+from collections import UserDict, OrderedDict
 
 from ..__about__ import __version__, __author__, __license__
 from ..cidict import CIDict
@@ -648,30 +648,27 @@ class SchemaElementOIDSet(MutableSet):
     def __init__(self, schema, se_class, nameoroids):
         self._schema = schema
         self._se_class = se_class
-        self._nameoroid_dict = {}
-        self._nameoroid_list = []
-        nameoroids = filter(None, [nameoroid.strip() for nameoroid in nameoroids])
-        for nameoroid in nameoroids:
-            self.add(nameoroid)
+        self._nameoroid_dict = OrderedDict()
+        self.update(nameoroids)
 
     def __iter__(self):
-        return self._nameoroid_list.__iter__()
+        for key in self._nameoroid_dict.keys():
+            yield key
 
     def __len__(self):
         return len(self._nameoroid_dict)
 
+    def _key_oid(self, nameoroid):
+        return self._schema.get_oid(self._se_class, nameoroid, raise_keyerror=False).lower()
+
     def discard(self, nameoroid):
-        oid = self._schema.get_oid(self._se_class, nameoroid, raise_keyerror=0).lower()
         try:
-            del self._nameoroid_dict[oid]
+            del self._nameoroid_dict[self._key_oid(nameoroid)]
         except KeyError:
             pass
-        else:
-            self._nameoroid_list.remove(oid)
 
     def __contains__(self, nameoroid):
-        oid = self._schema.get_oid(self._se_class, nameoroid, raise_keyerror=0).lower()
-        return oid in self._nameoroid_dict
+        return self._key_oid(nameoroid) in self._nameoroid_dict
 
     def intersection(self, s):
         return SchemaElementOIDSet(
@@ -686,6 +683,8 @@ class SchemaElementOIDSet(MutableSet):
 
     def add(self, se_name):
         se_name = se_name.strip()
+        if not se_name:
+            return
         if se_name[0] == '@':
             if self._se_class != AttributeType:
                 raise ValueError('@-form only possible with class AttributeType')
@@ -693,23 +692,18 @@ class SchemaElementOIDSet(MutableSet):
                 (se_name[1:],),
                 attr_type_filter=None,
                 raise_keyerror=True,
-                ignore_dit_content_rule=1
+                ignore_dit_content_rule=True
             )
-            at_list = [
-                (at_oid, (at_obj.names or [at_oid])[0])
-                for at_oid, at_obj in list(must_attr.items()) + list(may_attr.items())
+            se_list = [
+                (se_oid, (se_obj.names or [se_oid])[0])
+                for se_oid, se_obj in list(must_attr.items()) + list(may_attr.items())
             ]
         else:
-            at_list = [
-                (
-                    self._schema.get_oid(self._se_class, se_name, raise_keyerror=True).lower(),
-                    se_name
-                )
-            ]
-        for at_oid, at_name in at_list:
-            if not at_oid in self._nameoroid_dict:
-                self._nameoroid_dict[at_oid] = at_name
-                self._nameoroid_list.append(at_oid)
+            se_list = [(self._key_oid(se_name), se_name)]
+        for se_oid, se_name in se_list:
+            if not se_oid in self._nameoroid_dict:
+                self._nameoroid_dict[se_oid] = se_name
+        # end of add()
 
     def update(self, seq):
         for item in seq:
@@ -717,10 +711,7 @@ class SchemaElementOIDSet(MutableSet):
 
     @property
     def names(self):
-        return [
-            self._nameoroid_dict[se_oid]
-            for se_oid in self._nameoroid_list
-        ]
+        return list(self._nameoroid_dict.values())
 
 
 class Entry(UserDict):
