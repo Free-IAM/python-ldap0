@@ -102,7 +102,7 @@ def modify_modlist(
     new_entry
         Dictionary holding what the new entry should be
     ignore_attr_types
-        List of attribute type names to be ignored completely
+        Sequence of attribute type names to be ignored completely
     ignore_oldexistent
         If non-zero attribute type names which are in old_entry
         but are not found in new_entry at all are not deleted.
@@ -114,15 +114,20 @@ def modify_modlist(
         order in new_entry
     """
     # Type checking
-    assert isinstance(sub_schema, subentry.SubSchema)
-    assert isinstance(old_entry, models.Entry)
-    assert isinstance(new_entry, models.Entry)
-
-    ignore_attr_type_set = SchemaElementOIDSet(
-        sub_schema,
-        AttributeType,
-        ignore_attr_types,
+    assert isinstance(sub_schema, subentry.SubSchema), TypeError(
+        'Expected sub_schema to be instance of SubSchema, got %r' % (sub_schema,)
     )
+    assert isinstance(old_entry, models.Entry), TypeError('Expected old_entry to be instance of models.Entry, got %r' % (old_entry,))
+    assert isinstance(new_entry, models.Entry), TypeError('Expected new_entry to be instance of models.Entry, got %r' % (new_entry,))
+
+    if isinstance(ignore_attr_types, SchemaElementOIDSet):
+        ignore_attr_type_set = ignore_attr_types
+    else:
+        ignore_attr_type_set = SchemaElementOIDSet(
+            sub_schema,
+            AttributeType,
+            ignore_attr_types,
+        )
 
     # Performance optimization
     at_cls = models.AttributeType
