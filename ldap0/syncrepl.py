@@ -305,7 +305,7 @@ class SyncInfoMessage:
     1.3.6.1.4.1.4203.1.9.1.4 and responseValue contains a BER-encoded
     syncInfoValue.  The criticality is FALSE (and hence absent).
     """
-    responseName = b'1.3.6.1.4.1.4203.1.9.1.4'
+    responseName = '1.3.6.1.4.1.4203.1.9.1.4'
 
     def __init__(self, encodedMessage):
         d = decoder.decode(encodedMessage, asn1Spec=SyncInfoValue())

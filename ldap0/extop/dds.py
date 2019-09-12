@@ -58,7 +58,7 @@ class RefreshRequest(ExtendedRequest):
 
 class RefreshResponse(ExtendedResponse):
 
-    responseName = b'1.3.6.1.4.1.1466.101.119.1'
+    responseName = '1.3.6.1.4.1.1466.101.119.1'
 
     class RefreshResponseValue(univ.Sequence):
         componentType = namedtype.NamedTypes(
