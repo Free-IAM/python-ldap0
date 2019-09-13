@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-ldap0.base - basic classes and functions
+ldap0.res - basic classes for LDAP results
 """
 
 from .dn import DNObj
