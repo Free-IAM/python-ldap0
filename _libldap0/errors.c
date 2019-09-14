@@ -45,10 +45,10 @@ LDAPerr(int errnum)
 
 /* Convert an LDAP error into an informative python exception */
 PyObject*
-LDAPerror( LDAP *l, char *msg )
+LDAPerror(LDAP *l, char *msg)
 {
     if (l == NULL) {
-        PyErr_SetFromErrno( LDAPexception_class );
+        PyErr_SetFromErrno(LDAPexception_class);
         return NULL;
     } else {
 
