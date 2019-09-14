@@ -132,11 +132,13 @@ class LDAPObject:
             try:
                 result = func(*args, **kwargs)
             except LDAPError as ldap_err:
-                if hasattr(ldap_err, 'args') \
-                   and ldap_err.args \
-                   and 'info' not in ldap_err.args[0] \
-                   and 'errno' in ldap_err.args[0]:
-                    ldap_err.args[0]['info'] = strerror(ldap_err.args[0]['errno'])
+                if (
+                        hasattr(ldap_err, 'args')
+                        and ldap_err.args
+                        and 'info' not in ldap_err.args[0]
+                        and 'errno' in ldap_err.args[0]
+                    ):
+                    ldap_err.args[0]['info'] = strerror(ldap_err.args[0]['errno']).encode('ascii')
                 if __debug__ and self._trace_level >= 2:
                     logging.debug(
                         '-> LDAPError - %s',

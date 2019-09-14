@@ -199,8 +199,9 @@ class Test00_LDAPObject(SlapdTestCase):
                 if err_no != ENOTCONN:
                     self.fail("expected err_no=%d, got %d" % (ENOTCONN, err_no))
                 info = ldap_err.args[0]['info']
-                if info != os.strerror(ENOTCONN):
-                    self.fail("expected info=%r, got %d" % (os.strerror(ENOTCONN), info))
+                info_expected = os.strerror(ENOTCONN).encode('ascii')
+                if info != info_expected:
+                    self.fail("expected info=%r, got %r" % (info_expected, info))
             else:
                 self.fail("expected SERVER_DOWN, got %r" % ldap_res)
 
