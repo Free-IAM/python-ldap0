@@ -37,7 +37,7 @@ MOD_OP_STR = {
 
 CHANGE_TYPES = {b'add', b'delete', b'modify', b'modrdn'}
 
-SAFE_STRING_PATTERN = '(^(\000|\n|\r| |:|<)|[\000\n\r\200-\377]+|[ ]+$)'
+SAFE_STRING_PATTERN = b'(^(\000|\n|\r| |:|<)|[\000\n\r\200-\377]+|[ ]+$)'
 SAFE_STRING_RE = re.compile(SAFE_STRING_PATTERN)
 
 
@@ -95,7 +95,7 @@ class LDIFWriter:
         """
         return (
             attr_type.lower() in self._base64_attrs or
-            SAFE_STRING_RE.search(attr_value.decode('utf-8')) is not None
+            SAFE_STRING_RE.search(attr_value) is not None
         )
 
     def _unparse_attr_type_and_value(self, attr_type, attr_value):
