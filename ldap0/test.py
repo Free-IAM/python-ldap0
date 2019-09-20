@@ -9,6 +9,7 @@ import time
 import subprocess
 import logging
 import unittest
+from typing import List
 
 from urllib.parse import quote_plus
 
@@ -20,6 +21,7 @@ from .ldapobject import LDAPObject
 from .functions import escape_format
 from .filter import escape_str as escape_filter_str
 from .ldif import LDIFParser
+from .typehints import EntryStr
 
 # a template string for generating simple slapd.conf file
 SLAPD_CONF_TEMPLATE = r"""
@@ -158,7 +160,7 @@ class SlapdObject:
         os.rmdir(self.testrundir)
         logging.info('cleaned-up %s', self.testrundir)
 
-    def _avail_tcp_port(self):
+    def _avail_tcp_port(self) -> int:
         """
         find an available port for TCP connection
         """
@@ -169,7 +171,7 @@ class SlapdObject:
         logging.info('Found available port %d', port)
         return port
 
-    def gen_config(self):
+    def gen_config(self) -> str:
         """
         generates a slapd.conf and returns it as one string
 
@@ -234,7 +236,7 @@ class SlapdObject:
             raise RuntimeError("configuration test failed")
         logging.info("config ok: %s", self._slapd_conf)
 
-    def get_slapd_version(self):
+    def get_slapd_version(self) -> tuple:
         """
         Determines slapd version
         """
@@ -327,7 +329,7 @@ class SlapdObject:
             logging.info('slapd[%d] terminated', self._proc.pid)
             self._proc = None
 
-    def _cli_auth_args(self):
+    def _cli_auth_args(self) -> List[str]:
         if self.cli_sasl_external:
             authc_args = [
                 '-Y', 'EXTERNAL',
@@ -365,13 +367,13 @@ class SlapdObject:
         """
         self._cli_popen(self.PATH_LDAPWHOAMI, extra_args=extra_args)
 
-    def ldapadd(self, ldif_data, extra_args=None):
+    def ldapadd(self, ldif_data: bytes, extra_args=None):
         """
         Runs ldapadd on this slapd instance, passing it the ldif content
         """
         self._cli_popen(self.PATH_LDAPADD, extra_args=extra_args, stdin_data=ldif_data)
 
-    def ldapmodify(self, ldif_data, extra_args=None):
+    def ldapmodify(self, ldif_data: bytes, extra_args=None):
         """
         Runs ldapadd on this slapd instance, passing it the ldif content
         """
@@ -426,7 +428,7 @@ class SlapdTestCase(unittest.TestCase):
                 escape_format(escape_filter_str, '(olcSuffix={0})', self.server.suffix),
             )[0].dn_s
 
-    def enable_overlay(self, slapo_entry, schema_files=None):
+    def enable_overlay(self, slapo_entry: EntryStr, schema_files=None):
         olc_overlay = slapo_entry['olcOverlay'][0]
         enabled_overlays = [
             val.split('}', 1)[1]
