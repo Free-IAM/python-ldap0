@@ -54,6 +54,8 @@ suffix "%(suffix)s"
 rootdn "%(rootdn)s"
 rootpw "%(rootpw)s"
 
+dbnosync
+
 access to
   dn.subtree="%(suffix)s"
   attrs=userPassword
