@@ -845,7 +845,7 @@ class Test00_LDAPObject(SlapdTestCase):
             None,
         )
 
-    def test001_add_rename_delete(self):
+    def test001_add_modify_rename_delete(self):
         dn1 = 'cn=äöüÄÖÜß,'+self.server.suffix
         rdn2 = 'cn=LaLeLu4711'
         dn2 = ','.join((rdn2, self.server.suffix))
@@ -860,6 +860,20 @@ class Test00_LDAPObject(SlapdTestCase):
         )
         with self.assertRaises(_libldap0.ALREADY_EXISTS):
             self._ldap_conn.add_s(dn1, entry)
+        modify_result = self._ldap_conn.modify_s(dn1, [(ldap0.MOD_ADD, b'description', ['äöüÄÖÜß'.encode('utf-8')])])
+        self.assertEqual(
+            (modify_result.rtype, modify_result.rdata, modify_result.msgid, modify_result.ctrls),
+            (_libldap0.RES_MODIFY, [], 4, [])
+        )
+        with self.assertRaises(_libldap0.TYPE_OR_VALUE_EXISTS):
+            self._ldap_conn.modify_s(dn1, [(ldap0.MOD_ADD, b'description', ['äöüÄÖÜß'.encode('utf-8')])])
+        modify_result = self._ldap_conn.modify_s(dn1, [(ldap0.MOD_DELETE, b'description', ['äöüÄÖÜß'.encode('utf-8')])])
+        self.assertEqual(
+            (modify_result.rtype, modify_result.rdata, modify_result.msgid, modify_result.ctrls),
+            (_libldap0.RES_MODIFY, [], 6, [])
+        )
+        with self.assertRaises(_libldap0.NO_SUCH_ATTRIBUTE):
+            self._ldap_conn.modify_s(dn1, [(ldap0.MOD_DELETE, b'description', ['äöüÄÖÜß'.encode('utf-8')])])
         rename_result = self._ldap_conn.rename_s(
             dn1,
             rdn2,
@@ -867,7 +881,7 @@ class Test00_LDAPObject(SlapdTestCase):
         )
         self.assertEqual(
             (rename_result.rtype, rename_result.rdata, rename_result.msgid, rename_result.ctrls),
-            (_libldap0.RES_MODRDN, [], 4, [])
+            (_libldap0.RES_MODRDN, [], 8, [])
         )
         read_result = self._ldap_conn.read_s(dn2)
         self.assertEqual(read_result.entry_s, {'cn': ['LaLeLu4711'], 'objectClass': ['applicationProcess']})
@@ -876,7 +890,7 @@ class Test00_LDAPObject(SlapdTestCase):
         delete_result = self._ldap_conn.delete_s(dn2)
         self.assertEqual(
             (delete_result.rtype, delete_result.rdata, delete_result.msgid, delete_result.ctrls),
-            (_libldap0.RES_DELETE, [], 7, [])
+            (_libldap0.RES_DELETE, [], 11, [])
         )
         with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
             self._ldap_conn.delete_s(dn2)
