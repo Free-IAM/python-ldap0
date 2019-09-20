@@ -4,6 +4,7 @@ ldap0.filters - misc stuff for handling LDAP filter strings (see RFC 4515)
 """
 
 import time
+from typing import List, Sequence, Union
 
 from .__about__ import __version__, __author__, __license__
 from .functions import strf_secs
@@ -11,14 +12,14 @@ from .functions import strf_secs
 FILTER_SPECIAL_CHARS = set('\\*()')
 
 
-def escape_bytes(assertion_value):
+def escape_bytes(assertion_value: bytes) -> str:
     """
     escape all bytes and return str (unicode)
     """
     return ''.join(['\\%02x' % char_code for char_code in assertion_value])
 
 
-def escape_str(assertion_value):
+def escape_str(assertion_value: str) -> str:
     """
     Replace all special characters found in assertion_value
     by quoted notation.
@@ -40,7 +41,7 @@ def escape_str(assertion_value):
     # end of escape_str()
 
 
-def negate_filter(flt):
+def negate_filter(flt: str) -> str:
     """
     Returns the simple negation of flt
     """
@@ -52,7 +53,7 @@ def negate_filter(flt):
     return '(!{0})'.format(flt)
 
 
-def map_filter_parts(assertion_type, assertion_values):
+def map_filter_parts(assertion_type: str, assertion_values: Sequence[str]) -> List[str]:
     """
     returns filter parts all with same asserton type but different values
     """
@@ -62,7 +63,7 @@ def map_filter_parts(assertion_type, assertion_values):
     ]
 
 
-def compose_filter(operand, filter_parts):
+def compose_filter(operand: str, filter_parts: Sequence[str]):
     """
     returns filter string composed by operand and list of sub-filters
     """
@@ -75,11 +76,12 @@ def compose_filter(operand, filter_parts):
         ''.join(filter_parts),
     )
 
+
 def dict_filter(
         entry,
-        iop='&',
-        oop='&',
-    ):
+        iop: str = '&',
+        oop: str = '&',
+    ) -> str:
     """
     returns a filter compose from an entry dictionary
 
@@ -102,10 +104,10 @@ def dict_filter(
 
 
 def time_span_filter(
-        filterstr='',
-        from_timestamp=0,
-        until_timestamp=None,
-        delta_attr='modifyTimestamp',
+        filterstr: str = '',
+        from_timestamp: Union[int, float] = 0,
+        until_timestamp: Union[int, float, None] = None,
+        delta_attr: str = 'modifyTimestamp',
     ):
     """
     If last_run_timestr is non-zero filterstr will be extended
