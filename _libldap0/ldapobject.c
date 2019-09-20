@@ -774,7 +774,7 @@ l_ldap_rename(LDAPObject* self, PyObject *args )
 {
     char *dn, *newrdn;
     char *newSuperior = NULL;
-    int new_sup_len = 0;
+    Py_ssize_t new_sup_len = 0;
     int delold = 1;
     PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
@@ -1084,6 +1084,7 @@ static PyObject *
 l_ldap_extop(LDAPObject* self, PyObject *args )
 {
     char *reqoid = NULL;
+    Py_ssize_t reqvalue_len;
     struct berval reqvalue = {0, NULL};
     PyObject *req_ctrls = Py_None;
     LDAPControl** server_ldcs = NULL;
@@ -1091,8 +1092,9 @@ l_ldap_extop(LDAPObject* self, PyObject *args )
     int msgid;
     int ldaperror;
 
-    if (!PyArg_ParseTuple(args, "yz#|O:extended_operation", &reqoid, &reqvalue.bv_val, &reqvalue.bv_len, &req_ctrls))
+    if (!PyArg_ParseTuple(args, "yz#|O:extended_operation", &reqoid, &reqvalue.bv_val, &reqvalue_len, &req_ctrls))
         return NULL;
+    reqvalue.bv_len = (ber_len_t) reqvalue_len;
 
     if (not_valid(self))
         return NULL;
