@@ -898,6 +898,7 @@ l_ldap_result(LDAPObject* self, PyObject *args )
             e = err;
         } else
             e = "ldap_parse_result";
+        ldap_controls_free(req_ctrls);
         ldap_msgfree(msg);
         Py_XDECREF(valuestr);
         return LDAPerror(self->ldap, e );
