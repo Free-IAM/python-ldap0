@@ -3,13 +3,16 @@
 ldap0.dn - misc stuff for handling distinguished names (see RFC 4514)
 """
 
+from typing import List, Union, Sequence
+
 import _libldap0
 
 from .__about__ import __version__, __author__, __license__
 from .functions import _libldap0_function_call
+from .typehints import StrList, EntryStr
 
 
-def escape_str(val):
+def escape_str(val: str) -> str:
     """
     Escape all DN special characters found in s
     with a back-slash (see RFC 4514, section 2.4)
@@ -33,7 +36,7 @@ def escape_str(val):
     return val
 
 
-def is_dn(val, flags=0):
+def is_dn(val: str, flags: int = 0) -> bool:
     """
     Returns True is `s' can be parsed by _libldap0.str2dn() like as a
     distinguished host_name (DN), otherwise False is returned.
@@ -57,12 +60,12 @@ class DNObj(tuple):
     """
     encoding = 'utf-8'
 
-    def __init__(self, dn_t):
+    def __init__(self, dn_t: Sequence):
         tuple.__init__(self)
-        self = dn_t
+        self = tuple(dn_t)
 
     @classmethod
-    def from_str(cls, dn, flags=0):
+    def from_str(cls, dn: str, flags=0):
         """
         create a new DNObj instance from DN string representation
         """
@@ -79,17 +82,17 @@ class DNObj(tuple):
         return cls(dn_t)
 
     @classmethod
-    def from_domain(cls, domain):
+    def from_domain(cls, domain: str):
         """
         create a new DNObj instance from dot-separated DNS domain name
         """
         domain = domain.encode('idna').decode('ascii')
-        return cls([(('dc', d),) for d in domain.split('.')])
+        return cls(tuple([(('dc', d),) for d in domain.split('.')]))
 
-    def encode(self, encoding=None, errors='strict'):
+    def encode(self, encoding=None, errors='strict') -> bytes:
         return self.__str__().encode(encoding or self.encoding, errors=errors)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return ','.join([
             '+'.join([
                 '='.join((atype, escape_str(avalue or '')))
@@ -98,22 +101,22 @@ class DNObj(tuple):
             for rdn in self
         ])
 
-    def __bytes__(self):
+    def __bytes__(self) -> bytes:
         return self.encode()
 
     def __hash__(self):
         return hash(self.__str__())
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%s(%s)' % (self.__class__.__name__, tuple.__repr__(self))
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return isinstance(other, self.__class__) and tuple.__eq__(self, other)
 
     def __add__(self, other):
         return self.__class__(tuple.__add__(self, other))
 
-    def slice(self, ind1, ind2):
+    def slice(self, ind1: Union[int, None], ind2: Union[int, None]):
         return self.__class__(self[ind1:ind2])
 
     def __reversed__(self):
@@ -125,7 +128,7 @@ class DNObj(tuple):
         """
         return self.__class__(self[:1])
 
-    def rdn_attrs(self):
+    def rdn_attrs(self) -> EntryStr:
         """
         returns the RDN attributes as string-keyed dict
         """
@@ -139,7 +142,7 @@ class DNObj(tuple):
         """
         return self.__class__(self[1:])
 
-    def parents(self):
+    def parents(self) -> List:
         """
         returns the parent's DN as DNObj instance
         """
@@ -152,7 +155,7 @@ class DNObj(tuple):
             for i in range(1, len(self))
         ]
 
-    def match(self, dn_list) -> str:
+    def match(self, dn_list: StrList):
         """
         returns best matching parent DN found in dn_list
         """
@@ -174,7 +177,7 @@ class DNObj(tuple):
                 max_match_dn = self.slice(-match_level, None)
         return max_match_dn
 
-    def domain(self, only_dc=True):
+    def domain(self, only_dc: bool = True) -> str:
         """
         Convert dc-style DN to DNS domain name (see RFC 2247)
         """
