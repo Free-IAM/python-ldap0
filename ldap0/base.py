@@ -15,7 +15,7 @@ __all__ = [
 ]
 
 
-def decode_list(lst: Sequence[bytes], encoding :str = 'utf-8') -> StrList:
+def decode_list(lst: Sequence[bytes], encoding: str = 'utf-8') -> StrList:
     """
     decode a sequence containing only byte-strings with given encoding
     and return a list of strings
@@ -23,7 +23,7 @@ def decode_list(lst: Sequence[bytes], encoding :str = 'utf-8') -> StrList:
     return [item.decode(encoding) for item in lst]
 
 
-def decode_entry_dict(entry: EntryBytes, encoding :str = 'utf-8') -> EntryStr:
+def decode_entry_dict(entry: EntryBytes, encoding: str = 'utf-8') -> EntryStr:
     """
     decode an LDAP entry dict containing only
     byte-strings in keys and values with given encoding
@@ -34,7 +34,7 @@ def decode_entry_dict(entry: EntryBytes, encoding :str = 'utf-8') -> EntryStr:
     ])
 
 
-def encode_list(lst: Sequence[str], encoding :str = 'utf-8') -> BytesList:
+def encode_list(lst: Sequence[str], encoding: str = 'utf-8') -> BytesList:
     """
     encode a sequence containing only Unicode-strings with given encoding
     and return a list of bytes
@@ -42,7 +42,7 @@ def encode_list(lst: Sequence[str], encoding :str = 'utf-8') -> BytesList:
     return [item.encode(encoding) for item in lst]
 
 
-def encode_entry_dict(entry: EntryStr, encoding :str = 'utf-8') -> EntryBytes:
+def encode_entry_dict(entry: EntryStr, encoding: str = 'utf-8') -> EntryBytes:
     """
     encode an LDAP entry dict containing only
     Unicode-strings in keys and values with given encoding
