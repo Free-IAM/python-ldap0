@@ -3,6 +3,8 @@
 ldap0.functions - wraps functions of module _ldap
 """
 
+from typing import Set
+
 __all__ = [
     'escape_str',
     'get_option',
@@ -87,7 +89,7 @@ def set_option(option, invalue):
     return _libldap0_function_call(_libldap0.set_option, option, invalue)
 
 
-def escape_str(escape_str_func, fmt, *args):
+def escape_str(escape_str_func, fmt: str, *args) -> str:
     """
     Applies escape_func() to all items of `args' and returns a string based
     on format string `val'.
@@ -96,7 +98,7 @@ def escape_str(escape_str_func, fmt, *args):
     return fmt % tuple(escaped_args)
 
 
-def escape_format(escape_str_func, fmt, *args, **kwargs):
+def escape_format(escape_str_func, fmt: str, *args, **kwargs) -> str:
     escaped_args = [
         escape_str_func(val)
         for val in args
@@ -108,21 +110,21 @@ def escape_format(escape_str_func, fmt, *args, **kwargs):
     return fmt.format(*escaped_args, **escaped_kwargs)
 
 
-def strf_secs(secs):
+def strf_secs(secs: float) -> str:
     """
     Convert seconds since epoch to a string compliant to LDAP syntax GeneralizedTime
     """
     return time.strftime('%Y%m%d%H%M%SZ', time.gmtime(secs))
 
 
-def strp_secs(dt_str):
+def strp_secs(dt_str: str) -> float:
     """
     Convert LDAP syntax GeneralizedTime to seconds since epoch
     """
     return timegm(time.strptime(dt_str, '%Y%m%d%H%M%SZ'))
 
 
-def attr_set(attrs_str):
+def attr_set(attrs_str: str) -> Set[str]:
     """
     Splits string with space or comma-separated list of attribute names
     and returns a set with white-space stripped values
