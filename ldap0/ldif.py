@@ -292,9 +292,9 @@ class LDIFParser:
             url = unfolded_line[colon_pos+2:].strip()
             attr_value = None
             if (
-                self._process_url_schemes and
-                urlparse(url)[0] in self._process_url_schemes
-            ):
+                    self._process_url_schemes and
+                    urlparse(url)[0] in self._process_url_schemes
+                ):
                 attr_value = urlopen(url).read()
         else:
             attr_value = unfolded_line[colon_pos+1:]
