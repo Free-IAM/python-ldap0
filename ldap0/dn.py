@@ -191,8 +191,7 @@ class DNObj(tuple):
             if attr_type.lower() != 'dc':
                 if only_dc:
                     raise ValueError('Only dc allowed as RDN attribute, was %r' % (attr_type,))
-                else:
-                    break
+                break
             dns_labels.append(attr_value.strip())
         dns_labels.reverse()
         return '.'.join(dns_labels)
