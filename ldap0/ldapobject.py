@@ -7,6 +7,7 @@ import sys
 import time
 import logging
 from os import strerror
+from typing import List, Optional, Union
 
 import _libldap0
 from _libldap0 import LDAPError
@@ -34,6 +35,7 @@ from .extop.cancel import CancelRequest
 from .sasl import SaslNoninteractiveAuth
 from .modlist import add_modlist
 from .ldapurl import LDAPUrl
+from .typehints import EntryMixed
 
 if __debug__:
     # Tracing is only supported in debugging mode
@@ -221,10 +223,10 @@ class LDAPObject:
         self._l.set_option(_libldap0.OPT_X_TLS_NEWCTX, 0)
         # end of set_tls_options()
 
-    def fileno(self):
+    def fileno(self) -> int:
         return self.get_option(_libldap0.OPT_DESC)
 
-    def abandon(self, msgid, req_ctrls=None):
+    def abandon(self, msgid: int, req_ctrls=None):
         if msgid not in self._outstanding_requests:
             raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
         res = self._ldap_call(
@@ -235,7 +237,7 @@ class LDAPObject:
         del self._outstanding_requests[msgid]
         return res
 
-    def cancel(self, cancelid, req_ctrls=None):
+    def cancel(self, cancelid: int, req_ctrls=None):
         if cancelid not in self._outstanding_requests:
             raise ldap0.NO_SUCH_OPERATION('Unexpected cancelid value %s' % (cancelid,))
         return self.extop(
@@ -243,7 +245,7 @@ class LDAPObject:
             req_ctrls=req_ctrls,
         )
 
-    def cancel_s(self, cancelid, req_ctrls=None):
+    def cancel_s(self, cancelid: int, req_ctrls=None) -> LDAPResult:
         try:
             msgid = self.cancel(cancelid, req_ctrls=req_ctrls)
             res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
@@ -253,7 +255,7 @@ class LDAPObject:
             pass
         del self._outstanding_requests[cancelid]
 
-    def add(self, dn, entry, req_ctrls=None):
+    def add(self, dn: str, entry: EntryMixed, req_ctrls=None) -> int:
         self.uncache(dn)
         entry = add_modlist(entry)
         return self._ldap_call(
@@ -263,13 +265,13 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
-    def add_s(self, dn, entry, req_ctrls=None):
+    def add_s(self, dn: str, entry, req_ctrls=None) -> LDAPResult:
         msgid = self.add(dn, entry, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         assert res.rtype == _libldap0.RES_ADD, ValueError('Wrong result type %d' % (res.rtype,))
         return res
 
-    def simple_bind(self, who='', cred=b'', req_ctrls=None):
+    def simple_bind(self, who='', cred=b'', req_ctrls=None) -> int:
         self.flush_cache()
         return self._ldap_call(
             self._l.simple_bind,
@@ -278,7 +280,7 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
-    def simple_bind_s(self, who='', cred=b'', req_ctrls=None):
+    def simple_bind_s(self, who='', cred=b'', req_ctrls=None) -> LDAPResult:
         msgid = self.simple_bind(who, cred, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         assert res.rtype == _libldap0.RES_BIND, ValueError('Wrong result type %d' % (res.rtype,))
@@ -317,7 +319,7 @@ class LDAPObject:
 
     def sasl_interactive_bind_s(
             self,
-            sasl_mech,
+            sasl_mech: str,
             auth,
             req_ctrls=None,
             sasl_flags=_libldap0.SASL_QUIET
@@ -333,10 +335,10 @@ class LDAPObject:
 
     def sasl_non_interactive_bind_s(
             self,
-            sasl_mech,
+            sasl_mech: str,
             req_ctrls=None,
             sasl_flags=_libldap0.SASL_QUIET,
-            authz_id=''
+            authz_id: str = ''
         ):
         if not authz_id:
             # short-cut allows really non-interactive SASL bind
@@ -348,7 +350,7 @@ class LDAPObject:
         )
         return self.sasl_interactive_bind_s(sasl_mech, auth, req_ctrls, sasl_flags)
 
-    def sasl_bind_s(self, sasl_mech, cred, req_ctrls=None):
+    def sasl_bind_s(self, sasl_mech: str, cred: bytes, req_ctrls=None):
         self.flush_cache()
         return self._ldap_call(
             self._l.sasl_bind_s,
@@ -357,7 +359,7 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
-    def compare(self, dn, attr, value, req_ctrls=None):
+    def compare(self, dn: str, attr, value, req_ctrls=None) -> int:
         return self._ldap_call(
             self._l.compare_ext,
             dn.encode(self.encoding),
@@ -366,7 +368,7 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
-    def compare_s(self, dn, attr, value, req_ctrls=None):
+    def compare_s(self, dn: str, attr, value, req_ctrls=None) -> bool:
         msgid = self.compare(dn, attr, value, req_ctrls)
         try:
             res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
@@ -378,7 +380,7 @@ class LDAPObject:
             'Compare operation returned wrong result: %r' % (res,)
         )
 
-    def delete(self, dn, req_ctrls=None):
+    def delete(self, dn: str, req_ctrls=None) -> int:
         self.uncache(dn)
         return self._ldap_call(
             self._l.delete_ext,
@@ -386,13 +388,13 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
-    def delete_s(self, dn, req_ctrls=None):
+    def delete_s(self, dn: str, req_ctrls=None) -> LDAPResult:
         msgid = self.delete(dn, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         assert res.rtype == _libldap0.RES_DELETE, ValueError('Wrong result type %d' % (res.rtype,))
         return res
 
-    def extop(self, extreq, req_ctrls=None):
+    def extop(self, extreq, req_ctrls=None) -> int:
         extop_req_value = extreq.encode()
         assert extop_req_value is None or isinstance(extop_req_value, bytes), TypeError(
             'Expected extop_req_value to be bytes or None, got %r' % (extop_req_value,)
@@ -404,7 +406,12 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
-    def extop_result(self, msgid=_libldap0.RES_ANY, extop_resp_class=None, timeout=-1):
+    def extop_result(
+            self,
+            msgid: int = _libldap0.RES_ANY,
+            extop_resp_class=None,
+            timeout: Union[int, float] = -1,
+        ):
         _, _, _, _, respoid, respvalue = self._ldap_call(
             self._l.result,
             msgid,
@@ -435,7 +442,7 @@ class LDAPObject:
         msgid = self.extop(extreq, req_ctrls)
         return self.extop_result(msgid, extop_resp_class=extop_resp_class)
 
-    def modify(self, dn, modlist, req_ctrls=None):
+    def modify(self, dn: str, modlist, req_ctrls=None) -> int:
         self.uncache(dn)
         return self._ldap_call(
             self._l.modify_ext,
@@ -444,13 +451,19 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
-    def modify_s(self, dn, modlist, req_ctrls=None):
+    def modify_s(self, dn: str, modlist, req_ctrls=None) -> LDAPResult:
         msgid = self.modify(dn, modlist, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         assert res.rtype == _libldap0.RES_MODIFY, ValueError('Wrong result type %d' % (res.rtype,))
         return res
 
-    def passwd(self, user=None, oldpw=None, newpw=None, req_ctrls=None):
+    def passwd(
+            self,
+            user=None,
+            oldpw=None,
+            newpw=None,
+            req_ctrls=None
+        ) -> int:
         self.uncache(user)
         return self.extop(
             PassmodRequest(
@@ -461,7 +474,13 @@ class LDAPObject:
             req_ctrls=req_ctrls,
         )
 
-    def passwd_s(self, user=None, oldpw=None, newpw=None, req_ctrls=None):
+    def passwd_s(
+            self,
+            user=None,
+            oldpw=None,
+            newpw=None,
+            req_ctrls=None
+        ) -> Union[bytes, None]:
         msgid = self.passwd(
             user=user,
             oldpw=oldpw,
@@ -475,31 +494,29 @@ class LDAPObject:
 
     def rename(
             self,
-            dn,
-            newrdn,
-            newsuperior=None,
-            delold=1,
+            dn: str,
+            newrdn: str,
+            newsuperior: Optional[str] = None,
+            delold: bool = True,
             req_ctrls=None,
-        ):
-        if newsuperior is not None:
-            newsuperior = newsuperior.encode(self.encoding)
+        ) -> int:
         return self._ldap_call(
             self._l.rename,
             dn.encode(self.encoding),
             newrdn.encode(self.encoding),
-            newsuperior,
+            newsuperior.encode(self.encoding) if newsuperior is not None else None,
             delold,
             encode_request_ctrls(req_ctrls),
         )
 
     def rename_s(
             self,
-            dn,
-            newrdn,
-            newsuperior=None,
-            delold=1,
+            dn: str,
+            newrdn: str,
+            newsuperior: Optional[str] = None,
+            delold: bool = True,
             req_ctrls=None,
-        ):
+        ) -> LDAPResult:
         msgid = self.rename(dn, newrdn, newsuperior, delold, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         assert res.rtype == _libldap0.RES_MODRDN, ValueError('Wrong result type %d' % (res.rtype,))
@@ -507,10 +524,10 @@ class LDAPObject:
 
     def result(
             self,
-            msgid,
-            all_results=_libldap0.MSG_ALL,
-            timeout=None,
-            add_intermediates=False,
+            msgid: int,
+            all_results: int = _libldap0.MSG_ALL,
+            timeout: Union[int, float] = -1,
+            add_intermediates: bool = False,
             resp_ctrl_classes=None,
         ):
         if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
@@ -539,9 +556,9 @@ class LDAPObject:
 
     def results(
             self,
-            msgid,
-            timeout=-1,
-            add_intermediates=False,
+            msgid: int,
+            timeout: Union[int, float]=-1,
+            add_intermediates: bool = False,
             resp_ctrl_classes=None,
         ):
         """
@@ -582,7 +599,7 @@ class LDAPObject:
             req_ctrls=None,
             timeout=-1,
             sizelimit=0
-        ):
+        ) -> int:
         assert isinstance(base, str), TypeError('Expected str for base, got %r' % (base,))
         assert isinstance(filterstr, str), TypeError('Expected str for filterstr, got %r' % (filterstr,))
         if attrlist is not None:
@@ -601,7 +618,7 @@ class LDAPObject:
             sizelimit,
         )
 
-    def cache_hit_ratio(self):
+    def cache_hit_ratio(self) -> float:
         """
         Returns percentage of cache hit ratio
         """
@@ -611,7 +628,7 @@ class LDAPObject:
                 float(self._cache_hits+self._cache_misses)
             )
         except ZeroDivisionError:
-            return None
+            return 0.0
 
     def flush_cache(self):
         """
@@ -656,7 +673,7 @@ class LDAPObject:
             timeout=-1,
             sizelimit=0,
             cache_ttl=None,
-        ):
+        ) -> List[LDAPResult]:
         if cache_ttl is None:
             cache_ttl = self.cache_ttl
         current_time = time.time()
@@ -755,7 +772,7 @@ class LDAPObject:
     def start_tls_s(self):
         return self._ldap_call(self._l.start_tls_s)
 
-    def unbind(self, req_ctrls=None):
+    def unbind(self, req_ctrls=None) -> int:
         res = self._ldap_call(
             self._l.unbind_ext,
             encode_request_ctrls(req_ctrls),
@@ -773,7 +790,7 @@ class LDAPObject:
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         return res
 
-    def whoami_s(self, req_ctrls=None):
+    def whoami_s(self, req_ctrls=None) -> str:
         wai = self.extop_s(
             WhoAmIRequest(),
             extop_resp_class=WhoAmIResponse,
@@ -850,11 +867,11 @@ class LDAPObject:
             return None
         return subschemasubentry.entry_s
 
-    def refresh(self, dn, ttl=None):
+    def refresh(self, dn: str, ttl=None) -> int:
         self.uncache(dn)
         return self.extop(RefreshRequest(entryName=dn, requestTtl=ttl))
 
-    def refresh_s(self, dn, ttl=None):
+    def refresh_s(self, dn: str, ttl=None):
         self.uncache(dn)
         msgid = self.refresh(dn, ttl=ttl)
         res = self.extop_result(msgid, extop_resp_class=RefreshResponse)
@@ -907,12 +924,12 @@ class LDAPObject:
         )
         return ldap_rootdse  # read_rootdse_s()
 
-    def get_naming_contexts(self):
+    def get_naming_contexts(self) -> List[str]:
         return self.read_rootdse_s(
             attrlist=['namingContexts']
-        ).get('namingContexts', [])
+        ).entry_s.get('namingContexts', [])
 
-    def get_whoami_dn(self):
+    def get_whoami_dn(self) -> str:
         if self._whoami_dn is None:
             wai = self.whoami_s()
             if wai == '':
