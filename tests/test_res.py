@@ -94,11 +94,15 @@ class Test004LDAPResult(unittest.TestCase):
     def test001_simple(self):
         r = LDAPResult(None, None, None, None)
         self.assertEqual(r.rtype, None)
-        self.assertEqual(r.rdata, None)
+        self.assertEqual(r.rdata, [])
         self.assertEqual(r.msgid, None)
-        self.assertEqual(r.ctrls, None)
+        self.assertEqual(r.ctrls, [])
 
     def test002_repr(self):
+        self.assertEqual(
+            repr(LDAPResult(None, None, None, None)),
+            'LDAPResult(None, [], None, [])',
+        )
         self.assertEqual(
             repr(LDAPResult(None, [], None, [])),
             'LDAPResult(None, [], None, [])',

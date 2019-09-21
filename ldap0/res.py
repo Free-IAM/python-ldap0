@@ -3,9 +3,12 @@
 ldap0.res - basic classes for LDAP results
 """
 
+from typing import List, Union
+
 from .dn import DNObj
 from .base import decode_list
 from .ldapurl import LDAPUrl
+from .typehints import EntryBytes, EntryMixed, EntryStr
 
 
 __all__ = [
@@ -20,13 +23,13 @@ class SearchReference:
     LDAP search continuation objects
     """
 
-    def __init__(self, entry, ctrls=None, encoding='utf-8'):
+    def __init__(self, entry: List[bytes], ctrls=None, encoding: str = 'utf-8'):
         self.encoding = encoding
         self._ref_urls_b = entry
         self._ref_urls_s = self._ref_urls_o = None
         self.ctrls = ctrls
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%s(%r, %r, encoding=%r)' % (
             self.__class__.__name__,
             self._ref_urls_b,
@@ -35,13 +38,13 @@ class SearchReference:
         )
 
     @property
-    def ref_url_strings(self):
+    def ref_url_strings(self) -> List[str]:
         if self._ref_urls_s is None:
             self._ref_urls_s = decode_list(self._ref_urls_b, encoding=self.encoding)
         return self._ref_urls_s
 
     @property
-    def ref_ldap_urls(self):
+    def ref_ldap_urls(self) -> List[LDAPUrl]:
         if self._ref_urls_o is None:
             self._ref_urls_o = [LDAPUrl(url) for url in self.ref_url_strings]
         return self._ref_urls_o
@@ -52,15 +55,15 @@ class SearchResultEntry:
     LDAP search result objects
     """
 
-    def __init__(self, dn, entry, ctrls=None, encoding='utf-8'):
+    def __init__(self, dn: bytes, entry: EntryBytes, ctrls=None, encoding: str = 'utf-8'):
         self.encoding = encoding
         self.dn_b = dn
         self._dn_s = self._dn_o = None
         self._entry_b = entry
         self._entry_as = self._entry_s = None
-        self.ctrls = ctrls
+        self.ctrls = ctrls or []
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%s(%r, %r, %r, encoding=%r)' % (
             self.__class__.__name__,
             self.dn_b,
@@ -89,22 +92,22 @@ class SearchResultEntry:
         return self._dn_o
 
     @property
-    def entry_b(self):
+    def entry_b(self) -> EntryBytes:
         return self._entry_b
 
     @property
-    def entry_as(self):
+    def entry_as(self) -> EntryMixed:
         if self._entry_as is None:
-            self._entry_as =  {
+            self._entry_as: EntryMixed =  {
                 at.decode('ascii'): avs
                 for at, avs in self._entry_b.items()
             }
         return self._entry_as
 
     @property
-    def entry_s(self):
+    def entry_s(self) -> EntryStr:
         if self._entry_s is None:
-            self._entry_s =  {
+            self._entry_s: EntryStr =  {
                 at.decode('ascii'): [av.decode(self.encoding) for av in avs]
                 for at, avs in self._entry_b.items()
             }
@@ -116,20 +119,17 @@ class LDAPResult:
     base class for LDAP result objects
     """
     
-    def __init__(self, rtype, rdata, msgid, ctrls, encoding='utf-8'):
-        if rdata is None:
-            data = None
-        else:
-            data = []
-            for dn, entry, ctrls in rdata:
-                if dn is None:                    
-                    data.append(SearchReference(entry, ctrls, encoding=encoding))
-                else:
-                    data.append(SearchResultEntry(dn, entry, ctrls, encoding=encoding))
+    def __init__(self, rtype: int, rdata, msgid: int, ctrls, encoding: str = 'utf-8'):
+        data: List[Union[SearchReference, SearchResultEntry]] = []
+        for dn, entry, ctrls in rdata or []:
+            if dn is None:                    
+                data.append(SearchReference(entry, ctrls, encoding=encoding))
+            else:
+                data.append(SearchResultEntry(dn, entry, ctrls, encoding=encoding))
         self.rtype = rtype
         self.rdata = data
         self.msgid = msgid
-        self.ctrls = ctrls
+        self.ctrls = ctrls or []
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%s(%r, %r, %r, %r)' % (self.__class__.__name__, self.rtype, self.rdata, self.msgid, self.ctrls)
