@@ -557,7 +557,7 @@ class LDAPObject:
     def results(
             self,
             msgid: int,
-            timeout: Union[int, float]=-1,
+            timeout: Union[int, float] = -1,
             add_intermediates: bool = False,
             resp_ctrl_classes=None,
         ):
