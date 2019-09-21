@@ -117,8 +117,12 @@ def modify_modlist(
     assert isinstance(sub_schema, subentry.SubSchema), TypeError(
         'Expected sub_schema to be instance of SubSchema, got %r' % (sub_schema,)
     )
-    assert isinstance(old_entry, models.Entry), TypeError('Expected old_entry to be instance of models.Entry, got %r' % (old_entry,))
-    assert isinstance(new_entry, models.Entry), TypeError('Expected new_entry to be instance of models.Entry, got %r' % (new_entry,))
+    assert isinstance(old_entry, models.Entry), TypeError(
+        'Expected old_entry to be instance of models.Entry, got %r' % (old_entry,)
+    )
+    assert isinstance(new_entry, models.Entry), TypeError(
+        'Expected new_entry to be instance of models.Entry, got %r' % (new_entry,)
+    )
 
     if isinstance(ignore_attr_types, SchemaElementOIDSet):
         ignore_attr_type_set = ignore_attr_types
