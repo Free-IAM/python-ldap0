@@ -108,7 +108,7 @@ class SearchResultEntry:
     @property
     def entry_as(self) -> EntryMixed:
         if self._entry_as is None:
-            self._entry_as: EntryMixed =  {
+            self._entry_as: EntryMixed = {
                 at.decode('ascii'): avs
                 for at, avs in self._entry_b.items()
             }
@@ -117,7 +117,7 @@ class SearchResultEntry:
     @property
     def entry_s(self) -> EntryStr:
         if self._entry_s is None:
-            self._entry_s: EntryStr =  {
+            self._entry_s: EntryStr = {
                 at.decode('ascii'): [av.decode(self.encoding) for av in avs]
                 for at, avs in self._entry_b.items()
             }

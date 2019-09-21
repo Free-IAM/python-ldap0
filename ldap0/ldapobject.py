@@ -579,7 +579,7 @@ class LDAPObject:
         if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
             raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
         start_time = time.time()
-        if timeout >=0:
+        if timeout >= 0:
             end_time = start_time + timeout
         while timeout < 0 or time.time() <= end_time:
             try:
