@@ -3,6 +3,8 @@
 ldap0.ldapurl - handling of LDAP URLs as described in RFC 4516
 """
 
+from typing import List, Optional
+
 from urllib.parse import (
     quote as url_quote,
     unquote as url_unquote,
@@ -85,13 +87,16 @@ class LDAPUrlExtension:
       exvalue
             Value of extension
     """
+    critical: bool
+    extype: Optional[str]
+    exvalue: Optional[str]
 
     def __init__(
             self,
-            extensionStr=None,
-            critical=0,
-            extype=None,
-            exvalue=None
+            extensionStr: Optional[str] = None,
+            critical: bool = False,
+            extype: Optional[str] = None,
+            exvalue: Optional[str] = None
         ):
         self.critical = critical
         self.extype = extype
@@ -99,7 +104,7 @@ class LDAPUrlExtension:
         if extensionStr:
             self._parse(extensionStr)
 
-    def _parse(self, extension):
+    def _parse(self, extension: str):
         extension = extension.strip()
         if not extension:
             # Don't parse empty strings
@@ -117,7 +122,7 @@ class LDAPUrlExtension:
             self.exvalue = url_unquote(self.exvalue.strip(), encoding='utf-8')
         self.extype = self.extype.strip()
 
-    def unparse(self):
+    def unparse(self) -> str:
         """
         generate string representation of single LDAP URL extension
         """
@@ -129,10 +134,10 @@ class LDAPUrlExtension:
             escape_str(self.exvalue or ''),
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.unparse()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<%s.%s instance at %s: %s>' % (
             self.__class__.__module__,
             self.__class__.__name__,
@@ -140,13 +145,13 @@ class LDAPUrlExtension:
             self.__dict__
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return \
             (self.critical == other.critical) and \
             (self.extype == other.extype) and \
             (self.exvalue == other.exvalue)
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return not self.__eq__(other)
 
 
@@ -156,12 +161,12 @@ class LDAPUrlExtensions(UserDict):
     dictionary type
     """
 
-    def __init__(self, default=None):
+    def __init__(self, default: Optional[LDAPUrlExtension] = None):
         UserDict.__init__(self)
         for key, val in (default or {}).items():
             self[key] = val
 
-    def __setitem__(self, name, value):
+    def __setitem__(self, name: str, value: LDAPUrlExtension):
         """
         value
             Either LDAPUrlExtension instance, (critical,exvalue)
@@ -177,10 +182,10 @@ class LDAPUrlExtensions(UserDict):
             for key in self.keys()
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return ','.join(map(str, self.values()))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<%s.%s instance at %s: %s>' % (
             self.__class__.__module__,
             self.__class__.__name__,
@@ -188,7 +193,7 @@ class LDAPUrlExtensions(UserDict):
             self.data
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         assert isinstance(other, self.__class__), TypeError(
             "other has to be instance of %s" % (self.__class__)
         )
@@ -203,7 +208,7 @@ class LDAPUrlExtensions(UserDict):
                 ext = LDAPUrlExtension(extension_str)
                 self[ext.extype] = ext
 
-    def unparse(self):
+    def unparse(self) -> str:
         """
         return comma-separated string representation of LDAP URL extensions
         """
@@ -244,13 +249,20 @@ class LDAPUrl:
         'pwd_filename': 'x-pwdfilename',
         'sasl_mech': 'x-saslmech',
     }
+    urlscheme: Optional[str]
+    hostport: Optional[str]
+    dn: Optional[str]
+    attrs: Optional[List[str]]
+    scope: Optional[int]
+    filterstr: Optional[str]
+    extensions: Optional[LDAPUrlExtensions]
 
     def __init__(
             self,
-            ldapUrl=None,
-            urlscheme='ldap',
-            hostport='',
-            dn='',
+            ldapUrl: Optional[str] = None,
+            urlscheme: str = 'ldap',
+            hostport: str = '',
+            dn: str = '',
             attrs=None,
             scope=None,
             filterstr=None,
@@ -264,7 +276,7 @@ class LDAPUrl:
         self.attrs = attrs
         self.scope = scope
         self.filterstr = filterstr
-        self.extensions = (extensions or LDAPUrlExtensions({}))
+        self.extensions = (extensions or LDAPUrlExtensions())
         if ldapUrl != None:
             self._parse(ldapUrl)
         if who != None:
@@ -272,7 +284,7 @@ class LDAPUrl:
         if cred != None:
             self.cred = cred
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return \
             self.urlscheme == other.urlscheme and \
             self.hostport == other.hostport and \
@@ -282,7 +294,7 @@ class LDAPUrl:
             self.filterstr == other.filterstr and \
             self.extensions == other.extensions
 
-    def __ne__(self, other):
+    def __ne__(self, other) -> bool:
         return not self.__eq__(other)
 
     def _parse(self, ldap_url):
@@ -342,7 +354,7 @@ class LDAPUrl:
                 self.extensions = None
         return
 
-    def connect_uri(self):
+    def connect_uri(self) -> str:
         """
         Returns LDAP URL suitable to be passed to
         ldap0.ldapobject.LDAPObject()
@@ -354,7 +366,7 @@ class LDAPUrl:
             hostport = self.hostport
         return '%s://%s' % (self.urlscheme, hostport)
 
-    def unparse(self):
+    def unparse(self) -> str:
         """
         Returns LDAP URL depending on class attributes set.
         """
@@ -390,7 +402,7 @@ class LDAPUrl:
             urlPrefix='',
             hrefText=None,
             hrefTarget=None
-        ):
+        ) -> str:
         """
         Returns a string with HTML link for this LDAP URL.
 
@@ -417,10 +429,10 @@ class LDAPUrl:
             hrefText,
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.unparse()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%s.%s(%r)' % (
             self.__class__.__module__,
             self.__class__.__name__,
