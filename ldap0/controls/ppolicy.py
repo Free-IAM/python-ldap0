@@ -74,7 +74,7 @@ class PasswordPolicyControl(ValueLessRequestControl, ResponseControl):
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(self, criticality=criticality)
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         self.timeBeforeExpiration = None
         self.graceAuthNsRemaining = None
         self.error = None

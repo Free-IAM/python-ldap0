@@ -147,7 +147,7 @@ class SyncStateControl(ResponseControl):
     controlType = '1.3.6.1.4.1.4203.1.9.1.2'
     opnames = ('present', 'add', 'modify', 'delete')
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         d = decoder.decode(encodedControlValue, asn1Spec=SyncStateValue())
         state = d[0].getComponentByName('state')
         uuid = UUID(bytes=bytes(d[0].getComponentByName('entryUUID')))
@@ -187,7 +187,7 @@ class SyncDoneControl(ResponseControl):
     """
     controlType = '1.3.6.1.4.1.4203.1.9.1.3'
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         d = decoder.decode(encodedControlValue, asn1Spec=SyncDoneValue())
         cookie = d[0].getComponentByName('cookie')
         if cookie.hasValue():

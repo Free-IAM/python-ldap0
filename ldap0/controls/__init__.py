@@ -89,7 +89,7 @@ class ResponseControl:
             self.controlType = controlType
         self.criticality = criticality
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         """
         decodes the BER-encoded ASN.1 control value and sets the appropriate
         class attributes

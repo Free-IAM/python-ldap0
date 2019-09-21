@@ -126,7 +126,7 @@ class VLVResponseControl(ResponseControl):
     def __init__(self, criticality=False):
         ResponseControl.__init__(self, self.controlType, criticality)
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         drv, rest = decoder.decode(
             encodedControlValue,
             asn1Spec=VirtualListViewResponseType(),

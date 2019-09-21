@@ -139,7 +139,7 @@ class EntryChangeNotificationControl(ResponseControl):
     """
     controlType = '2.16.840.1.113730.3.4.7'
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         ecncValue, _ = decoder.decode(
             encodedControlValue,
             asn1Spec=EntryChangeNotificationValue(),

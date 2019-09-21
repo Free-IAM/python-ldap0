@@ -54,7 +54,7 @@ class ReadEntryControl(LDAPControl):
             attributeSelection.setComponentByPosition(ind, self.attrList[ind])
         return encoder.encode(attributeSelection)
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         try:
             decodedEntry, _ = decoder.decode(
                 encodedControlValue,

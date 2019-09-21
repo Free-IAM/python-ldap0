@@ -27,7 +27,7 @@ class SearchNoOpControl(ValueLessRequestControl, ResponseControl):
     class SearchNoOpControlValue(univ.Sequence):
         pass
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         decodedValue, _ = decoder.decode(
             encodedControlValue,
             asn1Spec=self.SearchNoOpControlValue(),

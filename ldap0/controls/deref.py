@@ -90,7 +90,7 @@ class DereferenceControl(LDAPControl):
     def encode(self):
         return encoder.encode(self._deref_specs())
 
-    def decode(self, encodedControlValue):
+    def decode(self, encodedControlValue: bytes):
         decoded_value, _ = decoder.decode(
             encodedControlValue,
             asn1Spec=DerefResultControlValue()
