@@ -433,8 +433,8 @@ class LDAPObject:
             extop_response = ExtendedResponse(respoid, respvalue)
         else:
             if not extop_resp_class.check_resp_name(
-                None if respoid is None else respoid.decode('ascii')
-            ):
+                    None if respoid is None else respoid.decode('ascii')
+                ):
                 raise _libldap0.PROTOCOL_ERROR(
                     "Wrong OID in extended response! Expected %s, got %s" % (
                         extop_resp_class.responseName,

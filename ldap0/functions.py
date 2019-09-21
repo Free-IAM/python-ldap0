@@ -23,7 +23,7 @@ from .__about__ import __version__, __author__, __license__
 import _libldap0
 if _libldap0.__version__.decode('ascii') != __version__:
     raise ImportError(
-    'ldap0 %s and _libldap0 %s version mismatch!' % (
+        'ldap0 %s and _libldap0 %s version mismatch!' % (
             __version__,
             _libldap0.__version__,
         )

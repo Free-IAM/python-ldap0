@@ -17,7 +17,7 @@ from .functions import strf_secs, strp_secs
 import _libldap0
 if _libldap0.__version__.decode('ascii') != __version__:
     raise ImportError(
-    'ldap0 %s and _libldap0 %s version mismatch!' % (
+        'ldap0 %s and _libldap0 %s version mismatch!' % (
             __version__,
             _libldap0.__version__,
         )
