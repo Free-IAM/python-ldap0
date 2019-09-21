@@ -33,8 +33,8 @@ from _libldap0 import LDAPError
 from .lock import LDAPLock
 import ldap0
 
-global _libldap0_module_lock
-_libldap0_module_lock = LDAPLock(desc='Module lock', trace_level=ldap0._trace_level)
+global _LIBLDAP0_MODULE_LOCK
+_LIBLDAP0_MODULE_LOCK = LDAPLock(desc='Module lock', trace_level=ldap0._trace_level)
 
 
 def _libldap0_function_call(func, *args, **kwargs):
@@ -53,7 +53,7 @@ def _libldap0_function_call(func, *args, **kwargs):
             pprint.pformat((args, kwargs)),
             exc_info=(ldap0._trace_level >= 9),
         )
-    _libldap0_module_lock.acquire()
+    _LIBLDAP0_MODULE_LOCK.acquire()
     try: # finally
         try: # error / result logging
             result = func(*args, **kwargs)
@@ -65,7 +65,7 @@ def _libldap0_function_call(func, *args, **kwargs):
             if __debug__ and ldap0._trace_level >= 2:
                 result_log_msg = pprint.pformat(result)
     finally:
-        _libldap0_module_lock.release()
+        _LIBLDAP0_MODULE_LOCK.release()
     if __debug__ and ldap0._trace_level >= 2:
         logging.debug('-> %s', result_log_msg)
     return result # end of _libldap0_function_call()
