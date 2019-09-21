@@ -601,9 +601,11 @@ class SubSchema:
         dit_struct_ruleids = {}
         for dit_struct_rule_obj in self.sed[DITStructureRule].values():
             name_form_obj = self.get_obj(NameForm, dit_struct_rule_obj.form)
-            if name_form_obj != None and \
-               (name_form_obj.oid in name_form_identifiers) and \
-               (self.get_oid(ObjectClass, name_form_obj.oc) == structural_object_class_oid):
+            if (
+                    name_form_obj is not None
+                    and (name_form_obj.oid in name_form_identifiers)
+                    and (self.get_oid(ObjectClass, name_form_obj.oc) == structural_object_class_oid)
+                ):
                 dit_struct_ruleids[dit_struct_rule_obj.ruleid] = dit_struct_rule_obj
         return dit_struct_ruleids.keys() # get_possible_dit_structure_rules()
 

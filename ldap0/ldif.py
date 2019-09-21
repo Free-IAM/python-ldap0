@@ -338,7 +338,7 @@ class LDIFParser:
             return
 
         # Loop for processing whole records
-        while key != None and \
+        while key is not None and \
               (max_entries is None or self.records_read < max_entries):
             # Consume first line which must start with "dn: "
             if key != b'dn':
@@ -363,7 +363,7 @@ class LDIFParser:
             key, val = next_key_and_value()
 
             # Loop for reading the attributes
-            while key != None:
+            while key is not None:
                 # Add the attribute to the entry if not ignored attribute
                 if not key.lower() in self._ignored_attr_types:
                     try:
@@ -406,7 +406,7 @@ class LDIFParser:
             key, val = self._consume_empty_lines()
 
         # Loop for processing whole records
-        while key != None and \
+        while key is not None and \
               (max_entries is None or self.records_read < max_entries):
             # Consume first line which must start with "dn: "
             if key != b'dn':
@@ -430,7 +430,7 @@ class LDIFParser:
             key, val = next_key_and_value()
             # Read "control:" lines
             controls = []
-            while key != None and key == b'control':
+            while key is not None and key == b'control':
                 try:
                     control_type, criticality, control_value = val.split(' ', 2)
                 except ValueError:
@@ -453,7 +453,7 @@ class LDIFParser:
                 modops = []
                 try:
                     # Loop for reading the list of modifications
-                    while key != None:
+                    while key is not None:
                         # Extract attribute mod-operation (add, delete, replace)
                         try:
                             modop = MOD_OP_INTEGER[key]
@@ -486,7 +486,7 @@ class LDIFParser:
                     yield (dn, modops, controls)
             else:
                 # Consume the unhandled change record
-                while key != None:
+                while key is not None:
                     key, val = next_key_and_value()
 
             # Consume empty separator line(s)

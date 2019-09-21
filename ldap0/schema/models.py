@@ -173,9 +173,9 @@ class ObjectClass(SchemaElement):
         self.may = d['MAY']
         # Default is STRUCTURAL, see RFC 4512
         self.kind = 0
-        if d['ABSTRACT'] != None:
+        if d['ABSTRACT'] is not None:
             self.kind = 1
-        elif d['AUXILIARY'] != None:
+        elif d['AUXILIARY'] is not None:
             self.kind = 2
         if self.kind == 0 and not d['SUP'] and self.oid != '2.5.6.0':
             # STRUCTURAL object classes are sub-classes of 'top' by default

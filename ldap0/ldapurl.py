@@ -277,11 +277,11 @@ class LDAPUrl:
         self.scope = scope
         self.filterstr = filterstr
         self.extensions = (extensions or LDAPUrlExtensions())
-        if ldapUrl != None:
+        if ldapUrl is not None:
             self._parse(ldapUrl)
-        if who != None:
+        if who is not None:
             self.who = who
-        if cred != None:
+        if cred is not None:
             self.cred = cred
 
     def __eq__(self, other) -> bool:
@@ -461,7 +461,7 @@ class LDAPUrl:
             if value is None:
                 # A value of None means that extension is deleted
                 delattr(self, name)
-            elif value != None:
+            elif value is not None:
                 # Add appropriate extension
                 self.extensions[extype] = LDAPUrlExtension(
                     extype=extype,
