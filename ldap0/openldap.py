@@ -3,6 +3,8 @@
 ldap0.openldap -- OpenLDAP-specific stuff
 """
 
+from typing import Optional, Set
+
 from .__about__ import __version__, __author__, __license__
 from .ldapurl import LDAPUrl
 from .ldapurl import SEARCH_SCOPE as LDAPURL_SEARCH_SCOPE
@@ -76,8 +78,46 @@ class SyncReplDesc:
         'bindmethod': str.lower,
         'saslmech': str.upper,
     }
+    attrs: Optional[Set[str]]
+    attrsonly: Optional[str]
+    authcid: Optional[str]
+    authzid: Optional[str]
+    binddn: Optional[str]
+    bindmethod: Optional[str]
+    credentials: Optional[str]
+    exattrs: Optional[Set[str]]
+    filter: Optional[str]
+    interval: Optional[str]
+    keepalive: Optional[str]
+    logbase: Optional[str]
+    logfilter: Optional[str]
+    network_timeout: Optional[int]
+    provider: Optional[str]
+    realm: Optional[str]
+    retry: Optional[str]
+    rid: Optional[str]
+    saslmech: Optional[str]
+    schemachecking: Optional[str]
+    scope: Optional[int]
+    searchbase: Optional[str]
+    secprops: Optional[str]
+    sizelimit: Optional[int]
+    starttls: Optional[str]
+    suffixmassage: Optional[str]
+    syncdata: Optional[str]
+    timelimit: Optional[int]
+    timeout: Optional[int]
+    tls_cacert: Optional[str]
+    tls_cacertdir: Optional[str]
+    tls_cert: Optional[str]
+    tls_cipher_suite: Optional[str]
+    tls_crlcheck: Optional[str]
+    tls_key: Optional[str]
+    tls_reqcert: Optional[str]
+    tls_protocol_min: Optional[str]
+    type: Optional[str]
 
-    def __init__(self, syncrepl_statement):
+    def __init__(self, syncrepl_statement: str):
         """
         syncrepl_statement
            syncrepl statement without any line breaks
@@ -115,10 +155,10 @@ class SyncReplDesc:
         if self.scope is not None:
             self.scope = LDAPURL_SEARCH_SCOPE[self.scope]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%s(rid=%s)' % (self.__class__.__name__, self.rid)
 
-    def ldap_url(self):
+    def ldap_url(self) -> LDAPUrl:
         """
         Return ldapurl.LDAPUrl object representing some syncrepl parameters
         as close as possible.
