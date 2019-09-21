@@ -4,6 +4,7 @@ ldap0.sasl - support for SASL mechanism
 """
 
 import logging
+from typing import Dict
 
 from .__about__ import __version__, __author__, __license__
 
@@ -47,7 +48,7 @@ class SaslAuth:
     """
     encoding = 'utf-8'
 
-    def __init__(self, cb_value_dict, trace_level=0):
+    def __init__(self, cb_value_dict: Dict[int, bytes], trace_level: int = 0):
         self.cb_value_dict = {}
         for key, val in (cb_value_dict or {}).items():
             assert isinstance(val, bytes), TypeError(
@@ -56,7 +57,7 @@ class SaslAuth:
             self.cb_value_dict[key] = val
         self._trace_level = trace_level
 
-    def callback(self, cb_id, challenge, prompt, defresult):
+    def callback(self, cb_id: int, challenge, prompt, defresult) -> bytes:
         """
         callback method invoked by SASL lib
         """
@@ -79,10 +80,10 @@ class SaslPasswordAuth(SaslAuth):
 
     def __init__(
             self,
-            authc_id,
-            password,
-            authz_id='',
-            trace_level=0,
+            authc_id: str,
+            password: bytes,
+            authz_id: str = '',
+            trace_level: int = 0,
         ):
         SaslAuth.__init__(
             self,
@@ -103,8 +104,8 @@ class SaslNoninteractiveAuth(SaslAuth):
 
     def __init__(
             self,
-            authz_id=b'',
-            trace_level=0,
+            authz_id: str = '',
+            trace_level: int = 0,
         ):
         SaslAuth.__init__(
             self,
