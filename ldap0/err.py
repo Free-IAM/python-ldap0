@@ -45,7 +45,6 @@ class PasswordPolicyChangeAfterReset(PasswordPolicyException):
     """
     Exception class for password change after reset warning
     """
-    pass
 
 
 class PasswordPolicyExpirationWarning(PasswordPolicyException):

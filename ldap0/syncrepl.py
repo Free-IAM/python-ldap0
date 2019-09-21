@@ -491,13 +491,11 @@ class SyncreplConsumer:
         """
         Called by syncrepl_poll() to store a new cookie provided by the server.
         """
-        pass
 
     def syncrepl_get_cookie(self):
         """
         Called by syncrepl_search() to retreive the cookie stored by syncrepl_set_cookie()
         """
-        pass
 
     def syncrepl_present(self, uuids, refreshDeletes=False):
         """
@@ -517,7 +515,6 @@ class SyncreplConsumer:
         syncrepl_present() should reset the list of recorded uuids, without
         deleting any entries.
         """
-        pass
 
     def syncrepl_delete(self, uuids):
         """
@@ -525,7 +522,6 @@ class SyncreplConsumer:
         of UUIDs of the entries to be deleted is given in the
         uuids parameter.
         """
-        pass
 
     def syncrepl_entry(self, dn, attrs, uuid):
         """
@@ -535,7 +531,6 @@ class SyncreplConsumer:
         any future modification (including dn modification), deletion,
         and presentation operations.
         """
-        pass
 
     def syncrepl_refreshdone(self):
         """
@@ -544,4 +539,3 @@ class SyncreplConsumer:
         It indicates that initial synchronization is done and persist phase
         follows.
         """
-        pass
