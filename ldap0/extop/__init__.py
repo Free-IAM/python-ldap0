@@ -24,7 +24,11 @@ class ExtendedRequest:
         self.requestValue = requestValue
 
     def __repr__(self):
-        return '%s(requestName=%r, requestValue=%r)' % (self.__class__.__name__, self.requestName, self.requestValue)
+        return '%s(requestName=%r, requestValue=%r)' % (
+            self.__class__.__name__,
+            self.requestName,
+            self.requestValue,
+        )
 
     def encode(self):
         """
@@ -55,7 +59,11 @@ class ExtendedResponse:
             self.decode(encodedResponseValue)
 
     def __repr__(self):
-        return '%s(responseName=%r, responseValue=%r)' % (self.__class__.__name__, self.responseName, self.responseValue)
+        return '%s(responseName=%r, responseValue=%r)' % (
+            self.__class__.__name__,
+            self.responseName,
+            self.responseValue,
+        )
 
     @classmethod
     def check_resp_name(cls, name):

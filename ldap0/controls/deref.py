@@ -80,8 +80,14 @@ class DereferenceControl(LDAPControl):
             deref_spec = DerefSpec()
             deref_attributes = AttributeList()
             for j, deref_attribute_name in enumerate(deref_attribute_names):
-                deref_attributes.setComponentByPosition(j, deref_attribute_name.encode(self.encoding))
-            deref_spec.setComponentByName('derefAttr', AttributeDescription(deref_attr.encode(self.encoding)))
+                deref_attributes.setComponentByPosition(
+                    j,
+                    deref_attribute_name.encode(self.encoding)
+                )
+            deref_spec.setComponentByName(
+                'derefAttr',
+                AttributeDescription(deref_attr.encode(self.encoding))
+            )
             deref_spec.setComponentByName('attributes', deref_attributes)
             deref_specs.setComponentByPosition(i, deref_spec)
             i += 1

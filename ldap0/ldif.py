@@ -107,8 +107,12 @@ class LDIFWriter:
         attr_value
               attribute value
         """
-        assert isinstance(attr_type, bytes), TypeError('Expected bytes for attr_type, got %r' % (attr_type,))
-        assert isinstance(attr_value, bytes), TypeError('Expected bytes for attr_value, got %r' % (attr_value,))
+        assert isinstance(attr_type, bytes), TypeError(
+            'Expected bytes for attr_type, got %r' % (attr_type,)
+        )
+        assert isinstance(attr_value, bytes), TypeError(
+            'Expected bytes for attr_value, got %r' % (attr_value,)
+        )
         if self._needs_base64_encoding(attr_type, attr_value):
             # Encode with base64
             aval = b2a_base64(attr_value, newline=False)
@@ -220,7 +224,9 @@ class LDIFParser:
 
     @classmethod
     def frombuf(cls, ldif_bytes, **kwargs):
-        assert isinstance(ldif_bytes, bytes), TypeError('Expected bytes for ldif_bytes, got %r' % (ldif_bytes,))
+        assert isinstance(ldif_bytes, bytes), TypeError(
+            'Expected bytes for ldif_bytes, got %r' % (ldif_bytes,)
+        )
         return cls(BytesIO(ldif_bytes), **kwargs)
 
     def _readline(self):
