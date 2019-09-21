@@ -47,7 +47,11 @@ __all__ = [
     'ReconnectLDAPObject',
 ]
 
-NO_FINAL_RESULT_TYPES = {_libldap0.RES_SEARCH_ENTRY, _libldap0.RES_SEARCH_REFERENCE, _libldap0.RES_INTERMEDIATE}
+NO_FINAL_RESULT_TYPES = {
+    _libldap0.RES_SEARCH_ENTRY,
+    _libldap0.RES_SEARCH_REFERENCE,
+    _libldap0.RES_INTERMEDIATE,
+}
 
 #-----------------------------------------------------------------------
 # the real connection classes
@@ -249,7 +253,9 @@ class LDAPObject:
         try:
             msgid = self.cancel(cancelid, req_ctrls=req_ctrls)
             res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
-            assert res.rtype == _libldap0.RES_EXTENDED, ValueError('Wrong result type %d' % (res.rtype,))
+            assert res.rtype == _libldap0.RES_EXTENDED, ValueError(
+                'Wrong result type %d' % (res.rtype,)
+            )
             return res
         except _libldap0.CANCELLED:
             pass
@@ -268,7 +274,9 @@ class LDAPObject:
     def add_s(self, dn: str, entry, req_ctrls=None) -> LDAPResult:
         msgid = self.add(dn, entry, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
-        assert res.rtype == _libldap0.RES_ADD, ValueError('Wrong result type %d' % (res.rtype,))
+        assert res.rtype == _libldap0.RES_ADD, ValueError(
+            'Wrong result type %d' % (res.rtype,)
+        )
         return res
 
     def simple_bind(self, who='', cred=b'', req_ctrls=None) -> int:
@@ -541,7 +549,9 @@ class LDAPObject:
             add_intermediates,
             False
         )
-        assert res_msgid == msgid, ValueError('Expected LDAP result with msgid %d, got %d' % (msgid, res_msgid))
+        assert res_msgid == msgid, ValueError(
+            'Expected LDAP result with msgid %d, got %d' % (msgid, res_msgid)
+        )
         if res_type not in NO_FINAL_RESULT_TYPES:
             del self._outstanding_requests[res_msgid]
         return LDAPResult(
@@ -600,8 +610,12 @@ class LDAPObject:
             timeout=-1,
             sizelimit=0
         ) -> int:
-        assert isinstance(base, str), TypeError('Expected str for base, got %r' % (base,))
-        assert isinstance(filterstr, str), TypeError('Expected str for filterstr, got %r' % (filterstr,))
+        assert isinstance(base, str), TypeError(
+            'Expected str for base, got %r' % (base,)
+        )
+        assert isinstance(filterstr, str), TypeError(
+            'Expected str for filterstr, got %r' % (filterstr,)
+        )
         if attrlist is not None:
             attrlist = encode_list(attrlist, encoding='ascii')
         else:
@@ -652,7 +666,10 @@ class LDAPObject:
                 remove_keys.add(cache_key_args)
             else:
                 for cached_res in cached_results[1]:
-                    if isinstance(cached_res, SearchResultEntry) and cached_res.dn_s.lower() == entry_dn:
+                    if (
+                            isinstance(cached_res, SearchResultEntry)
+                            and cached_res.dn_s.lower() == entry_dn
+                        ):
                         remove_keys.add(cache_key_args)
         # finally remove items from cache dict
         for cache_key_args in remove_keys:
@@ -1074,7 +1091,10 @@ class ReconnectLDAPObject(LDAPObject):
                     )
                 try:
                     # Do the connect
-                    self._l = _libldap0_function_call(_libldap0.initialize, uri.encode(self.encoding))
+                    self._l = _libldap0_function_call(
+                        _libldap0.initialize,
+                        uri.encode(self.encoding),
+                    )
                     self._msgid_funcs = {
                         self._l.add_ext,
                         self._l.simple_bind,

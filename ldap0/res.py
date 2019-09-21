@@ -145,4 +145,10 @@ class LDAPResult:
                 self.rdata.append(SearchResultEntry(dn, entry, ctrls, encoding=encoding))
 
     def __repr__(self) -> str:
-        return '%s(%r, %r, %r, %r)' % (self.__class__.__name__, self.rtype, self.rdata, self.msgid, self.ctrls)
+        return '%s(%r, %r, %r, %r)' % (
+            self.__class__.__name__,
+            self.rtype,
+            self.rdata,
+            self.msgid,
+            self.ctrls,
+        )

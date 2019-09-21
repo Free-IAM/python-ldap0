@@ -449,7 +449,10 @@ class SlapdTestCase(unittest.TestCase):
                 schema_entries.extend(ldif_parser.parse())
         try:
             for dn, entry in schema_entries:
-                self._ldap_conn.add_s(dn.decode('utf-8'), {at.decode('ascii'): avs for at, avs in entry.items()})
+                self._ldap_conn.add_s(
+                    dn.decode('utf-8'),
+                    {at.decode('ascii'): avs for at, avs in entry.items()}
+                )
             self._ldap_conn.modify_s(
                 'cn=module{0},cn=config',
                 [(_libldap0.MOD_ADD, b'olcModuleLoad', [olc_overlay.encode('utf-8')])]

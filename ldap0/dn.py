@@ -168,7 +168,10 @@ class DNObj(tuple):
                 continue
             match_level = 0
             dn_len = len(dn_obj)
-            while match_level <= self_len and self[self_len-match_level-1] == dn_obj[dn_len-match_level-1]:
+            while (
+                    match_level <= self_len
+                    and self[self_len-match_level-1] == dn_obj[dn_len-match_level-1]
+                ):
                 match_level += 1
             if match_level > max_match_level:
                 max_match_level = match_level
