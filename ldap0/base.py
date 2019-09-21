@@ -3,6 +3,10 @@
 ldap0.base - basic classes and functions
 """
 
+from typing import List, Sequence
+
+from .typehints import BytesList, StrList, EntryBytes, EntryStr
+
 __all__ = [
     'decode_list',
     'decode_entry_dict',
@@ -11,14 +15,15 @@ __all__ = [
 ]
 
 
-def decode_list(lst, encoding='utf-8'):
+def decode_list(lst: Sequence[bytes], encoding :str = 'utf-8') -> StrList:
     """
-    decode a list containing only byte-strings with given encoding
+    decode a sequence containing only byte-strings with given encoding
+    and return a list of strings
     """
     return [item.decode(encoding) for item in lst]
 
 
-def decode_entry_dict(entry, encoding='utf-8'):
+def decode_entry_dict(entry: EntryBytes, encoding :str = 'utf-8') -> EntryStr:
     """
     decode an LDAP entry dict containing only
     byte-strings in keys and values with given encoding
@@ -29,14 +34,15 @@ def decode_entry_dict(entry, encoding='utf-8'):
     ])
 
 
-def encode_list(lst, encoding='utf-8'):
+def encode_list(lst: Sequence[str], encoding :str = 'utf-8') -> BytesList:
     """
-    encode a list containing only Unicode-strings with given encoding
+    encode a sequence containing only Unicode-strings with given encoding
+    and return a list of bytes
     """
     return [item.encode(encoding) for item in lst]
 
 
-def encode_entry_dict(entry, encoding='utf-8'):
+def encode_entry_dict(entry: EntryStr, encoding :str = 'utf-8') -> EntryBytes:
     """
     encode an LDAP entry dict containing only
     Unicode-strings in keys and values with given encoding
