@@ -3,7 +3,7 @@
 ldap0.dn - misc stuff for handling distinguished names (see RFC 4514)
 """
 
-from typing import List, Union, Sequence
+from typing import List, Union, Sequence, Tuple
 
 import _libldap0
 
@@ -60,7 +60,7 @@ class DNObj(tuple):
     """
     encoding = 'utf-8'
 
-    def __init__(self, dn_t: Sequence):
+    def __init__(self, dn_t: Sequence[Tuple[Tuple[str, str]]]):
         tuple.__init__(self)
         self = tuple(dn_t)
 
@@ -70,16 +70,14 @@ class DNObj(tuple):
         create a new DNObj instance from DN string representation
         """
         if not dn:
-            dn_t = (())
-        else:
-            dn_t = tuple([
-                tuple([
-                    (at.decode('ascii'), av.decode(cls.encoding))
-                    for at, av, _ in dn_comp
-                ])
-                for dn_comp in _libldap0_function_call(_libldap0.str2dn, dn.encode(cls.encoding), flags)
+            return cls([])
+        return cls([
+            tuple([
+                (at.decode('ascii'), av.decode(cls.encoding))
+                for at, av, _ in dn_comp
             ])
-        return cls(dn_t)
+            for dn_comp in _libldap0_function_call(_libldap0.str2dn, dn.encode(cls.encoding), flags)
+        ])
 
     @classmethod
     def from_domain(cls, domain: str):
@@ -87,7 +85,7 @@ class DNObj(tuple):
         create a new DNObj instance from dot-separated DNS domain name
         """
         domain = domain.encode('idna').decode('ascii')
-        return cls(tuple([(('dc', d),) for d in domain.split('.')]))
+        return cls([(('dc', d),) for d in domain.split('.')])
 
     def encode(self, encoding=None, errors='strict') -> bytes:
         return self.__str__().encode(encoding or self.encoding, errors=errors)
