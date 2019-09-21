@@ -91,7 +91,10 @@ class SlapdObject:
     root_cn = 'Mänager'
     root_dn = 'cn=%s,%s' % (root_cn, suffix)
     root_pw = 'password'
-    slapd_loglevel = [ v.strip() for v in os.environ.get('SLAPD_LOGLEVEL', 'stats,stats2').split(',') ]
+    slapd_loglevel = [
+        v.strip()
+        for v in os.environ.get('SLAPD_LOGLEVEL', 'stats,stats2').split(',')
+    ]
     # use SASL/EXTERNAL via LDAPI when invoking OpenLDAP CLI tools
     cli_sasl_external = True
     local_host = '127.0.0.1'
