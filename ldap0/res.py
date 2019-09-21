@@ -3,13 +3,13 @@
 ldap0.res - basic classes for LDAP results
 """
 
-from typing import List, Union
+from typing import List, Optional, Union
 
 from .dn import DNObj
 from .base import decode_list
 from .ldapurl import LDAPUrl
 from .typehints import EntryBytes, EntryMixed, EntryStr
-
+from .controls import ResponseControl
 
 __all__ = [
     'LDAPResult',
@@ -22,6 +22,9 @@ class SearchReference:
     """
     LDAP search continuation objects
     """
+
+    _ref_urls_s: Optional[List[str]]
+    _ref_urls_o: Optional[List[LDAPUrl]]
 
     def __init__(self, entry: List[bytes], ctrls=None, encoding: str = 'utf-8'):
         self.encoding = encoding
@@ -54,6 +57,13 @@ class SearchResultEntry:
     """
     LDAP search result objects
     """
+
+    dn_b: bytes
+    _dn_s: Optional[str]
+    _dn_o: Optional[DNObj]
+    _entry_b: EntryBytes
+    _entry_as: Optional[EntryMixed]
+    _entry_s: Optional[EntryStr]
 
     def __init__(self, dn: bytes, entry: EntryBytes, ctrls=None, encoding: str = 'utf-8'):
         self.encoding = encoding
@@ -118,18 +128,21 @@ class LDAPResult:
     """
     base class for LDAP result objects
     """
-    
+    rtype: int
+    rdata: List[Union[SearchReference, SearchResultEntry]]
+    msgid: int
+    ctrls: List[ResponseControl]
+
     def __init__(self, rtype: int, rdata, msgid: int, ctrls, encoding: str = 'utf-8'):
-        data: List[Union[SearchReference, SearchResultEntry]] = []
-        for dn, entry, ctrls in rdata or []:
-            if dn is None:                    
-                data.append(SearchReference(entry, ctrls, encoding=encoding))
-            else:
-                data.append(SearchResultEntry(dn, entry, ctrls, encoding=encoding))
         self.rtype = rtype
-        self.rdata = data
+        self.rdata = []
         self.msgid = msgid
         self.ctrls = ctrls or []
+        for dn, entry, ctrls in rdata or []:
+            if dn is None:
+                self.rdata.append(SearchReference(entry, ctrls, encoding=encoding))
+            else:
+                self.rdata.append(SearchResultEntry(dn, entry, ctrls, encoding=encoding))
 
     def __repr__(self) -> str:
         return '%s(%r, %r, %r, %r)' % (self.__class__.__name__, self.rtype, self.rdata, self.msgid, self.ctrls)
