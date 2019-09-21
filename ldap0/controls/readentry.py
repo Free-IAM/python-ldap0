@@ -56,12 +56,12 @@ class ReadEntryControl(LDAPControl):
 
     def decode(self, encodedControlValue):
         try:
-            decodedEntry,_ = decoder.decode(
+            decodedEntry, _ = decoder.decode(
                 encodedControlValue,
                 asn1Spec=SearchResultEntry(),
             )
         except PyAsn1Error:
-            decodedEntry,_ = decoder.decode(
+            decodedEntry, _ = decoder.decode(
                 encodedControlValue,
                 asn1Spec=OpenLDAPITS6899SearchResultEntry(),
             )
