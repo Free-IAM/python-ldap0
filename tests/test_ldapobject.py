@@ -451,7 +451,7 @@ class Test00_LDAPObject(SlapdTestCase):
             self.assertEqual(l._cache_misses, 0)
             self.assertEqual(l._cache_hits, 0)
             self.assertEqual(len(l._cache), 0)
-            self.assertEqual(l.cache_hit_ratio(), None)
+            self.assertEqual(l.cache_hit_ratio(), 0.0)
             for i in range(5):
                 ldap_res = l.search_s(new_dn, ldap0.SCOPE_BASE)[0]
                 self.assertEqual(ldap_res.dn_s, new_dn)
