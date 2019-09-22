@@ -9,12 +9,15 @@ from binascii import Error as binascii_Error
 from urllib.request import urlopen
 from urllib.parse import urlparse
 from io import BytesIO
+from collections import defaultdict
+from typing import BinaryIO, Dict, Optional, Sequence, Set, Tuple, Union
 
 import _libldap0
 from _libldap0 import MOD_ADD, MOD_DELETE, MOD_REPLACE, MOD_INCREMENT
 
 from .__about__ import __version__, __author__, __license__
 from .functions import _libldap0_function_call
+from .typehints import EntryBytes
 
 __all__ = [
     'LDIFWriter',
@@ -47,8 +50,19 @@ class LDIFWriter:
     Copy LDIF input to a file output object containing all data retrieved
     via URLs
     """
+    _output_file: BinaryIO
+    _base64_attrs: Set
+    _cols: int
+    _last_line_sep: bytes
+    records_written: int
 
-    def __init__(self, output_file, base64_attrs=None, cols=76, line_sep=b'\n'):
+    def __init__(
+            self,
+            output_file: BinaryIO,
+            base64_attrs: Optional[Sequence[bytes]] = None,
+            cols: int = 76,
+            line_sep=b'\n',
+        ):
         """
         output_file
             file object for output
@@ -67,7 +81,7 @@ class LDIFWriter:
         self._last_line_sep = line_sep
         self.records_written = 0
 
-    def _unfold_lines(self, line):
+    def _unfold_lines(self, line: bytes):
         """
         Write string line as one or more folded lines
         """
@@ -88,7 +102,7 @@ class LDIFWriter:
                 pos = pos+self._cols-1
         return # _unfold_lines()
 
-    def _needs_base64_encoding(self, attr_type, attr_value):
+    def _needs_base64_encoding(self, attr_type: bytes, attr_value: bytes) -> bool:
         """
         returns True if attr_value has to be base-64 encoded because
         of special chars or because attr_type is in self._base64_attrs
@@ -98,7 +112,7 @@ class LDIFWriter:
             SAFE_STRING_RE.search(attr_value) is not None
         )
 
-    def _unparse_attr_type_and_value(self, attr_type, attr_value):
+    def _unparse_attr_type_and_value(self, attr_type: bytes, attr_value: bytes):
         """
         Write a single attribute type/value pair
 
@@ -123,7 +137,7 @@ class LDIFWriter:
         self._unfold_lines(sep.join((attr_type, aval)))
         return # _unparseAttrTypeandValue()
 
-    def _unparse_entry_record(self, entry):
+    def _unparse_entry_record(self, entry: EntryBytes):
         """
         entry
             dictionary holding an entry
@@ -180,14 +194,25 @@ class LDIFParser:
     records_read
           Counter for records processed so far
     """
+    _input_file: BinaryIO
+    _max_entries: Optional[int]
+    _process_url_schemes: Set[bytes]
+    _ignored_attr_types: Set[bytes]
+    _last_line_sep: bytes
+    version: Optional[int]
+    line_counter: int
+    byte_counter: int
+    records_read: int
+    changetype_counter: Dict[bytes, int]
+    _last_line: Optional[bytes]
 
     def __init__(
             self,
-            input_file,
-            ignored_attr_types=None,
-            max_entries=None,
-            process_url_schemes=None,
-            line_sep=b'\n'
+            input_file: BinaryIO,
+            ignored_attr_types: Optional[Sequence[bytes]] = None,
+            max_entries: Optional[int] = None,
+            process_url_schemes: Optional[bytes] = None,
+            line_sep: bytes = b'\n'
         ):
         """
         Parameters:
@@ -207,15 +232,15 @@ class LDIFParser:
         """
         self._input_file = input_file
         self._max_entries = max_entries
-        self._process_url_schemes = set([s.lower() for s in process_url_schemes or []])
-        self._ignored_attr_types = set([a.lower() for a in ignored_attr_types or []])
+        self._process_url_schemes = {val.lower() for val in process_url_schemes or []}
+        self._ignored_attr_types = {val.lower() for val in ignored_attr_types or []}
         self._last_line_sep = line_sep
         self.version = None
         # Initialize counters
         self.line_counter = 0
         self.byte_counter = 0
         self.records_read = 0
-        self.changetype_counter = {}.fromkeys(CHANGE_TYPES, 0)
+        self.changetype_counter = defaultdict(lambda: 0)
         # Read very first line
         try:
             self._last_line = self._readline()
@@ -223,13 +248,13 @@ class LDIFParser:
             self._last_line = b''
 
     @classmethod
-    def frombuf(cls, ldif_bytes, **kwargs):
+    def frombuf(cls, ldif_bytes: bytes, **kwargs):
         assert isinstance(ldif_bytes, bytes), TypeError(
             'Expected bytes for ldif_bytes, got %r' % (ldif_bytes,)
         )
         return cls(BytesIO(ldif_bytes), **kwargs)
 
-    def _readline(self):
+    def _readline(self) -> Union[bytes, None]:
         line = self._input_file.readline()
         self.line_counter = self.line_counter + 1
         self.byte_counter = self.byte_counter + len(line)
@@ -241,7 +266,7 @@ class LDIFParser:
             return line[:-1]
         return line
 
-    def _unfold_lines(self):
+    def _unfold_lines(self) -> bytes:
         """
         Unfold several folded lines with trailing space into one line
         """
@@ -258,11 +283,12 @@ class LDIFParser:
         self._last_line = next_line
         return b''.join(unfolded_lines)
 
-    def _next_key_and_value(self):
+    def _next_key_and_value(self) -> Tuple[Union[bytes, None], Union[bytes, None]]:
         """
         Parse a single attribute type and value pair from one or
         more lines of LDIF data
         """
+        attr_value: Union[bytes, None]
         # Reading new attribute line
         unfolded_line = self._unfold_lines()
         # Ignore comments which can also be folded
@@ -295,12 +321,12 @@ class LDIFParser:
                     self._process_url_schemes and
                     urlparse(url)[0] in self._process_url_schemes
                 ):
-                attr_value = urlopen(url).read()
+                attr_value = urlopen(url.decode('utf-8')).read()
         else:
             attr_value = unfolded_line[colon_pos+1:]
         return attr_type, attr_value
 
-    def _consume_empty_lines(self):
+    def _consume_empty_lines(self) -> Tuple[Union[bytes, None], Union[bytes, None]]:
         """
         Consume empty lines until first non-empty line.
         Must only be used between full records!
