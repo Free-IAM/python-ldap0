@@ -53,7 +53,7 @@ class VLVRequestControl(RequestControl):
 
     def __init__(
             self,
-            criticality=False,
+            criticality: bool = False,
             before_count=0,
             after_count=0,
             offset=None,
@@ -75,7 +75,7 @@ class VLVRequestControl(RequestControl):
         self.greater_than_or_equal = greater_than_or_equal
         self.context_id = context_id
 
-    def encode(self):
+    def encode(self) -> bytes:
         vlv = VirtualListViewRequestType()
         vlv.setComponentByName('beforeCount', self.before_count)
         vlv.setComponentByName('afterCount', self.after_count)

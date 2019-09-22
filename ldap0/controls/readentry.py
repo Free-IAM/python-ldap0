@@ -44,11 +44,11 @@ class ReadEntryControl(LDAPControl):
         dictionary holding the LDAP entry
     """
 
-    def __init__(self, criticality=False, attrList=None):
+    def __init__(self, criticality: bool = False, attrList=None):
         LDAPControl.__init__(self, criticality=criticality)
         self.attrList = encode_list(attrList or [], encoding='ascii')
 
-    def encode(self):
+    def encode(self) -> bytes:
         attributeSelection = AttributeDescriptionList()
         for ind in range(len(self.attrList)):
             attributeSelection.setComponentByPosition(ind, self.attrList[ind])

@@ -68,7 +68,7 @@ class SessionTrackingControl(RequestControl):
         self.formatOID = formatOID
         self.sessionTrackingIdentifier = sessionTrackingIdentifier
 
-    def encode(self):
+    def encode(self) -> bytes:
         scv = self.SessionIdentifierControlValue()
         scv.setComponentByName(
             'sessionSourceIp',

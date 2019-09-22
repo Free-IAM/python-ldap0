@@ -20,11 +20,11 @@ class AssertionControl(RequestControl):
     """
     controlType = _libldap0.CONTROL_ASSERT.decode('ascii')
 
-    def __init__(self, criticality=True, filterstr='(objectClass=*)'):
+    def __init__(self, criticality: bool = True, filterstr: str = '(objectClass=*)'):
         RequestControl.__init__(self, criticality=criticality)
         self.filterstr = filterstr
 
-    def encode(self):
+    def encode(self) -> bytes:
         return _libldap0.encode_assertion_control(self.filterstr.encode(self.encoding))
 
 
@@ -38,9 +38,9 @@ class MatchedValuesControl(RequestControl):
     """
     controlType = _libldap0.CONTROL_VALUESRETURNFILTER.decode('ascii')
 
-    def __init__(self, criticality=False, filterstr='(objectClass=*)'):
+    def __init__(self, criticality: bool = False, filterstr: str = '(objectClass=*)'):
         RequestControl.__init__(self, criticality=criticality)
         self.filterstr = filterstr
 
-    def encode(self):
+    def encode(self) -> bytes:
         return _libldap0.encode_valuesreturnfilter_control(self.filterstr.encode(self.encoding))

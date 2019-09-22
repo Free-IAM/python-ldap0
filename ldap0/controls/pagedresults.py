@@ -26,12 +26,12 @@ class SimplePagedResultsControl(RequestControl, ResponseControl):
             namedtype.NamedType('cookie', LDAPString()),
         )
 
-    def __init__(self, criticality=False, size=10, cookie=''):
+    def __init__(self, criticality: bool = False, size=10, cookie=''):
         RequestControl.__init__(self, criticality=criticality)
         self.size = size
         self.cookie = cookie or b''
 
-    def encode(self):
+    def encode(self) -> bytes:
         pc = self.PagedResultsControlValue()
         pc.setComponentByName('size', univ.Integer(self.size))
         pc.setComponentByName('cookie', LDAPString(self.cookie))

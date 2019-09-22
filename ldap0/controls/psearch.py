@@ -4,6 +4,8 @@ ldap0.controls.psearch - classes for Persistent Search Control
 (see https://tools.ietf.org/html/draft-ietf-ldapext-psearch)
 """
 
+from typing import Optional
+
 # Imports from pyasn1
 from pyasn1.type import namedtype, namedval, univ, constraint
 from pyasn1.codec.ber import encoder, decoder
@@ -65,10 +67,10 @@ class PersistentSearchControl(RequestControl):
 
     def __init__(
             self,
-            criticality=True,
-            changeTypes=None,
-            changesOnly=False,
-            returnECs=True,
+            criticality: bool = True,
+            changeTypes: Optional[int] = None,
+            changesOnly: bool = False,
+            returnECs: bool = True,
         ):
         RequestControl.__init__(self, criticality=criticality)
         self.changesOnly = changesOnly
@@ -82,7 +84,7 @@ class PersistentSearchControl(RequestControl):
                 self.changeTypes = self.changeTypes|CHANGE_TYPES_INT.get(chtype, chtype)
         return
 
-    def encode(self):
+    def encode(self) -> bytes:
         pval = self.PersistentSearchControlValue()
         pval.setComponentByName('changeTypes', univ.Integer(self.changeTypes))
         pval.setComponentByName('changesOnly', univ.Boolean(self.changesOnly))

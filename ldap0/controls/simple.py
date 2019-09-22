@@ -42,7 +42,7 @@ class ValueLessRequestControl(RequestControl):
             criticality=criticality,
         )
 
-    def encode(self):
+    def encode(self) -> bytes:
         return None
 
 
@@ -54,7 +54,7 @@ class OctetStringInteger(LDAPControl):
       Integer to be sent as OctetString
     """
 
-    def __init__(self, controlType=None, criticality=False, integerValue=None):
+    def __init__(self, controlType=None, criticality: bool = False, integerValue=None):
         LDAPControl.__init__(
             self,
             controlType=controlType,
@@ -62,7 +62,7 @@ class OctetStringInteger(LDAPControl):
         )
         self.integerValue = integerValue
 
-    def encode(self):
+    def encode(self) -> bytes:
         return struct.pack('!Q', self.integerValue)
 
     def decode(self, encodedControlValue: bytes):
@@ -87,7 +87,7 @@ class BooleanControl(LDAPControl):
         b'\x01\x01\x00': 0,
     }
 
-    def __init__(self, controlType=None, criticality=False, booleanValue=False):
+    def __init__(self, controlType=None, criticality: bool = False, booleanValue=False):
         LDAPControl.__init__(
             self,
             controlType=controlType,
@@ -95,7 +95,7 @@ class BooleanControl(LDAPControl):
         )
         self.booleanValue = booleanValue
 
-    def encode(self):
+    def encode(self) -> bytes:
         return self.boolean2ber[int(self.booleanValue)]
 
     def decode(self, encodedControlValue: bytes):
@@ -142,7 +142,7 @@ class ProxyAuthzControl(RequestControl):
     """
     controlType = _libldap0.CONTROL_PROXY_AUTHZ.decode('ascii')
 
-    def __init__(self, criticality=False, authzId=''):
+    def __init__(self, criticality: bool = False, authzId=''):
         RequestControl.__init__(
             self,
             criticality=criticality,
@@ -187,7 +187,7 @@ class SubentriesControl(BooleanControl):
     """
     controlType = '1.3.6.1.4.1.4203.1.10.1'
 
-    def __init__(self, criticality=False, booleanValue=False):
+    def __init__(self, criticality: bool = False, booleanValue=False):
         BooleanControl.__init__(
             self,
             controlType=None,

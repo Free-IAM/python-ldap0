@@ -61,7 +61,7 @@ class SSSRequestControl(RequestControl):
 
     def __init__(
             self,
-            criticality=False,
+            criticality: bool = False,
             ordering_rules=None,
         ):
         RequestControl.__init__(self, self.controlType, criticality)
@@ -70,7 +70,7 @@ class SSSRequestControl(RequestControl):
             rule = rule.split(':')
             assert len(rule) < 3, 'syntax for ordering rule: [-]<attribute-type>[:ordering-rule]'
 
-    def encode(self):
+    def encode(self) -> bytes:
         p = SortKeyListType()
         for i, rule in enumerate(self.ordering_rules):
             q = SortKeyType()

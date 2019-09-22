@@ -6,6 +6,8 @@ The ldap0.controls module provides LDAPControl classes.
 Each class provides support for a certain control.
 """
 
+from typing import Dict, Optional, Sequence, Tuple
+
 from pyasn1.error import PyAsn1Error
 
 import _libldap0
@@ -25,25 +27,6 @@ __all__ = [
 ]
 
 
-class ControlRegistry:
-    """
-    A simple registry for extended controls and their handler class
-    """
-
-    def __init__(self):
-        self.cmap = {}
-
-    def reg(self, control_class):
-        self.cmap[control_class.controlType] = control_class
-
-    def get(self, control_type):
-        return self.cmap[control_type]
-
-
-# response control OID to class registry
-KNOWN_RESPONSE_CONTROLS = ControlRegistry()
-
-
 class RequestControl:
     """
     Base class for all request controls
@@ -56,16 +39,21 @@ class RequestControl:
         control value of the LDAPv3 extended request control
         (here it is the BER-encoded ASN.1 control value)
     """
-    encoding = 'utf-8'
-    controlType = None
+    encoding: str = 'utf-8'
+    controlType: Optional[str] = None
 
-    def __init__(self, controlType=None, criticality=False, encodedControlValue=None):
+    def __init__(
+            self,
+            controlType: Optional[str] = None,
+            criticality: bool = False,
+            encodedControlValue: Optional[bytes] = None
+        ):
         if controlType is not None:
             self.controlType = controlType
         self.criticality = criticality
         self.encodedControlValue = encodedControlValue
 
-    def encode(self):
+    def encode(self) -> bytes:
         """
         sets class attribute encodedControlValue to the BER-encoded ASN.1
         control value composed by class attributes set before
@@ -82,9 +70,13 @@ class ResponseControl:
     criticality
         sets the criticality of the received control (boolean)
     """
-    encoding = 'utf-8'
+    encoding: str = 'utf-8'
 
-    def __init__(self, controlType=None, criticality=False):
+    def __init__(
+            self,
+            controlType: Optional[str] = None,
+            criticality: bool = False,
+        ):
         if controlType is not None:
             self.controlType = controlType
         self.criticality = criticality
@@ -101,9 +93,15 @@ class LDAPControl(RequestControl, ResponseControl):
     """
     Base class for combined request/response controls
     """
-    encoding = 'utf-8'
+    encoding: str = 'utf-8'
+    controlType: Optional[str] = None
 
-    def __init__(self, controlType=None, criticality=False, encodedControlValue=None):
+    def __init__(
+            self,
+            controlType: Optional[str] = None,
+            criticality: bool = False,
+            encodedControlValue: Optional[bytes] = None
+        ):
         RequestControl.__init__(
             self,
             controlType=controlType,
@@ -112,7 +110,9 @@ class LDAPControl(RequestControl, ResponseControl):
         )
 
 
-def encode_request_ctrls(ctrls):
+def encode_request_ctrls(
+        ctrls: Sequence[RequestControl]
+    ) -> Tuple[str, bool, bytes]:
     """
     Return list of readily encoded 3-tuples which can be directly
     passed to C module _ldap
@@ -129,7 +129,10 @@ def encode_request_ctrls(ctrls):
     # end of encode_request_ctrls()
 
 
-def decode_response_ctrls(ctrls, ctrl_reg=None):
+def decode_response_ctrls(
+        ctrls: Sequence[ResponseControl],
+        ctrl_reg: Optional[Dict[str, ResponseControl]] = None,
+    ):
     """
     Returns list of readily decoded ResponseControl objects
 
@@ -164,3 +167,24 @@ def decode_response_ctrls(ctrls, ctrl_reg=None):
                 result.append(control)
     return result
     # end of decode_response_ctrls()
+
+
+class ControlRegistry:
+    """
+    A simple registry for extended controls and their handler class
+    """
+
+    cmap: Dict[str, ResponseControl]
+
+    def __init__(self):
+        self.cmap = {}
+
+    def reg(self, control_class):
+        self.cmap[control_class.controlType] = control_class
+
+    def get(self, control_type):
+        return self.cmap[control_type]
+
+
+# response control OID to class registry
+KNOWN_RESPONSE_CONTROLS = ControlRegistry()
