@@ -7,6 +7,7 @@ import hashlib
 import string
 from binascii import hexlify
 from random import SystemRandom
+from typing import Union, Optional
 
 from .__about__ import __version__, __author__, __license__
 
@@ -48,7 +49,10 @@ PWD_OCTETS_ALPHABET = (
     b'\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff'
 )
 
-def random_string(alphabet=PWD_ALPHABET, length=PWD_LENGTH):
+def random_string(
+        alphabet: Union[str, bytes] = PWD_ALPHABET,
+        length: int = PWD_LENGTH,
+    ) -> Union[str, bytes]:
     """
     Returns a random password byte string consisting of `length' bytes of
     chars found in `alphabet'.
@@ -62,7 +66,11 @@ def random_string(alphabet=PWD_ALPHABET, length=PWD_LENGTH):
     return {str: '', bytes: b''}[type(alphabet)].join(res)
 
 
-def unicode_pwd(password=None, alphabet=PWD_ALPHABET, length=PWD_LENGTH):
+def unicode_pwd(
+        password: Optional[bytes] = None,
+        alphabet: bytes = PWD_ALPHABET,
+        length: int = PWD_LENGTH,
+    ) -> bytes:
     """
     returns password or random generated password as properly encoded
     'unicodePwd' value for MS AD
@@ -78,7 +86,7 @@ def unicode_pwd(password=None, alphabet=PWD_ALPHABET, length=PWD_LENGTH):
     return u'"{}"'.format(password.decode('utf-8')).encode('utf-16-le')
 
 
-def ntlm_password_hash(password):
+def ntlm_password_hash(password: bytes) -> bytes:
     """
     returns MD4-based NT password hash for a password.
 
