@@ -7,7 +7,7 @@ import sys
 import time
 import logging
 from os import strerror
-from typing import List, Optional, Union
+from typing import Iterator, List, Optional, Union
 
 import _libldap0
 from _libldap0 import LDAPError
@@ -537,7 +537,7 @@ class LDAPObject:
             timeout: Union[int, float] = -1,
             add_intermediates: bool = False,
             resp_ctrl_classes=None,
-        ):
+        ) -> LDAPResult:
         if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
             raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
         res_type, res_data, res_msgid, res_ctrls = self._ldap_call(
@@ -570,7 +570,7 @@ class LDAPObject:
             timeout: Union[int, float] = -1,
             add_intermediates: bool = False,
             resp_ctrl_classes=None,
-        ):
+        ) -> Iterator[LDAPResult]:
         """
         Generator method which returns an iterator for processing all LDAP
         operation results of the given msgid like retrieved with
