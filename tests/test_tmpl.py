@@ -16,12 +16,12 @@ class TestTemplateEntry(unittest.TestCase):
 
     def test001_inetorgperson_bytes(self):
         inet_org_person = TemplateEntry(
-            t_dn = b'cn={first_name} {last_name},ou=People,dc=example,dc=com',
+            t_dn = 'cn={first_name} {last_name},ou=People,dc=example,dc=com',
             t_entry = {
-                b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
-                b'cn': [b'{first_name} {last_name}', b'{last_name}, {first_name}'],
-                b'sn': [b'{last_name}'],
-                b'mail': [b'{mail_addr}'],
+                'objectClass': ['top', 'person', 'organizationalPerson', 'inetOrgPerson'],
+                'cn': ['{first_name} {last_name}', '{last_name}, {first_name}'],
+                'sn': ['{last_name}'],
+                'mail': ['{mail_addr}'],
             },
         )
         self.assertEqual(
@@ -31,7 +31,7 @@ class TestTemplateEntry(unittest.TestCase):
                 b'mail_addr': b'theo.tester@example.com',
             }),
             (
-                b'cn=Theo Tester,ou=People,dc=example,dc=com',
+                'cn=Theo Tester,ou=People,dc=example,dc=com',
                 {
                     b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
                     b'cn': [b'Theo Tester', b'Tester, Theo'],
@@ -47,7 +47,7 @@ class TestTemplateEntry(unittest.TestCase):
                 b'last_name': b'T\xc3\xa4ster',
             }),
             (
-                b'cn=Theo T\xc3\xa4ster,ou=People,dc=example,dc=com',
+                'cn=Theo Täster,ou=People,dc=example,dc=com',
                 {
                     b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
                     b'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
@@ -58,16 +58,14 @@ class TestTemplateEntry(unittest.TestCase):
 
     def test002_unicode(self):
         inet_org_person = TemplateEntry(
-            t_dn = u'cn={first_name} {last_name},ou=People,dc=example,dc=com',
+            t_dn = 'cn={first_name} {last_name},ou=People,dc=example,dc=com',
             t_entry = {
-                u'objectClass': [u'top', u'person', u'organizationalPerson', u'inetOrgPerson'],
-                u'cn': [u'{first_name} {last_name}', u'{last_name}, {first_name}'],
-                u'sn': [u'{last_name}'],
-                u'mail': [u'{mail_addr}'],
-                u'description': [u'Tästuser'],
+                'objectClass': ['top', 'person', 'organizationalPerson', 'inetOrgPerson'],
+                'cn': ['{first_name} {last_name}', '{last_name}, {first_name}'],
+                'sn': ['{last_name}'],
+                'mail': ['{mail_addr}'],
+                'description': ['Tästuser'],
             },
-            # Unicode is assumed => no character decoding is done
-            encoding=None,
         )
         self.assertEqual(
             inet_org_person.ldap_entry({
@@ -76,7 +74,7 @@ class TestTemplateEntry(unittest.TestCase):
                 b'mail_addr': b'theo.tester@example.com',
             }),
             (
-                b'cn=Theo Tester,ou=People,dc=example,dc=com',
+                'cn=Theo Tester,ou=People,dc=example,dc=com',
                 {
                     b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
                     b'cn': [b'Theo Tester', b'Tester, Theo'],
@@ -93,7 +91,7 @@ class TestTemplateEntry(unittest.TestCase):
                 b'last_name': b'T\xc3\xa4ster',
             }),
             (
-                b'cn=Theo T\xc3\xa4ster,ou=People,dc=example,dc=com',
+                'cn=Theo Täster,ou=People,dc=example,dc=com',
                 {
                     b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
                     b'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
