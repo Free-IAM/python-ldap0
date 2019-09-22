@@ -15,7 +15,7 @@ from . import ExtendedRequest, ExtendedResponse
 
 class RefreshRequest(ExtendedRequest):
 
-    requestName = '1.3.6.1.4.1.1466.101.119.1'
+    requestName: str = '1.3.6.1.4.1.1466.101.119.1'
     defaultRequestTtl = 86400
 
     class RefreshRequestValue(univ.Sequence):
@@ -39,7 +39,7 @@ class RefreshRequest(ExtendedRequest):
         self.entryName = entryName
         self.requestTtl = requestTtl or self.defaultRequestTtl
 
-    def encode(self):
+    def encode(self) -> bytes:
         req_value = self.RefreshRequestValue()
         req_value.setComponentByName(
             'entryName',
@@ -70,7 +70,7 @@ class RefreshResponse(ExtendedResponse):
             )
         )
 
-    def decode(self, value):
+    def decode(self, value: bytes):
         refresh_response, _ = decoder.decode(
             value,
             asn1Spec=self.RefreshResponseValue(),

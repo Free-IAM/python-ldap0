@@ -18,7 +18,8 @@ class CancelRequest(ExtendedRequest):
     Cancel Operation Request
     """
 
-    requestName = '1.3.6.1.1.8'
+    requestName: str = '1.3.6.1.1.8'
+    cancelID: int
 
     class CancelRequestValue(univ.Sequence):
         """
@@ -31,11 +32,11 @@ class CancelRequest(ExtendedRequest):
             ),
         )
 
-    def __init__(self, cancelID):
+    def __init__(self, cancelID: int):
         ExtendedRequest.__init__(self)
         self.cancelID = cancelID
 
-    def encode(self):
+    def encode(self) -> bytes:
         req_value = self.CancelRequestValue()
         req_value.setComponentByName(
             'cancelID',

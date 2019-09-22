@@ -55,7 +55,7 @@ class PassmodRequest(ExtendedRequest):
     Password Modify extended request
     """
 
-    requestName = '1.3.6.1.4.1.4203.1.11.1'
+    requestName: str = '1.3.6.1.4.1.4203.1.11.1'
 
     class PasswdModifyRequestValue(univ.Sequence):
         """
@@ -76,7 +76,7 @@ class PassmodRequest(ExtendedRequest):
         self.oldPasswd = oldPasswd
         self.newPasswd = newPasswd
 
-    def encode(self):
+    def encode(self) -> bytes:
         req_value = self.PasswdModifyRequestValue()
         req_value.setComponentByName(
             'userIdentity',
@@ -129,7 +129,7 @@ class PassmodResponse(ExtendedResponse):
 
     responseName = None
 
-    def decode(self, value):
+    def decode(self, value: bytes):
         self.genPasswd = None
         if value is None:
             return

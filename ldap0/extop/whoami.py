@@ -13,7 +13,7 @@ class WhoAmIRequest(ExtendedRequest):
     Who Am I? extended request
     """
 
-    requestName = '1.3.6.1.4.1.4203.1.11.3'
+    requestName: str = '1.3.6.1.4.1.4203.1.11.3'
 
 
 class WhoAmIResponse(ExtendedResponse):
@@ -30,5 +30,5 @@ class WhoAmIResponse(ExtendedResponse):
         """
         return name == cls.responseName or name == WhoAmIRequest.requestName
 
-    def decode(self, value):
+    def decode(self, value: bytes):
         self.responseValue = value.decode(self.encoding, errors='strict')

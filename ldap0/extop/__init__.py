@@ -3,6 +3,8 @@
 ldap0.extop - support classes for LDAPv3 extended operations
 """
 
+from typing import Optional
+
 from ..__about__ import __version__, __author__, __license__
 
 
@@ -16,7 +18,7 @@ class ExtendedRequest:
         value of the LDAPv3 extended operation request
         (here it is the BER-encoded ASN.1 request value)
     """
-    encoding = 'utf-8'
+    encoding: str = 'utf-8'
 
     def __init__(self, requestName=None, requestValue=None):
         if requestName is not None:
@@ -30,7 +32,7 @@ class ExtendedRequest:
             self.requestValue,
         )
 
-    def encode(self):
+    def encode(self) -> bytes:
         """
         returns the BER-encoded ASN.1 request value composed by class attributes
         set before
@@ -72,7 +74,7 @@ class ExtendedResponse:
         """
         return name == cls.responseName
 
-    def decode(self, value):
+    def decode(self, value: bytes):
         """
         decodes the BER-encoded ASN.1 extended operation response value and
         sets the appropriate class attributes
