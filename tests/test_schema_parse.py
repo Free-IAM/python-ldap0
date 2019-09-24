@@ -99,11 +99,11 @@ class TestSplitTokens(unittest.TestCase):
         self._run_split_tokens_tests(TESTCASES_UTF8)
 
     @unittest.expectedFailure
-    def test_broken_oid(self):
+    def test_let_broken_oid_pass(self):
         """
         run test cases specified in constant TESTCASES_BROKEN_OID
         """
-        self._run_failure_tests(TESTCASES_BROKEN_OID)
+        self._run_split_tokens_tests(TESTCASES_BROKEN_OID)
 
     @unittest.expectedFailure
     def test_escaped_quotes(self):
