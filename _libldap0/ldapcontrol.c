@@ -9,7 +9,7 @@
 /* Free a single LDAPControl object created by Tuple_to_LDAPControl */
 
 static void
-LDAPControl_DEL( LDAPControl* lc )
+LDAPControl_DEL(LDAPControl* lc)
 {
     if (lc == NULL)
         return;
@@ -22,16 +22,16 @@ LDAPControl_DEL( LDAPControl* lc )
 /* Free an array of LDAPControl objects created by LDAPControls_from_object */
 
 void
-LDAPControl_List_DEL( LDAPControl** lcs )
+LDAPControl_List_DEL(LDAPControl** lcs)
 {
     LDAPControl** lcp;
     if (lcs == NULL)
         return;
 
-    for ( lcp = lcs; *lcp; lcp++ )
-        LDAPControl_DEL( *lcp );
+    for (lcp = lcs; *lcp; lcp++)
+        LDAPControl_DEL(*lcp);
 
-    PyMem_DEL( lcs );
+    PyMem_DEL(lcs);
 }
 
 /* Takes a tuple of the form:
@@ -42,7 +42,7 @@ LDAPControl_List_DEL( LDAPControl** lcs )
  */
 
 static LDAPControl*
-Tuple_to_LDAPControl( PyObject* tup )
+Tuple_to_LDAPControl(PyObject* tup)
 {
     char *oid;
     char iscritical;
@@ -56,7 +56,7 @@ Tuple_to_LDAPControl( PyObject* tup )
         return NULL;
     }
 
-    if (!PyArg_ParseTuple( tup, "ybO:Tuple_to_LDAPControl", &oid, &iscritical, &bytes ))
+    if (!PyArg_ParseTuple(tup, "ybO:Tuple_to_LDAPControl", &oid, &iscritical, &bytes))
         return NULL;
 
     lc = PyMem_NEW(LDAPControl, 1);
@@ -235,7 +235,7 @@ encode_assertion_control(PyObject *self, PyObject *args)
     if (err != LDAP_SUCCESS)
         return LDAPerror(ld, "ldap_create");
 
-    err = ldap_create_assertion_control_value(ld,assertion_filterstr,&ctrl_val);
+    err = ldap_create_assertion_control_value(ld, assertion_filterstr, &ctrl_val);
 
     if (err != LDAP_SUCCESS) {
         LDAPerror(ld, "ldap_create_assertion_control_value");
