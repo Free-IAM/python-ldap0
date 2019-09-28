@@ -17,7 +17,7 @@ class PasswordExpiringControl(ResponseControl):
     """
     Indicates time in seconds when password will expire
     """
-    controlType = '2.16.840.1.113730.3.4.5'
+    controlType: str = '2.16.840.1.113730.3.4.5'
 
     def decode(self, encodedControlValue: bytes):
         self.gracePeriod = int(encodedControlValue)
@@ -29,7 +29,7 @@ class PasswordExpiredControl(ResponseControl):
     """
     Indicates that password is expired
     """
-    controlType = '2.16.840.1.113730.3.4.4'
+    controlType: str = '2.16.840.1.113730.3.4.4'
 
     def decode(self, encodedControlValue: bytes):
         self.passwordExpired = (encodedControlValue == b'0')

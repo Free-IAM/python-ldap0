@@ -80,7 +80,7 @@ class PreReadControl(ReadEntryControl):
     """
     Class for pre-read control described in RFC 4527
     """
-    controlType = '1.3.6.1.1.13.1'
+    controlType: str = '1.3.6.1.1.13.1'
 
 KNOWN_RESPONSE_CONTROLS.reg(PreReadControl)
 
@@ -89,6 +89,6 @@ class PostReadControl(ReadEntryControl):
     """
     Class for post-read control described in RFC 4527
     """
-    controlType = '1.3.6.1.1.13.2'
+    controlType: str = '1.3.6.1.1.13.2'
 
 KNOWN_RESPONSE_CONTROLS.reg(PostReadControl)

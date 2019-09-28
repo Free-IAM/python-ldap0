@@ -5,8 +5,6 @@ ldap0.controls.simple - classes for some very simple LDAP controls
 
 import struct
 
-import _libldap0
-
 from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, LDAPControl, KNOWN_RESPONSE_CONTROLS
 
@@ -106,7 +104,7 @@ class ManageDSAITControl(ValueLessRequestControl):
     """
     Manage DSA IT Control
     """
-    controlType = _libldap0.CONTROL_MANAGEDSAIT.decode('ascii')
+    controlType: str = '2.16.840.1.113730.3.4.2'
 
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(
@@ -121,7 +119,7 @@ class RelaxRulesControl(ValueLessRequestControl):
     """
     Relax Rules Control
     """
-    controlType = _libldap0.CONTROL_RELAX.decode('ascii')
+    controlType: str = '1.3.6.1.4.1.4203.666.5.12'
 
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(
@@ -140,7 +138,7 @@ class ProxyAuthzControl(RequestControl):
       string containing the authorization ID indicating the identity
       on behalf which the server should process the request
     """
-    controlType = _libldap0.CONTROL_PROXY_AUTHZ.decode('ascii')
+    controlType: str = '2.16.840.1.113730.3.4.18'
 
     def __init__(self, criticality: bool = False, authzId=''):
         RequestControl.__init__(
@@ -154,7 +152,7 @@ class AuthorizationIdentityRequestControl(ValueLessRequestControl):
     """
     Authorization Identity Request and Response Controls
     """
-    controlType = '2.16.840.1.113730.3.4.16'
+    controlType: str = '2.16.840.1.113730.3.4.16'
 
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(
@@ -172,7 +170,7 @@ class AuthorizationIdentityResponseControl(ResponseControl):
     authzId
         decoded authorization identity
     """
-    controlType = '2.16.840.1.113730.3.4.15'
+    controlType: str = '2.16.840.1.113730.3.4.15'
 
     def decode(self, encodedControlValue: bytes):
         self.authzId = encodedControlValue
@@ -185,7 +183,7 @@ class SubentriesControl(BooleanControl):
     Subentries Control (RFC 3672)
     https://tools.ietf.org/html/rfc3672#section-3
     """
-    controlType = '1.3.6.1.4.1.4203.1.10.1'
+    controlType: str = '1.3.6.1.4.1.4203.1.10.1'
 
     def __init__(self, criticality: bool = False, booleanValue=False):
         BooleanControl.__init__(

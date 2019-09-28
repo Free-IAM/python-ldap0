@@ -43,7 +43,7 @@ class SessionTrackingControl(RequestControl):
     sessionTrackingIdentifier
       String containing a specific tracking ID
     """
-    controlType = SESSION_TRACKING_CONTROL_OID
+    controlType: str = SESSION_TRACKING_CONTROL_OID
 
     class SessionIdentifierControlValue(univ.Sequence):
         componentType = namedtype.NamedTypes(

@@ -69,7 +69,7 @@ class PasswordPolicyResponseValue(univ.Sequence):
 
 
 class PasswordPolicyControl(ValueLessRequestControl, ResponseControl):
-    controlType = '1.3.6.1.4.1.42.2.27.8.5.1'
+    controlType: str = '1.3.6.1.4.1.42.2.27.8.5.1'
 
     def __init__(self, criticality=False):
         ValueLessRequestControl.__init__(self, criticality=criticality)

@@ -18,7 +18,7 @@ class AssertionControl(RequestControl):
       LDAP filter string specifying which assertions have to match
       so that the server processes the operation
     """
-    controlType = _libldap0.CONTROL_ASSERT.decode('ascii')
+    controlType: str = '1.3.6.1.1.12'
 
     def __init__(self, criticality: bool = True, filterstr: str = '(objectClass=*)'):
         RequestControl.__init__(self, criticality=criticality)
@@ -36,7 +36,7 @@ class MatchedValuesControl(RequestControl):
       LDAP filter string specifying which attribute values
       should be returned
     """
-    controlType = _libldap0.CONTROL_VALUESRETURNFILTER.decode('ascii')
+    controlType: str = '1.2.826.0.1.3344810.2.3'
 
     def __init__(self, criticality: bool = False, filterstr: str = '(objectClass=*)'):
         RequestControl.__init__(self, criticality=criticality)

@@ -49,7 +49,7 @@ class VirtualListViewRequestType(univ.Sequence):
 
 
 class VLVRequestControl(RequestControl):
-    controlType = '2.16.840.1.113730.3.4.9'
+    controlType: str = '2.16.840.1.113730.3.4.9'
 
     def __init__(
             self,
@@ -121,7 +121,7 @@ class VirtualListViewResponseType(univ.Sequence):
 
 
 class VLVResponseControl(ResponseControl):
-    controlType = '2.16.840.1.113730.3.4.10'
+    controlType: str = '2.16.840.1.113730.3.4.10'
 
     def __init__(self, criticality=False):
         ResponseControl.__init__(self, self.controlType, criticality)

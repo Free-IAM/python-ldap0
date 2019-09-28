@@ -18,7 +18,7 @@ __all__ = [
 ]
 
 class SimplePagedResultsControl(RequestControl, ResponseControl):
-    controlType = '1.2.840.113556.1.4.319'
+    controlType: str = '1.2.840.113556.1.4.319'
 
     class PagedResultsControlValue(univ.Sequence):
         componentType = namedtype.NamedTypes(
