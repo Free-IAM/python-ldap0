@@ -652,16 +652,25 @@ class Test00_LDAPObject(SlapdTestCase):
         self._ldap_conn.add_s(dn, entry)
         old = self._ldap_conn.read_s(
             dn,
-            attrlist=['modifyTimestamp', 'entryCSN'],
+            attrlist=['entryDN', 'modifyTimestamp', 'entryCSN', 'entryUUID'],
         )
-        assertion_filter = '(&(modifyTimestamp=%s)(entryCSN=%s))' % (
-            old.entry_s['modifyTimestamp'][0],
-            old.entry_s['entryCSN'][0],
+        assertion_filter = (
+            '(&'
+              '(entryCSN={entryCSN})'
+              '(entryDN={entryDN})'
+              '(entryUUID={entryUUID})'
+              '(modifyTimestamp={modifyTimestamp})'
+            ')'
+        ).format(
+            entryDN=old.entry_s['entryDN'][0],
+            entryUUID=old.entry_s['entryUUID'][0],
+            modifyTimestamp=old.entry_s['modifyTimestamp'][0],
+            entryCSN=old.entry_s['entryCSN'][0],
         )
         self._ldap_conn.modify_s(
             dn,
             [(ldap0.MOD_REPLACE, b'description', [b'test modification #1'])],
-            req_ctrls=[AssertionControl(filterstr=assertion_filter)],
+            req_ctrls=[AssertionControl(criticality=False, filterstr=assertion_filter)],
         )
         with self.assertRaises(ldap0.ASSERTION_FAILED):
             self._ldap_conn.modify_s(

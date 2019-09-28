@@ -17,6 +17,7 @@ from ldap0.controls.ppolicy import *
 from ldap0.controls.pwdpolicy import *
 from ldap0.controls.readentry import *
 from ldap0.controls.vlv import *
+from ldap0.controls.libldap import *
 
 
 class TestRequestControls(unittest.TestCase):
@@ -145,6 +146,31 @@ class TestVirtualListView(unittest.TestCase):
         vrc = VLVResponseControl(criticality=True)
         with self.assertRaises(PyAsn1Error):
             vrc.decode(b'\xFF')
+
+
+class TestAssertionControl(unittest.TestCase):
+
+    def test001_assertion_control(self):
+        self.assertEqual(
+            AssertionControl(True, '(entryDN=uid=foo,cn=ae,ou=ae-dir)').encode(),
+            b'\xa3"\x04\x07entryDN\x04\x17uid=foo,cn=ae,ou=ae-dir'
+        )
+        self.assertEqual(
+            AssertionControl(
+                True,
+                (
+                    '(&(entryCSN=20190917170703.426971Z#000000#000#000000)(entryDN=cn=Schwitters\\5c2C Kurt,ou=Testing,dc=stroeder,dc=de)(entryUUID=58e450f6-b2e0-1038-8849-9fc73698254c)(createTimestamp=20190122222520Z)(modifyTimestamp=20190917170703Z)(creatorsName=cn=michael ströder+mail=michael@stroeder.com,ou=private,dc=stroeder,dc=de)(modifiersName=cn=michael ströder+mail=michael@stroeder.com,ou=private,dc=stroeder,dc=de))'
+                )
+            ).encode(),
+            b'\xa0\x82\x01\xa9\xa34\x04\x08'
+            b'entryCSN\x04(20190917170703.426971Z#000000#000#000000'
+            b'\xa3=\x04\x07entryDN\x042cn=Schwitters\\2C Kurt,ou=Testing,dc=stroeder,dc=de'
+            b'\xa31\x04\tentryUUID\x04$58e450f6-b2e0-1038-8849-9fc73698254c\xa3"'
+            b'\x04\x0fcreateTimestamp\x04\x0f20190122222520Z\xa3"'
+            b'\x04\x0fmodifyTimestamp\x04\x0f20190917170703Z\xa3Z'
+            b'\x04\x0ccreatorsName\x04Jcn=michael str\xc3\xb6der+mail=michael@stroeder.com,ou=private,dc=stroeder,dc=de'
+            b'\xa3[\x04\rmodifiersName\x04Jcn=michael str\xc3\xb6der+mail=michael@stroeder.com,ou=private,dc=stroeder,dc=de'
+        )
 
 
 class TestPPolicy(unittest.TestCase):
