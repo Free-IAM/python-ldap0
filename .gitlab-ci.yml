@@ -34,9 +34,9 @@ test:leap:
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - pip3 install coverage
 
-test:centos:
+test:centos7:
   extends: .tests
-  image: centos:latest
+  image: centos:7
   before_script:
   - yum update -y
   - rpm --import https://ltb-project.org/lib/RPM-GPG-KEY-LTB-project
