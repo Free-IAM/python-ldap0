@@ -232,7 +232,7 @@ class Test00_LDAPObject(SlapdTestCase):
                 'PLAIN',
                 'CRAM-MD5',
                 'DIGEST-MD5',
-                'SCRAM-SHA-1',
+#                'SCRAM-SHA-1',
             ):
             with self.ldap_object_class(self.server.ldapi_uri) as l:
                 l.sasl_interactive_bind_s(
@@ -241,7 +241,6 @@ class Test00_LDAPObject(SlapdTestCase):
                 )
                 self.assertEqual(l.whoami_s(), authz_id.lower())
 
-    @unittest.skipIf(platform.linux_distribution()[0].lower()=='debian', 'SASL password mechs not working on Debian')
     def test006_sasl_password_mechs_bad(self):
         for sasl_mech in (
                 'PLAIN',
