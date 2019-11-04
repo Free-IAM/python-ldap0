@@ -226,7 +226,6 @@ class Test00_LDAPObject(SlapdTestCase):
             l.sasl_non_interactive_bind_s('EXTERNAL', authz_id=authz_id)
             self.assertEqual(l.whoami_s(), authz_id.lower())
 
-    @unittest.skipIf(platform.linux_distribution()[0].lower()=='debian', 'SASL password mechs not working on Debian')
     def test006_sasl_password_mechs(self):
         authz_id = 'dn:cn=user1,%s' % (self.server.suffix)
         for sasl_mech in (
