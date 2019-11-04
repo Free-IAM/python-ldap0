@@ -68,7 +68,7 @@ class TestLdapCExtension(SlapdTestCase):
         """
         Starts a server, and returns a LDAPObject bound to it
         """
-        ldap_conn = _libldap0.initialize(self.server.ldap_uri.encode('ascii'))
+        ldap_conn = _libldap0._initialize(self.server.ldap_uri.encode('ascii'))
         ldap_conn.set_option(_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION3)
         if bind:
             # Perform a simple bind
@@ -588,7 +588,7 @@ class TestLdapCExtension(SlapdTestCase):
             _libldap0.get_option(_libldap0.OPT_MATCHED_DN)
 
     def test018_enotconn(self):
-        ldap_conn = _libldap0.initialize(b'ldap://127.0.0.1:42')
+        ldap_conn = _libldap0._initialize(b'ldap://127.0.0.1:42')
         try:
             msg_id = ldap_conn.simple_bind(b'', b'')
             r = ldap_conn.result(msg_id, _libldap0.MSG_ALL, self.timeout)
@@ -623,7 +623,7 @@ class TestLdapCExtension(SlapdTestCase):
 
     @unittest.skip('Skipped because of unclarified timeouts')
     def test021_sasl_bind_s(self):
-        ldap_conn = _libldap0.initialize(self.server.ldapi_uri.encode('ascii'))
+        ldap_conn = _libldap0._initialize(self.server.ldapi_uri.encode('ascii'))
         ldap_conn.set_option(_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION3)
         msg_id = ldap_conn.sasl_bind_s(b'EXTERNAL', b'', None)
         self.assertIsInstance(msg_id, int)
@@ -631,7 +631,7 @@ class TestLdapCExtension(SlapdTestCase):
 
     @unittest.skip('Skipped because of unclarified timeouts')
     def test022_sasl_interactive_bind_s(self):
-        ldap_conn = _libldap0.initialize(self.server.ldapi_uri.encode('ascii'))
+        ldap_conn = _libldap0._initialize(self.server.ldapi_uri.encode('ascii'))
         ldap_conn.set_option(_libldap0.OPT_PROTOCOL_VERSION, _libldap0.VERSION3)
         msg_id = ldap_conn.sasl_interactive_bind_s(b'EXTERNAL', SaslNoninteractiveAuth(), None, 0)
         self.assertIsInstance(msg_id, int)

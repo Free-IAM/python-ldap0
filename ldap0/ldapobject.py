@@ -94,7 +94,7 @@ class LDAPObject:
         )
         self.uri = None
         conn_uri = ldap_url.connect_uri()
-        self._l = _libldap0_function_call(_libldap0.initialize, conn_uri.encode('ascii'))
+        self._l = _libldap0_function_call(_libldap0._initialize, conn_uri.encode('ascii'))
         self._msgid_funcs = {
             self._l.add_ext,
             self._l.simple_bind,
@@ -1092,7 +1092,7 @@ class ReconnectLDAPObject(LDAPObject):
                 try:
                     # Do the connect
                     self._l = _libldap0_function_call(
-                        _libldap0.initialize,
+                        _libldap0._initialize,
                         uri.encode(self.encoding),
                     )
                     self._msgid_funcs = {
