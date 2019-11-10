@@ -22,13 +22,15 @@ class TestTemplateEntry(unittest.TestCase):
                 'cn': ['{first_name} {last_name}', '{last_name}, {first_name}'],
                 'sn': ['{last_name}'],
                 'mail': ['{mail_addr}'],
+                'departmentNumber': ['{dept_num:08d}'],
             },
         )
         self.assertEqual(
             inet_org_person.ldap_entry({
-                b'first_name': b'Theo',
-                b'last_name': b'Tester',
-                b'mail_addr': b'theo.tester@example.com',
+                'first_name': 'Theo',
+                'last_name': 'Tester',
+                'mail_addr': 'theo.tester@example.com',
+                'dept_num': 42,
             }),
             (
                 'cn=Theo Tester,ou=People,dc=example,dc=com',
@@ -37,14 +39,15 @@ class TestTemplateEntry(unittest.TestCase):
                     b'cn': [b'Theo Tester', b'Tester, Theo'],
                     b'sn': [b'Tester'],
                     b'mail': [b'theo.tester@example.com'],
+                    b'departmentNumber': [b'00000042'],
                 }
             )
         )
         # missing mail_addr
         self.assertEqual(
             inet_org_person.ldap_entry({
-                b'first_name': b'Theo',
-                b'last_name': b'T\xc3\xa4ster',
+                'first_name': 'Theo',
+                'last_name': 'Täster',
             }),
             (
                 'cn=Theo Täster,ou=People,dc=example,dc=com',
@@ -69,9 +72,9 @@ class TestTemplateEntry(unittest.TestCase):
         )
         self.assertEqual(
             inet_org_person.ldap_entry({
-                b'first_name': b'Theo',
-                b'last_name': b'Tester',
-                b'mail_addr': b'theo.tester@example.com',
+                'first_name': 'Theo',
+                'last_name': 'Tester',
+                'mail_addr': 'theo.tester@example.com',
             }),
             (
                 'cn=Theo Tester,ou=People,dc=example,dc=com',
@@ -87,8 +90,8 @@ class TestTemplateEntry(unittest.TestCase):
         # missing mail_addr
         self.assertEqual(
             inet_org_person.ldap_entry({
-                b'first_name': b'Theo',
-                b'last_name': b'T\xc3\xa4ster',
+                'first_name': 'Theo',
+                'last_name': 'Täster',
             }),
             (
                 'cn=Theo Täster,ou=People,dc=example,dc=com',

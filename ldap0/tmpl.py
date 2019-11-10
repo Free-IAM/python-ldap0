@@ -33,10 +33,6 @@ class TemplateEntry:
         returns 2-tuple (dn, entry) derived from
         string-keyed, single-valued :data_dict:
         """
-        data_dict = dict([
-            (key.decode(encoding), val.decode(encoding))
-            for key, val in data_dict.items()
-        ])
         ldap_entry = {}
         for attr_type in self.t_entry:
             attr_values = []
