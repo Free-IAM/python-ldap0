@@ -35,11 +35,11 @@ class TestTemplateEntry(unittest.TestCase):
             (
                 'cn=Theo Tester,ou=People,dc=example,dc=com',
                 {
-                    b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
-                    b'cn': [b'Theo Tester', b'Tester, Theo'],
-                    b'sn': [b'Tester'],
-                    b'mail': [b'theo.tester@example.com'],
-                    b'departmentNumber': [b'00000042'],
+                    'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                    'cn': [b'Theo Tester', b'Tester, Theo'],
+                    'sn': [b'Tester'],
+                    'mail': [b'theo.tester@example.com'],
+                    'departmentNumber': [b'00000042'],
                 }
             )
         )
@@ -52,9 +52,9 @@ class TestTemplateEntry(unittest.TestCase):
             (
                 'cn=Theo Täster,ou=People,dc=example,dc=com',
                 {
-                    b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
-                    b'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
-                    b'sn': [b'T\xc3\xa4ster'],
+                    'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                    'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
+                    'sn': [b'T\xc3\xa4ster'],
                 }
             )
         )
@@ -79,11 +79,11 @@ class TestTemplateEntry(unittest.TestCase):
             (
                 'cn=Theo Tester,ou=People,dc=example,dc=com',
                 {
-                    b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
-                    b'cn': [b'Theo Tester', b'Tester, Theo'],
-                    b'sn': [b'Tester'],
-                    b'mail': [b'theo.tester@example.com'],
-                    b'description': [b'T\xc3\xa4stuser'],
+                    'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                    'cn': [b'Theo Tester', b'Tester, Theo'],
+                    'sn': [b'Tester'],
+                    'mail': [b'theo.tester@example.com'],
+                    'description': [b'T\xc3\xa4stuser'],
                 }
             )
         )
@@ -96,10 +96,10 @@ class TestTemplateEntry(unittest.TestCase):
             (
                 'cn=Theo Täster,ou=People,dc=example,dc=com',
                 {
-                    b'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
-                    b'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
-                    b'sn': [b'T\xc3\xa4ster'],
-                    b'description': [b'T\xc3\xa4stuser'],
+                    'objectClass': [b'top', b'person', b'organizationalPerson', b'inetOrgPerson'],
+                    'cn': [b'Theo T\xc3\xa4ster', b'T\xc3\xa4ster, Theo'],
+                    'sn': [b'T\xc3\xa4ster'],
+                    'description': [b'T\xc3\xa4stuser'],
                 }
             )
         )

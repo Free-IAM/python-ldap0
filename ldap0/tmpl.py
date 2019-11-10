@@ -46,6 +46,6 @@ class TemplateEntry:
                     attr_values.append(attr_value)
                     attr_value_set.add(attr_value)
             if attr_values:
-                ldap_entry[attr_type.encode(encoding)] = attr_values
+                ldap_entry[attr_type] = attr_values
         ldap_dn = self.t_dn.format(**data_dict)
         return (ldap_dn, ldap_entry) # end of ldap_entry()
