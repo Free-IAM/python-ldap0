@@ -216,7 +216,7 @@ class LDAPObject:
                     # Check whether CA cert file can be read
                     with open(tls_pathname, 'rb'):
                         pass
-                    self._l.set_option(tls_option, tls_pathname)
+                    self._l.set_option(tls_option, tls_pathname.encode('utf-8'))
             except ValueError as value_error:
                 if sys.platform != 'darwin' and \
                    str(value_error) != 'ValueError: option error':
