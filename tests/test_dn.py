@@ -221,6 +221,13 @@ class TestDNObj(unittest.TestCase):
             ]),
             DNObj.from_domain('example.com')
         )
+        self.assertEqual(
+            dn_obj.match([
+                DNObj.from_str('CN=Michael, dc=example, dc=com'),
+                DNObj.from_str('DC=example, DC=com'),
+            ]),
+            DNObj.from_domain('example.com'),
+        )
         # sub entry match
         dn_obj = DNObj.from_domain('sub1.example.com')
         self.assertEqual(
@@ -271,6 +278,18 @@ class TestDNObj(unittest.TestCase):
                 DNObj.from_domain('com'),
             ]
         )
+
+    def test010_equals(self):
+        self.assertTrue(
+            DNObj.from_str('cn=Michael, dc=example, dc=com')==DNObj.from_str('CN=Michael, DC=example, DC=com')
+        )
+        self.assertFalse(
+            DNObj.from_str('uid=Michael, dc=example, dc=com')==DNObj.from_str('CN=Michael, DC=example, DC=com')
+        )
+        self.assertFalse(
+            DNObj.from_str('cn=Michael, dc=example, dc=com')==DNObj.from_str('CN=Mike, DC=example, DC=com')
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

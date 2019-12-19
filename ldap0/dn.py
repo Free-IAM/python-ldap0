@@ -109,7 +109,20 @@ class DNObj(tuple):
         return '%s(%s)' % (self.__class__.__name__, tuple.__repr__(self))
 
     def __eq__(self, other) -> bool:
-        return isinstance(other, self.__class__) and tuple.__eq__(self, other)
+        res = isinstance(other, self.__class__) and len(self) == len(other)
+        i = 0
+        while res and i < len(self):
+            res = len(self[i]) == len(other[i])
+            j = 0
+            while res and j < len(self[i]):
+                res = (
+                    self[i][j][0].lower() == other[i][j][0].lower()
+                    and
+                    self[i][j][1] == other[i][j][1]
+                )
+                j += 1
+            i += 1
+        return res
 
     def __add__(self, other):
         return self.__class__(tuple.__add__(self, other))
@@ -170,7 +183,10 @@ class DNObj(tuple):
             dn_len = len(dn_obj)
             while (
                     match_level <= self_len
-                    and self[self_len-match_level-1] == dn_obj[dn_len-match_level-1]
+                    and (
+                       self.slice(self_len-match_level-1, self_len-match_level)
+                       == dn_obj.slice(self_len-match_level-1, self_len-match_level)
+                    )
                 ):
                 match_level += 1
             if match_level > max_match_level:
