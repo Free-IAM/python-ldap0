@@ -176,16 +176,16 @@ class DNObj(tuple):
             return max_match_dn
         self_len = len(self)
         for dn_obj in dn_list:
-            if len(dn_obj) > self_len:
+            dn_len = len(dn_obj)
+            if dn_len > self_len:
                 # can't match
                 continue
             match_level = 0
-            dn_len = len(dn_obj)
             while (
                     match_level <= self_len
                     and (
                        self.slice(self_len-match_level-1, self_len-match_level)
-                       == dn_obj.slice(self_len-match_level-1, self_len-match_level)
+                       == dn_obj.slice(dn_len-match_level-1, dn_len-match_level)
                     )
                 ):
                 match_level += 1

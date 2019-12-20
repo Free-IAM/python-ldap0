@@ -228,6 +228,13 @@ class TestDNObj(unittest.TestCase):
             ]),
             DNObj.from_domain('example.com'),
         )
+        self.assertEqual(
+            DNObj.from_str('cn=Person,dc=foo,dc=example,dc=com').match([
+                DNObj.from_domain('foo.example.com'),
+                DNObj.from_domain('bar.example.com'),
+            ]),
+            DNObj.from_domain('foo.example.com'),
+        )
         # sub entry match
         dn_obj = DNObj.from_domain('sub1.example.com')
         self.assertEqual(
