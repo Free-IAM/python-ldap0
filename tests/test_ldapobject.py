@@ -738,6 +738,11 @@ class Test00_LDAPObject(SlapdTestCase):
             self._ldap_conn.get_whoami_dn(),
             self.server.root_dn,
         )
+        # repeated (not cached)
+        self.assertEqual(
+            self._ldap_conn.get_whoami_dn(refresh=True),
+            self.server.root_dn,
+        )
         with self.ldap_object_class(self.server.ldapi_uri) as l:
             self.assertEqual(l._whoami_dn, None)
             l.simple_bind_s('', b'')

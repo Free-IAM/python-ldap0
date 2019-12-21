@@ -946,8 +946,11 @@ class LDAPObject:
             attrlist=['namingContexts']
         ).entry_s.get('namingContexts', [])
 
-    def get_whoami_dn(self) -> str:
-        if self._whoami_dn is None:
+    def get_whoami_dn(self, refresh=False) -> str:
+        """
+        Return the result of Who Am I extended operation as plain DN
+        """
+        if refresh or self._whoami_dn is None:
             wai = self.whoami_s()
             if wai == '':
                 self._whoami_dn = wai
@@ -955,7 +958,7 @@ class LDAPObject:
                 self._whoami_dn = wai[3:]
             else:
                 self._whoami_dn = None
-                raise ValueError('Expected dn: form of Who Am I? result, got %r' % wai)
+                raise ValueError('Expected dn: form of Who Am I? result, got %r' % (wai,))
         return self._whoami_dn
 
 
