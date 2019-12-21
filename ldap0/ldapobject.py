@@ -693,8 +693,8 @@ class LDAPObject:
         ) -> List[LDAPResult]:
         if cache_ttl is None:
             cache_ttl = self.cache_ttl
-        current_time = time.time()
         if cache_ttl > 0:
+            current_time = time.time()
             cache_key_args = (
                 base,
                 scope,
