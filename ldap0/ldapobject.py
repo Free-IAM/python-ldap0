@@ -946,11 +946,11 @@ class LDAPObject:
             attrlist=['namingContexts']
         ).entry_s.get('namingContexts', [])
 
-    def get_whoami_dn(self, refresh=False) -> str:
+    def get_whoami_dn(self) -> str:
         """
         Return the result of Who Am I extended operation as plain DN
         """
-        if refresh or self._whoami_dn is None:
+        if self._whoami_dn is None:
             wai = self.whoami_s()
             if wai == '':
                 self._whoami_dn = wai
