@@ -213,7 +213,7 @@ class LDAPObject:
                     # get global default
                     tls_pathname = _libldap0.get_option(tls_option)
                 if tls_pathname:
-                    # Check whether CA cert file can be read
+                    # Check whether option file can be read
                     with open(tls_pathname, 'rb'):
                         pass
                     self._l.set_option(tls_option, tls_pathname.encode('utf-8'))
@@ -1122,7 +1122,7 @@ class ReconnectLDAPObject(LDAPObject):
                             '%s reconnect to %s failed\n',
                             counter_text, uri
                         )
-                    reconnect_counter = reconnect_counter-1
+                    reconnect_counter -= 1
                     if not reconnect_counter:
                         raise ldap_error
                     if __debug__ and self._trace_level >= 1:
