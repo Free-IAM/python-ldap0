@@ -987,6 +987,19 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             l.reconnect(l.uri, reset_last_bind=True)
             self.assertEqual(l.whoami_s(), '')
 
+    def test107_reconnect_failure(self):
+        with self.ldap_object_class(self.server.ldapi_uri, retry_max=2, retry_delay=0.1) as l:
+            l.sasl_non_interactive_bind_s('EXTERNAL')
+            authz_id = l.whoami_s()
+            self.assertEqual(authz_id, 'dn:'+self.server.root_dn.lower())
+            self.server.stop()
+            with self.assertRaises(ldap0.SERVER_DOWN):
+                l.whoami_s()
+            self.server.start()
+            # FIX ME: Not sure what the correct behaviour should be
+            #l.sasl_non_interactive_bind_s('EXTERNAL')
+            #self.assertEqual(l.whoami_s(), authz_id)
+
 
 class TestSchemaUrlFetchLDAP(SlapdTestCase):
 
