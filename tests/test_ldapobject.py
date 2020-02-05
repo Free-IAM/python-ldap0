@@ -996,9 +996,9 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             with self.assertRaises(ldap0.SERVER_DOWN):
                 l.whoami_s()
             self.server.start()
-            # FIX ME: Not sure what the correct behaviour should be
-            #l.sasl_non_interactive_bind_s('EXTERNAL')
-            #self.assertEqual(l.whoami_s(), authz_id)
+            l.reconnect(l.uri)
+            l.sasl_non_interactive_bind_s('EXTERNAL')
+            self.assertEqual(l.whoami_s(), authz_id)
 
 
 class TestSchemaUrlFetchLDAP(SlapdTestCase):
