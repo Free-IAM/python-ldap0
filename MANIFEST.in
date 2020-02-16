@@ -1,5 +1,2 @@
-include clean.sh setup.py setup.cfg tox.ini
-recursive-include docs *.rst
-recursive-include _libldap0 *.c *.h
-recursive-include ldap0 *.py
-recursive-include tests *.py
+include LICENSE
+include README.md
