@@ -209,9 +209,6 @@ class LDAPObject:
                 (_libldap0.OPT_X_TLS_KEYFILE, client_key_filename),
             ):
             try:
-                if not tls_pathname:
-                    # get global default
-                    tls_pathname = _libldap0.get_option(tls_option)
                 if tls_pathname:
                     # Check whether option file can be read
                     with open(tls_pathname, 'rb'):
