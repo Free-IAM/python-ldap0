@@ -1,2 +1,4 @@
 include LICENSE
 include README.md
+_libldap0
+include _libldap0/*.c _libldap0/*.h
