@@ -20,7 +20,7 @@ class SearchNoOpControl(ValueLessRequestControl, ResponseControl):
     No-op control attached to search operations implementing sort of a
     count operation
 
-    see https://www.openldap.org/its/index.cgi?findid=6598#followup4
+    see https://bugs.openldap.org/show_bug.cgi?id=6598#followup4
     """
     controlType: str = '1.3.6.1.4.1.4203.666.5.18'
 
