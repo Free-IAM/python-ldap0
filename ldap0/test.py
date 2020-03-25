@@ -108,13 +108,12 @@ class SlapdObject:
     )
 
     TMPDIR = os.environ.get('TMP', os.getcwd())
-    SBINDIR = os.environ.get('SBIN', '/usr/sbin')
     BINDIR = os.environ.get('BIN', '/usr/bin')
     SCHEMADIR = os.environ.get('SCHEMA', '/etc/openldap/schema')
     PATH_LDAPADD = os.path.join(BINDIR, 'ldapadd')
     PATH_LDAPMODIFY = os.path.join(BINDIR, 'ldapmodify')
     PATH_LDAPWHOAMI = os.path.join(BINDIR, 'ldapwhoami')
-    PATH_SLAPD = os.environ.get('SLAPD', os.path.join(SBINDIR, 'slapd'))
+    PATH_SLAPD = os.environ.get('SLAPD', '/usr/sbin/slapd')
 
     # time in secs to wait before trying to access slapd via LDAP (again)
     start_sleep = float(os.environ.get('START_SLEEP', '1.5'))
