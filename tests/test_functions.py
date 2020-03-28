@@ -111,6 +111,47 @@ class TestFunction(unittest.TestCase):
             ldap0.functions.datetime2str(datetime.datetime(2020, 3, 28, 12, 34, 56))
         )
 
+    def test_is_expired(self):
+        self.assertTrue(
+            ldap0.functions.is_expired(
+                datetime.datetime.utcnow()-datetime.timedelta(seconds=2),
+                datetime.timedelta(seconds=1),
+            )
+        )
+        for start_time in (
+               datetime.datetime(1970, 1, 1),
+               '19700101000000Z',
+               b'19700101000000Z',
+               0,
+               0.0,
+            ):
+            for max_age_1, max_age_0 in (
+                    (datetime.timedelta(seconds=1), datetime.timedelta(seconds=0)),
+                    ('1', '0'),
+                    (1, 0),
+                    (1.0, 0.0),
+                ):
+                self.assertTrue(
+                    ldap0.functions.is_expired(
+                        start_time,
+                        max_age_1,
+                    )
+                )
+                self.assertFalse(
+                    ldap0.functions.is_expired(
+                        start_time,
+                        max_age_0,
+                        disable_secs=0,
+                    )
+                )
+                self.assertTrue(
+                    ldap0.functions.is_expired(
+                        start_time,
+                        max_age_0,
+                        disable_secs=-1,
+                    )
+                )
+
 
 class TestOptions(unittest.TestCase):
     """

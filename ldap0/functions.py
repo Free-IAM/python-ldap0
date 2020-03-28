@@ -3,7 +3,7 @@
 ldap0.functions - wraps functions of module _ldap
 """
 
-from typing import Set
+from typing import Optional, Set, Union
 
 __all__ = [
     'escape_str',
@@ -132,6 +132,34 @@ def datetime2str(time_dt) -> str:
     Return datetime as string formatted as GeneralizedTime (UTC)
     """
     return datetime.datetime.strftime(time_dt, DATETIME_FORMAT_UTC)
+
+
+def is_expired(
+        start: Union[str, bytes, datetime.datetime],
+        max_age: Union[str, bytes, int, float, datetime.timedelta],
+        now=None,
+        disable_secs: Union[int, float] = 0,
+    ) -> bool:
+    """
+    Check expiry of something based on start date and time
+    and a timespan.
+
+    Returns True if start + max_age > now
+    """
+    if isinstance(start, bytes):
+        start = str2datetime(start.decode('utf-8'))
+    elif isinstance(start, str):
+        start = str2datetime(start)
+    elif isinstance(start, (int, float)):
+        start = datetime.datetime.fromtimestamp(start)
+    if isinstance(max_age, (str, bytes, float)):
+        max_age = datetime.timedelta(seconds=int(max_age))
+    elif isinstance(max_age, int):
+        max_age = datetime.timedelta(seconds=max_age)
+    if max_age.seconds <= disable_secs or not start:
+        # nothing to check
+        return False
+    return (start + max_age) < (now or datetime.datetime.utcnow())
 
 
 def attr_set(attrs_str: str) -> Set[str]:
