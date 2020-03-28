@@ -5,6 +5,7 @@ Automatic tests for module ldap0.functions
 
 # from Python's standard lib
 import unittest
+import datetime
 
 import ldap0
 from ldap0.functions import attr_set, escape_str
@@ -86,6 +87,26 @@ class TestFunction(unittest.TestCase):
         self.assertEqual(
             attr_set('    foo, bar, foo bar'),
             {'foo', 'bar'}
+        )
+
+    def test_str2datetime(self):
+        self.assertEqual(
+            ldap0.functions.str2datetime('19700101000000Z'),
+            datetime.datetime(1970, 1, 1)
+        )
+        self.assertEqual(
+            ldap0.functions.str2datetime('20200328123456Z'),
+            datetime.datetime(2020, 3, 28, 12, 34, 56)
+        )
+
+    def test_datetime2str(self):
+        self.assertEqual(
+            '19700101000000Z',
+            ldap0.functions.datetime2str(datetime.datetime(1970, 1, 1))
+        )
+        self.assertEqual(
+            '20200328123456Z',
+            ldap0.functions.datetime2str(datetime.datetime(2020, 3, 28, 12, 34, 56))
         )
 
 

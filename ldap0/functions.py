@@ -13,6 +13,7 @@ __all__ = [
     'strp_secs',
 ]
 
+import datetime
 import pprint
 import time
 import logging
@@ -27,6 +28,9 @@ import ldap0
 
 global _LIBLDAP0_MODULE_LOCK
 _LIBLDAP0_MODULE_LOCK = LDAPLock(desc='Module lock', trace_level=ldap0._trace_level)
+
+# format string used for Generalized Time attributes values with UTC
+DATETIME_FORMAT_UTC = r'%Y%m%d%H%M%SZ'
 
 
 def _libldap0_function_call(func, *args, **kwargs):
@@ -106,14 +110,28 @@ def strf_secs(secs: float) -> str:
     """
     Convert seconds since epoch to a string compliant to LDAP syntax GeneralizedTime
     """
-    return time.strftime('%Y%m%d%H%M%SZ', time.gmtime(secs))
+    return time.strftime(DATETIME_FORMAT_UTC, time.gmtime(secs))
 
 
 def strp_secs(dt_str: str) -> float:
     """
     Convert LDAP syntax GeneralizedTime to seconds since epoch
     """
-    return timegm(time.strptime(dt_str, '%Y%m%d%H%M%SZ'))
+    return timegm(time.strptime(dt_str, DATETIME_FORMAT_UTC))
+
+
+def str2datetime(time_str: str):
+    """
+    Parse GeneralizedTime (UTC) string to datetime.datetime instance
+    """
+    return datetime.datetime.strptime(time_str, DATETIME_FORMAT_UTC)
+
+
+def datetime2str(time_dt) -> str:
+    """
+    Return datetime as string formatted as GeneralizedTime (UTC)
+    """
+    return datetime.datetime.strftime(time_dt, DATETIME_FORMAT_UTC)
 
 
 def attr_set(attrs_str: str) -> Set[str]:
