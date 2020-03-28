@@ -7,10 +7,9 @@ Automatic tests for module ldap0.functions
 import unittest
 import datetime
 
-import ldap0
-from ldap0.functions import attr_set, escape_str
-from ldap0.dn import escape_str as escape_dn_str
-from ldap0.filter import escape_str as escape_filter_str
+import ldap0.functions
+import ldap0.dn
+import ldap0.filter
 
 
 class TestFunction(unittest.TestCase):
@@ -18,51 +17,54 @@ class TestFunction(unittest.TestCase):
     test simple functions in ldap0.functions
     """
 
-    def test_ldap_strf_secs(self):
-        """
-        test function ldap_strf_secs()
-        """
-        self.assertEqual(ldap0.strf_secs(0), '19700101000000Z')
-        self.assertEqual(ldap0.strf_secs(1466947067), '20160626131747Z')
+    def test_strf_secs(self):
+        self.assertEqual(
+            ldap0.functions.strf_secs(0),
+            '19700101000000Z'
+        )
+        self.assertEqual(
+            ldap0.functions.strf_secs(1466947067),
+            '20160626131747Z'
+        )
 
-    def test_ldap_strp_secs(self):
-        """
-        test function ldap_strp_secs()
-        """
-        self.assertEqual(ldap0.strp_secs('19700101000000Z'), 0)
-        self.assertEqual(ldap0.strp_secs('20160626131747Z'), 1466947067)
+    def test_strp_secs(self):
+        self.assertEqual(
+            ldap0.functions.strp_secs('19700101000000Z'),
+            0
+        )
+        self.assertEqual(
+            ldap0.functions.strp_secs('20160626131747Z'),
+            1466947067
+        )
 
     def test_escape_str(self):
-        """
-        test function escape_string_tmpl()
-        """
         self.assertEqual(
-            escape_str(
-                escape_filter_str,
+            ldap0.functions.ldap0.functions.escape_str(
+                ldap0.filter.escape_str,
                 '(&(objectClass=aeUser)(uid=%s))',
                 'foo'
             ),
             '(&(objectClass=aeUser)(uid=foo))'
         )
         self.assertEqual(
-            escape_str(
-                escape_filter_str,
+            ldap0.functions.escape_str(
+                ldap0.filter.escape_str,
                 '(&(objectClass=aeUser)(uid=%s))',
                 'foo)bar'
             ),
             '(&(objectClass=aeUser)(uid=foo\\29bar))'
         )
         self.assertEqual(
-            escape_str(
-                escape_dn_str,
+            ldap0.functions.escape_str(
+                ldap0.dn.escape_str,
                 'uid=%s',
                 'foo=bar'
             ),
             'uid=foo\\=bar'
         )
         self.assertEqual(
-            escape_str(
-                escape_dn_str,
+            ldap0.functions.escape_str(
+                ldap0.dn.escape_str,
                 'uid=%s,cn=%s,cn=%s,dc=example,dc=com',
                 'foo=bar',
                 'foo+',
@@ -73,19 +75,19 @@ class TestFunction(unittest.TestCase):
 
     def test_attr_set(self):
         self.assertEqual(
-            attr_set('foo bar foobar'),
+            ldap0.functions.attr_set('foo bar foobar'),
             {'foobar', 'foo', 'bar'}
         )
         self.assertEqual(
-            attr_set('foo,bar,foobar'),
+            ldap0.functions.attr_set('foo,bar,foobar'),
             {'foobar', 'foo', 'bar'}
         )
         self.assertEqual(
-            attr_set('    foo, bar, foobar'),
+            ldap0.functions.attr_set('    foo, bar, foobar'),
             {'foobar', 'foo', 'bar'}
         )
         self.assertEqual(
-            attr_set('    foo, bar, foo bar'),
+            ldap0.functions.attr_set('    foo, bar, foo bar'),
             {'foo', 'bar'}
         )
 
