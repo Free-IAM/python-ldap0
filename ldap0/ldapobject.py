@@ -427,6 +427,8 @@ class LDAPObject:
             True,
         )
         if extop_resp_class is None:
+            extop_resp_class = KNOWN_EXTENDED_RESPONSES.get(respoid)
+        if extop_resp_class is None:
             extop_response = ExtendedResponse(respoid, respvalue)
         else:
             if not extop_resp_class.check_resp_name(

@@ -3,7 +3,7 @@
 ldap0.extop - support classes for LDAPv3 extended operations
 """
 
-from typing import Optional
+from typing import Dict, Union, Optional
 
 from ..__about__ import __version__, __author__, __license__
 
@@ -19,6 +19,9 @@ class ExtendedRequest:
         (here it is the BER-encoded ASN.1 request value)
     """
     encoding: str = 'utf-8'
+
+    defaultResponse: Optional['ExtendedResponse'] = None
+    defaultIntermediateResponse: Optional['IntermediateResponse'] = None
 
     def __init__(self, requestName=None, requestValue=None):
         if requestName is not None:
@@ -122,3 +125,25 @@ class IntermediateResponse:
         sets the appropriate class attributes
         """
         self.responseValue = value
+
+
+class ExopRegistry:
+    """
+    A simple registry for responses and their handler class
+    """
+
+    cmap: Dict[str, Union[ExtendedResponse, IntermediateResponse]]
+
+    def __init__(self):
+        self.cmap = {}
+
+    def reg(self, extop):
+        self.cmap[extop.responseName] = extop
+
+    def get(self, oid):
+        return self.cmap[oid]
+
+
+# response OID to class registry
+KNOWN_EXTENDED_RESPONSES = ExopRegistry()
+KNOWN_INTERMEDIATE_RESPONSES = ExopRegistry()

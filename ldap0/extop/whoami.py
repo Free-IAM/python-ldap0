@@ -8,14 +8,6 @@ from ..__about__ import __version__, __author__, __license__
 from . import ExtendedRequest, ExtendedResponse
 
 
-class WhoAmIRequest(ExtendedRequest):
-    """
-    Who Am I? extended request
-    """
-
-    requestName: str = '1.3.6.1.4.1.4203.1.11.3'
-
-
 class WhoAmIResponse(ExtendedResponse):
     """
     Who Am I? extended response
@@ -32,3 +24,12 @@ class WhoAmIResponse(ExtendedResponse):
 
     def decode(self, value: bytes):
         self.responseValue = value.decode(self.encoding, errors='strict')
+
+
+class WhoAmIRequest(ExtendedRequest):
+    """
+    Who Am I? extended request
+    """
+
+    requestName: str = '1.3.6.1.4.1.4203.1.11.3'
+    defaultResponse = WhoAmIResponse

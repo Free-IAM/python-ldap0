@@ -13,7 +13,7 @@ from uuid import UUID
 
 from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
-from ..extop import IntermediateResponse
+from ..extop import IntermediateResponse, KNOWN_INTERMEDIATE_RESPONSES
 
 
 __all__ = [
@@ -348,3 +348,5 @@ class SyncInfoMessage(IntermediateResponse):
                 setattr(self, attr, val)
                 return
 
+
+KNOWN_INTERMEDIATE_RESPONSES.reg(SyncInfoMessage)
