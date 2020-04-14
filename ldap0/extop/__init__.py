@@ -80,3 +80,45 @@ class ExtendedResponse:
         sets the appropriate class attributes
         """
         self.responseValue = value
+
+
+class IntermediateResponse:
+    """
+    Generic base class for a LDAPv3 intermediate response
+
+    requestName
+        OID as string of the LDAPv3 intermediate response
+    encodedResponseValue
+        BER-encoded ASN.1 value of the LDAPv3 intermediate response
+    """
+    encoding = 'utf-8'
+
+    responseName = None
+
+    def __init__(self, responseName=None, encodedResponseValue=None):
+        if responseName is not None:
+            self.responseName = responseName
+        self.responseValue = encodedResponseValue
+        if encodedResponseValue is not None:
+            self.decode(encodedResponseValue)
+
+    def __repr__(self):
+        return '%s(responseName=%r, responseValue=%r)' % (
+            self.__class__.__name__,
+            self.responseName,
+            self.responseValue,
+        )
+
+    @classmethod
+    def check_resp_name(cls, name):
+        """
+        returns True if :name: is the correct expected responseName
+        """
+        return name == cls.responseName
+
+    def decode(self, value: bytes):
+        """
+        decodes the BER-encoded ASN.1 extended operation response value and
+        sets the appropriate class attributes
+        """
+        self.responseValue = value

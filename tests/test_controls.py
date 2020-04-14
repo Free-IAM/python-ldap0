@@ -16,6 +16,7 @@ from ldap0.controls.psearch import *
 from ldap0.controls.ppolicy import *
 from ldap0.controls.pwdpolicy import *
 from ldap0.controls.readentry import *
+from ldap0.controls.syncrepl import *
 from ldap0.controls.vlv import *
 from ldap0.controls.libldap import *
 
@@ -170,6 +171,55 @@ class TestAssertionControl(unittest.TestCase):
             b'\x04\x0fmodifyTimestamp\x04\x0f20190917170703Z\xa3Z'
             b'\x04\x0ccreatorsName\x04Jcn=michael str\xc3\xb6der+mail=michael@stroeder.com,ou=private,dc=stroeder,dc=de'
             b'\xa3[\x04\rmodifiersName\x04Jcn=michael str\xc3\xb6der+mail=michael@stroeder.com,ou=private,dc=stroeder,dc=de'
+        )
+
+
+class TestSyncRepl(unittest.TestCase):
+    """
+    test class for ldap0.controls.syncrepl
+    """
+
+    #@unittest.skip('Test vectors not verified')
+    def test001_syncrepl_request_control(self):
+        src = SyncRequestControl(
+            criticality=True,
+        )
+        self.assertEqual(src.encode(), b'0\x03\n\x01\x01')
+
+        src = SyncRequestControl(
+            criticality=True,
+            cookie="rid=000,csn=20190917170703.426971Z#000000#000#000000",
+            mode='refreshAndPersist',
+            reloadHint=False
+        )
+        self.assertEqual(src.encode(), b'09\n\x01\x03\x044rid=000,csn=20190917170703.426971Z#000000#000#000000')
+
+    def _check_state_decoded_val(self, buf, state=None, entryUUID=None, cookie=None):
+        ssc = SyncStateControl()
+        ssc.decode(buf)
+        self.assertEqual(ssc.state, state)
+        self.assertEqual(ssc.entryUUID, entryUUID)
+        self.assertEqual(ssc.cookie, cookie)
+
+    def test002_syncrepl_state_response_control(self):
+        self._check_state_decoded_val(
+            b'0K\x0a\x01\x01\x04\x10\xefg\x1dwU\tJ\xb5\xbb\xd3j\xb8~&\x1b;\x044rid=000,csn=20200414133753.354835Z#000000#000#000000',
+            state='add',
+            entryUUID='ef671d77-5509-4ab5-bbd3-6ab87e261b3b',
+            cookie=b'rid=000,csn=20200414133753.354835Z#000000#000#000000',
+        )
+
+    def _check_done_decoded_val(self, buf, cookie=None, refreshDeletes=None):
+        sdc = SyncDoneControl()
+        sdc.decode(buf)
+        self.assertEqual(sdc.cookie, cookie)
+        self.assertEqual(sdc.refreshDeletes, refreshDeletes)
+
+    def test003_syncrepl_done_response_control(self):
+        self._check_done_decoded_val(
+            b'09\x044rid=000,csn=20200414133753.354835Z#000000#000#000000\x01\x01\xff',
+            cookie=b'rid=000,csn=20200414133753.354835Z#000000#000#000000',
+            refreshDeletes=True,
         )
 
 
