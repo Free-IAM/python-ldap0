@@ -12,7 +12,7 @@ umask 077
 set -e
 
 # first run the test suite isolated just to be sure
-SLAPD_SLEEP="0.1" TMP="/tmp" tox-3.7
+SLAPD_SLEEP="0.1" TMP="/tmp" tox
 
 # determine version numer
 RELEASE=$(PYTHONPATH=ldap0 python3 -c 'from __about__ import __version__ ; print(__version__)')
