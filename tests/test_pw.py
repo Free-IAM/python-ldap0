@@ -11,15 +11,6 @@ import ldap0.pw
 from ldap0.pw import *
 
 
-class TestBasics(unittest.TestCase):
-
-    def test_constants(self):
-        self.assertEqual(
-            ldap0.pw.PWD_OCTETS_ALPHABET,
-            (''.join([ chr(i) for i in range(256)])).encode('iso-8859-1')
-        )
-
-
 class TestPasswordFunctions(unittest.TestCase):
     """
     test functions in ldap0.dn
