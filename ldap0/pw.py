@@ -5,8 +5,8 @@ ldap0.pw - stuff for passwords
 
 import hashlib
 import string
+import secrets
 from binascii import hexlify
-from random import SystemRandom
 from typing import Union, Optional
 
 from .__about__ import __version__, __author__, __license__
@@ -57,13 +57,13 @@ def random_string(
     Returns a random password byte string consisting of `length' bytes of
     chars found in `alphabet'.
     """
-    sys_rand = SystemRandom()
     random_upper_bound = len(alphabet) - 1
     res = []
     for _ in range(length):
-        pos = sys_rand.randint(0, random_upper_bound)
-        res.append(alphabet[pos:pos+1])
-    return {str: '', bytes: b''}[type(alphabet)].join(res)
+        res.append(secrets.choice(alphabet))
+    if isinstance(alphabet, bytes):
+        return bytes(res)
+    return ''.join(res)
 
 
 def unicode_pwd(
