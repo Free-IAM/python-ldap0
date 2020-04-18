@@ -127,23 +127,26 @@ class IntermediateResponse:
         self.responseValue = value
 
 
-class ExopRegistry:
+class ExtOpResponseRegistry:
     """
     A simple registry for responses and their handler class
     """
 
-    cmap: Dict[str, Union[ExtendedResponse, IntermediateResponse]]
+    _handler_cls: Dict[str, Union[ExtendedResponse, IntermediateResponse]]
 
     def __init__(self):
-        self.cmap = {}
+        self._handler_cls = {}
 
-    def reg(self, extop):
-        self.cmap[extop.responseName] = extop
+    def register(
+        self,
+        handler: Union[ExtendedResponse, IntermediateResponse],
+    ):
+        self._handler_cls[handler.responseName] = handler
 
-    def get(self, oid):
-        return self.cmap[oid]
+    def get(self, oid: str) -> Union[ExtendedResponse, IntermediateResponse]:
+        return self._handler_cls[oid]
 
 
 # response OID to class registry
-KNOWN_EXTENDED_RESPONSES = ExopRegistry()
-KNOWN_INTERMEDIATE_RESPONSES = ExopRegistry()
+KNOWN_EXTENDED_RESPONSES = ExtOpResponseRegistry()
+KNOWN_INTERMEDIATE_RESPONSES = ExtOpResponseRegistry()

@@ -349,4 +349,4 @@ class SyncInfoMessage(IntermediateResponse):
                 return
 
 
-KNOWN_INTERMEDIATE_RESPONSES.reg(SyncInfoMessage)
+KNOWN_INTERMEDIATE_RESPONSES.register(SyncInfoMessage)
