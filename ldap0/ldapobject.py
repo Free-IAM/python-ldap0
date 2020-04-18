@@ -27,7 +27,7 @@ from .schema.subentry import SCHEMA_ATTRS
 from .controls import decode_response_ctrls, encode_request_ctrls
 from .controls.openldap import SearchNoOpControl
 from .controls.ppolicy import PasswordPolicyControl
-from .extop import ExtendedResponse
+from .extop import ExtendedResponse, KNOWN_EXTENDED_RESPONSES
 from .extop.dds import RefreshRequest, RefreshResponse
 from .extop.whoami import WhoAmIRequest, WhoAmIResponse
 from .extop.passmod import PassmodRequest, PassmodResponse
