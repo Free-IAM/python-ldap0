@@ -17,6 +17,7 @@ class TestLDIFParser(unittest.TestCase):
     """
     Various LDIF test cases
     """
+    record_type = None
 
     def _parse_records(
             self,
@@ -34,7 +35,7 @@ class TestLDIFParser(unittest.TestCase):
         )
         parser_method = getattr(
             ldif_parser,
-            'list_%s_records' % self.record_type
+            'list_{0}_records'.format(self.record_type)
         )
         return parser_method()
 
