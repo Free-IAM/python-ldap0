@@ -148,5 +148,5 @@ class ExtOpResponseRegistry:
 
 
 # response OID to class registry
-KNOWN_EXTENDED_RESPONSES = ExtOpResponseRegistry()
-KNOWN_INTERMEDIATE_RESPONSES = ExtOpResponseRegistry()
+EXTOP_RESPONSE_REGISTRY = ExtOpResponseRegistry()
+INTERMEDIATE_RESPONSE_REGISTRY = ExtOpResponseRegistry()

@@ -27,7 +27,7 @@ from .schema.subentry import SCHEMA_ATTRS
 from .controls import decode_response_ctrls, encode_request_ctrls
 from .controls.openldap import SearchNoOpControl
 from .controls.ppolicy import PasswordPolicyControl
-from .extop import ExtendedResponse, KNOWN_EXTENDED_RESPONSES
+from .extop import ExtendedResponse, EXTOP_RESPONSE_REGISTRY
 from .extop.dds import RefreshRequest, RefreshResponse
 from .extop.whoami import WhoAmIRequest, WhoAmIResponse
 from .extop.passmod import PassmodRequest, PassmodResponse
@@ -427,7 +427,7 @@ class LDAPObject:
             True,
         )
         if extop_resp_class is None:
-            extop_resp_class = KNOWN_EXTENDED_RESPONSES.get(respoid)
+            extop_resp_class = EXTOP_RESPONSE_REGISTRY.get(respoid)
         if extop_resp_class is None:
             extop_response = ExtendedResponse(respoid, respvalue)
         else:
