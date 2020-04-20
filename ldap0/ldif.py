@@ -211,7 +211,7 @@ class LDIFParser:
             input_file: BinaryIO,
             ignored_attr_types: Optional[Sequence[bytes]] = None,
             max_entries: Optional[int] = None,
-            process_url_schemes: Optional[bytes] = None,
+            process_url_schemes: Optional[Sequence[bytes]] = None,
             line_sep: bytes = b'\n'
         ):
         """
