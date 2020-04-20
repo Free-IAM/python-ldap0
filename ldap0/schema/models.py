@@ -28,8 +28,8 @@ __all__ = [
     'OBJECTCLASS_KIND_STR',
 ]
 
-#TYPEDEF_TOKEN_DEFAULTS = Mapping[str, Union[int, str, Tuple[Union[None, str]]]]
-TYPEDEF_TOKEN_DEFAULTS = Mapping[str, Any]
+#TokenDefaults = Mapping[str, Union[int, str, Tuple[Union[None, str]]]]
+TokenDefaults = Mapping[str, Any]
 
 NOT_HUMAN_READABLE_LDAP_SYNTAXES = {
     '1.3.6.1.4.1.1466.115.121.1.4',  # Audio
@@ -75,7 +75,7 @@ class SchemaElement:
       Dictionary internally used by the schema element parser
       containing the defaults for certain schema description key-words
     """
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'DESC':(None,),
     }
     oid: str
@@ -90,7 +90,6 @@ class SchemaElement:
 
     def _set_attrs(self, l, d):
         self.desc = d['DESC'][0]
-        return
 
     def set_id(self, element_id):
         self.oid = element_id
@@ -98,7 +97,8 @@ class SchemaElement:
     def get_id(self):
         return self.oid
 
-    def key_attr(self, key, value, quoted=0):
+    @staticmethod
+    def key_attr(key, value, quoted=0):
         assert value is None or isinstance(value, str), \
             TypeError("value has to be of str, was %r" % value)
         if not value:
@@ -159,7 +159,7 @@ class ObjectClass(SchemaElement):
       this object class is derived from
     """
     schema_attribute = 'objectClasses'
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -189,7 +189,6 @@ class ObjectClass(SchemaElement):
             self.sup = ('top',)
         else:
             self.sup = d['SUP']
-        return
 
     def __str__(self):
         result = [str(self.oid)]
@@ -249,7 +248,7 @@ class AttributeType(SchemaElement):
       this attribute type is derived from
     """
     schema_attribute = 'attributeTypes'
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -300,7 +299,6 @@ class AttributeType(SchemaElement):
         self.collective = d['COLLECTIVE'] is not None
         self.no_user_mod = d['NO-USER-MODIFICATION'] is not None
         self.usage = ATTRIBUTE_USAGE.get(d['USAGE'][0], 0)
-        return
 
     def __str__(self):
         result = [str(self.oid)]
@@ -343,7 +341,7 @@ class LDAPSyntax(SchemaElement):
       as not human-readable (X-NOT-HUMAN-READABLE)
     """
     schema_attribute = 'ldapSyntaxes'
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'DESC': (None,),
         'X-NOT-HUMAN-READABLE': (None,),
         'X-BINARY-TRANSFER-REQUIRED': (None,),
@@ -357,7 +355,6 @@ class LDAPSyntax(SchemaElement):
             self.oid in NOT_HUMAN_READABLE_LDAP_SYNTAXES or \
             d['X-NOT-HUMAN-READABLE'][0] == 'TRUE'
         self.x_binary_transfer_required = d['X-BINARY-TRANSFER-REQUIRED'][0] == 'TRUE'
-        return
 
     def __str__(self):
         result = [str(self.oid)]
@@ -394,7 +391,7 @@ class MatchingRule(SchemaElement):
       String contains OID of the LDAP syntax this matching rule is usable with
     """
     schema_attribute = 'matchingRules'
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -406,7 +403,6 @@ class MatchingRule(SchemaElement):
         self.desc = d['DESC'][0]
         self.obsolete = d['OBSOLETE'] is not None
         self.syntax = d['SYNTAX'][0]
-        return
 
     def __str__(self):
         result = [str(self.oid)]
@@ -440,7 +436,7 @@ class MatchingRuleUse(SchemaElement):
       for which this matching rule is used
     """
     schema_attribute = 'matchingRuleUse'
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -452,7 +448,6 @@ class MatchingRuleUse(SchemaElement):
         self.desc = d['DESC'][0]
         self.obsolete = d['OBSOLETE'] is not None
         self.applies = d['APPLIES']
-        return
 
     def __str__(self):
         result = [str(self.oid)]
@@ -497,7 +492,7 @@ class DITContentRule(SchemaElement):
       may not be present in an entry of the object class
     """
     schema_attribute = 'dITContentRules'
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -515,7 +510,6 @@ class DITContentRule(SchemaElement):
         self.must = d['MUST']
         self.may = d['MAY']
         self.nots = d['NOT']
-        return
 
     def __str__(self):
         result = [str(self.oid)]
@@ -555,7 +549,7 @@ class DITStructureRule(SchemaElement):
     """
     schema_attribute = 'dITStructureRules'
 
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -576,7 +570,6 @@ class DITStructureRule(SchemaElement):
         self.obsolete = d['OBSOLETE'] is not None
         self.form = d['FORM'][0]
         self.sup = d['SUP']
-        return
 
     def __str__(self):
         result = [str(self.ruleid)]
@@ -619,7 +612,7 @@ class NameForm(SchemaElement):
       an RDN may contain
     """
     schema_attribute = 'nameForms'
-    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
+    token_defaults: TokenDefaults = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -635,7 +628,6 @@ class NameForm(SchemaElement):
         self.oc = d['OC'][0]
         self.must = d['MUST']
         self.may = d['MAY']
-        return
 
     def __str__(self):
         result = [str(self.oid)]
