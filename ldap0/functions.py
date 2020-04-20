@@ -137,7 +137,7 @@ def datetime2str(time_dt) -> str:
 def is_expired(
         start: Union[str, bytes, datetime.datetime],
         max_age: Union[str, bytes, int, float, datetime.timedelta],
-        now=None,
+        now: Optional[datetime.datetime] = None,
         disable_secs: Union[int, float] = 0,
     ) -> bool:
     """
