@@ -5,6 +5,7 @@ ldap0.schema.models - support for subSchemaSubEntry information
 
 from collections.abc import MutableSet
 from collections import UserDict, OrderedDict
+from typing import Any, Mapping, Sequence, Union, Tuple
 
 from ..__about__ import __version__, __author__, __license__
 from ..cidict import CIDict
@@ -26,6 +27,9 @@ __all__ = [
     'NOT_HUMAN_READABLE_LDAP_SYNTAXES',
     'OBJECTCLASS_KIND_STR',
 ]
+
+#TYPEDEF_TOKEN_DEFAULTS = Mapping[str, Union[int, str, Tuple[Union[None, str]]]]
+TYPEDEF_TOKEN_DEFAULTS = Mapping[str, Any]
 
 NOT_HUMAN_READABLE_LDAP_SYNTAXES = {
     '1.3.6.1.4.1.1466.115.121.1.4',  # Audio
@@ -71,9 +75,11 @@ class SchemaElement:
       Dictionary internally used by the schema element parser
       containing the defaults for certain schema description key-words
     """
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'DESC':(None,),
     }
+    oid: str
+    desc: str
 
     def __init__(self, schema_element_str=None):
         if schema_element_str:
@@ -153,7 +159,7 @@ class ObjectClass(SchemaElement):
       this object class is derived from
     """
     schema_attribute = 'objectClasses'
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -164,6 +170,7 @@ class ObjectClass(SchemaElement):
         'MUST': (()),
         'MAY': ()
     }
+    names: Sequence[str]
 
     def _set_attrs(self, l, d):
         self.obsolete = d['OBSOLETE'] is not None
@@ -242,7 +249,7 @@ class AttributeType(SchemaElement):
       this attribute type is derived from
     """
     schema_attribute = 'attributeTypes'
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -336,7 +343,7 @@ class LDAPSyntax(SchemaElement):
       as not human-readable (X-NOT-HUMAN-READABLE)
     """
     schema_attribute = 'ldapSyntaxes'
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'DESC': (None,),
         'X-NOT-HUMAN-READABLE': (None,),
         'X-BINARY-TRANSFER-REQUIRED': (None,),
@@ -387,7 +394,7 @@ class MatchingRule(SchemaElement):
       String contains OID of the LDAP syntax this matching rule is usable with
     """
     schema_attribute = 'matchingRules'
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -433,7 +440,7 @@ class MatchingRuleUse(SchemaElement):
       for which this matching rule is used
     """
     schema_attribute = 'matchingRuleUse'
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -490,7 +497,7 @@ class DITContentRule(SchemaElement):
       may not be present in an entry of the object class
     """
     schema_attribute = 'dITContentRules'
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
@@ -548,13 +555,14 @@ class DITStructureRule(SchemaElement):
     """
     schema_attribute = 'dITStructureRules'
 
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
         'FORM': (None,),
         'SUP': (()),
     }
+    ruleid: str
 
     def set_id(self, element_id):
         self.ruleid = element_id
@@ -611,7 +619,7 @@ class NameForm(SchemaElement):
       an RDN may contain
     """
     schema_attribute = 'nameForms'
-    token_defaults = {
+    token_defaults: TYPEDEF_TOKEN_DEFAULTS = {
         'NAME': (()),
         'DESC': (None,),
         'OBSOLETE': None,
