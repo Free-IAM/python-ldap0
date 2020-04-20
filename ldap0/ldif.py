@@ -263,9 +263,9 @@ class LDIFParser:
         self.byte_counter = self.byte_counter + len(line)
         if not line:
             return None
-        elif line[-2:] == b'\r\n':
+        if line[-2:] == b'\r\n':
             return line[:-2]
-        elif line[-1:] == b'\n':
+        if line[-1:] == b'\n':
             return line[:-1]
         return line
 
