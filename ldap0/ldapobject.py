@@ -229,7 +229,7 @@ class LDAPObject:
 
     def abandon(self, msgid: int, req_ctrls=None):
         if msgid not in self._outstanding_requests:
-            raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
+            raise _libldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
         res = self._ldap_call(
             self._l.abandon_ext,
             msgid,
@@ -240,7 +240,7 @@ class LDAPObject:
 
     def cancel(self, cancelid: int, req_ctrls=None):
         if cancelid not in self._outstanding_requests:
-            raise ldap0.NO_SUCH_OPERATION('Unexpected cancelid value %s' % (cancelid,))
+            raise _libldap0.NO_SUCH_OPERATION('Unexpected cancelid value %s' % (cancelid,))
         return self.extop(
             CancelRequest(cancelid),
             req_ctrls=req_ctrls,
@@ -538,7 +538,7 @@ class LDAPObject:
             resp_ctrl_classes=None,
         ) -> LDAPResult:
         if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
-            raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
+            raise _libldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
         res_type, res_data, res_msgid, res_ctrls = self._ldap_call(
             self._l.result,
             msgid,
@@ -576,7 +576,7 @@ class LDAPObject:
         LDAPObject.result()
         """
         if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
-            raise ldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
+            raise _libldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
         start_time = time.time()
         if timeout >= 0:
             end_time = start_time + timeout
