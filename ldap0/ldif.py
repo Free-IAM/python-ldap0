@@ -249,6 +249,9 @@ class LDIFParser:
 
     @classmethod
     def frombuf(cls, ldif_bytes: bytes, **kwargs):
+        """
+        initialize LDIFParser instance for parsing a byte sequence
+        """
         assert isinstance(ldif_bytes, bytes), TypeError(
             'Expected bytes for ldif_bytes, got %r' % (ldif_bytes,)
         )
@@ -528,7 +531,13 @@ class LDIFParser:
         # parse_change_records()
 
     def list_entry_records(self):
+        """
+        return list of parsed entry records
+        """
         return list(self.parse_entry_records())
 
     def list_change_records(self):
+        """
+        return list of parsed change records
+        """
         return list(self.parse_change_records())
