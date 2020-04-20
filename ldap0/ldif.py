@@ -100,7 +100,7 @@ class LDIFWriter:
                 self._output_file.write(line[pos:min(line_len, pos+self._cols-1)])
                 self._output_file.write(self._last_line_sep)
                 pos = pos+self._cols-1
-        return # _unfold_lines()
+        # _unfold_lines()
 
     def _needs_base64_encoding(self, attr_type: bytes, attr_value: bytes) -> bool:
         """
@@ -135,7 +135,7 @@ class LDIFWriter:
             aval = attr_value
             sep = b': '
         self._unfold_lines(sep.join((attr_type, aval)))
-        return # _unparseAttrTypeandValue()
+        # _unparseAttrTypeandValue()
 
     def _unparse_entry_record(self, entry: EntryBytes):
         """
@@ -181,7 +181,7 @@ class LDIFWriter:
         self._output_file.write(self._last_line_sep)
         # Count records written
         self.records_written = self.records_written+1
-        return # unparse()
+        # unparse()
 
 
 class LDIFParser:
@@ -407,7 +407,7 @@ class LDIFParser:
             self.records_read = self.records_read + 1
             # Consume empty separator line(s)
             key, val = self._consume_empty_lines()
-        return # parse_entry_records()
+        # parse_entry_records()
 
     def parse(self, max_entries=None):
         """
@@ -525,7 +525,7 @@ class LDIFParser:
                 self.changetype_counter[changetype] = 1
             self.records_read = self.records_read + 1
 
-        return # parse_change_records()
+        # parse_change_records()
 
     def list_entry_records(self):
         return list(self.parse_entry_records())
