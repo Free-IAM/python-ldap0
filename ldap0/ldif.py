@@ -76,7 +76,7 @@ class LDIFWriter:
         """
         self._output_file = output_file
         base64_attrs = base64_attrs or []
-        self._base64_attrs = set([a.lower() for a in base64_attrs])
+        self._base64_attrs = {a.lower() for a in base64_attrs}
         self._cols = cols
         self._last_line_sep = line_sep
         self.records_written = 0
