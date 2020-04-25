@@ -12,6 +12,7 @@
   baseurl=https://ltb-project.org/rpm/$releasever/$basearch
   enabled=1
   gpgcheck=1
+  ' > /etc/yum.repos.d/ltb-project.repo
 
 
 test:tumbleweed:
