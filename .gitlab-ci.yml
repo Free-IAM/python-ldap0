@@ -5,7 +5,7 @@
     refs:
       - branches
 
-.LTB-RPM-REPO: &script-1 |
+.LTB-RPM-REPO: &gen_yum_repo_file |
   echo '
   [ltb-project]
   name=LTB project packages
@@ -38,7 +38,7 @@ test:centos7:
   before_script:
   - yum update -y
   - yum install -y epel-release
-  - *script-1
+  - *gen_yum_repo_file
   - yum install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram openldap-ltb openldap-devel gcc cyrus-sasl-devel python36 python36-devel python36-setuptools python36-pip
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd
@@ -51,7 +51,7 @@ test:centos8:
   before_script:
   - dnf update -y
   - dnf install -y epel-release
-  - *script-1
+  - *gen_yum_repo_file
   - dnf install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram openldap-ltb openldap-devel gcc cyrus-sasl-devel platform-python-devel platform-python-setuptools platform-python-pip
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd
