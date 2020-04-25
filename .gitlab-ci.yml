@@ -7,13 +7,13 @@
 
 .LTB-RPM-REPO: &gen_yum_repo_file |
   echo '
-  [ltb-project]
-  name=LTB project packages
-  baseurl=https://ltb-project.org/rpm/$releasever/$basearch
+  [sofl]
+  name=Symas OpenLDAP for Linux RPM repository
+  baseurl=https://repo.symas.com/repo/rpm/SOFL/rhel$releasever
   enabled=1
   gpgcheck=1
-  gpgkey=https://ltb-project.org/lib/RPM-GPG-KEY-LTB-project
-  ' > /etc/yum.repos.d/ltb-project.repo
+  gpgkey=https://repo.symas.com/repo/gpg/RPM-GPG-KEY-symas-com-signing-key
+  ' > /etc/yum.repos.d/sofl.repo
 
 
 test:opensuse-tumbleweed:
@@ -39,7 +39,8 @@ test:centos-7:
   - yum update -y
   - yum install -y epel-release
   - *gen_yum_repo_file
-  - yum install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram openldap-ltb openldap-devel gcc cyrus-sasl-devel python36 python36-devel python36-setuptools python36-pip
+  - yum update -y
+  - yum install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram symas-openldap-clients symas-openldap-servers openldap-devel gcc cyrus-sasl-devel python36 python36-devel python36-setuptools python36-pip
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd
   - export SCHEMA=/usr/local/openldap/etc/openldap/schema
@@ -52,7 +53,8 @@ test:centos-8:
   - dnf update -y
   - dnf install -y epel-release
   - *gen_yum_repo_file
-  - dnf install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram openldap-ltb openldap-devel gcc cyrus-sasl-devel platform-python-devel platform-python-setuptools platform-python-pip
+  - yum update -y
+  - dnf install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram symas-openldap-clients symas-openldap-servers openldap-devel gcc cyrus-sasl-devel platform-python-devel platform-python-setuptools platform-python-pip
   - ln -s /usr/libexec/platform-python /usr/bin/python3
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd
