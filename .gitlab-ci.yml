@@ -53,6 +53,7 @@ test:centos8:
   - dnf install -y epel-release
   - *gen_yum_repo_file
   - dnf install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram openldap-ltb openldap-devel gcc cyrus-sasl-devel platform-python-devel platform-python-setuptools platform-python-pip
+  - ln -s /usr/libexec/platform-python /usr/bin/python3
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
   - export SLAPD=/usr/local/openldap/libexec/slapd
   - export SCHEMA=/usr/local/openldap/etc/openldap/schema
