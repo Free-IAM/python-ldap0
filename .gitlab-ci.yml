@@ -59,7 +59,7 @@ test:centos8:
   - export SCHEMA=/usr/local/openldap/etc/openldap/schema
   - export BIN=/usr/local/openldap/bin
 
-test:debian:
+test:debian:stable
   extends: .tests
   image: debian:stable
   before_script:
@@ -73,7 +73,7 @@ test:debian:
   - export SCHEMA=/etc/ldap/schema
   - export BIN=/usr/bin
 
-test:debian:
+test:debian:testing
   extends: .tests
   image: debian:testing
   before_script:
