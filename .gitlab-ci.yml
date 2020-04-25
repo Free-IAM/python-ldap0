@@ -42,9 +42,9 @@ test:centos-7:
   - yum update -y
   - yum install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram symas-openldap-clients symas-openldap-servers openldap-devel gcc cyrus-sasl-devel python36 python36-devel python36-setuptools python36-pip
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
-  - export SLAPD=/usr/local/openldap/libexec/slapd
-  - export SCHEMA=/usr/local/openldap/etc/openldap/schema
-  - export BIN=/usr/local/openldap/bin
+  - export SLAPD=/usr/sbin/slapd
+  - export SCHEMA=/etc/openldap/schema
+  - export BIN=/usr/bin
 
 test:centos-8:
   extends: .tests
@@ -57,9 +57,9 @@ test:centos-8:
   - dnf install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram symas-openldap-clients symas-openldap-servers openldap-devel gcc cyrus-sasl-devel platform-python-devel platform-python-setuptools platform-python-pip
   - ln -s /usr/libexec/platform-python /usr/bin/python3
   - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
-  - export SLAPD=/usr/local/openldap/libexec/slapd
-  - export SCHEMA=/usr/local/openldap/etc/openldap/schema
-  - export BIN=/usr/local/openldap/bin
+  - export SLAPD=/usr/sbin/slapd
+  - export SCHEMA=/etc/openldap/schema
+  - export BIN=/usr/bin
 
 test:debian-stable:
   extends: .tests
