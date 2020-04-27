@@ -11,8 +11,10 @@ umask 077
 # After here exit on any error
 set -e
 
+TOX_ENV="py$(python3 -c 'import sys ; print("%s%s" % (sys.version_info.major, sys.version_info.minor))')"
+
 # first run the test suite isolated just to be sure
-SLAPD_SLEEP="0.1" TMP="/tmp" tox
+SLAPD_SLEEP="0.1" TMP="/tmp" tox -e "${TOX_ENV}"
 
 # determine version numer
 RELEASE=$(PYTHONPATH=ldap0 python3 -c 'from __about__ import __version__ ; print(__version__)')
