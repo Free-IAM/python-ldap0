@@ -77,9 +77,9 @@ class LDAPObject:
 
     def __init__(
             self,
-            uri,
-            trace_level=0,
-            cache_ttl=0.0,
+            uri: str,
+            trace_level: int = 0,
+            cache_ttl: Union[int, float] = 0.0,
         ):
         self._trace_level = trace_level
         if isinstance(uri, str):
@@ -985,11 +985,11 @@ class ReconnectLDAPObject(LDAPObject):
 
     def __init__(
             self,
-            uri,
-            trace_level=0,
-            cache_ttl=0.0,
-            retry_max=1,
-            retry_delay=60.0,
+            uri: str,
+            trace_level: int = 0,
+            cache_ttl: Union[int, float] = 0.0,
+            retry_max: int = 1,
+            retry_delay: Union[int, float] = 60.0,
         ):
         """
         Parameters like LDAPObject.__init__() with these
