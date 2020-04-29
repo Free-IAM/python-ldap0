@@ -15,6 +15,11 @@ class LDAPLock:
     Note that this cumbersome approach with _lock attribute was taken
     since threading.Lock is not suitable for sub-classing.
     """
+    __slots__ = (
+        '_desc',
+        '_lock',
+        '_trace_level',
+    )
     _min_trace_level: int = 3
 
     def __init__(self, desc: str, trace_level: int = 0):
