@@ -75,6 +75,11 @@ class SchemaElement:
       Dictionary internally used by the schema element parser
       containing the defaults for certain schema description key-words
     """
+    __slots__ = (
+        'oid',
+        'desc',
+        'obsolete',
+    )
     token_defaults: TokenDefaults = {
         'DESC':(None,),
     }
@@ -158,6 +163,14 @@ class ObjectClass(SchemaElement):
       This list of strings contains NAMEs or OIDs of object classes
       this object class is derived from
     """
+    __slots__ = (
+        'names',
+        'obsolete',
+        'sup',
+        'must',
+        'may',
+        'kind',
+    )
     schema_attribute = 'objectClasses'
     token_defaults: TokenDefaults = {
         'NAME': (()),
@@ -247,6 +260,22 @@ class AttributeType(SchemaElement):
       This list of strings contains NAMEs or OIDs of attribute types
       this attribute type is derived from
     """
+    __slots__ = (
+        'names',
+        'obsolete',
+        'sup',
+        'equality',
+        'ordering',
+        'syntax',
+        'syntax_len',
+        'single_value',
+        'collective',
+        'substr',
+        'x_origin',
+        'x_ordered',
+        'no_user_mod',
+        'usage',
+    )
     schema_attribute = 'attributeTypes'
     token_defaults: TokenDefaults = {
         'NAME': (()),
@@ -340,6 +369,11 @@ class LDAPSyntax(SchemaElement):
       Integer flag (0 or 1) indicating whether the attribute type is marked
       as not human-readable (X-NOT-HUMAN-READABLE)
     """
+    __slots__ = (
+        'x_subst',
+        'not_human_readable',
+        'x_binary_transfer_required',
+    )
     schema_attribute = 'ldapSyntaxes'
     token_defaults: TokenDefaults = {
         'DESC': (None,),
@@ -390,6 +424,10 @@ class MatchingRule(SchemaElement):
     syntax
       String contains OID of the LDAP syntax this matching rule is usable with
     """
+    __slots__ = (
+        'names',
+        'syntax',
+    )
     schema_attribute = 'matchingRules'
     token_defaults: TokenDefaults = {
         'NAME': (()),
@@ -435,6 +473,10 @@ class MatchingRuleUse(SchemaElement):
       This list of strings contains NAMEs or OIDs of attribute types
       for which this matching rule is used
     """
+    __slots__ = (
+        'names',
+        'applies',
+    )
     schema_attribute = 'matchingRuleUse'
     token_defaults: TokenDefaults = {
         'NAME': (()),
@@ -491,6 +533,13 @@ class DITContentRule(SchemaElement):
       This list of strings contains NAMEs or OIDs of attributes which
       may not be present in an entry of the object class
     """
+    __slots__ = (
+        'names',
+        'aux',
+        'must',
+        'may',
+        'nots',
+    )
     schema_attribute = 'dITContentRules'
     token_defaults: TokenDefaults = {
         'NAME': (()),
@@ -547,8 +596,13 @@ class DITStructureRule(SchemaElement):
       List of strings with NAMEs or OIDs of allowed structural object classes
       of superior entries in the DIT
     """
+    __slots__ = (
+        'ruleid',
+        'names',
+        'sup',
+        'form',
+    )
     schema_attribute = 'dITStructureRules'
-
     token_defaults: TokenDefaults = {
         'NAME': (()),
         'DESC': (None,),
@@ -611,6 +665,12 @@ class NameForm(SchemaElement):
       This list of strings contains NAMEs or OIDs of additional attributes
       an RDN may contain
     """
+    __slots__ = (
+        'names',
+        'oc',
+        'must',
+        'may',
+    )
     schema_attribute = 'nameForms'
     token_defaults: TokenDefaults = {
         'NAME': (()),
