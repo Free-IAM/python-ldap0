@@ -22,7 +22,13 @@ class SearchReference:
     """
     LDAP search continuation objects
     """
-
+    __slots__ = (
+        'ctrls',
+        'encoding',
+        '_ref_urls_b',
+        '_ref_urls_o',
+        '_ref_urls_s',
+    )
     _ref_urls_s: Optional[List[str]]
     _ref_urls_o: Optional[List[LDAPUrl]]
 
@@ -57,7 +63,16 @@ class SearchResultEntry:
     """
     LDAP search result objects
     """
-
+    __slots__ = (
+        'ctrls',
+        'dn_b',
+        '_dn_o',
+        '_dn_s',
+        'encoding',
+        '_entry_as',
+        '_entry_b',
+        '_entry_s',
+    )
     dn_b: bytes
     _dn_s: Optional[str]
     _dn_o: Optional[DNObj]
@@ -128,6 +143,12 @@ class LDAPResult:
     """
     base class for LDAP result objects
     """
+    __slots__ = (
+        'rtype',
+        'rdata',
+        'msgid',
+        'ctrls',
+    )
     rtype: int
     rdata: List[Union[SearchReference, SearchResultEntry]]
     msgid: int
