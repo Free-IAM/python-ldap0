@@ -926,6 +926,11 @@ class Test00_LDAPObject(SlapdTestCase):
         ldap_res = self._ldap_conn.ensure_entry(dn1, None)
         self.assertEqual(len(ldap_res), 1)
         self.assertEqual(ldap_res[0].rtype, ldap0.RES_DELETE)
+        # nothing to be done
+        ldap_res = self._ldap_conn.ensure_entry(dn1, None)
+        self.assertEqual(ldap_res, [])
+        with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
+            ldap_res = self._ldap_conn.ensure_entry(dn1, None, del_ignore=False)
         # add
         ldap_res = self._ldap_conn.ensure_entry(dn2, entry1)
         self.assertEqual(len(ldap_res), 1)
@@ -946,6 +951,10 @@ class Test00_LDAPObject(SlapdTestCase):
         self.assertEqual(ldap_res[1].rtype, ldap0.RES_MODIFY)
         # clean up
         self._ldap_conn.delete_s(dn1)
+        # now some errors....
+        with self.assertRaises(ValueError) as ctx:
+            self._ldap_conn.ensure_entry(None, None)
+        self.assertEqual(str(ctx.exception), 'Expected either dn or old_base to be not None!')
 
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):

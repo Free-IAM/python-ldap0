@@ -473,6 +473,7 @@ class LDAPObject:
             old_filter: Optional[str] = None,
             old_attrs: Optional[List[str]] = None,
             req_ctrls: Optional[List[RequestControl]] = None,
+            del_ignore: bool = True,
         ) -> LDAPResult:
         """
         Ensure existence or absence of a single LDAP entry
@@ -491,7 +492,13 @@ class LDAPObject:
                 del_dn = old_res.dn_s
             else:
                 raise ValueError('Expected either dn or old_base to be not None!')
-            return [self.delete_s(del_dn, req_ctrls=req_ctrls)]
+            res = []
+            try:
+                res.append(self.delete_s(del_dn, req_ctrls=req_ctrls))
+            except _libldap0.NO_SUCH_OBJECT as ldap_err:
+                if not del_ignore:
+                    raise ldap_err
+            return res
         # first try to read/search old entry
         if dn is None:
             raise ValueError('Parameter dn must not be None!')
