@@ -63,15 +63,6 @@ class LDAPObject:
     Wrapper class around _libldap0.LDAPObject
     """
 
-    CLASSATTR_OPTION_MAPPING = {
-        "protocol_version": _libldap0.OPT_PROTOCOL_VERSION,
-        "deref": _libldap0.OPT_DEREF,
-        "referrals": _libldap0.OPT_REFERRALS,
-        "timelimit": _libldap0.OPT_TIMELIMIT,
-        "sizelimit": _libldap0.OPT_SIZELIMIT,
-        "network_timeout": _libldap0.OPT_NETWORK_TIMEOUT,
-    }
-
     def __init__(
             self,
             uri: str,
@@ -117,6 +108,54 @@ class LDAPObject:
         self.set_option(_libldap0.OPT_REFERRALS, False)
         self.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_HARD)
 
+    @property
+    def protocol_version(self) -> int:
+        return self.get_option(_libldap0.OPT_PROTOCOL_VERSION)
+
+    @protocol_version.setter
+    def protocol_version(self, val) -> None:
+        return self.set_option(_libldap0.OPT_PROTOCOL_VERSION, val)
+
+    @property
+    def deref(self) -> int:
+        return self.get_option(_libldap0.OPT_DEREF)
+
+    @deref.setter
+    def deref(self, val) -> None:
+        return self.set_option(_libldap0.OPT_DEREF, val)
+
+    @property
+    def referrals(self) -> int:
+        return self.get_option(_libldap0.OPT_REFERRALS)
+
+    @referrals.setter
+    def referrals(self, val) -> None:
+        return self.set_option(_libldap0.OPT_REFERRALS, val)
+
+    @property
+    def timelimit(self) -> int:
+        return self.get_option(_libldap0.OPT_TIMELIMIT)
+
+    @timelimit.setter
+    def timelimit(self, val) -> None:
+        return self.set_option(_libldap0.OPT_TIMELIMIT, val)
+
+    @property
+    def sizelimit(self) -> int:
+        return self.get_option(_libldap0.OPT_SIZELIMIT)
+
+    @sizelimit.setter
+    def sizelimit(self, val) -> None:
+        return self.set_option(_libldap0.OPT_SIZELIMIT, val)
+
+    @property
+    def network_timeout(self) -> int:
+        return self.get_option(_libldap0.OPT_NETWORK_TIMEOUT)
+
+    @network_timeout.setter
+    def network_timeout(self, val) -> None:
+        return self.set_option(_libldap0.OPT_NETWORK_TIMEOUT, val)
+
     def _ldap_call(self, func, *args, **kwargs):
         """
         Wrapper method mainly for serializing calls into OpenLDAP libs
@@ -161,22 +200,6 @@ class LDAPObject:
         if func in self._msgid_funcs:
             self._outstanding_requests[result] = (func, args, kwargs)
         return result
-
-    def __setattr__(self, name, value):
-        if name in self.CLASSATTR_OPTION_MAPPING:
-            self.set_option(self.CLASSATTR_OPTION_MAPPING[name], value)
-        else:
-            self.__dict__[name] = value
-
-    def __getattr__(self, name):
-        if name in self.CLASSATTR_OPTION_MAPPING:
-            return self.get_option(self.CLASSATTR_OPTION_MAPPING[name])
-        if name in self.__dict__:
-            return self.__dict__[name]
-        raise AttributeError('%s has no attribute %r' % (
-            self.__class__.__name__,
-            name
-        ))
 
     def __enter__(self):
         return self
