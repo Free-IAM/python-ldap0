@@ -919,6 +919,9 @@ class Test00_LDAPObject(SlapdTestCase):
         ldap_res = self._ldap_conn.ensure_entry(dn1, entry1)
         self.assertEqual(len(ldap_res), 1)
         self.assertEqual(ldap_res[0].rtype, ldap0.RES_ADD)
+        # nothing to be done
+        ldap_res = self._ldap_conn.ensure_entry(dn1, entry1)
+        self.assertEqual(ldap_res, [])
         # delete
         ldap_res = self._ldap_conn.ensure_entry(dn1, None)
         self.assertEqual(len(ldap_res), 1)
