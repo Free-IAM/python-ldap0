@@ -956,6 +956,16 @@ class Test00_LDAPObject(SlapdTestCase):
             self._ldap_conn.ensure_entry(None, None)
         self.assertEqual(str(ctx.exception), 'Expected either dn or old_base to be not None!')
 
+    def test027_res_call_args(self):
+        with self.ldap_object_class(self.server.ldapi_uri) as l:
+            l.res_call_args = True
+            bind_res = l.simple_bind_s('', b'')
+            self.assertEqual(l.whoami_s(), '')
+            func, args, kwargs = bind_res.call_args
+            self.assertEqual(func.__name__, self.ldap_object_class.simple_bind.__name__)
+            self.assertEqual(args, (b'', b'', None))
+            self.assertEqual(kwargs, {})
+
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
@@ -1008,6 +1018,7 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             'timeout': -1,
             '_trace_level': 0,
             '_whoami_dn': bind_dn,
+            'res_call_args': False,
         }
         with self.ldap_object_class(self.server.ldapi_uri) as l1:
             l1.simple_bind_s(bind_dn, b'user1_pw')

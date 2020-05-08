@@ -148,17 +148,19 @@ class LDAPResult:
         'rdata',
         'msgid',
         'ctrls',
+        'call_args',
     )
     rtype: int
     rdata: List[Union[SearchReference, SearchResultEntry]]
     msgid: int
     ctrls: List[ResponseControl]
 
-    def __init__(self, rtype: int, rdata, msgid: int, ctrls, encoding: str = 'utf-8'):
+    def __init__(self, rtype: int, rdata, msgid: int, ctrls, encoding: str = 'utf-8', call_args=None):
         self.rtype = rtype
         self.rdata = []
         self.msgid = msgid
         self.ctrls = ctrls or []
+        self.call_args = call_args
         for dn, entry, ctrls in rdata or []:
             if dn is None:
                 self.rdata.append(SearchReference(entry, ctrls, encoding=encoding))

@@ -82,6 +82,7 @@ class LDAPObject:
             trace_level: int = 0,
             cache_ttl: Union[int, float] = 0.0,
         ):
+        self.res_call_args = False
         self._trace_level = trace_level
         if isinstance(uri, str):
             ldap_url = LDAPUrl(uri)
@@ -161,10 +162,7 @@ class LDAPObject:
                     )
                 logging.debug('-> %s', pprint.pformat(result))
         if func in self._msgid_funcs:
-            if __debug__:
-                self._outstanding_requests[result] = (func, args, kwargs)
-            else:
-                self._outstanding_requests[result] = (func,)
+            self._outstanding_requests[result] = (func, args, kwargs)
         return result
 
     def __setattr__(self, name, value):
@@ -629,6 +627,10 @@ class LDAPObject:
         assert res_msgid == msgid, ValueError(
             'Expected LDAP result with msgid %d, got %d' % (msgid, res_msgid)
         )
+        if self.res_call_args:
+            call_args = self._outstanding_requests.get(res_msgid, None)
+        else:
+            call_args = None
         if res_type not in NO_FINAL_RESULT_TYPES:
             del self._outstanding_requests[res_msgid]
         return LDAPResult(
@@ -639,6 +641,7 @@ class LDAPObject:
             ],
             res_msgid,
             decode_response_ctrls(res_ctrls, resp_ctrl_classes),
+            call_args=call_args,
         )
 
     def results(
