@@ -70,9 +70,6 @@ class LDAPObject:
         "timelimit": _libldap0.OPT_TIMELIMIT,
         "sizelimit": _libldap0.OPT_SIZELIMIT,
         "network_timeout": _libldap0.OPT_NETWORK_TIMEOUT,
-        "error_number": _libldap0.OPT_ERROR_NUMBER,
-        "error_string": _libldap0.OPT_ERROR_STRING,
-        "matched_dn": _libldap0.OPT_MATCHED_DN,
     }
 
     def __init__(
