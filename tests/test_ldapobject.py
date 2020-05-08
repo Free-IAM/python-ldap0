@@ -993,9 +993,6 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     def test103_reconnect_get_state(self):
         bind_dn = 'cn=user1,'+self.server.suffix
         expected_state = {
-            '_cache': {},
-            '_cache_hits': 0,
-            '_cache_misses': 0,
             '_last_bind': (
                 'simple_bind_s',
                 (bind_dn, b'user1_pw'),
@@ -1017,7 +1014,6 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             'cache_ttl': 0.0,
             'timeout': -1,
             '_trace_level': 0,
-            '_whoami_dn': bind_dn,
             'res_call_args': False,
             'encoding': 'utf-8',
         }

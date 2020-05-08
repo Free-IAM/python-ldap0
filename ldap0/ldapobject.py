@@ -62,6 +62,22 @@ class LDAPObject:
     """
     Wrapper class around _libldap0.LDAPObject
     """
+    __slots__ = (
+        '_cache',
+        '_cache_hits',
+        '_cache_misses',
+        'cache_ttl',
+        'encoding',
+        '_l',
+        '_libldap0_lock',
+        '_msgid_funcs',
+        '_outstanding_requests',
+        'res_call_args',
+        'timeout',
+        '_trace_level',
+        'uri',
+        '_whoami_dn',
+    )
 
     def __init__(
             self,
@@ -1165,14 +1181,26 @@ class ReconnectLDAPObject(LDAPObject):
     it impossible to have a long-lasting control flow in the
     application.
     """
-
+    __slots__ = (
+        '_last_bind',
+        '_options',
+        '_reconnect_lock',
+        '_reconnects_done',
+        '_retry_delay',
+        '_retry_max',
+        '_start_tls',
+    )
     __transient_attrs__ = {
+        '_cache',
+        '_cache_hits',
+        '_cache_misses',
         '_l',
         '_libldap0_lock',
         '_reconnect_lock',
         '_last_bind',
         '_outstanding_requests',
         '_msgid_funcs',
+        '_whoami_dn',
     }
 
     def __init__(
@@ -1215,9 +1243,9 @@ class ReconnectLDAPObject(LDAPObject):
         return data representation for pickled object
         """
         state = {}
-        for key, val in self.__dict__.items():
+        for key in self.__slots__ + LDAPObject.__slots__:
             if key not in self.__transient_attrs__:
-                state[key] = val
+                state[key] = getattr(self, key)
         state['_last_bind'] = (
             self._last_bind[0].__name__,
             self._last_bind[1],
@@ -1229,7 +1257,10 @@ class ReconnectLDAPObject(LDAPObject):
         """
         set up the object from pickled data
         """
-        self.__dict__.update(data)
+        for key, val in data.items():
+            setattr(self, key, val)
+        self._whoami_dn = None
+        self.flush_cache()
         self._last_bind = (
             getattr(LDAPObject, self._last_bind[0]),
             self._last_bind[1],
