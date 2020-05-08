@@ -1019,6 +1019,7 @@ class Test01_ReconnectLDAPObject(Test00_LDAPObject):
             '_trace_level': 0,
             '_whoami_dn': bind_dn,
             'res_call_args': False,
+            'encoding': 'utf-8',
         }
         with self.ldap_object_class(self.server.ldapi_uri) as l1:
             l1.simple_bind_s(bind_dn, b'user1_pw')
