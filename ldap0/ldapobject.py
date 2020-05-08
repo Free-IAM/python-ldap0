@@ -20,11 +20,12 @@ from .err import \
     PasswordPolicyExpiredError
 from .err import NoUniqueEntry
 from .base import encode_list
+from .dn import DNObj
 from .res import SearchResultEntry, LDAPResult
 from .lock import LDAPLock
 from .functions import _libldap0_function_call
 from .schema.subentry import SCHEMA_ATTRS
-from .controls import decode_response_ctrls, encode_request_ctrls
+from .controls import decode_response_ctrls, encode_request_ctrls, RequestControl
 from .controls.openldap import SearchNoOpControl
 from .controls.ppolicy import PasswordPolicyControl
 from .extop import ExtendedResponse, EXTOP_RESPONSE_REGISTRY
@@ -33,7 +34,7 @@ from .extop.whoami import WhoAmIRequest, WhoAmIResponse
 from .extop.passmod import PassmodRequest, PassmodResponse
 from .extop.cancel import CancelRequest
 from .sasl import SaslNoninteractiveAuth
-from .modlist import add_modlist
+from .modlist import add_modlist, modify_modlist
 from .ldapurl import LDAPUrl
 from .typehints import EntryMixed
 
@@ -458,10 +459,80 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
-    def modify_s(self, dn: str, modlist, req_ctrls=None) -> LDAPResult:
+    def modify_s(self, dn: str, modlist, req_ctrls=None) -> List[LDAPResult]:
         msgid = self.modify(dn, modlist, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         assert res.rtype == _libldap0.RES_MODIFY, ValueError('Wrong result type %d' % (res.rtype,))
+        return res
+
+    def ensure_entry(
+            self,
+            dn: Optional[str] = None,
+            entry: Optional[dict] = None,
+            old_base: Optional[str] = None,
+            old_filter: Optional[str] = None,
+            old_attrs: Optional[List[str]] = None,
+            req_ctrls: Optional[List[RequestControl]] = None,
+        ) -> LDAPResult:
+        """
+        Ensure existence or absence of a single LDAP entry
+        """
+        if entry is None:
+            # ensure LDAP entry is absent
+            if dn is not None:
+                del_dn = dn
+            elif old_base is not None:
+                old_res = self.find_unique_entry(
+                    old_base,
+                    scope=_libldap0.SCOPE_SUBTREE,
+                    filterstr=old_filter or '(objectClass=*)',
+                    attrlist=['1.1']
+                )
+                del_dn = old_res.dn_s
+            else:
+                raise ValueError('Expected either dn or old_base to be not None!')
+            return [self.delete_s(del_dn, req_ctrls=req_ctrls)]
+        # first try to read/search old entry
+        if dn is None:
+            raise ValueError('Parameter dn must not be None!')
+        if old_filter is None:
+            try:
+                old_res = self.read_s(dn, attrlist=old_attrs)
+            except _libldap0.NO_SUCH_OBJECT:
+                old_dn = None
+            else:
+                old_dn = dn
+        else:
+            # forced to search for the old entry
+            if old_base is None:
+                old_base = dn
+            old_res = self.find_unique_entry(
+                old_base,
+                scope=_libldap0.SCOPE_SUBTREE,
+                filterstr=old_filter,
+                attrlist=old_attrs
+            )
+            old_dn = old_res.dn_s
+        if old_dn is None:
+            # new entry has to be added
+            return [self.add_s(dn, entry, req_ctrls=req_ctrls)]
+         # existing entry has to be renamed and/or modified
+        res = []
+        if old_dn != dn:
+            # rename/move existing entry
+            dn_o = DNObj.from_str(dn)
+            res.append(
+                self.rename_s(
+                    old_dn,
+                    str(dn_o.rdn()),
+                    str(dn_o.parent()),
+                    req_ctrls=req_ctrls,
+                )
+            )
+        mod_list = modify_modlist(old_res.entry_as, entry)
+        if mod_list:
+            # finally really modify the existing entry
+            res.append(self.modify_s(dn, mod_list, req_ctrls=req_ctrls))
         return res
 
     def passwd(

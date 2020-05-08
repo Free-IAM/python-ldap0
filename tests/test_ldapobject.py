@@ -902,6 +902,49 @@ class Test00_LDAPObject(SlapdTestCase):
         with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
             self._ldap_conn.delete_s(dn2)
 
+    def test026_ensure_entry(self):
+        dn1 = 'cn=äöüÄÖÜß,'+self.server.suffix
+        rdn2 = 'cn=LaLeLu4711'
+        dn2 = ','.join((rdn2, self.server.suffix))
+        entry1 = {
+            'objectClass': [b'applicationProcess'],
+            'cn': ['äöüÄÖÜß'.encode('utf-8')],
+        }
+        entry2 = {
+            'objectClass': [b'applicationProcess'],
+            'cn': [b'LaLeLu4711'],
+            'description': [b'Now you see it...'],
+        }
+        # add
+        ldap_res = self._ldap_conn.ensure_entry(dn1, entry1)
+        self.assertEqual(len(ldap_res), 1)
+        self.assertEqual(ldap_res[0].rtype, ldap0.RES_ADD)
+        # delete
+        ldap_res = self._ldap_conn.ensure_entry(dn1, None)
+        self.assertEqual(len(ldap_res), 1)
+        self.assertEqual(ldap_res[0].rtype, ldap0.RES_DELETE)
+        # add
+        ldap_res = self._ldap_conn.ensure_entry(dn2, entry1)
+        self.assertEqual(len(ldap_res), 1)
+        self.assertEqual(ldap_res[0].rtype, ldap0.RES_ADD)
+        # modify
+        ldap_res = self._ldap_conn.ensure_entry(dn2, entry2)
+        self.assertEqual(len(ldap_res), 1)
+        self.assertEqual(ldap_res[0].rtype, ldap0.RES_MODIFY)
+        # rename and modify
+        ldap_res = self._ldap_conn.ensure_entry(
+            dn1,
+            entry1,
+            old_base=dn2,
+            old_filter='(objectClass=applicationProcess)',
+        )
+        self.assertEqual(len(ldap_res), 2)
+        self.assertEqual(ldap_res[0].rtype, ldap0.RES_MODRDN)
+        self.assertEqual(ldap_res[1].rtype, ldap0.RES_MODIFY)
+        # clean up
+        self._ldap_conn.delete_s(dn1)
+
+
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
     test ReconnectLDAPObject by restarting slapd
