@@ -88,10 +88,10 @@ class SchemaElement:
 
     def __init__(self, schema_element_str=None):
         if schema_element_str:
-            l = split_tokens(schema_element_str)
-            self.set_id(l[1])
-            d = extract_tokens(l, self.token_defaults)
-            self._set_attrs(d)
+            tkl = split_tokens(schema_element_str)
+            self.set_id(tkl[1])
+            opts = extract_tokens(tkl, self.token_defaults)
+            self._set_attrs(opts)
 
     def _set_attrs(self, opts):
         self.desc = opts['DESC'][0]
@@ -112,7 +112,8 @@ class SchemaElement:
             return " %s '%s'" % (key, value.replace("'", "\\'"))
         return " %s %s" % (key, value)
 
-    def key_list(self, key, values, sep=' ', quoted=0):
+    @staticmethod
+    def key_list(key, values, sep=' ', quoted=0):
         assert isinstance(values, tuple), TypeError("values has to be a tuple, was %r" % values)
         if not values:
             return ''
