@@ -757,9 +757,9 @@ class SchemaElementOIDSet(MutableSet):
             ]
         else:
             se_list = [(self._key_oid(se_name), se_name)]
-        for se_oid, se_name in se_list:
+        for se_oid, se_name0 in se_list:
             if not se_oid in self._nameoroid_dict:
-                self._nameoroid_dict[se_oid] = se_name
+                self._nameoroid_dict[se_oid] = se_name0
         # end of add()
 
     def update(self, seq):
