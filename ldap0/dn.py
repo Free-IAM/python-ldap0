@@ -159,7 +159,7 @@ class DNObj(tuple):
         """
         if len(self) <= 0:
             return []
-        elif len(self) == 1:
+        if len(self) == 1:
             return [self.__class__((()))]
         return [
             self.__class__(self[i:])

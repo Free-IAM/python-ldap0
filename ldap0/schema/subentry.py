@@ -163,7 +163,7 @@ class SubSchema:
 
         self.subentry_dn = subentry_dn
         self.no_user_mod_attr_oids = self.determine_no_user_mod_attrs()
-        return # subSchema.__init__()
+        # end of SubSchema()
 
 
     def ldap_entry(self):

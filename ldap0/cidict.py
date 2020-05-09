@@ -52,7 +52,6 @@ class CIDict(UserDict):
     def items(self):
         for k in self._keys.values():
             yield (k, self[k])
-        return
 
 
 class SingleValueDict(CIDict):

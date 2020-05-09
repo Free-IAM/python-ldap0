@@ -82,7 +82,7 @@ class PersistentSearchControl(RequestControl):
             self.changeTypes = 0
             for chtype in changeTypes or CHANGE_TYPES_INT.values():
                 self.changeTypes = self.changeTypes|CHANGE_TYPES_INT.get(chtype, chtype)
-        return
+        # end of PersistentSearchControl()
 
     def encode(self) -> bytes:
         pval = self.PersistentSearchControlValue()

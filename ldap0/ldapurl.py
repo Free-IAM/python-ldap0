@@ -315,19 +315,18 @@ class LDAPUrl:
             self.hostport = url_unquote(rest, encoding='utf-8')
             self.dn = ''
             return
+        if slash_pos != -1 and (qemark_pos == -1 or (slash_pos < qemark_pos)):
+            # Slash separates DN from hostport
+            self.hostport = url_unquote(rest[:slash_pos], encoding='utf-8')
+            # Eat the slash from rest
+            rest = rest[slash_pos+1:]
+        elif qemark_pos != 1 and (slash_pos == -1 or (slash_pos > qemark_pos)):
+            # Question mark separates hostport from rest, DN is assumed to be empty
+            self.hostport = url_unquote(rest[:qemark_pos], encoding='utf-8')
+            # Do not eat question mark
+            rest = rest[qemark_pos:]
         else:
-            if slash_pos != -1 and (qemark_pos == -1 or (slash_pos < qemark_pos)):
-                # Slash separates DN from hostport
-                self.hostport = url_unquote(rest[:slash_pos], encoding='utf-8')
-                # Eat the slash from rest
-                rest = rest[slash_pos+1:]
-            elif qemark_pos != 1 and (slash_pos == -1 or (slash_pos > qemark_pos)):
-                # Question mark separates hostport from rest, DN is assumed to be empty
-                self.hostport = url_unquote(rest[:qemark_pos], encoding='utf-8')
-                # Do not eat question mark
-                rest = rest[qemark_pos:]
-            else:
-                raise ValueError('Something completely weird happened!')
+            raise ValueError('Something completely weird happened!')
         paramlist = rest.split('?', 4)
         paramlist_len = len(paramlist)
         if paramlist_len >= 1:

@@ -69,7 +69,7 @@ def compose_filter(operand: str, filter_parts: Sequence[str]):
     """
     if not filter_parts:
         return ''
-    elif len(filter_parts) == 1:
+    if len(filter_parts) == 1:
         return filter_parts[0]
     return '(%s%s)' % (
         operand,
