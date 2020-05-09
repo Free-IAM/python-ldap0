@@ -91,9 +91,9 @@ class SchemaElement:
             l = split_tokens(schema_element_str)
             self.set_id(l[1])
             d = extract_tokens(l, self.token_defaults)
-            self._set_attrs(l, d)
+            self._set_attrs(d)
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.desc = d['DESC'][0]
 
     def set_id(self, element_id):
@@ -185,7 +185,7 @@ class ObjectClass(SchemaElement):
     }
     names: Sequence[str]
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.obsolete = d['OBSOLETE'] is not None
         self.names = d['NAME']
         self.desc = d['DESC'][0]
@@ -294,7 +294,7 @@ class AttributeType(SchemaElement):
         'X-ORDERED': (None,),
     }
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.names = d['NAME']
         self.desc = d['DESC'][0]
         self.obsolete = d['OBSOLETE'] is not None
@@ -319,9 +319,6 @@ class AttributeType(SchemaElement):
                 except ValueError:
                     self.syntax = d['SYNTAX'][0]
                     self.syntax_len = None
-                    for i in l:
-                        if i.startswith("{") and i.endswith("}"):
-                            self.syntax_len = int(i[1:-1])
                 else:
                     self.syntax_len = int(syntax_len[:-1])
         self.single_value = d['SINGLE-VALUE'] is not None
@@ -382,7 +379,7 @@ class LDAPSyntax(SchemaElement):
         'X-SUBST': (None,),
     }
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.desc = d['DESC'][0]
         self.x_subst = d['X-SUBST'][0]
         self.not_human_readable = \
@@ -436,7 +433,7 @@ class MatchingRule(SchemaElement):
         'SYNTAX': (None,),
     }
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.names = d['NAME']
         self.desc = d['DESC'][0]
         self.obsolete = d['OBSOLETE'] is not None
@@ -485,7 +482,7 @@ class MatchingRuleUse(SchemaElement):
         'APPLIES': (()),
     }
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.names = d['NAME']
         self.desc = d['DESC'][0]
         self.obsolete = d['OBSOLETE'] is not None
@@ -551,7 +548,7 @@ class DITContentRule(SchemaElement):
         'NOT': (()),
     }
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.names = d['NAME']
         self.desc = d['DESC'][0]
         self.obsolete = d['OBSOLETE'] is not None
@@ -618,7 +615,7 @@ class DITStructureRule(SchemaElement):
     def get_id(self):
         return self.ruleid
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.names = d['NAME']
         self.desc = d['DESC'][0]
         self.obsolete = d['OBSOLETE'] is not None
@@ -681,7 +678,7 @@ class NameForm(SchemaElement):
         'MAY': (()),
     }
 
-    def _set_attrs(self, l, d):
+    def _set_attrs(self, d):
         self.names = d['NAME']
         self.desc = d['DESC'][0]
         self.obsolete = d['OBSOLETE'] is not None
