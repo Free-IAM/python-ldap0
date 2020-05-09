@@ -160,11 +160,9 @@ class SubSchema:
 
         # Turn dict into list maybe more handy for applications
         self.non_unique_oids = self.non_unique_oids.keys()
-
         self.subentry_dn = subentry_dn
         self.no_user_mod_attr_oids = self.determine_no_user_mod_attrs()
         # end of SubSchema()
-
 
     def ldap_entry(self):
         """
@@ -182,6 +180,7 @@ class SubSchema:
                 except KeyError:
                     entry[SCHEMA_ATTR_MAPPING[se_class]] = [se_str]
         return entry
+        # end of ldap_entry()
 
     def listall(self, schema_element_class, schema_element_filters=None):
         """
@@ -202,7 +201,7 @@ class SubSchema:
         else:
             result = avail_se.keys()
         return result
-
+        # end of listall()
 
     def tree(self, schema_element_class, schema_element_filters=None):
         """
@@ -237,6 +236,7 @@ class SubSchema:
                 except Exception:
                     pass
         return tree
+        # end of tree()
 
     def get_oid(self, se_class, nameoroid, raise_keyerror=0):
         """
@@ -261,6 +261,7 @@ class SubSchema:
             # just return the name
             result_oid = nameoroid_stripped
         return result_oid
+        # end of get_oid()
 
     def get_inheritedattr(self, se_class, nameoroid, name):
         """
@@ -278,6 +279,7 @@ class SubSchema:
         if result is None and se.sup:
             result = self.get_inheritedattr(se_class, se.sup[0], name)
         return result
+        # end of get_inheritedattr()
 
     def get_obj(self, se_class, nameoroid, default=None, raise_keyerror=0):
         """
@@ -297,6 +299,7 @@ class SubSchema:
                 )
             se_obj = default
         return se_obj
+        # end of get_obj()
 
     def get_inheritedobj(self, se_class, nameoroid, inherited=None):
         """
@@ -314,6 +317,7 @@ class SubSchema:
                     self.get_inheritedattr(se_class, nameoroid, class_attr_name)
                 )
         return se
+        # end of get_inheritedobj()
 
     def get_syntax(self, nameoroid):
         """
@@ -348,6 +352,7 @@ class SubSchema:
             else:
                 result = oid
         return result
+        # end of get_structural_oc()
 
     def get_applicable_aux_classes(self, nameoroid):
         """
@@ -363,6 +368,7 @@ class SubSchema:
             return content_rule.aux
         # list all AUXILIARY object classes
         return self.listall(ObjectClass, [('kind', [2])])
+        # end of get_applicable_aux_classes()
 
     def attribute_types(
             self,
@@ -495,7 +501,8 @@ class SubSchema:
                                 del l[a]
                                 break
 
-        return r_must, r_may # attribute_types()
+        return r_must, r_may
+        # end of attribute_types()
 
     def get_all_operational_attributes(self, only_user_editable=False):
         """
@@ -509,6 +516,7 @@ class SubSchema:
                 ):
                 res.add(at_obj.oid)
         return res
+        # end of get_all_operational_attributes()
 
     def determine_no_user_mod_attrs(self):
         result = {}.fromkeys([
@@ -516,7 +524,8 @@ class SubSchema:
             for a in self.sed[AttributeType].values()
             if a.no_user_mod
         ])
-        return result # determine_no_user_mod_attrs()
+        return result
+        # end of determine_no_user_mod_attrs()
 
     def get_associated_name_forms(self, structural_object_class_oid):
         """
@@ -545,7 +554,8 @@ class SubSchema:
                     name_form_obj.oc.lower() in structural_object_class_names
                 ):
                 result.append(name_form_obj)
-        return result # get_associated_name_forms()
+        return result
+        # end of get_associated_name_forms()
 
     def get_rdn_variants(self, structural_object_class_oid):
         rdn_variants = []
@@ -554,7 +564,8 @@ class SubSchema:
             for l in range(1, len(name_form_obj.may)):
                 for i in combinations(name_form_obj.may, l):
                     rdn_variants.append((name_form_obj, name_form_obj.must+i))
-        return rdn_variants # get_rdn_variants()
+        return rdn_variants
+        # end of get_rdn_variants()
 
     def get_rdn_templates(self, structural_object_class_oid):
         """
@@ -570,7 +581,8 @@ class SubSchema:
                 for attr_type in attr_types
             ])
             for attr_types in rdn_attr_tuples
-        ] # get_rdn_templates()
+        ]
+        # end of get_rdn_templates()
 
     def get_applicable_name_form_objs(self, dn, structural_object_class_oid):
         """
@@ -590,7 +602,8 @@ class SubSchema:
             name_form_rdn_attrs.sort()
             if current_rdn_attrs == name_form_rdn_attrs:
                 result.append(name_form_obj)
-        return result # get_applicable_name_form_objs()
+        return result
+        # end of get_applicable_name_form_objs()
 
     def get_possible_dit_structure_rules(self, dn, structural_object_class_oid):
         name_form_identifiers = CIDict()
@@ -605,7 +618,8 @@ class SubSchema:
                     and (self.get_oid(ObjectClass, name_form_obj.oc) == structural_object_class_oid)
                 ):
                 dit_struct_ruleids[dit_struct_rule_obj.ruleid] = dit_struct_rule_obj
-        return dit_struct_ruleids.keys() # get_possible_dit_structure_rules()
+        return dit_struct_ruleids.keys()
+        # end of get_possible_dit_structure_rules()
 
     def get_subord_structural_oc_names(self, ruleid):
         subord_structural_oc_oids = {}
@@ -628,7 +642,7 @@ class SubSchema:
             else:
                 result.append(oc_oid)
         return subord_structural_ruleids.keys(), result
-        # get_subord_structural_oc_names()
+        # end of get_subord_structural_oc_names()
 
     def get_superior_structural_oc_names(self, ruleid):
         try:
@@ -652,4 +666,5 @@ class SubSchema:
                         if sup_name_form_obj:
                             sup_ruleids.append(sup_ruleid)
                             result.append(sup_name_form_obj.oc)
-        return sup_ruleids, result # get_superior_structural_oc_names()
+        return sup_ruleids, result
+        # end of get_superior_structural_oc_names()
