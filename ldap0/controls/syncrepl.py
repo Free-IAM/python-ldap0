@@ -4,12 +4,12 @@ ldap0.controls.syncrepl - classes for Content Synchronization Controls
 (see RFC 4533)
 """
 
+from uuid import UUID
+
 # Imports from pyasn1
 from pyasn1.type import namedtype, namedval, univ, tag, constraint
 from pyasn1.codec.ber import encoder, decoder
 from pyasn1_modules.rfc2251 import LDAPString
-
-from uuid import UUID
 
 from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
