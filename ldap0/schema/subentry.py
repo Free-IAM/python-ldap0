@@ -539,7 +539,7 @@ class SubSchema:
         else:
             structural_object_class_names = ()
         result = []
-        for name_form_oid, name_form_obj in self.sed[NameForm].items():
+        for _, name_form_obj in self.sed[NameForm].items():
             if not name_form_obj.obsolete and (
                     name_form_obj.oc == structural_object_class_oid or \
                     name_form_obj.oc.lower() in structural_object_class_names

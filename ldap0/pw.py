@@ -39,7 +39,6 @@ def random_string(
     """
     if alphabet is None:
         return secrets.token_bytes(length)
-    random_upper_bound = len(alphabet) - 1
     res = []
     for _ in range(length):
         res.append(secrets.choice(alphabet))
