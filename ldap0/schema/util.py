@@ -8,7 +8,6 @@ from urllib.request import urlopen
 from _libldap0 import MOD_DELETE, MOD_ADD
 
 from ..__about__ import __version__, __author__, __license__
-from ..base import decode_entry_dict
 from ..cidict import CIDict
 from ..ldapurl import LDAPUrl, is_ldapurl
 from ..ldapobject import LDAPObject

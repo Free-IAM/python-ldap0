@@ -6,7 +6,6 @@ ldap0.tmpl - templating
 from typing import Optional, Tuple
 
 from .__about__ import __version__, __author__, __license__
-from .base import decode_entry_dict
 from .typehints import EntryMixed, EntryStr
 
 

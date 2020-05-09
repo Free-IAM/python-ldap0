@@ -3,7 +3,7 @@
 ldap0.base - basic classes and functions
 """
 
-from typing import List, Sequence
+from typing import Sequence
 
 from .typehints import BytesList, StrList, EntryBytes, EntryStr
 

@@ -5,7 +5,7 @@ ldap0.schema.models - support for subSchemaSubEntry information
 
 from collections.abc import MutableSet
 from collections import UserDict, OrderedDict
-from typing import Any, Mapping, Sequence, Union, Tuple
+from typing import Any, Mapping, Sequence
 
 from ..__about__ import __version__, __author__, __license__
 from ..cidict import CIDict

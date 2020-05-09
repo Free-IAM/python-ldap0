@@ -12,7 +12,6 @@ from typing import Any, Iterator, List, Optional, Tuple, Union
 import _libldap0
 from _libldap0 import LDAPError
 
-import ldap0
 from .__about__ import __version__, __author__, __license__
 from .err import \
     PasswordPolicyChangeAfterReset, \
@@ -25,7 +24,7 @@ from .res import SearchResultEntry, LDAPResult
 from .lock import LDAPLock
 from .functions import _libldap0_function_call
 from .schema.subentry import SCHEMA_ATTRS
-from .controls import decode_response_ctrls, encode_request_ctrls, RequestControl
+from .controls import decode_response_ctrls, encode_request_ctrls
 from .controls.openldap import SearchNoOpControl
 from .controls.ppolicy import PasswordPolicyControl
 from .extop import ExtendedRequest, ExtendedResponse, EXTOP_RESPONSE_REGISTRY
