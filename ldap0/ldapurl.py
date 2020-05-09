@@ -412,14 +412,14 @@ class LDAPUrl:
         hrefTarget
             string added as link target attribute
         """
-        assert type(urlPrefix) == str, TypeError("urlPrefix must be str, was %r" % urlPrefix)
+        assert isinstance(urlPrefix, str), TypeError("urlPrefix must be str, was %r" % urlPrefix)
         if hrefText is None:
             hrefText = self.unparse()
-        assert type(hrefText) == str, TypeError("hrefText must be str, was %r" % hrefText)
+        assert isinstance(hrefText, str), TypeError("hrefText must be str, was %r" % hrefText)
         if hrefTarget is None:
             target = ''
         else:
-            assert type(hrefTarget) == str, TypeError("hrefTarget must be str, was %r" % hrefTarget)
+            assert isinstance(hrefTarget, str), TypeError("hrefTarget must be str, was %r" % hrefTarget)
             target = ' target="%s"' % hrefTarget
         return '<a%s href="%s%s">%s</a>' % (
             target,
