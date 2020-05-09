@@ -93,8 +93,8 @@ class SchemaElement:
             d = extract_tokens(l, self.token_defaults)
             self._set_attrs(d)
 
-    def _set_attrs(self, d):
-        self.desc = d['DESC'][0]
+    def _set_attrs(self, opts):
+        self.desc = opts['DESC'][0]
 
     def set_id(self, element_id):
         self.oid = element_id
@@ -185,23 +185,23 @@ class ObjectClass(SchemaElement):
     }
     names: Sequence[str]
 
-    def _set_attrs(self, d):
-        self.obsolete = d['OBSOLETE'] is not None
-        self.names = d['NAME']
-        self.desc = d['DESC'][0]
-        self.must = d['MUST']
-        self.may = d['MAY']
+    def _set_attrs(self, opts):
+        self.obsolete = opts['OBSOLETE'] is not None
+        self.names = opts['NAME']
+        self.desc = opts['DESC'][0]
+        self.must = opts['MUST']
+        self.may = opts['MAY']
         # Default is STRUCTURAL, see RFC 4512
         self.kind = 0
-        if d['ABSTRACT'] is not None:
+        if opts['ABSTRACT'] is not None:
             self.kind = 1
-        elif d['AUXILIARY'] is not None:
+        elif opts['AUXILIARY'] is not None:
             self.kind = 2
-        if self.kind == 0 and not d['SUP'] and self.oid != '2.5.6.0':
+        if self.kind == 0 and not opts['SUP'] and self.oid != '2.5.6.0':
             # STRUCTURAL object classes are sub-classes of 'top' by default
             self.sup = ('top',)
         else:
-            self.sup = d['SUP']
+            self.sup = opts['SUP']
 
     def __str__(self):
         result = [str(self.oid)]
@@ -294,18 +294,18 @@ class AttributeType(SchemaElement):
         'X-ORDERED': (None,),
     }
 
-    def _set_attrs(self, d):
-        self.names = d['NAME']
-        self.desc = d['DESC'][0]
-        self.obsolete = d['OBSOLETE'] is not None
-        self.sup = d['SUP']
-        self.equality = d['EQUALITY'][0]
-        self.ordering = d['ORDERING'][0]
-        self.substr = d['SUBSTR'][0]
-        self.x_origin = d['X-ORIGIN'][0]
-        self.x_ordered = d['X-ORDERED'][0]
+    def _set_attrs(self, opts):
+        self.names = opts['NAME']
+        self.desc = opts['DESC'][0]
+        self.obsolete = opts['OBSOLETE'] is not None
+        self.sup = opts['SUP']
+        self.equality = opts['EQUALITY'][0]
+        self.ordering = opts['ORDERING'][0]
+        self.substr = opts['SUBSTR'][0]
+        self.x_origin = opts['X-ORIGIN'][0]
+        self.x_ordered = opts['X-ORDERED'][0]
         try:
-            syntax = d['SYNTAX'][0]
+            syntax = opts['SYNTAX'][0]
         except IndexError:
             self.syntax = None
             self.syntax_len = None
@@ -315,16 +315,16 @@ class AttributeType(SchemaElement):
                 self.syntax_len = None
             else:
                 try:
-                    self.syntax, syntax_len = d['SYNTAX'][0].split("{")
+                    self.syntax, syntax_len = opts['SYNTAX'][0].split("{")
                 except ValueError:
-                    self.syntax = d['SYNTAX'][0]
+                    self.syntax = opts['SYNTAX'][0]
                     self.syntax_len = None
                 else:
                     self.syntax_len = int(syntax_len[:-1])
-        self.single_value = d['SINGLE-VALUE'] is not None
-        self.collective = d['COLLECTIVE'] is not None
-        self.no_user_mod = d['NO-USER-MODIFICATION'] is not None
-        self.usage = ATTRIBUTE_USAGE.get(d['USAGE'][0], 0)
+        self.single_value = opts['SINGLE-VALUE'] is not None
+        self.collective = opts['COLLECTIVE'] is not None
+        self.no_user_mod = opts['NO-USER-MODIFICATION'] is not None
+        self.usage = ATTRIBUTE_USAGE.get(opts['USAGE'][0], 0)
 
     def __str__(self):
         result = [str(self.oid)]
@@ -379,13 +379,13 @@ class LDAPSyntax(SchemaElement):
         'X-SUBST': (None,),
     }
 
-    def _set_attrs(self, d):
-        self.desc = d['DESC'][0]
-        self.x_subst = d['X-SUBST'][0]
+    def _set_attrs(self, opts):
+        self.desc = opts['DESC'][0]
+        self.x_subst = opts['X-SUBST'][0]
         self.not_human_readable = \
             self.oid in NOT_HUMAN_READABLE_LDAP_SYNTAXES or \
-            d['X-NOT-HUMAN-READABLE'][0] == 'TRUE'
-        self.x_binary_transfer_required = d['X-BINARY-TRANSFER-REQUIRED'][0] == 'TRUE'
+            opts['X-NOT-HUMAN-READABLE'][0] == 'TRUE'
+        self.x_binary_transfer_required = opts['X-BINARY-TRANSFER-REQUIRED'][0] == 'TRUE'
 
     def __str__(self):
         result = [str(self.oid)]
@@ -433,11 +433,11 @@ class MatchingRule(SchemaElement):
         'SYNTAX': (None,),
     }
 
-    def _set_attrs(self, d):
-        self.names = d['NAME']
-        self.desc = d['DESC'][0]
-        self.obsolete = d['OBSOLETE'] is not None
-        self.syntax = d['SYNTAX'][0]
+    def _set_attrs(self, opts):
+        self.names = opts['NAME']
+        self.desc = opts['DESC'][0]
+        self.obsolete = opts['OBSOLETE'] is not None
+        self.syntax = opts['SYNTAX'][0]
 
     def __str__(self):
         result = [str(self.oid)]
@@ -482,11 +482,11 @@ class MatchingRuleUse(SchemaElement):
         'APPLIES': (()),
     }
 
-    def _set_attrs(self, d):
-        self.names = d['NAME']
-        self.desc = d['DESC'][0]
-        self.obsolete = d['OBSOLETE'] is not None
-        self.applies = d['APPLIES']
+    def _set_attrs(self, opts):
+        self.names = opts['NAME']
+        self.desc = opts['DESC'][0]
+        self.obsolete = opts['OBSOLETE'] is not None
+        self.applies = opts['APPLIES']
 
     def __str__(self):
         result = [str(self.oid)]
@@ -548,14 +548,14 @@ class DITContentRule(SchemaElement):
         'NOT': (()),
     }
 
-    def _set_attrs(self, d):
-        self.names = d['NAME']
-        self.desc = d['DESC'][0]
-        self.obsolete = d['OBSOLETE'] is not None
-        self.aux = d['AUX']
-        self.must = d['MUST']
-        self.may = d['MAY']
-        self.nots = d['NOT']
+    def _set_attrs(self, opts):
+        self.names = opts['NAME']
+        self.desc = opts['DESC'][0]
+        self.obsolete = opts['OBSOLETE'] is not None
+        self.aux = opts['AUX']
+        self.must = opts['MUST']
+        self.may = opts['MAY']
+        self.nots = opts['NOT']
 
     def __str__(self):
         result = [str(self.oid)]
@@ -615,12 +615,12 @@ class DITStructureRule(SchemaElement):
     def get_id(self):
         return self.ruleid
 
-    def _set_attrs(self, d):
-        self.names = d['NAME']
-        self.desc = d['DESC'][0]
-        self.obsolete = d['OBSOLETE'] is not None
-        self.form = d['FORM'][0]
-        self.sup = d['SUP']
+    def _set_attrs(self, opts):
+        self.names = opts['NAME']
+        self.desc = opts['DESC'][0]
+        self.obsolete = opts['OBSOLETE'] is not None
+        self.form = opts['FORM'][0]
+        self.sup = opts['SUP']
 
     def __str__(self):
         result = [str(self.ruleid)]
@@ -678,13 +678,13 @@ class NameForm(SchemaElement):
         'MAY': (()),
     }
 
-    def _set_attrs(self, d):
-        self.names = d['NAME']
-        self.desc = d['DESC'][0]
-        self.obsolete = d['OBSOLETE'] is not None
-        self.oc = d['OC'][0]
-        self.must = d['MUST']
-        self.may = d['MAY']
+    def _set_attrs(self, opts):
+        self.names = opts['NAME']
+        self.desc = opts['DESC'][0]
+        self.obsolete = opts['OBSOLETE'] is not None
+        self.oc = opts['OC'][0]
+        self.must = opts['MUST']
+        self.may = opts['MAY']
 
     def __str__(self):
         result = [str(self.oid)]
