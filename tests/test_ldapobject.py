@@ -422,6 +422,7 @@ class Test00_LDAPObject(SlapdTestCase):
             trace_level=self.trace_level,
             cache_ttl=10.0,
         ) as l:
+            self.assertEqual(l.cache_ttl, 10.0)
             l.sasl_non_interactive_bind_s('EXTERNAL')
             self.assertEqual(l.whoami_s(), 'dn:'+self.server.root_dn.lower())
             new_dn = 'cn=Cache Tester,'+self.server.suffix
