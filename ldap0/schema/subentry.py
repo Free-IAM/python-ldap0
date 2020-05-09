@@ -156,8 +156,7 @@ class SubSchema:
                         if check_uniqueness and name in self.name2oid[se_class]:
                             self.non_unique_names[se_class][se_id] = None
                             raise NameNotUnique(attr_value)
-                        else:
-                            self.name2oid[se_class][name] = se_id
+                        self.name2oid[se_class][name] = se_id
 
         # Turn dict into list maybe more handy for applications
         self.non_unique_oids = self.non_unique_oids.keys()
@@ -296,8 +295,7 @@ class SubSchema:
                         se_oid
                     )
                 )
-            else:
-                se_obj = default
+            se_obj = default
         return se_obj
 
     def get_inheritedobj(self, se_class, nameoroid, inherited=None):
