@@ -1219,7 +1219,6 @@ class ReconnectLDAPObject(LDAPObject):
         retry_delay
             Time span to wait between two reconnect trials
         """
-        self.uri = uri
         self._options = []
         self._last_bind = None
         LDAPObject.__init__(
