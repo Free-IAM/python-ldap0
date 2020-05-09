@@ -235,7 +235,7 @@ class SubSchema:
                 sup_oid = self.get_oid(schema_element_class, s)
                 try:
                     tree[sup_oid].append(se_oid)
-                except:
+                except Exception:
                     pass
         return tree
 
