@@ -138,9 +138,9 @@ class ExtOpResponseRegistry:
         self._handler_cls = {}
 
     def register(
-        self,
-        handler: Union[ExtendedResponse, IntermediateResponse],
-    ):
+            self,
+            handler: Union[ExtendedResponse, IntermediateResponse],
+        ):
         self._handler_cls[handler.responseName] = handler
 
     def get(self, oid: str) -> Union[ExtendedResponse, IntermediateResponse]:

@@ -184,8 +184,8 @@ class DNObj(tuple):
             while (
                     match_level <= self_len
                     and (
-                       self.slice(self_len-match_level-1, self_len-match_level)
-                       == dn_obj.slice(dn_len-match_level-1, dn_len-match_level)
+                        self.slice(self_len-match_level-1, self_len-match_level)
+                        == dn_obj.slice(dn_len-match_level-1, dn_len-match_level)
                     )
                 ):
                 match_level += 1
