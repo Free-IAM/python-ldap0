@@ -28,7 +28,7 @@ class WhoAmIResponse(ExtendedResponse):
         """
         work around MS AD returning obscure OID as responseName
         """
-        return name == cls.responseName or name == WhoAmIRequest.requestName
+        return name in (cls.responseName, WhoAmIRequest.requestName)
 
     def decode(self, value: bytes):
         self.responseValue = value.decode(self.encoding, errors='strict')
