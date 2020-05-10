@@ -18,6 +18,10 @@ class ExtendedRequest:
         value of the LDAPv3 extended operation request
         (here it is the BER-encoded ASN.1 request value)
     """
+    __slots__ = (
+        'requestName',
+        'requestValue',
+    )
     encoding: str = 'utf-8'
 
     defaultIntermediateResponse: Optional['IntermediateResponse'] = None

@@ -14,7 +14,10 @@ from . import ExtendedRequest, ExtendedResponse
 
 
 class RefreshRequest(ExtendedRequest):
-
+    __slots__ = (
+        'entryName',
+        'requestTtl',
+    )
     requestName: str = '1.3.6.1.4.1.1466.101.119.1'
     defaultRequestTtl = 86400
 

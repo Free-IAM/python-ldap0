@@ -17,7 +17,9 @@ class CancelRequest(ExtendedRequest):
     """
     Cancel Operation Request
     """
-
+    __slots__ = (
+        'cancelID',
+    )
     requestName: str = '1.3.6.1.1.8'
     cancelID: int
 

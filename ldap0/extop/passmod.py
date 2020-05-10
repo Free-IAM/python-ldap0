@@ -54,7 +54,11 @@ class PassmodRequest(ExtendedRequest):
     """
     Password Modify extended request
     """
-
+    __slots__ = (
+        'userIdentity',
+        'oldPasswd',
+        'newPasswd',
+    )
     requestName: str = '1.3.6.1.4.1.4203.1.11.1'
 
     class PasswdModifyRequestValue(univ.Sequence):
