@@ -14,6 +14,10 @@ from . import ExtendedRequest, ExtendedResponse
 
 
 class RefreshRequest(ExtendedRequest):
+    """
+    Refresh Request
+    (see https://tools.ietf.org/html/rfc2589#section-4.1)
+    """
     __slots__ = (
         'entryName',
         'requestTtl',
@@ -22,6 +26,13 @@ class RefreshRequest(ExtendedRequest):
     defaultRequestTtl = 86400
 
     class RefreshRequestValue(univ.Sequence):
+        """
+        SEQUENCE {
+            entryName  [0] LDAPDN,
+            requestTtl [1] INTEGER
+        }
+        (see https://tools.ietf.org/html/rfc2589#section-4.1)
+        """
         componentType = namedtype.NamedTypes(
             namedtype.NamedType(
                 'entryName',
@@ -60,12 +71,21 @@ class RefreshRequest(ExtendedRequest):
 
 
 class RefreshResponse(ExtendedResponse):
+    """
+    Refresh Response
+    (see https://tools.ietf.org/html/rfc2589#section-4.2)
+    """
     __slots__ = (
         'responseTtl',
     )
     responseName = '1.3.6.1.4.1.1466.101.119.1'
 
     class RefreshResponseValue(univ.Sequence):
+        """
+        SEQUENCE {
+            responseTtl [1] INTEGER
+        }
+        """
         componentType = namedtype.NamedTypes(
             namedtype.NamedType(
                 'responseTtl',

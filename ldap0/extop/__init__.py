@@ -144,9 +144,15 @@ class ExtOpResponseRegistry:
             self,
             handler: Union[ExtendedResponse, IntermediateResponse],
         ):
+        """
+        register an handler class for extended response
+        """
         self._handler_cls[handler.responseName] = handler
 
     def get(self, oid: str) -> Union[ExtendedResponse, IntermediateResponse]:
+        """
+        return handler class for extended response by OID (responseName)
+        """
         return self._handler_cls[oid]
 
 
