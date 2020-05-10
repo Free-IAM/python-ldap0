@@ -20,7 +20,6 @@ class ExtendedRequest:
     """
     encoding: str = 'utf-8'
 
-    defaultResponse: Optional['ExtendedResponse'] = None
     defaultIntermediateResponse: Optional['IntermediateResponse'] = None
 
     def __init__(self, requestName=None, requestValue=None):
@@ -52,6 +51,9 @@ class ExtendedResponse:
     encodedResponseValue
         BER-encoded ASN.1 value of the LDAPv3 extended operation response
     """
+    __slots__ = (
+        'responseValue',
+    )
     encoding = 'utf-8'
 
     responseName = None

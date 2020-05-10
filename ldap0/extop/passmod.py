@@ -126,7 +126,9 @@ class PassmodResponse(ExtendedResponse):
     """
     Password Modify extended response
     """
-
+    __slots__ = (
+        'genPasswd',
+    )
     responseName = None
 
     def decode(self, value: bytes):
