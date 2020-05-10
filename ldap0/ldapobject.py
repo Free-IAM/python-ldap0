@@ -523,7 +523,7 @@ class LDAPObject:
         if extop_resp_class is None:
             extop_resp_class = EXTOP_RESPONSE_REGISTRY.get(respoid)
         if extop_resp_class is None:
-            extop_response = ExtendedResponse(respoid, respvalue)
+            extop_response = ExtendedResponse(encodedResponseValue=respvalue)
         else:
             if not extop_resp_class.check_resp_name(
                     None if respoid is None else respoid.decode('ascii')

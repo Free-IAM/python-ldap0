@@ -37,18 +37,12 @@ class TestExtOpResponse(unittest.TestCase):
     """
 
     def test_basic(self):
-        er = ExtendedResponse('1.2.3.4')
-        self.assertEqual(er.responseName, '1.2.3.4')
+        er = ExtendedResponse()
         self.assertEqual(er.responseValue, None)
-        self.assertEqual(repr(er), "ExtendedResponse(responseName='1.2.3.4', responseValue=None)")
-        er = ExtendedResponse(responseName='1.2.3.4')
-        self.assertEqual(er.responseName, '1.2.3.4')
-        self.assertEqual(er.responseValue, None)
-        self.assertEqual(repr(er), "ExtendedResponse(responseName='1.2.3.4', responseValue=None)")
-        er = ExtendedResponse('1.2.3.4', 'foobar')
-        self.assertEqual(er.responseName, '1.2.3.4')
+        self.assertEqual(repr(er), "ExtendedResponse(encodedResponseValue=None)")
+        er = ExtendedResponse('foobar')
         self.assertEqual(er.responseValue, 'foobar')
-        self.assertEqual(repr(er), "ExtendedResponse(responseName='1.2.3.4', responseValue='foobar')")
+        self.assertEqual(repr(er), "ExtendedResponse(encodedResponseValue='foobar')")
         er.decode('foobar42')
         self.assertEqual(er.responseValue, 'foobar42')
 

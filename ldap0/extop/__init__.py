@@ -56,17 +56,14 @@ class ExtendedResponse:
 
     responseName = None
 
-    def __init__(self, responseName=None, encodedResponseValue=None):
-        if responseName is not None:
-            self.responseName = responseName
+    def __init__(self, encodedResponseValue=None):
         self.responseValue = encodedResponseValue
         if encodedResponseValue is not None:
             self.decode(encodedResponseValue)
 
     def __repr__(self):
-        return '%s(responseName=%r, responseValue=%r)' % (
+        return '%s(encodedResponseValue=%r)' % (
             self.__class__.__name__,
-            self.responseName,
             self.responseValue,
         )
 
