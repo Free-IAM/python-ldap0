@@ -4,6 +4,8 @@ ldap0.controls.syncrepl - classes for Content Synchronization Controls
 (see RFC 4533)
 """
 
+from typing import Optional, Sequence
+
 from uuid import UUID
 
 # Imports from pyasn1
@@ -21,6 +23,10 @@ __all__ = [
     'SyncStateControl',
     'SyncDoneControl',
     'SyncInfoMessage',
+    'SyncInfoNewCookie',
+    'SyncInfoRefreshDelete',
+    'SyncInfoRefreshPresent',
+    'SyncInfoIDSet',
 ]
 
 
@@ -153,16 +159,16 @@ class SyncStateControl(ResponseControl):
     opnames = ('present', 'add', 'modify', 'delete')
 
     def decode(self, encodedControlValue: bytes):
-        d = decoder.decode(encodedControlValue, asn1Spec=SyncStateValue())
-        state = d[0].getComponentByName('state')
-        uuid = UUID(bytes=bytes(d[0].getComponentByName('entryUUID')))
-        cookie = d[0].getComponentByName('cookie')
-        if cookie is not None and cookie.hasValue():
+        d, _ = decoder.decode(encodedControlValue, asn1Spec=SyncStateValue())
+        self.state = self.__class__.opnames[int(d['state'])]
+        uuid = UUID(bytes=bytes(d['entryUUID']))
+        self.entryUUID = str(uuid)
+        cookie = d['cookie']
+        if cookie.hasValue():
             self.cookie = bytes(cookie)
         else:
             self.cookie = None
-        self.state = self.__class__.opnames[int(state)]
-        self.entryUUID = str(uuid)
+
 
 KNOWN_RESPONSE_CONTROLS.reg(SyncStateControl)
 
@@ -193,17 +199,14 @@ class SyncDoneControl(ResponseControl):
     controlType = '1.3.6.1.4.1.4203.1.9.1.3'
 
     def decode(self, encodedControlValue: bytes):
-        d = decoder.decode(encodedControlValue, asn1Spec=SyncDoneValue())
-        cookie = d[0].getComponentByName('cookie')
+        d, _ = decoder.decode(encodedControlValue, asn1Spec=SyncDoneValue())
+        cookie = d['cookie']
         if cookie.hasValue():
             self.cookie = bytes(cookie)
         else:
             self.cookie = None
-        refresh_deletes = d[0].getComponentByName('refreshDeletes')
-        if refresh_deletes.hasValue():
-            self.refreshDeletes = bool(refresh_deletes)
-        else:
-            self.refreshDeletes = None
+        self.refreshDeletes = bool(d['refreshDeletes'])
+
 
 KNOWN_RESPONSE_CONTROLS.reg(SyncDoneControl)
 
@@ -312,41 +315,84 @@ class SyncInfoMessage(IntermediateResponse):
     """
     responseName = '1.3.6.1.4.1.4203.1.9.1.4'
 
-    def __init__(self, encodedMessage):
-        d = decoder.decode(encodedMessage, asn1Spec=SyncInfoValue())
-        self.newcookie = None
-        self.refreshDelete = {}
-        self.refreshPresent = {}
-        self.syncIdSet = {}
+    def __new__(cls, responseName, encodedResponseValue):
+        if cls is not __class__:
+            return super().__new__(cls)
+        syncinfo, _ = decoder.decode(encodedResponseValue, asn1Spec=SyncInfoValue())
+        choice = syncinfo.getName()
+        if choice == 'newcookie':
+            child = SyncInfoNewCookie
+        elif choice == 'refreshDelete':
+            child = SyncInfoRefreshDelete
+        elif choice == 'refreshPresent':
+            child = SyncInfoRefreshPresent
+        elif choice == 'syncIdSet':
+            child = SyncInfoIDSet
+        else:
+            raise ValueError
+        return child.__new__(child, responseName, encodedResponseValue)
 
-        for attr in ['newcookie', 'refreshDelete', 'refreshPresent', 'syncIdSet']:
-            comp = d[0].getComponentByName(attr)
+    def decode(self, value: bytes):
+        self.syncinfo, _ = decoder.decode(
+            value,
+            asn1Spec=SyncInfoValue(),
+        )
 
-            if comp is not None and comp.hasValue():
+class SyncInfoNewCookie(SyncInfoMessage):
+    cookie: bytes
 
-                if attr == 'newcookie':
-                    self.newcookie = comp
-                    return
+    def decode(self, value: bytes):
+        super().decode(value)
+        self.cookie = bytes(self.syncinfo.getComponent())
 
-                val = dict()
 
-                cookie = comp.getComponentByName('cookie')
-                if cookie.hasValue():
-                    val['cookie'] = bytes(cookie)
+class SyncInfoRefreshDelete(SyncInfoMessage):
+    cookie: Optional[bytes]
+    refreshDone: bool
 
-                if attr.startswith('refresh'):
-                    val['refreshDone'] = bool(comp.getComponentByName('refreshDone'))
-                elif attr == 'syncIdSet':
-                    uuids = []
-                    ids = comp.getComponentByName('syncUUIDs')
-                    for i in range(len(ids)):
-                        uuid = UUID(bytes=bytes(ids.getComponentByPosition(i)))
-                        uuids.append(str(uuid))
-                    val['syncUUIDs'] = uuids
-                    val['refreshDeletes'] = bool(comp.getComponentByName('refreshDeletes'))
+    def decode(self, value: bytes):
+        super().decode(value)
+        component = self.syncinfo.getComponent()
+        self.cookie = None
+        cookie = component['cookie']
+        if cookie is not univ.noValue:
+            self.cookie = bytes(cookie)
+        self.refreshDone = bool(component['refreshDone'])
 
-                setattr(self, attr, val)
-                return
+
+class SyncInfoRefreshPresent(SyncInfoMessage):
+    cookie: Optional[bytes]
+    refreshDone: bool
+
+    def decode(self, value: bytes):
+        super().decode(value)
+        component = self.syncinfo.getComponent()
+        self.cookie = None
+        cookie = component['cookie']
+        if cookie is not univ.noValue:
+            self.cookie = bytes(cookie)
+        self.refreshDone = bool(component['refreshDone'])
+
+
+class SyncInfoIDSet(SyncInfoMessage):
+    cookie: Optional[bytes]
+    refreshDeletes: bool
+    syncUUIDs: Sequence[str]
+
+    def decode(self, value: bytes):
+        super().decode(value)
+        component = self.syncinfo.getComponent()
+        self.cookie = None
+        cookie = component['cookie']
+        if cookie is not univ.noValue:
+            self.cookie = bytes(cookie)
+        self.refreshDeletes = bool(component['refreshDeletes'])
+
+        uuids = []
+        for syncuuid in component['syncUUIDs']:
+            uuid = UUID(bytes=bytes(syncuuid))
+            uuids.append(str(uuid))
+        self.syncUUIDs = uuids
 
 
 INTERMEDIATE_RESPONSE_REGISTRY.register(SyncInfoMessage)
