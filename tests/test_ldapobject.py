@@ -904,42 +904,65 @@ class Test00_LDAPObject(SlapdTestCase):
             self._ldap_conn.delete_s(dn2)
 
     def test026_ensure_entry(self):
-        dn1 = 'cn=äöüÄÖÜß,'+self.server.suffix
-        rdn2 = 'cn=LaLeLu4711'
-        dn2 = ','.join((rdn2, self.server.suffix))
+        dn1 = 'cn=unicode-täxt,'+self.server.suffix
+        dn2 = 'cn=LaLeLu4711,'+self.server.suffix
         entry1 = {
             'objectClass': [b'applicationProcess'],
-            'cn': ['äöüÄÖÜß'.encode('utf-8')],
+            'cn': ['unicode-täxt'.encode('utf-8')],
         }
         entry2 = {
             'objectClass': [b'applicationProcess'],
             'cn': [b'LaLeLu4711'],
             'description': [b'Now you see it...'],
         }
+        entry3 = {
+            'objectClass': [b'applicationProcess', b'pkiUser'],
+            'cn': [b'LaLeLu4711'],
+            'description': [b'Now you see it...'],
+        }
+        mod_attr_list = list(entry2.keys())
         # add
         ldap_res = self._ldap_conn.ensure_entry(dn1, entry1)
         self.assertEqual(len(ldap_res), 1)
         self.assertEqual(ldap_res[0].rtype, ldap0.RES_ADD)
+        self.assertEqual(
+            self._ldap_conn.read_s(dn1, attrlist=mod_attr_list).entry_as,
+            entry1
+        )
         # nothing to be done
         ldap_res = self._ldap_conn.ensure_entry(dn1, entry1)
         self.assertEqual(ldap_res, [])
+        self.assertEqual(
+            self._ldap_conn.read_s(dn1, attrlist=mod_attr_list).entry_as,
+            entry1
+        )
         # delete
         ldap_res = self._ldap_conn.ensure_entry(dn1, None)
         self.assertEqual(len(ldap_res), 1)
         self.assertEqual(ldap_res[0].rtype, ldap0.RES_DELETE)
+        with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
+            self._ldap_conn.read_s(dn1, attrlist=['1.1'])
         # nothing to be done
         ldap_res = self._ldap_conn.ensure_entry(dn1, None)
         self.assertEqual(ldap_res, [])
         with self.assertRaises(_libldap0.NO_SUCH_OBJECT):
             ldap_res = self._ldap_conn.ensure_entry(dn1, None, del_ignore=False)
         # add
-        ldap_res = self._ldap_conn.ensure_entry(dn2, entry1)
-        self.assertEqual(len(ldap_res), 1)
-        self.assertEqual(ldap_res[0].rtype, ldap0.RES_ADD)
-        # modify
         ldap_res = self._ldap_conn.ensure_entry(dn2, entry2)
         self.assertEqual(len(ldap_res), 1)
+        self.assertEqual(ldap_res[0].rtype, ldap0.RES_ADD)
+        self.assertEqual(
+            self._ldap_conn.read_s(dn2, attrlist=mod_attr_list).entry_as,
+            entry2
+        )
+        # modify
+        ldap_res = self._ldap_conn.ensure_entry(dn2, entry3)
+        self.assertEqual(len(ldap_res), 1)
         self.assertEqual(ldap_res[0].rtype, ldap0.RES_MODIFY)
+        self.assertEqual(
+            self._ldap_conn.read_s(dn2, attrlist=mod_attr_list).entry_as,
+            entry3
+        )
         # rename and modify
         ldap_res = self._ldap_conn.ensure_entry(
             dn1,
@@ -950,6 +973,10 @@ class Test00_LDAPObject(SlapdTestCase):
         self.assertEqual(len(ldap_res), 2)
         self.assertEqual(ldap_res[0].rtype, ldap0.RES_MODRDN)
         self.assertEqual(ldap_res[1].rtype, ldap0.RES_MODIFY)
+        self.assertEqual(
+            self._ldap_conn.read_s(dn1, attrlist=mod_attr_list).entry_as,
+            entry1
+        )
         # clean up
         self._ldap_conn.delete_s(dn1)
         # now some errors....
