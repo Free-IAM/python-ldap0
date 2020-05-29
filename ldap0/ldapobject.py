@@ -580,6 +580,7 @@ class LDAPObject:
             old_base: Optional[str] = None,
             old_filter: Optional[str] = None,
             old_attrs: Optional[AttrList] = None,
+            old_entry: Optional[EntryMixed] = None,
             req_ctrls: Optional[RequestControls] = None,
             del_ignore: bool = True,
         ) -> List[LDAPResult]:
@@ -610,13 +611,17 @@ class LDAPObject:
         # first try to read/search old entry
         if dn is None:
             raise ValueError('Parameter dn must not be None!')
-        if old_filter is None:
+        if old_entry is not None:
+            # don't read old entry
+            old_dn = dn
+        elif old_filter is None:
             try:
                 old_res = self.read_s(dn, attrlist=old_attrs)
             except _libldap0.NO_SUCH_OBJECT:
                 old_dn = None
             else:
                 old_dn = dn
+                old_entry = old_res.entry_as
         else:
             # forced to search for the old entry
             if old_base is None:
@@ -628,6 +633,7 @@ class LDAPObject:
                 attrlist=old_attrs
             )
             old_dn = old_res.dn_s
+            old_entry = old_res.entry_as
         if old_dn is None:
             # new entry has to be added
             return [self.add_s(dn, entry, req_ctrls=req_ctrls)]
@@ -640,11 +646,14 @@ class LDAPObject:
                 self.rename_s(
                     old_dn,
                     str(dn_o.rdn()),
-                    str(dn_o.parent()),
+                    newsuperior=str(dn_o.parent()),
+                    delold=True,
                     req_ctrls=req_ctrls,
                 )
             )
-        mod_list = modify_modlist(old_res.entry_as, entry)
+            # re-read entry because characteristic attribute might have changed
+            old_entry = self.read_s(dn, attrlist=old_attrs).entry_as
+        mod_list = modify_modlist(old_entry, entry)
         if mod_list:
             # finally really modify the existing entry
             res.append(self.modify_s(dn, mod_list, req_ctrls=req_ctrls))

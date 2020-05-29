@@ -963,6 +963,14 @@ class Test00_LDAPObject(SlapdTestCase):
             self._ldap_conn.read_s(dn2, attrlist=mod_attr_list).entry_as,
             entry3
         )
+        # modify without reading old entry because it's provided as argument
+        ldap_res = self._ldap_conn.ensure_entry(dn2, entry2, old_entry=entry3)
+        self.assertEqual(len(ldap_res), 1)
+        self.assertEqual(ldap_res[0].rtype, ldap0.RES_MODIFY)
+        self.assertEqual(
+            self._ldap_conn.read_s(dn2, attrlist=mod_attr_list).entry_as,
+            entry2
+        )
         # rename and modify
         ldap_res = self._ldap_conn.ensure_entry(
             dn1,
