@@ -69,9 +69,11 @@ def is_ldapurl(val):
     return scheme.lower() in LDAPURL_SCHEMES
 
 
-def escape_str(val):
-    """Returns URL encoding of string s"""
-    return url_quote(val, safe='', encoding='utf-8').replace(',', '%2C').replace('/', '%2F')
+def escape_str(val: str) -> str:
+    """
+    Returns URL encoding of val
+    """
+    return url_quote(val, safe='', encoding='utf-8').replace('/', '%2F')
 
 
 class LDAPUrlExtension:
@@ -127,9 +129,9 @@ class LDAPUrlExtension:
         generate string representation of single LDAP URL extension
         """
         if self.exvalue is None:
-            return '%s%s' % ('!'*(self.critical > 0), self.extype)
+            return '%s%s' % ('!'*bool(self.critical), self.extype)
         return '%s%s=%s' % (
-            '!'*(self.critical > 0),
+            '!'*bool(self.critical),
             self.extype,
             escape_str(self.exvalue or ''),
         )
