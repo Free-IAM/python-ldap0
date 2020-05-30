@@ -11,6 +11,14 @@ from .functions import strf_secs
 
 FILTER_SPECIAL_CHARS = set('\\*()')
 
+# map for escaping special chars in LDAP filters expect back-slash
+BASIC_ESCAPE_MAP = {
+    ord('*'): '\\2a',
+    ord('('): '\\28',
+    ord(')'): '\\29',
+    ord('\x00'): '\\00',
+}
+
 
 def escape_bytes(assertion_value: bytes) -> str:
     """
@@ -27,18 +35,7 @@ def escape_str(assertion_value: str) -> str:
     assert isinstance(assertion_value, str), TypeError(
         'Expected assertion_value to be unicode (str), got %r' % (assertion_value,)
     )
-    return assertion_value.replace(
-        '\\', '\\5c'
-    ).replace(
-        '*', '\\2a'
-    ).replace(
-        '(', '\\28'
-    ).replace(
-        ')', '\\29'
-    ).replace(
-        '\x00', '\\00'
-    )
-    # end of escape_str()
+    return assertion_value.replace('\\', '\\5c').translate(BASIC_ESCAPE_MAP)
 
 
 def negate_filter(flt: str) -> str:
