@@ -12,23 +12,29 @@ from .functions import _libldap0_function_call
 from .typehints import StrList, EntryStr
 
 
+# to be used with str.translate in escape_str()
+BASIC_ESCAPE_MAP = {
+    ord('\\'): '\\\\',
+    ord(','): '\\,',
+    ord('+'): '\\+',
+    ord('"'): '\\"',
+    ord('<'): '\\<',
+    ord('>'): '\\>',
+    ord(';'): '\\;',
+    ord('='): '\\=',
+    0: '\\\000',
+}
+
+
 def escape_str(val: str) -> str:
     """
-    Escape all DN special characters found in s
-    with a back-slash (see RFC 4514, section 2.4)
+    Escape all DN special characters found in val
+    according to rules defined in RFC 4514, section 2.4
     """
     assert isinstance(val, str), TypeError('Expected str (unicode) for val, got %r' % (val,))
     if not val:
         return val
-    val = val.replace('\\', '\\\\')
-    val = val.replace(',', '\\,')
-    val = val.replace('+', '\\+')
-    val = val.replace('"', '\\"')
-    val = val.replace('<', '\\<')
-    val = val.replace('>', '\\>')
-    val = val.replace(';', '\\;')
-    val = val.replace('=', '\\=')
-    val = val.replace('\000', '\\\000')
+    val = val.translate(BASIC_ESCAPE_MAP)
     if val[-1:] == ' ':
         val = ''.join((val[:-1], '\\ '))
     if val[0:1] == '#' or val[0:1] == ' ':
