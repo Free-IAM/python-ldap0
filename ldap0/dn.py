@@ -71,7 +71,7 @@ class DNObj(tuple):
         self = tuple(dn_t)
 
     @classmethod
-    def from_str(cls, dn: str, flags=0):
+    def from_str(cls, dn: str, flags=0, at_sanitizer=(lambda at: at)):
         """
         create a new DNObj instance from DN string representation
         """
@@ -79,7 +79,7 @@ class DNObj(tuple):
             return cls([])
         return cls([
             tuple([
-                (at.decode('ascii'), av.decode(cls.encoding))
+                (at_sanitizer(at.decode('ascii')), av.decode(cls.encoding))
                 for at, av, _ in dn_comp
             ])
             for dn_comp in _libldap0_function_call(_libldap0.str2dn, dn.encode(cls.encoding), flags)

@@ -297,6 +297,16 @@ class TestDNObj(unittest.TestCase):
             DNObj.from_str('cn=Michael, dc=example, dc=com')==DNObj.from_str('CN=Mike, DC=example, DC=com')
         )
 
+    def test010_at_sanitizer(self):
+        self.assertNotEqual(
+            str(DNObj.from_str('cn=Michael, dc=example, dc=com')),
+            str(DNObj.from_str('CN=Michael, DC=example, DC=com'))
+        )
+        self.assertEqual(
+            str(DNObj.from_str('cn=Michael, dc=example, dc=com')),
+            str(DNObj.from_str('CN=Michael, DC=example, DC=com', at_sanitizer=str.lower))
+        )
+
 
 if __name__ == '__main__':
     unittest.main()
