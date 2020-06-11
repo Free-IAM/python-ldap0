@@ -626,14 +626,18 @@ class LDAPObject:
             # forced to search for the old entry
             if old_base is None:
                 old_base = dn
-            old_res = self.find_unique_entry(
-                old_base,
-                scope=_libldap0.SCOPE_SUBTREE,
-                filterstr=old_filter,
-                attrlist=old_attrs
-            )
-            old_dn = old_res.dn_s
-            old_entry = old_res.entry_as
+            try:
+                old_res = self.find_unique_entry(
+                    old_base,
+                    scope=_libldap0.SCOPE_SUBTREE,
+                    filterstr=old_filter,
+                    attrlist=old_attrs,
+                )
+            except NoUniqueEntry:
+                old_dn = None
+            else:
+                old_dn = old_res.dn_s
+                old_entry = old_res.entry_as
         if old_dn is None:
             # new entry has to be added
             return [self.add_s(dn, entry, req_ctrls=req_ctrls)]

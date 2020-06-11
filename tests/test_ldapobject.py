@@ -929,6 +929,21 @@ class Test00_LDAPObject(SlapdTestCase):
             self._ldap_conn.read_s(dn1, attrlist=mod_attr_list).entry_as,
             entry1
         )
+        self._ldap_conn.delete_s(dn1)
+        # add
+        ldap_res = self._ldap_conn.ensure_entry(
+            dn1,
+            entry1,
+            old_base=self.server.suffix,
+            old_filter='(cn=unicode-täxt)',
+            old_attrs=list(entry1.keys()),
+        )
+        self.assertEqual(len(ldap_res), 1)
+        self.assertEqual(ldap_res[0].rtype, ldap0.RES_ADD)
+        self.assertEqual(
+            self._ldap_conn.read_s(dn1, attrlist=mod_attr_list).entry_as,
+            entry1
+        )
         # nothing to be done
         ldap_res = self._ldap_conn.ensure_entry(dn1, entry1)
         self.assertEqual(ldap_res, [])
