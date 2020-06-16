@@ -170,12 +170,12 @@ class SyncStateControl(ResponseControl):
             self.cookie = None
 
     def __repr__(self):
-        cookietext = ""
-        if self.cookie is not None:
-            cookietext = ", cookie={!r}".format(self.cookie)
-        return "{}(state={}, entryUUID={!r}{})".format(
-                self.__class__.__name__, self.state,
-                self.entryUUID, cookietext)
+        return '{}(state={}, entryUUID={!r}{})'.format(
+            self.__class__.__name__,
+            self.state,
+            self.entryUUID,
+            '' if self.cookie is None else ', cookie={!r}'.format(self.cookie),
+        )
 
 
 KNOWN_RESPONSE_CONTROLS.reg(SyncStateControl)
@@ -216,11 +216,11 @@ class SyncDoneControl(ResponseControl):
         self.refreshDeletes = bool(d['refreshDeletes'])
 
     def __repr__(self):
-        cookietext = ""
-        if self.cookie is not None:
-            cookietext = "cookie={!r}, ".format(self.cookie)
-        return "{}({}refreshDeletes={})".format(
-                self.__class__.__name__, cookietext, self.refreshDeletes)
+        return '{}({}refreshDeletes={})'.format(
+            self.__class__.__name__,
+            '' if self.cookie is None else 'cookie={!r}, '.format(self.cookie),
+            self.refreshDeletes,
+        )
 
 
 KNOWN_RESPONSE_CONTROLS.reg(SyncDoneControl)
@@ -361,8 +361,10 @@ class SyncInfoNewCookie(SyncInfoMessage):
         self.cookie = bytes(self.syncinfo.getComponent())
 
     def __repr__(self):
-        return "{}(cookie={!r})".format(self.__class__.__name__,
-                                        self.cookie)
+        return '{}(cookie={!r})'.format(
+            self.__class__.__name__,
+            self.cookie,
+        )
 
 
 class SyncInfoRefreshDelete(SyncInfoMessage):
@@ -379,8 +381,11 @@ class SyncInfoRefreshDelete(SyncInfoMessage):
         self.refreshDone = bool(component['refreshDone'])
 
     def __repr__(self):
-        return "{}(cookie={!r}, refreshDone={!r})".format(
-                self.__class__.__name__, self.cookie, self.refreshDone)
+        return '{}(cookie={!r}, refreshDone={!r})'.format(
+            self.__class__.__name__,
+            self.cookie,
+            self.refreshDone,
+        )
 
 
 class SyncInfoRefreshPresent(SyncInfoMessage):
@@ -397,8 +402,11 @@ class SyncInfoRefreshPresent(SyncInfoMessage):
         self.refreshDone = bool(component['refreshDone'])
 
     def __repr__(self):
-        return "{}(cookie={!r}, refreshDone={!r})".format(
-                self.__class__.__name__, self.cookie, self.refreshDone)
+        return '{}(cookie={!r}, refreshDone={!r})'.format(
+            self.__class__.__name__,
+            self.cookie,
+            self.refreshDone,
+        )
 
 
 class SyncInfoIDSet(SyncInfoMessage):
@@ -422,9 +430,12 @@ class SyncInfoIDSet(SyncInfoMessage):
         self.syncUUIDs = uuids
 
     def __repr__(self):
-        return "{}(cookie={!r}, refreshDeletes={!r}, syncUUIDs={!r})".format(
-                self.__class__.__name__, self.cookie, self.refreshDeletes,
-                self.uuids)
+        return '{}(cookie={!r}, refreshDeletes={!r}, syncUUIDs={!r})'.format(
+            self.__class__.__name__,
+            self.cookie,
+            self.refreshDeletes,
+            self.uuids,
+        )
 
 
 INTERMEDIATE_RESPONSE_REGISTRY.register(SyncInfoMessage)
