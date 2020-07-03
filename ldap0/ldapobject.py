@@ -747,7 +747,9 @@ class LDAPObject:
             add_intermediates,
             False
         )
-        assert res_msgid == msgid, ValueError(
+        if res_type is None:
+            return
+        assert msgid == _libldap0.RES_ANY or res_msgid == msgid, ValueError(
             'Expected LDAP result with msgid %d, got %d' % (msgid, res_msgid)
         )
         if self.res_call_args:
