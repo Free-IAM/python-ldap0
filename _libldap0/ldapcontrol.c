@@ -233,12 +233,12 @@ encode_assertion_control(PyObject *self, PyObject *args)
     err = ldap_create(&ld);
     Py_END_ALLOW_THREADS
     if (err != LDAP_SUCCESS)
-        return LDAPerror(ld, "ldap_create");
+        return LDAPerror(ld);
 
     err = ldap_create_assertion_control_value(ld, assertion_filterstr, &ctrl_val);
 
     if (err != LDAP_SUCCESS) {
-        LDAPerror(ld, "ldap_create_assertion_control_value");
+        LDAPerror(ld);
         Py_BEGIN_ALLOW_THREADS
         ldap_unbind_ext(ld, NULL, NULL);
         Py_END_ALLOW_THREADS

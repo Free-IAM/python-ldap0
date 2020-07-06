@@ -20,7 +20,7 @@ l_ldap_initialize(PyObject* unused, PyObject *args)
     ret = ldap_initialize(&ld, uri);
     Py_END_ALLOW_THREADS
     if (ret != LDAP_SUCCESS)
-        return LDAPerror(ld, "ldap_initialize");
+        return LDAPerror(ld);
     return (PyObject*)newLDAPObject(ld);
 }
 
