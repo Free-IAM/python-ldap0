@@ -211,6 +211,9 @@ LDAPinit_errors( PyObject*d ) {
 # define seterrobj(n) { \
         PyObject *e = PyErr_NewException("ldap0." #n, \
         LDAPexception_class, NULL); \
+        PyObject *nobj = PyLong_FromLong(LDAP_##n); \
+        PyObject_SetAttrString(e, "errnum", nobj); \
+        Py_DECREF(nobj); \
         seterrobj2(n, e); \
         Py_INCREF(e); \
     }
