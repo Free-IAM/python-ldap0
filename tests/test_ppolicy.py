@@ -193,15 +193,35 @@ class TestPPolicy(SlapdTestCase):
         self.assertTrue('pwdReset' not in user_entry)
         # wait until password expired and check for PasswordPolicyExpiredError
         time.sleep(self.pwd_max_age+1.0-(time.time()-pwd_changed_time))
+        for pwd_graceauthn_limit in range(self.pwd_graceauthn_limit, 0, -1):
+            with self.ldap_object_class(self.server.ldap_uri) as l:
+                print('\npwd_graceauthn_limit =', pwd_graceauthn_limit)
+                with self.assertRaises(PasswordPolicyExpiredError) as ctx:
+                    l.simple_bind_s(
+                        self.user_dn,
+                        user_password.encode('utf-8'),
+                        req_ctrls=[PasswordPolicyControl()],
+                    )
+                print('\nctx.exception.graceAuthNsRemaining =', ctx.exception.graceAuthNsRemaining)
+                self.assertEqual(
+                    str(ctx.exception),
+                    'Password expired! {0:d} grace logins left.'.format(pwd_graceauthn_limit)
+                )
+                self.assertEqual(ctx.exception.graceAuthNsRemaining, pwd_graceauthn_limit)
+                del ctx
+                # TODO: Clarify why this sleep is needed for getting a correct decrease of graceAuthNsRemaining
+                time.sleep(1.0)
         with self.ldap_object_class(self.server.ldap_uri) as l:
-            with self.assertRaises(PasswordPolicyExpiredError) as ctx:
+            with self.assertRaises(ldap0.INVALID_CREDENTIALS) as ctx:
                 l.simple_bind_s(
                     self.user_dn,
                     user_password.encode('utf-8'),
                     req_ctrls=[PasswordPolicyControl()],
                 )
-            self.assertEqual(str(ctx.exception), 'Password expired! 2 grace logins left.')
-            self.assertEqual(ctx.exception.graceAuthNsRemaining, self.pwd_graceauthn_limit)
+            self.assertEqual(
+                ctx.exception.args[0]['ctrls'],
+                [(b'1.3.6.1.4.1.42.2.27.8.5.1', 0, b'0\x03\x81\x01\x00')],
+            )
 
 
 if __name__ == '__main__':
