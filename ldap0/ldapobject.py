@@ -567,7 +567,7 @@ class LDAPObject:
             dn: str,
             modlist,
             req_ctrls: Optional[RequestControls] = None,
-        ) -> List[LDAPResult]:
+        ) -> LDAPResult:
         msgid = self.modify(dn, modlist, req_ctrls)
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         assert res.rtype == _libldap0.RES_MODIFY, ValueError('Wrong result type %d' % (res.rtype,))
