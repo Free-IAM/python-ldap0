@@ -5,11 +5,14 @@ ldap0.res - basic classes for LDAP results
 
 from typing import List, Optional, Union
 
+import _libldap0
+
 from .dn import DNObj
 from .base import decode_list
 from .ldapurl import LDAPUrl
 from .typehints import EntryBytes, EntryMixed, EntryStr
 from .controls import ResponseControl
+from .extop import IntermediateResponse, INTERMEDIATE_RESPONSE_REGISTRY
 
 __all__ = [
     'LDAPResult',
@@ -151,7 +154,7 @@ class LDAPResult:
         'call_args',
     )
     rtype: int
-    rdata: List[Union[SearchReference, SearchResultEntry]]
+    rdata: List[Union[SearchReference, SearchResultEntry, IntermediateResponse]]
     msgid: int
     ctrls: List[ResponseControl]
 
@@ -162,10 +165,17 @@ class LDAPResult:
         self.ctrls = ctrls or []
         self.call_args = call_args
         for dn, entry, ctrls in rdata or []:
-            if dn is None:
+            if rtype == _libldap0.RES_SEARCH_REFERENCE:
                 self.rdata.append(SearchReference(entry, ctrls, encoding=encoding))
-            else:
+            elif rtype == _libldap0.RES_SEARCH_ENTRY:
                 self.rdata.append(SearchResultEntry(dn, entry, ctrls, encoding=encoding))
+            elif rtype == _libldap0.RES_INTERMEDIATE:
+                respoid = dn.decode(encoding)
+                resp_class = INTERMEDIATE_RESPONSE_REGISTRY.get(respoid, IntermediateResponse)
+                response = resp_class(respoid, encodedResponseValue=entry, ctrls=ctrls)
+                self.rdata.append(response)
+            else:
+                raise NotImplementedError
 
     def __repr__(self) -> str:
         return '%s(%r, %r, %r, %r)' % (
