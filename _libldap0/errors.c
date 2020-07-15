@@ -4,6 +4,7 @@
 
 #include "common.h"
 #include "errors.h"
+#include "ldapcontrol.h"
 #include <errno.h>
 #include <string.h>
 
@@ -45,30 +46,48 @@ LDAPerr(int errnum)
 
 /* Convert an LDAP error into an informative python exception */
 PyObject*
-LDAPerror(LDAP *l, char *msg)
+LDAPraise_for_message(LDAP *l, LDAPMessage *m)
 {
     if (l == NULL) {
         PyErr_SetFromErrno(LDAPexception_class);
+        ldap_msgfree(m);
         return NULL;
     } else {
 
-        int myerrno, errnum, opt_errnum;
+        int myerrno, errnum, opt_errnum, msgid = -1, msgtype = 0;
         PyObject *errobj;
         PyObject *info;
         PyObject *str;
         PyObject *pyerrno;
+        PyObject *pyresult;
+        PyObject *pyctrls = NULL;
+        char *matched = NULL,
+             *error = NULL,
+             **refs = NULL;
+        LDAPControl **serverctrls = NULL;
 
         /* at first save errno for later use before it gets overwritten by another call */
         myerrno = errno;
 
-        char *matched, *error;
+        if (m != NULL) {
+            msgid = ldap_msgid(m);
+            msgtype = ldap_msgtype(m);
+            ldap_parse_result(l, m, &errnum, &matched, &error, &refs,
+                              &serverctrls, 1);
+        }
 
-        opt_errnum = ldap_get_option(l, LDAP_OPT_ERROR_NUMBER, &errnum);
-        if (opt_errnum != LDAP_OPT_SUCCESS)
-            errnum = opt_errnum;
+        if (msgtype <= 0) {
+            opt_errnum = ldap_get_option(l, LDAP_OPT_ERROR_NUMBER, &errnum);
+            if (opt_errnum != LDAP_OPT_SUCCESS)
+                errnum = opt_errnum;
 
-        if (errnum == LDAP_NO_MEMORY)
-            return PyErr_NoMemory();
+            if (errnum == LDAP_NO_MEMORY) {
+                return PyErr_NoMemory();
+            }
+
+            ldap_get_option(l, LDAP_OPT_MATCHED_DN, &matched);
+            ldap_get_option(l, LDAP_OPT_ERROR_STRING, &error);
+        }
 
         if (errnum >= LDAP_ERROR_MIN && errnum <= LDAP_ERROR_MAX)
             errobj = errobjects[errnum+LDAP_ERROR_OFFSET];
@@ -76,8 +95,32 @@ LDAPerror(LDAP *l, char *msg)
             errobj = LDAPexception_class;
 
         info = PyDict_New();
-        if (info == NULL)
+        if (info == NULL) {
+            ldap_memfree(matched);
+            ldap_memfree(error);
+            ldap_memvfree((void **)refs);
+            ldap_controls_free(serverctrls);
             return NULL;
+        }
+
+        if (msgtype > 0) {
+            pyresult = PyLong_FromLong(msgtype);
+            if (pyresult)
+                PyDict_SetItemString(info, "msgtype", pyresult);
+            Py_XDECREF(pyresult);
+        }
+
+        if (msgid >= 0) {
+            pyresult = PyLong_FromLong(msgid);
+            if (pyresult)
+                PyDict_SetItemString(info, "msgid", pyresult);
+            Py_XDECREF(pyresult);
+        }
+
+        pyresult = PyLong_FromLong(errnum);
+        if (pyresult)
+            PyDict_SetItemString(info, "result", pyresult);
+        Py_XDECREF(pyresult);
 
         str = PyBytes_FromString(ldap_err2string(errnum));
         if (str)
@@ -91,7 +134,21 @@ LDAPerror(LDAP *l, char *msg)
             Py_XDECREF(pyerrno);
         }
 
-        if (ldap_get_option(l, LDAP_OPT_MATCHED_DN, &matched) >= 0 && matched != NULL) {
+        if (!(pyctrls = LDAPControls_to_List(serverctrls))) {
+            int err = LDAP_NO_MEMORY;
+
+            ldap_set_option(l, LDAP_OPT_ERROR_NUMBER, &err);
+            ldap_memfree(matched);
+            ldap_memfree(error);
+            ldap_memvfree((void **)refs);
+            ldap_controls_free(serverctrls);
+            return PyErr_NoMemory();
+        }
+        ldap_controls_free(serverctrls);
+        PyDict_SetItemString(info, "ctrls", pyctrls);
+        Py_XDECREF(pyctrls);
+
+        if (matched != NULL) {
             if (*matched != '\0') {
                 str = PyBytes_FromString(matched);
                 if (str)
@@ -101,24 +158,33 @@ LDAPerror(LDAP *l, char *msg)
             ldap_memfree(matched);
         }
 
-        if (errnum == LDAP_REFERRAL) {
-            str = PyBytes_FromString(msg);
+        if (errnum == LDAP_REFERRAL && refs != NULL && refs[0] != NULL) {
+            /* Keep old behaviour, overshadow error message */
+            char err[1024];
+
+            snprintf(err, sizeof(err), "Referral:\n%s", refs[0]);
+            str = PyUnicode_FromString(err);
+            PyDict_SetItemString(info, "info", str);
+            Py_XDECREF(str);
+        } else if (error != NULL && *error != '\0') {
+            str = PyBytes_FromString(error);
             if (str)
                 PyDict_SetItemString( info, "info", str );
             Py_XDECREF(str);
-        } else if (ldap_get_option(l, LDAP_OPT_ERROR_STRING, &error) >= 0) {
-            if (error != NULL && *error != '\0') {
-                str = PyBytes_FromString(error);
-                if (str)
-                    PyDict_SetItemString(info, "info", str);
-                Py_XDECREF(str);
-            }
-            ldap_memfree(error);
         }
+
         PyErr_SetObject( errobj, info );
         Py_DECREF(info);
+        ldap_memvfree((void **)refs);
+        ldap_memfree(error);
         return NULL;
     }
+}
+
+PyObject *
+LDAPerror(LDAP *l)
+{
+    return LDAPraise_for_message(l, NULL);
 }
 
 
@@ -143,6 +209,9 @@ LDAPinit_errors( PyObject*d ) {
 # define seterrobj(n) { \
         PyObject *e = PyErr_NewException("ldap0." #n, \
         LDAPexception_class, NULL); \
+        PyObject *nobj = PyLong_FromLong(LDAP_##n); \
+        PyObject_SetAttrString(e, "errnum", nobj); \
+        Py_DECREF(nobj); \
         seterrobj2(n, e); \
         Py_INCREF(e); \
     }
