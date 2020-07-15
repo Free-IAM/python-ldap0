@@ -101,12 +101,13 @@ class IntermediateResponse:
 
     responseName = None
 
-    def __init__(self, responseName=None, encodedResponseValue=None):
+    def __init__(self, responseName=None, encodedResponseValue=None, ctrls=None):
         if responseName is not None:
             self.responseName = responseName
         self.responseValue = encodedResponseValue
         if encodedResponseValue is not None:
             self.decode(encodedResponseValue)
+        self.ctrls = ctrls or []
 
     def __repr__(self):
         return '%s(responseName=%r, responseValue=%r)' % (

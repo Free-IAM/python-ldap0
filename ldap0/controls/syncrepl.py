@@ -330,7 +330,7 @@ class SyncInfoMessage(IntermediateResponse):
     """
     responseName = '1.3.6.1.4.1.4203.1.9.1.4'
 
-    def __new__(cls, responseName, encodedResponseValue):
+    def __new__(cls, responseName, encodedResponseValue, ctrls):
         if cls is not __class__:
             return super().__new__(cls)
         syncinfo, _ = decoder.decode(encodedResponseValue, asn1Spec=SyncInfoValue())
@@ -345,7 +345,7 @@ class SyncInfoMessage(IntermediateResponse):
             child = SyncInfoIDSet
         else:
             raise ValueError
-        return child.__new__(child, responseName, encodedResponseValue)
+        return child.__new__(child, responseName, encodedResponseValue, ctrls)
 
     def decode(self, value: bytes):
         self.syncinfo, _ = decoder.decode(
