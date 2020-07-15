@@ -328,16 +328,33 @@ class TestLdapCExtension(SlapdTestCase):
         self.assertEqual(result, _libldap0.RES_ADD)
         # try a false compare
         msg_id = ldap_conn.compare_ext(dn.encode('utf-8'), b'userPassword', b'bad_string')
-        with self.assertRaises(_libldap0.COMPARE_FALSE):
+        with self.assertRaises(_libldap0.COMPARE_FALSE) as e:
             r = ldap_conn.result(msg_id, _libldap0.MSG_ALL, self.timeout)
+
+        self.assertEqual(e.exception.args[0]['msgid'], msg_id)
+        self.assertEqual(e.exception.args[0]['msgtype'], _libldap0.RES_COMPARE)
+        self.assertEqual(e.exception.args[0]['result'], 5)
+        self.assertFalse(e.exception.args[0]['ctrls'])
+
         # try a true compare
         msg_id = ldap_conn.compare_ext(dn.encode('utf-8'), b'userPassword', b'the_password')
-        with self.assertRaises(_libldap0.COMPARE_TRUE):
+        with self.assertRaises(_libldap0.COMPARE_TRUE) as e:
             r = ldap_conn.result(msg_id, _libldap0.MSG_ALL, self.timeout)
+
+        self.assertEqual(e.exception.args[0]['msgid'], msg_id)
+        self.assertEqual(e.exception.args[0]['msgtype'], _libldap0.RES_COMPARE)
+        self.assertEqual(e.exception.args[0]['result'], 6)
+        self.assertFalse(e.exception.args[0]['ctrls'])
+
         # try a compare on bad attribute
         msg_id = ldap_conn.compare_ext(dn.encode('utf-8'), b'badAttribute', b'ignoreme')
-        with self.assertRaises(_libldap0.error):
+        with self.assertRaises(_libldap0.error) as e:
             r = ldap_conn.result(msg_id, _libldap0.MSG_ALL, self.timeout)
+
+        self.assertEqual(e.exception.args[0]['msgid'], msg_id)
+        self.assertEqual(e.exception.args[0]['msgtype'], _libldap0.RES_COMPARE)
+        self.assertEqual(e.exception.args[0]['result'], 17)
+        self.assertFalse(e.exception.args[0]['ctrls'])
 
     def test011_delete_no_such_object(self):
         """

@@ -52,7 +52,7 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
         if (dn == NULL)  {
             Py_DECREF(result);
             ldap_msgfree(m);
-            return LDAPerror(ld, "ldap_get_dn" );
+            return LDAPerror(ld);
         }
 
         attrdict = PyDict_New();
@@ -68,7 +68,7 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
             Py_DECREF(result);
             ldap_msgfree(m);
             ldap_memfree(dn);
-            return LDAPerror(ld, "ldap_get_entry_controls" );
+            return LDAPerror(ld);
         }
 
         /* convert req_ctrls to list of tuples */
@@ -79,7 +79,7 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
             ldap_msgfree(m);
             ldap_memfree(dn);
             ldap_controls_free(req_ctrls);
-            return LDAPerror(ld, "LDAPControls_to_List" );
+            return LDAPerror(ld);
         }
         ldap_controls_free(req_ctrls);
 
@@ -188,7 +188,7 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
             Py_DECREF(reflist);
             Py_DECREF(result);
             ldap_msgfree(m);
-            return LDAPerror(ld, "ldap_parse_reference" );
+            return LDAPerror(ld);
         }
 
         /* convert req_ctrls to list of tuples */
@@ -199,7 +199,7 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
             Py_DECREF(result);
             ldap_msgfree(m);
             ldap_controls_free(req_ctrls);
-            return LDAPerror(ld, "LDAPControls_to_List" );
+            return LDAPerror(ld);
         }
         ldap_controls_free(req_ctrls);
         if (refs) {
@@ -239,7 +239,7 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
                 if (ldap_parse_intermediate( ld, entry, &retoid, &retdata, &req_ctrls, 0 ) != LDAP_SUCCESS) {
                     Py_DECREF(result);
                     ldap_msgfree(m);
-                    return LDAPerror(ld, "ldap_parse_intermediate");
+                    return LDAPerror(ld);
                 }
 
                 /* convert req_ctrls to list of tuples */
@@ -251,7 +251,7 @@ LDAPmessage_to_python(LDAP *ld, LDAPMessage *m, int add_ctrls, int add_intermedi
                     ldap_controls_free(req_ctrls);
                     ldap_memfree(retoid);
                     ber_bvfree(retdata);
-                    return LDAPerror(ld, "LDAPControls_to_List");
+                    return LDAPerror(ld);
                 }
                 ldap_controls_free(req_ctrls);
 
