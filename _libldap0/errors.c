@@ -163,7 +163,7 @@ LDAPraise_for_message(LDAP *l, LDAPMessage *m)
             char err[1024];
 
             snprintf(err, sizeof(err), "Referral:\n%s", refs[0]);
-            str = PyUnicode_FromString(err);
+            str = PyBytes_FromString(err);
             PyDict_SetItemString(info, "info", str);
             Py_XDECREF(str);
         } else if (error != NULL && *error != '\0') {
