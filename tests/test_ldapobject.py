@@ -608,7 +608,7 @@ class Test00_LDAPObject(SlapdTestCase):
                 b'Referral:\nldap://ldap.uninett.no/dc=uninett,dc=no??one?objectClass=*)'
             )
         else:
-            self.fail("should have raised ldap0.REFERRAL")
+            self.fail('should have raised ldap0.REFERRAL')
         ldap_result = self._ldap_conn.search_s(
             dn,
             ldap0.SCOPE_BASE,
