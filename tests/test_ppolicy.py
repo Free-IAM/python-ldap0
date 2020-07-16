@@ -209,8 +209,11 @@ class TestPPolicy(SlapdTestCase):
                 )
                 self.assertEqual(ctx.exception.graceAuthNsRemaining, pwd_graceauthn_limit)
                 del ctx
-                # TODO: Clarify why this sleep is needed for getting a correct decrease of graceAuthNsRemaining
-                time.sleep(1.0)
+                # OpenLDAP's slapd derives graceAuthNsRemaining from number
+                # of pwdGraceUseTime values, which are only stored with
+                # a granularity of a second
+                # => sleep for a bit more than second to be on the safe side
+                time.sleep(1.1)
         with self.ldap_object_class(self.server.ldap_uri) as l:
             with self.assertRaises(ldap0.INVALID_CREDENTIALS) as ctx:
                 l.simple_bind_s(
