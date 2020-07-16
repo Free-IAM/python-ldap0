@@ -195,14 +195,12 @@ class TestPPolicy(SlapdTestCase):
         time.sleep(self.pwd_max_age+1.0-(time.time()-pwd_changed_time))
         for pwd_graceauthn_limit in range(self.pwd_graceauthn_limit, 0, -1):
             with self.ldap_object_class(self.server.ldap_uri) as l:
-                print('\npwd_graceauthn_limit =', pwd_graceauthn_limit)
                 with self.assertRaises(PasswordPolicyExpiredError) as ctx:
                     l.simple_bind_s(
                         self.user_dn,
                         user_password.encode('utf-8'),
                         req_ctrls=[PasswordPolicyControl()],
                     )
-                print('\nctx.exception.graceAuthNsRemaining =', ctx.exception.graceAuthNsRemaining)
                 self.assertEqual(
                     str(ctx.exception),
                     'Password expired! {0:d} grace logins left.'.format(pwd_graceauthn_limit)
