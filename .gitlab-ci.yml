@@ -63,7 +63,7 @@ test:centos-8:
 
 test:debian-stable:
   extends: .tests
-  image: debian:stable
+  image: debian:stable-slim
   before_script:
   - apt-get update
   - export DEBIAN_FRONTEND=noninteractive
@@ -77,7 +77,7 @@ test:debian-stable:
 
 test:debian-testing:
   extends: .tests
-  image: debian:testing
+  image: debian:testing-slim
   before_script:
   - apt-get update
   - export DEBIAN_FRONTEND=noninteractive
