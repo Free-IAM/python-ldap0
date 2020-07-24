@@ -10,21 +10,19 @@ import time
 import unittest
 import logging
 
-from ldap0.test import SlapdTestCase
-from ldap0.base import decode_entry_dict, encode_entry_dict
-from ldap0.functions import strp_secs
-from ldap0.err import \
-    PasswordPolicyChangeAfterReset, \
-    PasswordPolicyExpirationWarning, \
-    PasswordPolicyExpiredError
-
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
 
 import ldap0
-from ldap0 import LDAPError
 from ldap0.ldapobject import LDAPObject
 from ldap0.controls.ppolicy import PasswordPolicyControl
+from ldap0.test import SlapdTestCase
+from ldap0.functions import strp_secs
+from ldap0.err import (
+    PasswordPolicyChangeAfterReset,
+    PasswordPolicyExpirationWarning,
+    PasswordPolicyExpiredError,
+)
 
 
 LDIF_TEMPLATE = """dn: %(suffix)s
@@ -48,7 +46,7 @@ userPassword: user1_pw
 
 class TestPPolicy(SlapdTestCase):
     """
-    test LDAP search operations
+    test bind operation with slapo-ppolicy
     """
     ldap_object_class = LDAPObject
     maxDiff = None
@@ -81,7 +79,6 @@ class TestPPolicy(SlapdTestCase):
                 'olcPPolicyForwardUpdates': ['FALSE'],
                 'olcPPolicyHashCleartext': ['FALSE'],
                 'olcPPolicyUseLockout': ['TRUE'],
-                'olcPPolicyUseLockout': ['TRUE'],
             },
             ['ppolicy.ldif'],
         )
@@ -96,7 +93,7 @@ class TestPPolicy(SlapdTestCase):
             )
         except ldap0.ALREADY_EXISTS:
             pass
-        return # end of setUp()
+        # end of setUp()
 
     @property
     def user_dn(self):
@@ -148,7 +145,6 @@ class TestPPolicy(SlapdTestCase):
         user_password = 'supersecret1'
         user = self._set_user_password(user_password, pwd_reset=True)
         self.assertEqual(user.entry_s['pwdReset'], ['TRUE'])
-        pwd_changed_time = strp_secs(user.entry_s['pwdChangedTime'][0])
         # check a normal simple bind first
         with self.ldap_object_class(self.server.ldap_uri) as l:
             with self.assertRaises(PasswordPolicyChangeAfterReset) as ctx:
@@ -160,7 +156,7 @@ class TestPPolicy(SlapdTestCase):
             self.assertEqual(str(ctx.exception), 'Password change is needed after reset!')
             # let the user change his own password
             l.passwd_s(self.user_dn, None, 'supersecret2')
-        return # end of test001_pwd_reset()
+        # end of test001_pwd_reset()
 
     def test002_pwd_expiry_warning(self):
         user_password = b'supersecret2'
@@ -181,7 +177,7 @@ class TestPPolicy(SlapdTestCase):
                 )
             self.assertEqual(str(ctx.exception), 'Password will expire in 1 seconds!')
             self.assertEqual(ctx.exception.timeBeforeExpiration, 1)
-        return # test002_pwd_expiry_warning()
+        # end of test002_pwd_expiry_warning()
 
     def test003_pwd_grace_logins(self):
         user_password = 'supersecret2'
@@ -223,6 +219,7 @@ class TestPPolicy(SlapdTestCase):
                 ctx.exception.args[0]['ctrls'],
                 [(b'1.3.6.1.4.1.42.2.27.8.5.1', 0, b'0\x03\x81\x01\x00')],
             )
+        # end of test003_pwd_grace_logins()
 
 
 if __name__ == '__main__':
