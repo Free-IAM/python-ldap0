@@ -431,6 +431,7 @@ class SlapdTestCase(unittest.TestCase):
             )[0].dn_s
 
     def enable_overlay(self, slapo_entry: EntryStr, schema_files=None):
+        logging.debug('Enable overlay with %r', slapo_entry)
         olc_overlay = slapo_entry['olcOverlay'][0]
         enabled_overlays = [
             val.split('}', 1)[1]
