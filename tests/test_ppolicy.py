@@ -9,13 +9,18 @@ import os
 import time
 import unittest
 import logging
+from typing import List
 
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
 
 import ldap0
+from ldap0.schema.models import AttributeType
+from ldap0.schema.subentry import SubSchema
 from ldap0.ldapobject import LDAPObject
+from ldap0.controls.simple import ValueLessRequestControl
 from ldap0.controls.ppolicy import PasswordPolicyControl
+from ldap0.controls.pwdpolicy import PasswordExpiringControl, PasswordExpiredControl
 from ldap0.test import SlapdTestCase
 from ldap0.functions import strp_secs
 from ldap0.err import (
@@ -71,17 +76,23 @@ class TestPPolicy(SlapdTestCase):
 
     def setUp(self):
         super(TestPPolicy, self).setUp()
-        self.enable_overlay(
-            {
-                'olcOverlay': ['ppolicy'],
-                'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
-                'olcPPolicyDefault': ['cn=ppolicy-default,'+self.server.suffix],
-                'olcPPolicyForwardUpdates': ['FALSE'],
-                'olcPPolicyHashCleartext': ['FALSE'],
-                'olcPPolicyUseLockout': ['TRUE'],
-            },
-            ['ppolicy.ldif'],
+        sub_schema = SubSchema(
+            self._ldap_conn.read_subschemasubentry_s('cn=Subschema'),
         )
+        slapo_ppolicy_cfg = {
+            'olcOverlay': ['ppolicy'],
+            'objectClass': ['olcOverlayConfig', 'olcPPolicyConfig'],
+            'olcPPolicyDefault': ['cn=ppolicy-default,'+self.server.suffix],
+            'olcPPolicyForwardUpdates': ['FALSE'],
+            'olcPPolicyHashCleartext': ['FALSE'],
+            'olcPPolicyUseLockout': ['TRUE'],
+        }
+        netscape_controls = ('olcPPolicySendNetscapeControls' in sub_schema.name2oid[AttributeType])
+        logging.debug('netscape_controls = %r', netscape_controls)
+        if True:
+            # enable ppolicy_send_netscape_controls available since OpenLDAP ITS#9279
+            slapo_ppolicy_cfg['olcPPolicySendNetscapeControls'] = ['TRUE']
+        self.enable_overlay(slapo_ppolicy_cfg, ['ppolicy.ldif'])
         try:
             self._add_ppolicy_entry(
                 'default',
@@ -220,6 +231,43 @@ class TestPPolicy(SlapdTestCase):
                 [(b'1.3.6.1.4.1.42.2.27.8.5.1', 0, b'0\x03\x81\x01\x00')],
             )
         # end of test003_pwd_grace_logins()
+
+    def test004_pwdpolicy_expiration(self):
+        user_password = 'supersecret2'
+        user = self._set_user_password(user_password, pwd_reset=False)
+        user = self._ldap_conn.read_s(
+            self.user_dn,
+            attrlist=['pwdChangedTime'],
+        )
+        pwd_changed_time = strp_secs(user.entry_s['pwdChangedTime'][0])
+        # wait until grace period and check for PasswordPolicyExpirationWarning
+        sleep_time = self.pwd_expire_warning - (time.time() - pwd_changed_time - 1.0)
+        logging.debug('Wait for %s seconds', sleep_time)
+        time.sleep(sleep_time)
+        with self.ldap_object_class(self.server.ldap_uri, trace_level=2) as l:
+            bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
+            logging.debug('bind_res = %r', bind_res)
+        self.assertEqual(len(bind_res.ctrls), 1)
+        self.assertIsInstance(bind_res.ctrls[0], PasswordExpiringControl)
+        # end of test004_pwdpolicy_expiration_warning()
+
+    def test005_pwdpolicy_expired(self):
+        user_password = 'supersecret2'
+        user = self._ldap_conn.read_s(
+            self.user_dn,
+            attrlist=['pwdChangedTime'],
+        )
+        pwd_changed_time = strp_secs(user.entry_s['pwdChangedTime'][0])
+        # wait until grace period and check for PasswordPolicyExpirationWarning
+        sleep_time = self.pwd_max_age + 1.0 - (time.time() - pwd_changed_time)
+        logging.debug('Wait for %s seconds', sleep_time)
+        time.sleep(sleep_time)
+        with self.ldap_object_class(self.server.ldap_uri, trace_level=2) as l:
+            bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
+            logging.debug('bind_res = %r', bind_res)
+        self.assertEqual(len(bind_res.ctrls), 1)
+        self.assertIsInstance(bind_res.ctrls[0], PasswordExpiredControl)
+        # end of test004_pwdpolicy_expiration_warning()
 
 
 if __name__ == '__main__':
