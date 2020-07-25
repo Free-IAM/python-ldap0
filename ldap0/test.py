@@ -410,7 +410,7 @@ class SlapdTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        logging.getLogger().setLevel(os.environ.get('LOGLEVEL', 'WARN').upper())
+        logging.getLogger().setLevel(os.environ.get('LDAP0_LOG_LEVEL', 'WARN').upper())
         cls.server = cls.server_class()
         cls.server.start()
 
