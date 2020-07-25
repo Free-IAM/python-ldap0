@@ -9,7 +9,6 @@ import os
 import time
 import unittest
 import logging
-from typing import List
 
 # Switch off processing .ldaprc or ldap0.conf before importing _ldap
 os.environ['LDAPNOINIT'] = '1'
@@ -18,7 +17,6 @@ import ldap0
 from ldap0.schema.models import AttributeType
 from ldap0.schema.subentry import SubSchema
 from ldap0.ldapobject import LDAPObject
-from ldap0.controls.simple import ValueLessRequestControl
 from ldap0.controls.ppolicy import PasswordPolicyControl
 from ldap0.controls.pwdpolicy import PasswordExpiringControl, PasswordExpiredControl
 from ldap0.test import SlapdTestCase
