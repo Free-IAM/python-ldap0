@@ -9,7 +9,6 @@ import unittest
 from pyasn1.error import PyAsn1Error
 
 import _libldap0
-from ldap0.res import SearchResultEntry
 from ldap0.controls import encode_request_ctrls, ResponseControl, decode_response_ctrls, ControlRegistry
 from ldap0.controls.sessiontrack import *
 from ldap0.controls.psearch import *

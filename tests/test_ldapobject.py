@@ -4,7 +4,6 @@ Automatic tests for module ldap0.ldapobject
 """
 
 import os
-import platform
 import unittest
 import pickle
 import time
@@ -17,7 +16,6 @@ import _libldap0
 
 import ldap0
 import ldap0.schema.util
-from ldap0.res import LDAPResult
 from ldap0.ldapurl import LDAPUrl
 from ldap0.sasl import SaslPasswordAuth
 from ldap0.test import SlapdTestCase

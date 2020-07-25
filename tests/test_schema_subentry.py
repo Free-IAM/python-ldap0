@@ -7,7 +7,6 @@ import unittest
 from pprint import pformat
 
 import ldap0.ldif
-from ldap0.dn import DNObj
 from ldap0.schema.util import urlfetch, modify_modlist
 from ldap0.schema.subentry import SubSchema, SCHEMA_ATTR_MAPPING, SCHEMA_CLASS_MAPPING, OIDNotUnique, NameNotUnique
 from ldap0.schema.models import AttributeType, ObjectClass, NameForm, Entry, SchemaElementOIDSet

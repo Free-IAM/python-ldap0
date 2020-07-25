@@ -9,7 +9,6 @@ import textwrap
 
 from io import BytesIO
 
-import ldap0.ldif
 from ldap0.ldif import LDIFParser, LDIFWriter, MOD_OP_INTEGER
 
 

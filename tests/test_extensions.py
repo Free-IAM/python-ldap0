@@ -6,7 +6,6 @@ available in all OpenLDAP builds
 """
 
 import os
-import time
 import unittest
 
 from ldap0.test import SlapdTestCase
@@ -15,7 +14,6 @@ from ldap0.test import SlapdTestCase
 os.environ['LDAPNOINIT'] = '1'
 
 import ldap0
-from ldap0 import LDAPError
 from ldap0.ldapobject import LDAPObject
 from ldap0.res import SearchResultEntry
 from ldap0.controls.simple import ManageDSAITControl

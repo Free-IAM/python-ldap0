@@ -8,7 +8,6 @@ import unittest
 
 from ldap0 import SCOPE_SUBTREE, SCOPE_ONELEVEL
 from ldap0.openldap import SyncReplDesc
-from ldap0.ldapurl import LDAPUrl
 
 
 class TestSyncReplDesc(unittest.TestCase):

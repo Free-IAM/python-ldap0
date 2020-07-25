@@ -7,7 +7,6 @@ Automatic tests for module ldap0.dn
 import hashlib
 import unittest
 
-import ldap0.pw
 from ldap0.pw import *
 
 
