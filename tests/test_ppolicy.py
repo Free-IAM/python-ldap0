@@ -87,10 +87,10 @@ class TestPPolicy(SlapdTestCase):
             'olcPPolicyHashCleartext': ['FALSE'],
             'olcPPolicyUseLockout': ['TRUE'],
         }
-        netscape_controls = ('olcPPolicySendNetscapeControls' in sub_schema.name2oid[AttributeType])
-        logging.debug('netscape_controls = %r', netscape_controls)
-        if True:
-            # enable ppolicy_send_netscape_controls available since OpenLDAP ITS#9279
+        self.send_netscape_controls = ('olcPPolicySendNetscapeControls' in sub_schema.name2oid[AttributeType])
+        logging.debug('send_netscape_controls = %r', self.send_netscape_controls)
+        if self.send_netscape_controls:
+            # enable ppolicy_send_send_netscape_controls available since OpenLDAP ITS#9279
             slapo_ppolicy_cfg['olcPPolicySendNetscapeControls'] = ['TRUE']
         self.enable_overlay(slapo_ppolicy_cfg, ['ppolicy.ldif'])
         try:
@@ -233,6 +233,8 @@ class TestPPolicy(SlapdTestCase):
         # end of test003_pwd_grace_logins()
 
     def test004_pwdpolicy_expiration(self):
+        if not self.send_netscape_controls:
+            self.skipTest('slapd has no support for ITS#9279')
         user_password = 'supersecret2'
         user = self._set_user_password(user_password, pwd_reset=False)
         user = self._ldap_conn.read_s(
@@ -244,7 +246,7 @@ class TestPPolicy(SlapdTestCase):
         sleep_time = self.pwd_expire_warning - (time.time() - pwd_changed_time - 1.0)
         logging.debug('Wait for %s seconds', sleep_time)
         time.sleep(sleep_time)
-        with self.ldap_object_class(self.server.ldap_uri, trace_level=2) as l:
+        with self.ldap_object_class(self.server.ldap_uri) as l:
             bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
@@ -252,6 +254,8 @@ class TestPPolicy(SlapdTestCase):
         # end of test004_pwdpolicy_expiration_warning()
 
     def test005_pwdpolicy_expired(self):
+        if not self.send_netscape_controls:
+            self.skipTest('slapd has no support for ITS#9279')
         user_password = 'supersecret2'
         user = self._ldap_conn.read_s(
             self.user_dn,
@@ -262,7 +266,7 @@ class TestPPolicy(SlapdTestCase):
         sleep_time = self.pwd_max_age + 1.0 - (time.time() - pwd_changed_time)
         logging.debug('Wait for %s seconds', sleep_time)
         time.sleep(sleep_time)
-        with self.ldap_object_class(self.server.ldap_uri, trace_level=2) as l:
+        with self.ldap_object_class(self.server.ldap_uri) as l:
             bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
