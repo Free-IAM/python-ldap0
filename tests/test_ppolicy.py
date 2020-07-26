@@ -74,9 +74,6 @@ class TestPPolicy(SlapdTestCase):
 
     def setUp(self):
         super(TestPPolicy, self).setUp()
-        sub_schema = SubSchema(
-            self._ldap_conn.read_subschemasubentry_s('cn=Subschema'),
-        )
         slapo_ppolicy_cfg = dict(
             olcOverlay=['ppolicy'],
             objectClass=['olcOverlayConfig', 'olcPPolicyConfig'],
@@ -85,13 +82,20 @@ class TestPPolicy(SlapdTestCase):
             olcPPolicyHashCleartext=['FALSE'],
             olcPPolicyUseLockout=['TRUE'],
         )
+        self.enable_overlay(slapo_ppolicy_cfg, ['ppolicy.ldif'])
         # check whether attribute type olcPPolicySendNetscapeControls is present in subschema
+        sub_schema = SubSchema(
+            self._ldap_conn.read_subschemasubentry_s('cn=Subschema'),
+        )
         self.send_netscape_controls = ('1.3.6.1.4.1.4203.1.12.2.3.3.12.6' in sub_schema.sed[AttributeType])
         if self.send_netscape_controls:
             # enable ppolicy_send_send_netscape_controls available since OpenLDAP ITS#9279
             slapo_ppolicy_cfg.update(olcPPolicySendNetscapeControls=['TRUE'])
+            self._ldap_conn.modify_s(
+                'olcOverlay={0}ppolicy,olcDatabase={1}mdb,cn=config',
+                [(ldap0.MOD_REPLACE, b'olcPPolicySendNetscapeControls', [b'TRUE'])]
+            )
             logging.debug('Set olcPPolicySendNetscapeControls: TRUE')
-        self.enable_overlay(slapo_ppolicy_cfg, ['ppolicy.ldif'])
         try:
             self._add_ppolicy_entry(
                 'default',
