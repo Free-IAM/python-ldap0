@@ -15,16 +15,17 @@ class TestTemplateEntry(unittest.TestCase):
     """
 
     def test001_inetorgperson_bytes(self):
-        inet_org_person = TemplateEntry(
-            t_dn = 'cn={first_name} {last_name},ou=People,dc=example,dc=com',
-            t_entry = {
-                'objectClass': ['top', 'person', 'organizationalPerson', 'inetOrgPerson'],
-                'cn': ['{first_name} {last_name}', '{last_name}, {first_name}'],
-                'sn': ['{last_name}'],
-                'mail': ['{mail_addr}'],
-                'departmentNumber': ['{dept_num:08d}'],
-            },
-        )
+        t_dn = 'cn={first_name} {last_name},ou=People,dc=example,dc=com'
+        t_entry = {
+            'objectClass': ['top', 'person', 'organizationalPerson', 'inetOrgPerson'],
+            'cn': ['{first_name} {last_name}', '{last_name}, {first_name}'],
+            'sn': ['{last_name}'],
+            'mail': ['{mail_addr}'],
+            'departmentNumber': ['{dept_num:08d}'],
+        }
+        inet_org_person = TemplateEntry(t_dn=t_dn, t_entry=t_entry)
+        self.assertEqual(inet_org_person.t_dn, t_dn)
+        self.assertEqual(inet_org_person.t_entry, t_entry)
         self.assertEqual(
             inet_org_person.ldap_entry({
                 'first_name': 'Theo',
