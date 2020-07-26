@@ -144,4 +144,3 @@ class PassmodResponse(ExtendedResponse):
         )
         if 'genPasswd' in passmod_resp:
             self.genPasswd = bytes(passmod_resp.getComponentByName('genPasswd'))
-        return
