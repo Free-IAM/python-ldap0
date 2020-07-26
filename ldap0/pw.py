@@ -9,8 +9,6 @@ import secrets
 from binascii import hexlify
 from typing import Union, Optional
 
-from .__about__ import __version__, __author__, __license__
-
 __all__ = [
     'ntlm_password_hash',
     'random_string',

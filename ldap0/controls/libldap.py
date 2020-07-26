@@ -6,7 +6,6 @@ by OpenLDAP functions
 
 import _libldap0
 
-from ..__about__ import __version__, __author__, __license__
 from . import RequestControl
 
 

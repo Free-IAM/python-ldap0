@@ -9,7 +9,6 @@ from pyasn1.codec.ber import encoder, decoder
 from pyasn1_modules.rfc2251 import \
     LDAPDN, AttributeDescription, AttributeDescriptionList, AttributeValue
 
-from ..__about__ import __version__, __author__, __license__
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 from ..res import SearchResultEntry
 

@@ -11,8 +11,6 @@ from urllib.parse import (
 )
 from collections import UserDict
 
-from .__about__ import __version__, __author__, __license__
-
 __all__ = [
     # constants
     'SEARCH_SCOPE',

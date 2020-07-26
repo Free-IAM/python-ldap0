@@ -6,7 +6,6 @@ ldap0.controls.openldap - classes for OpenLDAP-specific controls
 from pyasn1.type import univ
 from pyasn1.codec.ber import decoder
 
-from ..__about__ import __version__, __author__, __license__
 from . import ResponseControl, KNOWN_RESPONSE_CONTROLS
 from .simple import ValueLessRequestControl
 

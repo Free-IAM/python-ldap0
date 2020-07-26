@@ -4,7 +4,6 @@ ldap0.controls.pwdpolicy - classes for Password Policy controls
 (see https://tools.ietf.org/html/draft-vchu-ldap-pwd-policy)
 """
 
-from ..__about__ import __version__, __author__, __license__
 from . import ResponseControl, KNOWN_RESPONSE_CONTROLS
 
 __all__ = [

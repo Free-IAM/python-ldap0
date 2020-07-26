@@ -5,8 +5,6 @@ ldap0.modlist - create add/modify modlist's
 
 from _libldap0 import MOD_DELETE, MOD_ADD
 
-from .__about__ import __version__, __author__, __license__
-
 
 def add_modlist(entry, ignore_attr_types=None):
     """Build modify list for call of method LDAPObject.add()"""

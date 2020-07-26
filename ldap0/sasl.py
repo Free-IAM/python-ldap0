@@ -6,8 +6,6 @@ ldap0.sasl - support for SASL mechanism
 import logging
 from typing import Dict
 
-from .__about__ import __version__, __author__, __license__
-
 
 __all__ = [
     'SaslAuth',

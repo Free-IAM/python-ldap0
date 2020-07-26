@@ -5,8 +5,6 @@ ldap0.extop - support classes for LDAPv3 extended operations
 
 from typing import Dict, Union, Optional
 
-from ..__about__ import __version__, __author__, __license__
-
 
 class ExtendedRequest:
     """

@@ -9,7 +9,6 @@ from pyasn1.type import namedtype, univ
 from pyasn1.codec.der import encoder
 from pyasn1_modules.rfc2251 import MessageID
 
-from ..__about__ import __version__, __author__, __license__
 from . import ExtendedRequest, ExtendedResponse
 
 

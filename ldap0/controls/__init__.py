@@ -12,8 +12,6 @@ from pyasn1.error import PyAsn1Error
 
 import _libldap0
 
-from ..__about__ import __version__, __author__, __license__
-
 
 __all__ = [
     'KNOWN_RESPONSE_CONTROLS',

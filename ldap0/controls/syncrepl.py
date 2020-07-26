@@ -13,7 +13,6 @@ from pyasn1.type import namedtype, namedval, univ, tag, constraint
 from pyasn1.codec.ber import encoder, decoder
 from pyasn1_modules.rfc2251 import LDAPString
 
-from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, KNOWN_RESPONSE_CONTROLS
 from ..extop import IntermediateResponse, INTERMEDIATE_RESPONSE_REGISTRY
 

@@ -6,8 +6,6 @@ ldap0.err - error classes
 import _libldap0
 from . import LDAPError
 
-from .__about__ import __version__, __author__, __license__
-
 __all__ = [
     'LIMIT_EXCEPTIONS',
     'NoUniqueEntry',

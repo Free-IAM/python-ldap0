@@ -6,8 +6,6 @@ ldap0.lock -- specific lock class with logging
 import logging
 import threading
 
-from .__about__ import __version__, __author__, __license__
-
 
 class LDAPLock:
     """

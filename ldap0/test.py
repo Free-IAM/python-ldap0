@@ -15,7 +15,6 @@ from urllib.parse import quote_plus
 
 import _libldap0
 
-from .__about__ import __version__, __author__, __license__
 from .base import encode_list
 from .ldapobject import LDAPObject
 from .functions import escape_format

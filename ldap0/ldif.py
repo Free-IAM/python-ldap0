@@ -15,7 +15,6 @@ from typing import BinaryIO, Dict, Optional, Sequence, Set, Tuple, Union
 import _libldap0
 from _libldap0 import MOD_ADD, MOD_DELETE, MOD_REPLACE, MOD_INCREMENT
 
-from .__about__ import __version__, __author__, __license__
 from .functions import _libldap0_function_call
 from .typehints import EntryBytes
 

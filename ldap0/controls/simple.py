@@ -5,7 +5,6 @@ ldap0.controls.simple - classes for some very simple LDAP controls
 
 import struct
 
-from ..__about__ import __version__, __author__, __license__
 from . import RequestControl, ResponseControl, LDAPControl, KNOWN_RESPONSE_CONTROLS
 
 

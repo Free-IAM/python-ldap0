@@ -4,7 +4,6 @@ ldap0.extop.whoami - Classes for "Who am I?" extended operation
 (see RFC 4532)
 """
 
-from ..__about__ import __version__, __author__, __license__
 from . import ExtendedRequest, ExtendedResponse
 
 

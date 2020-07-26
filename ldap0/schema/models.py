@@ -7,7 +7,6 @@ from collections.abc import MutableSet
 from collections import UserDict, OrderedDict
 from typing import Any, Mapping, Sequence
 
-from ..__about__ import __version__, __author__, __license__
 from ..cidict import CIDict
 from .parse import split_tokens, extract_tokens
 

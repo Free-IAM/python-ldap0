@@ -5,7 +5,6 @@ ldap0.schema.subentry -  subschema subentry handling
 
 from itertools import combinations
 
-from ..__about__ import __version__, __author__, __license__
 from .models import \
     AttributeType, \
     DITContentRule, \

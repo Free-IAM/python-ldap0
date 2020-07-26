@@ -5,8 +5,6 @@ ldap0.cidict - custom dictionary classes with case-insensitive string-keys
 
 from collections import UserDict
 
-from .__about__ import __version__, __author__, __license__
-
 
 class CIDict(UserDict):
     """

@@ -11,7 +11,6 @@ from pyasn1.error import PyAsn1Error
 from pyasn1_modules.rfc2251 import AttributeDescriptionList, SearchResultEntry
 from pyasn1_modules.rfc2251 import LDAPDN, PartialAttributeList
 
-from ..__about__ import __version__, __author__, __license__
 from ..base import encode_list
 from ..res import SearchResultEntry as LDAPResultSearchResultEntry
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS

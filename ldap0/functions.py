@@ -22,7 +22,6 @@ from calendar import timegm
 import _libldap0
 from _libldap0 import LDAPError
 
-from .__about__ import __version__, __author__, __license__
 from .lock import LDAPLock
 import ldap0
 
