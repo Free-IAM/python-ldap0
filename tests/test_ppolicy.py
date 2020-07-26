@@ -252,6 +252,8 @@ class TestPPolicy(SlapdTestCase):
             bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
+        #self.assertIsInstance(bind_res.ctrls[0], PasswordExpiringControl)
+        #self.assertEqual(bind_res.ctrls[0].gracePeriod, 1)
         # end of test004_pwdpolicy_expiration()
 
     def test005_pwdpolicy_expired(self):
@@ -272,6 +274,7 @@ class TestPPolicy(SlapdTestCase):
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
         self.assertIsInstance(bind_res.ctrls[0], PasswordExpiredControl)
+        #self.assertTrue(bind_res.ctrls[0].passwordExpired)
         # end of test005_pwdpolicy_expired()
 
 
