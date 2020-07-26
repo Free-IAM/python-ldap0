@@ -53,7 +53,6 @@ class TestPPolicy(SlapdTestCase):
     """
     ldap_object_class = LDAPObject
     maxDiff = None
-    trace_level = 0
     pwd_max_age = 4
     pwd_expire_warning = 2
     pwd_graceauthn_limit = 2
@@ -160,7 +159,7 @@ class TestPPolicy(SlapdTestCase):
         user = self._set_user_password(user_password, pwd_reset=True)
         self.assertEqual(user.entry_s['pwdReset'], ['TRUE'])
         # check a normal simple bind first
-        with self.ldap_object_class(self.server.ldap_uri) as l:
+        with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
             with self.assertRaises(PasswordPolicyChangeAfterReset) as ctx:
                 l.simple_bind_s(
                     self.user_dn,
@@ -182,7 +181,7 @@ class TestPPolicy(SlapdTestCase):
         self.assertTrue('pwdReset' not in user.entry_s)
         # wait until grace period and check for PasswordPolicyExpirationWarning
         time.sleep(self.pwd_expire_warning-(time.time()-pwd_changed_time-1.0))
-        with self.ldap_object_class(self.server.ldap_uri) as l:
+        with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
             with self.assertRaises(PasswordPolicyExpirationWarning) as ctx:
                 l.simple_bind_s(
                     self.user_dn,
@@ -204,7 +203,7 @@ class TestPPolicy(SlapdTestCase):
         # wait until password expired and check for PasswordPolicyExpiredError
         time.sleep(self.pwd_max_age+1.0-(time.time()-pwd_changed_time))
         for pwd_graceauthn_limit in range(self.pwd_graceauthn_limit, 0, -1):
-            with self.ldap_object_class(self.server.ldap_uri) as l:
+            with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
                 with self.assertRaises(PasswordPolicyExpiredError) as ctx:
                     l.simple_bind_s(
                         self.user_dn,
@@ -222,7 +221,7 @@ class TestPPolicy(SlapdTestCase):
                 # a granularity of a second
                 # => sleep for a bit more than second to be on the safe side
                 time.sleep(1.1)
-        with self.ldap_object_class(self.server.ldap_uri) as l:
+        with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
             with self.assertRaises(ldap0.INVALID_CREDENTIALS) as ctx:
                 l.simple_bind_s(
                     self.user_dn,
@@ -249,7 +248,7 @@ class TestPPolicy(SlapdTestCase):
         sleep_time = self.pwd_expire_warning - (time.time() - pwd_changed_time - 1.0)
         logging.debug('Wait for %s seconds', sleep_time)
         time.sleep(sleep_time)
-        with self.ldap_object_class(self.server.ldap_uri) as l:
+        with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
             bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
@@ -269,7 +268,7 @@ class TestPPolicy(SlapdTestCase):
         sleep_time = self.pwd_max_age + 1.0 - (time.time() - pwd_changed_time)
         logging.debug('Wait for %s seconds', sleep_time)
         time.sleep(sleep_time)
-        with self.ldap_object_class(self.server.ldap_uri) as l:
+        with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
             bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
