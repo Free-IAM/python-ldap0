@@ -15,16 +15,9 @@ class TemplateEntry:
     t_dn: Optional[str] = None
     t_entry: Optional[EntryStr] = None
 
-    def __init__(
-            self,
-            t_dn: Optional[str] = None,
-            t_entry: Optional[EntryStr] = None,
-        ):
-        # Strip out empty values
-        if t_dn is not None:
-            self.t_dn = t_dn
-        if t_entry is not None:
-            self.t_entry = t_entry
+    def __init__(self, t_dn: str, t_entry: EntryStr):
+        self.t_dn = t_dn
+        self.t_entry = t_entry
 
     def ldap_entry(self, data_dict, encoding: str = 'utf-8') -> Tuple[str, EntryMixed]:
         """
@@ -46,4 +39,4 @@ class TemplateEntry:
             if attr_values:
                 ldap_entry[attr_type] = attr_values
         ldap_dn = self.t_dn.format(**data_dict)
-        return (ldap_dn, ldap_entry) # end of ldap_entry()
+        return (ldap_dn, ldap_entry)
