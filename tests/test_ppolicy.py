@@ -274,7 +274,7 @@ class TestPPolicy(SlapdTestCase):
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
         self.assertIsInstance(bind_res.ctrls[0], PasswordExpiredControl)
-        #self.assertTrue(bind_res.ctrls[0].passwordExpired)
+        self.assertTrue(bind_res.ctrls[0].passwordExpired)
         # end of test005_pwdpolicy_expired()
 
 
