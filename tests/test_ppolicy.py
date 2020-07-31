@@ -300,11 +300,13 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
         logging.debug('Wait for %s seconds', sleep_time)
         time.sleep(sleep_time)
         with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
-            bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
-            logging.debug('bind_res = %r', bind_res)
-        self.assertEqual(len(bind_res.ctrls), 1)
-        self.assertIsInstance(bind_res.ctrls[0], PasswordExpiredControl)
-        self.assertTrue(bind_res.ctrls[0].passwordExpired)
+            with self.assertRaises(ldap0.INVALID_CREDENTIALS) as ctx:
+                l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
+            self.assertEqual(len(ctx.exception.args[0]['ctrls']), 1)
+            self.assertEqual(
+                ctx.exception.args[0]['ctrls'],
+                [(PasswordExpiredControl.controlType.encode('ascii'), 0, b'0')],
+            )
         # end of test005_pwdpolicy_expired()
 
 
