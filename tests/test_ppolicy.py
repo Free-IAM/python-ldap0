@@ -73,6 +73,15 @@ class TestPPolicy(SlapdTestCase):
 
     def setUp(self):
         super(TestPPolicy, self).setUp()
+        sub_schema = SubSchema(
+            self._ldap_conn.read_subschemasubentry_s('cn=Subschema'),
+        )
+        # determine whether loading a separate schema file is needed
+        # by checking presence of object class pwdPolicy
+        if os.path.exists(os.path.join(self.server.SCHEMADIR, 'ppolicy.ldif')):
+            slapo_ppolicy_schema = ['ppolicy.ldif']
+        else:
+            slapo_ppolicy_schema = None
         slapo_ppolicy_cfg = dict(
             olcOverlay=['ppolicy'],
             objectClass=['olcOverlayConfig', 'olcPPolicyConfig'],
@@ -81,7 +90,7 @@ class TestPPolicy(SlapdTestCase):
             olcPPolicyHashCleartext=['FALSE'],
             olcPPolicyUseLockout=['TRUE'],
         )
-        self.enable_overlay(slapo_ppolicy_cfg, ['ppolicy.ldif'])
+        self.enable_overlay(slapo_ppolicy_cfg, slapo_ppolicy_schema)
         # check whether attribute type olcPPolicySendNetscapeControls is present in subschema
         sub_schema = SubSchema(
             self._ldap_conn.read_subschemasubentry_s('cn=Subschema'),
