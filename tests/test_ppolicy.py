@@ -196,7 +196,9 @@ class TestPPolicy(SlapoPPolicyTestCase):
         pwd_changed_time = strp_secs(user.entry_s['pwdChangedTime'][0])
         self.assertTrue('pwdReset' not in user.entry_s)
         # wait until grace period and check for PasswordPolicyExpirationWarning
-        time.sleep(self.pwd_expire_warning-(time.time()-pwd_changed_time-1.0))
+        sleep_time = pwd_changed_time + self.pwd_max_age - self.pwd_expire_warning + 1.0 - time.time()
+        logging.debug('Wait for %s seconds', sleep_time)
+        time.sleep(sleep_time)
         with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
             with self.assertRaises(PasswordPolicyExpirationWarning) as ctx:
                 l.simple_bind_s(
@@ -217,7 +219,9 @@ class TestPPolicy(SlapoPPolicyTestCase):
         pwd_changed_time = strp_secs(user_entry['pwdChangedTime'][0])
         self.assertTrue('pwdReset' not in user_entry)
         # wait until password expired and check for PasswordPolicyExpiredError
-        time.sleep(self.pwd_max_age+1.0-(time.time()-pwd_changed_time))
+        sleep_time = pwd_changed_time + self.pwd_max_age + 1.0 - time.time()
+        logging.debug('Wait for %s seconds', sleep_time)
+        time.sleep(sleep_time)
         for pwd_graceauthn_limit in range(self.pwd_graceauthn_limit, 0, -1):
             with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
                 with self.assertRaises(PasswordPolicyExpiredError) as ctx:
@@ -255,6 +259,7 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
     """
     tests for ldap0.controls.pwdpolicy
     """
+    pwd_graceauthn_limit = None
 
     def test001_pwdpolicy_expiration(self):
         if not self.send_netscape_controls:
@@ -267,7 +272,7 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
         )
         pwd_changed_time = strp_secs(user.entry_s['pwdChangedTime'][0])
         # wait until grace period and check for PasswordPolicyExpirationWarning
-        sleep_time = self.pwd_expire_warning - (time.time() - pwd_changed_time - 1.0)
+        sleep_time = pwd_changed_time + self.pwd_max_age - self.pwd_expire_warning + 1.0 - time.time()
         logging.debug('Wait for %s seconds', sleep_time)
         time.sleep(sleep_time)
         with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
@@ -288,7 +293,7 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
         )
         pwd_changed_time = strp_secs(user.entry_s['pwdChangedTime'][0])
         # wait until grace period and check for PasswordPolicyExpirationWarning
-        sleep_time = self.pwd_max_age + 1.0 - (time.time() - pwd_changed_time)
+        sleep_time = pwd_changed_time + self.pwd_max_age + 1.0 - time.time()
         logging.debug('Wait for %s seconds', sleep_time)
         time.sleep(sleep_time)
         with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
