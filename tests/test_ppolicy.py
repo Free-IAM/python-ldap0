@@ -206,8 +206,12 @@ class TestPPolicy(SlapoPPolicyTestCase):
                     user_password,
                     req_ctrls=[PasswordPolicyControl()],
                 )
-            self.assertEqual(str(ctx.exception), 'Password will expire in 1 seconds!')
-            self.assertEqual(ctx.exception.timeBeforeExpiration, 1)
+            expected_time_left = int(self.pwd_max_age-self.pwd_expire_warning-1)
+            self.assertEqual(ctx.exception.timeBeforeExpiration, expected_time_left)
+            self.assertEqual(
+                str(ctx.exception),
+                'Password will expire in %d seconds!' % (expected_time_left,),
+            )
         # end of test002_pwd_expiry_warning()
 
     def test003_pwd_grace_logins(self):
@@ -280,7 +284,8 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
         #self.assertIsInstance(bind_res.ctrls[0], PasswordExpiringControl)
-        #self.assertEqual(bind_res.ctrls[0].gracePeriod, 1)
+        expected_time_left = int(self.pwd_max_age-self.pwd_expire_warning-1)
+        #self.assertEqual(bind_res.ctrls[0].gracePeriod, expected_time_left)
         # end of test004_pwdpolicy_expiration()
 
     def test002_pwdpolicy_expired(self):
