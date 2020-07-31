@@ -47,9 +47,9 @@ userPassword: user1_pw
 """
 
 
-class TestPPolicy(SlapdTestCase):
+class SlapoPPolicyTestCase(SlapdTestCase):
     """
-    test bind operation with slapo-ppolicy
+    base-class for tests with slapo-ppolicy
     """
     ldap_object_class = LDAPObject
     maxDiff = None
@@ -59,7 +59,7 @@ class TestPPolicy(SlapdTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestPPolicy, cls).setUpClass()
+        super(SlapoPPolicyTestCase, cls).setUpClass()
         # insert some Foo* objects via ldapadd
         cls.server.ldapadd(
             (LDIF_TEMPLATE % {
@@ -72,7 +72,7 @@ class TestPPolicy(SlapdTestCase):
         )
 
     def setUp(self):
-        super(TestPPolicy, self).setUp()
+        super(SlapoPPolicyTestCase, self).setUp()
         sub_schema = SubSchema(
             self._ldap_conn.read_subschemasubentry_s('cn=Subschema'),
         )
@@ -134,7 +134,8 @@ class TestPPolicy(SlapdTestCase):
             'pwdAttribute': [b'userPassword'],
         }
         for at, av in ppolicy_attrs.items():
-            ppolicy_entry[at] = [str(av).encode('utf-8')]
+            if av is not None:
+                ppolicy_entry[at] = [str(av).encode('utf-8')]
         self._ldap_conn.add_s(
             ppolicy_dn,
             ppolicy_entry,
@@ -162,6 +163,12 @@ class TestPPolicy(SlapdTestCase):
             self.user_dn,
             attrlist=['pwdChangedTime', 'pwdReset'],
         )
+
+
+class TestPPolicy(SlapoPPolicyTestCase):
+    """
+    tests for ldap0.controls.ppolicy
+    """
 
     def test001_pwd_reset(self):
         user_password = 'supersecret1'
@@ -243,7 +250,13 @@ class TestPPolicy(SlapdTestCase):
             )
         # end of test003_pwd_grace_logins()
 
-    def test004_pwdpolicy_expiration(self):
+
+class TestPwdPolicy(SlapoPPolicyTestCase):
+    """
+    tests for ldap0.controls.pwdpolicy
+    """
+
+    def test001_pwdpolicy_expiration(self):
         if not self.send_netscape_controls:
             self.skipTest('slapd has no support for ITS#9279')
         user_password = 'supersecret2'
@@ -265,7 +278,7 @@ class TestPPolicy(SlapdTestCase):
         #self.assertEqual(bind_res.ctrls[0].gracePeriod, 1)
         # end of test004_pwdpolicy_expiration()
 
-    def test005_pwdpolicy_expired(self):
+    def test002_pwdpolicy_expired(self):
         if not self.send_netscape_controls:
             self.skipTest('slapd has no support for ITS#9279')
         user_password = 'supersecret2'
