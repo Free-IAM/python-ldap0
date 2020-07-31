@@ -146,19 +146,17 @@ class SlapoPPolicyTestCase(SlapdTestCase):
         ).entry_as
         self.assertEqual(read_entry, ppolicy_entry)
 
-    def _set_user_password(self, user_password, pwd_reset=False):
+    def _set_user_password(self, user_password, pwd_reset=None):
         modlist = [(ldap0.MOD_REPLACE, b'userPassword', [user_password.encode('utf-8')])]
-        if pwd_reset:
-            modlist.append((ldap0.MOD_REPLACE, b'pwdReset', [b'TRUE']))
-        else:
-            modlist.append((ldap0.MOD_DELETE, b'pwdReset', None))
-        self._ldap_conn.modify_s(
-            self.user_dn,
-            [
-                (ldap0.MOD_REPLACE, b'userPassword', [user_password.encode('utf-8')]),
-                (ldap0.MOD_REPLACE, b'pwdReset', [b'TRUE']),
-            ]
-        )
+        if pwd_reset is not None:
+            modlist.append(
+                (
+                    ldap0.MOD_REPLACE,
+                    b'pwdReset',
+                    [str(pwd_reset).upper().encode('ascii')]
+                )
+            )
+        self._ldap_conn.modify_s(self.user_dn, modlist)
         return self._ldap_conn.read_s(
             self.user_dn,
             attrlist=['pwdChangedTime', 'pwdReset'],
@@ -269,7 +267,7 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
         if not self.send_netscape_controls:
             self.skipTest('slapd has no support for ITS#9279')
         user_password = 'supersecret2'
-        user = self._set_user_password(user_password, pwd_reset=False)
+        user = self._set_user_password(user_password)
         user = self._ldap_conn.read_s(
             self.user_dn,
             attrlist=['pwdChangedTime'],
