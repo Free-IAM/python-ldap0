@@ -168,7 +168,7 @@ class TestPPolicy(SlapoPPolicyTestCase):
     tests for ldap0.controls.ppolicy
     """
 
-    def test001_pwd_reset(self):
+    def test001_ppolicy_reset(self):
         user_password = 'supersecret1'
         user = self._set_user_password(user_password, pwd_reset=True)
         self.assertEqual(user.entry_s['pwdReset'], ['TRUE'])
@@ -185,7 +185,7 @@ class TestPPolicy(SlapoPPolicyTestCase):
             l.passwd_s(self.user_dn, None, 'supersecret2')
         # end of test001_pwd_reset()
 
-    def test002_pwd_expiry_warning(self):
+    def test002_ppolicy_expiry_warning(self):
         user_password = b'supersecret2'
         user = self._ldap_conn.read_s(
             self.user_dn,
@@ -212,7 +212,7 @@ class TestPPolicy(SlapoPPolicyTestCase):
             )
         # end of test002_pwd_expiry_warning()
 
-    def test003_pwd_grace_logins(self):
+    def test003_ppolicy_grace_logins(self):
         user_password = 'supersecret2'
         user_entry = self._ldap_conn.read_s(
             self.user_dn,
