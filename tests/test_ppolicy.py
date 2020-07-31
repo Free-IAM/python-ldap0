@@ -250,10 +250,9 @@ class TestPPolicy(SlapoPPolicyTestCase):
                     user_password.encode('utf-8'),
                     req_ctrls=[PasswordPolicyControl()],
                 )
-            self.assertEqual(
-                ctx.exception.args[0]['ctrls'],
-                [(b'1.3.6.1.4.1.42.2.27.8.5.1', 0, b'0\x03\x81\x01\x00')],
-            )
+            self.assertEqual(len(ctx.exception.ctrls), 1)
+            self.assertIsInstance(ctx.exception.ctrls[0], PasswordPolicyControl)
+            self.assertEqual(ctx.exception.ctrls[0].error, 0)
         # end of test003_pwd_grace_logins()
 
 
@@ -302,11 +301,9 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
         with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
             with self.assertRaises(ldap0.INVALID_CREDENTIALS) as ctx:
                 l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
-            self.assertEqual(len(ctx.exception.args[0]['ctrls']), 1)
-            self.assertEqual(
-                ctx.exception.args[0]['ctrls'],
-                [(PasswordExpiredControl.controlType.encode('ascii'), 0, b'0')],
-            )
+            self.assertEqual(len(ctx.exception.ctrls), 1)
+            self.assertIsInstance(ctx.exception.ctrls[0], PasswordExpiredControl)
+            self.assertTrue(ctx.exception.ctrls[0].passwordExpired)
         # end of test005_pwdpolicy_expired()
 
 

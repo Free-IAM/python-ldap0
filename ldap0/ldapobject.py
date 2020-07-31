@@ -737,15 +737,19 @@ class LDAPObject:
         ) -> LDAPResult:
         if msgid != _libldap0.RES_ANY and msgid not in self._outstanding_requests:
             raise _libldap0.NO_SUCH_OPERATION('Unexpected msgid value %s' % (msgid,))
-        res_type, res_data, res_msgid, res_ctrls = self._ldap_call(
-            self._l.result,
-            msgid,
-            all_results,
-            timeout,
-            True,
-            add_intermediates,
-            False
-        )
+        try:
+            res_type, res_data, res_msgid, res_ctrls = self._ldap_call(
+                self._l.result,
+                msgid,
+                all_results,
+                timeout,
+                True,
+                add_intermediates,
+                False
+            )
+        except LDAPError as ldap_err:
+            ldap_err.ctrls = decode_response_ctrls(ldap_err.args[0]['ctrls'], resp_ctrl_classes)
+            raise ldap_err
         if res_type is None:
             return
         assert msgid == _libldap0.RES_ANY or res_msgid == msgid, ValueError(
