@@ -260,6 +260,8 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
     """
     tests for ldap0.controls.pwdpolicy
     """
+    pwd_max_age = 5
+    pwd_expire_warning = 3
     pwd_graceauthn_limit = None
 
     def test001_pwdpolicy_expiration(self):
@@ -280,9 +282,10 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
             bind_res = l.simple_bind_s(self.user_dn, user_password.encode('utf-8'))
             logging.debug('bind_res = %r', bind_res)
         self.assertEqual(len(bind_res.ctrls), 1)
-        #self.assertIsInstance(bind_res.ctrls[0], PasswordExpiringControl)
-        expected_time_left = int(self.pwd_max_age-self.pwd_expire_warning-1)
-        #self.assertEqual(bind_res.ctrls[0].gracePeriod, expected_time_left)
+        self.assertIsInstance(bind_res.ctrls[0], PasswordExpiringControl)
+        self.assertTrue(
+            bind_res.ctrls[0].gracePeriod <= self.pwd_expire_warning
+        )
         # end of test004_pwdpolicy_expiration()
 
     def test002_pwdpolicy_expired(self):
