@@ -56,6 +56,7 @@ class SyncReplDesc:
         'tls_key',
         'tls_reqcert',
         'tls_protocol_min',
+        'tls_reqsan',
         'type',
     )
     enum_args = {
@@ -65,6 +66,7 @@ class SyncReplDesc:
         'syncdata': {'default', 'accesslog', 'changelog'},
         'tls_crlcheck': {'none', 'peer', 'all'},
         'tls_reqcert': {'never', 'allow', 'try', 'demand'},
+        'tls_reqsan': {'never', 'allow', 'try', 'demand'},
         'type': {'refreshonly', 'refreshandpersist'},
     }
     sanitize_func = {
