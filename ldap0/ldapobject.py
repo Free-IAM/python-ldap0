@@ -748,7 +748,12 @@ class LDAPObject:
                 False
             )
         except LDAPError as ldap_err:
-            ldap_err.ctrls = decode_response_ctrls(ldap_err.args[0]['ctrls'], resp_ctrl_classes)
+            try:
+                err_ctrls = ldap_err.args[0]['ctrls']
+            except (IndexError, KeyError):
+                ldap_err.ctrls = None
+            else:
+                ldap_err.ctrls = decode_response_ctrls(err_ctrls, resp_ctrl_classes)
             raise ldap_err
         if res_type is None:
             return
