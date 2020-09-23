@@ -287,6 +287,22 @@ class TestDeref(unittest.TestCase):
         )
         self.assertIsInstance(deref.derefRes, dict)
         self.assertIsInstance(deref.derefRes['member'][0], ldap0.res.SearchResultEntry)
+        self.assertEqual(
+            deref.derefRes['member'][0].dn_s,
+            'uid=wjcg,cn=test,ou=ae-dir'
+        )
+        self.assertEqual(
+            deref.derefRes['member'][0].entry_s,
+            {'displayName': ['Fred Feuerstein (wjcg/30039)']}
+        )
+        self.assertEqual(
+            deref.derefRes['member'][1].dn_s,
+            'uid=sys-test-service-1,cn=test-services-1,cn=test,ou=ae-dir'
+        )
+        self.assertEqual(
+            deref.derefRes['member'][1].entry_s,
+            {}
+        )
 
 
 if __name__ == '__main__':
