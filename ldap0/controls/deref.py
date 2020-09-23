@@ -8,6 +8,7 @@ from pyasn1.type import namedtype, univ, tag
 from pyasn1.codec.ber import encoder, decoder
 from pyasn1_modules.rfc2251 import \
     LDAPDN, AttributeDescription, AttributeDescriptionList, AttributeValue
+from pyasn1.error import PyAsn1Error
 
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 from ..res import SearchResultEntry
@@ -105,14 +106,13 @@ class DereferenceControl(LDAPControl):
             deref_attr = bytes(deref_res[0])
             deref_dn = bytes(deref_res[1])
             deref_vals = deref_res[2]
-            deref_res_entry = SearchResultEntry(
-                deref_dn,
-                {
-                    bytes(tv[0]): [bytes(tv1) for tv1 in tv[1]]
-                    for tv in deref_vals or []
-                },
-                None,
-            )
+            deref_res_entry_b = {}
+            try:
+                for tv in deref_vals or []:
+                    deref_res_entry_b[bytes(tv[0])] = [bytes(tv1) for tv1 in tv[1]]
+            except PyAsn1Error:
+                pass
+            deref_res_entry = SearchResultEntry(deref_dn, deref_res_entry_b, None)
             try:
                 self.derefRes[deref_attr.decode(self.encoding)].append(deref_res_entry)
             except KeyError:
