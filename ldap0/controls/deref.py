@@ -108,7 +108,7 @@ class DereferenceControl(LDAPControl):
             deref_res_entry = SearchResultEntry(
                 deref_dn,
                 {
-                    bytes(tv[0]): list(map(bytes, tv[1]))
+                    bytes(tv[0]): [bytes(tv1) for tv1 in tv[1]]
                     for tv in deref_vals or []
                 },
                 None,
