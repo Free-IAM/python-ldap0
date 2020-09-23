@@ -9,6 +9,8 @@ import unittest
 from pyasn1.error import PyAsn1Error
 
 import _libldap0
+import ldap0.res
+import ldap0.controls
 from ldap0.controls import encode_request_ctrls, ResponseControl, decode_response_ctrls, ControlRegistry
 from ldap0.controls.sessiontrack import *
 from ldap0.controls.psearch import *
@@ -18,6 +20,11 @@ from ldap0.controls.readentry import *
 from ldap0.controls.syncrepl import *
 from ldap0.controls.vlv import *
 from ldap0.controls.libldap import *
+from ldap0.controls.deref import *
+
+
+# re-raise pyasn1 decoding exceptions
+ldap0.controls.STRICT_DECODE = True
 
 
 class TestRequestControls(unittest.TestCase):
@@ -242,6 +249,44 @@ class TestPPolicy(unittest.TestCase):
             b'0\x84\x00\x00\x00\t\xa0\x84\x00\x00\x00\x03\x80\x012',
             timeBeforeExpiration=50,
         )
+
+
+class TestDeref(unittest.TestCase):
+
+    def test_deref(self):
+        deref = DereferenceControl(criticality=False)
+        deref.decode(
+            b'0\x81\xae0U\x04\x06member\x04\x1auid=rqei,cn=test,ou=ae-dir\xa0/0'
+            b'-\x04\x0bdisplayName1\x1e\x04\x1cFred Feuerstein (rqei/30054)0U'
+            b'\x04\x06member\x04\x1auid=tmar,cn=test,ou=ae-dir\xa0/0-\x04\x0b'
+            b'displayName1\x1e\x04\x1cHorst R\xc3\xbcbezahl (tmar/30082)'
+        )
+        self.assertIsInstance(deref.derefRes, dict)
+        self.assertIsInstance(deref.derefRes['member'][0], ldap0.res.SearchResultEntry)
+        self.assertEqual(
+            deref.derefRes['member'][0].dn_s,
+            'uid=rqei,cn=test,ou=ae-dir'
+        )
+        self.assertEqual(
+            deref.derefRes['member'][0].entry_s,
+            {'displayName': ['Fred Feuerstein (rqei/30054)']}
+        )
+        self.assertEqual(
+            deref.derefRes['member'][1].dn_s,
+            'uid=tmar,cn=test,ou=ae-dir'
+        )
+        self.assertEqual(
+            deref.derefRes['member'][1].entry_s,
+            {'displayName': ['Horst Rübezahl (tmar/30082)']}
+        )
+        deref = DereferenceControl(criticality=False)
+        deref.decode(
+            b'0\x81\x9e0U\x04\x06member\x04\x1auid=wjcg,cn=test,ou=ae-dir\xa0/0'
+            b'-\x04\x0bdisplayName1\x1e\x04\x1cFred Feuerstein (wjcg/30039)0E'
+            b'\x04\x06member\x04;uid=sys-test-service-1,cn=test-services-1,cn=test,ou=ae-dir'
+        )
+        self.assertIsInstance(deref.derefRes, dict)
+        self.assertIsInstance(deref.derefRes['member'][0], ldap0.res.SearchResultEntry)
 
 
 if __name__ == '__main__':
