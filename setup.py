@@ -117,8 +117,8 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools',
-        'pyasn1>=0.4.5',
-        'pyasn1_modules>=0.2.5',
+        'pyasn1>=0.4.2',
+        'pyasn1_modules>=0.2.1',
     ],
     zip_safe=True,
 )
