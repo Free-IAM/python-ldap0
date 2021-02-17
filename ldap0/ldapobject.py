@@ -1070,7 +1070,7 @@ class LDAPObject:
             req_ctrls: Optional[RequestControls] = None,
             timeout: Union[int, float] = -1,
             cache_ttl: Optional[Union[int, float]] = None,
-        ) -> LDAPResult:
+        ) -> SearchResultEntry:
         ldap_res = self.search_s(
             dn,
             _libldap0.SCOPE_BASE,
