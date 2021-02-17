@@ -113,7 +113,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     package_dir={'': '.'},
     package_data = {
-        'ldap0': ['py.typed'],
+        PKG_NAME: ['py.typed'],
     },
     test_suite='tests',
     python_requires='>=3.6',
