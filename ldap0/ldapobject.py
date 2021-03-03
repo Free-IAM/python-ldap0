@@ -1064,7 +1064,7 @@ class LDAPObject:
 
     def read_s(
             self,
-            dn,
+            dn: str,
             filterstr: str = '(objectClass=*)',
             attrlist: Optional[AttrList] = None,
             req_ctrls: Optional[RequestControls] = None,
@@ -1086,7 +1086,7 @@ class LDAPObject:
 
     def read_subschemasubentry_s(
             self,
-            subschemasubentry_dn: None,
+            subschemasubentry_dn: str,
             attrs: Optional[AttrList] = None,
         ) -> EntryStr:
         try:
