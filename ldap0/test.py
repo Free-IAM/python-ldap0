@@ -43,7 +43,6 @@ TLSCACertificateFile tests/tls/ca-chain.pem
 TLSCertificateFile tests/tls/localhost.crt
 TLSCertificateKeyFile tests/tls/localhost.key
 TLSDHParamFile tests/tls/slapd-dhparams.pem
-TLSECName secp521r1
 
 authz-regexp
   "gidnumber=%(root_gid)s\\+uidnumber=%(root_uid)s,cn=peercred,cn=external,cn=auth"
