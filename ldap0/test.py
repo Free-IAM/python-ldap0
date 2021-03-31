@@ -36,6 +36,15 @@ allow bind_v2
 sasl-secprops none
 security ssf=0 simple_bind=0 sasl=0 transport=0
 
+TLSVerifyClient allow
+TLSProtocolMin 3.3
+TLSCipherSuite HIGH
+TLSCACertificateFile tests/tls/ca-chain.pem
+TLSCertificateFile tests/tls/localhost.crt
+TLSCertificateKeyFile tests/tls/localhost.key
+TLSDHParamFile tests/tls/slapd-dhparams.pem
+TLSECName secp521r1
+
 authz-regexp
   "gidnumber=%(root_gid)s\\+uidnumber=%(root_uid)s,cn=peercred,cn=external,cn=auth"
   "%(rootdn)s"

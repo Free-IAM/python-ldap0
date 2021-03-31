@@ -1015,6 +1015,21 @@ class Test00_LDAPObject(SlapdTestCase):
             self.assertEqual(args, (b'', b'', None))
             self.assertEqual(kwargs, {})
 
+    def test028_start_tls(self):
+        with self.ldap_object_class(self.server.ldap_uri) as l:
+            l.set_tls_options(cacert_filename='tests/tls/ca.crt')
+            l.start_tls_s()
+            self.assertEqual(l.whoami_s(), '')
+        with self.ldap_object_class(self.server.ldap_uri) as l:
+            l.set_tls_options(
+                cacert_filename='tests/tls/ca.crt',
+                client_cert_filename='tests/tls/test-client.crt',
+                client_key_filename='tests/tls/test-client.key',
+            )
+            l.start_tls_s()
+            l.sasl_non_interactive_bind_s('EXTERNAL')
+            self.assertEqual(l.whoami_s(), 'dn:cn=test-client,ou=example ou,o=example company')
+
 
 class Test01_ReconnectLDAPObject(Test00_LDAPObject):
     """
