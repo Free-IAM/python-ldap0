@@ -1016,6 +1016,9 @@ class Test00_LDAPObject(SlapdTestCase):
             self.assertEqual(kwargs, {})
 
     def test028_start_tls(self):
+        with self.assertRaises(ldap0.CONNECT_ERROR):
+            with self.ldap_object_class(self.server.ldap_uri) as l:
+                l.start_tls_s()
         with self.ldap_object_class(self.server.ldap_uri) as l:
             l.set_tls_options(cacert_filename='tests/tls/ca.crt')
             l.start_tls_s()
