@@ -89,8 +89,4 @@ class Cache(dict):
     def flush(self):
         self.hit_count = 0
         self.access_count = 0
-        for key in self.keys():
-            try:
-                dict.__delitem__(self, key)
-            except KeyError:
-                pass
+        self.clear()
