@@ -855,8 +855,13 @@ class LDAPObject:
         """
         reset/flush the internal cache
         """
+        try:
+            cache = self._cache
+        except AttributeError:
+            pass
+        else:
+            cache.flush()
         self._whoami_dn = None
-        self._cache.flush()
 
     def uncache(self, entry_dn) -> None:
         """
