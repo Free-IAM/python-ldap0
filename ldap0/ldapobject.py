@@ -35,6 +35,7 @@ from .sasl import SaslNoninteractiveAuth
 from .modlist import add_modlist, modify_modlist
 from .ldapurl import LDAPUrl
 from .typehints import AttrList, EntryMixed, EntryStr, RequestControls
+from .cache import Cache
 
 if __debug__:
     # Tracing is only supported in debugging mode
@@ -62,9 +63,7 @@ class LDAPObject:
     """
     __slots__ = (
         '_cache',
-        '_cache_hits',
-        '_cache_misses',
-        'cache_ttl',
+        '_cache_ttl',
         'encoding',
         '_l',
         '_libldap0_lock',
@@ -115,7 +114,8 @@ class LDAPObject:
         self._whoami_dn = None
         self.timeout = -1
         self.protocol_version = _libldap0.VERSION3
-        self.cache_ttl = cache_ttl
+        self._cache_ttl = cache_ttl
+        self._cache = Cache(ttl=cache_ttl)
         self.flush_cache()
         self.set_option(_libldap0.OPT_RESTART, False)
         self.set_option(_libldap0.OPT_DEREF, False)
@@ -849,22 +849,14 @@ class LDAPObject:
         """
         Returns percentage of cache hit ratio
         """
-        try:
-            return (
-                100 * float(self._cache_hits) /
-                float(self._cache_hits+self._cache_misses)
-            )
-        except ZeroDivisionError:
-            return 0.0
+        return self._cache.hit_ratio
 
     def flush_cache(self) -> None:
         """
         reset/flush the internal cache
         """
         self._whoami_dn = None
-        self._cache_misses = 0
-        self._cache_hits = 0
-        self._cache = {}
+        self._cache.flush()
 
     def uncache(self, entry_dn) -> None:
         """
@@ -874,16 +866,20 @@ class LDAPObject:
         remove_keys = set()
         # first find the items to be removed from cache
         for cache_key_args, cached_results in self._cache.items():
-            cached_results = self._cache[cache_key_args]
             if cache_key_args[0].lower() == entry_dn:
                 remove_keys.add(cache_key_args)
-            else:
-                for cached_res in cached_results[1]:
-                    if (
-                            isinstance(cached_res, SearchResultEntry)
-                            and cached_res.dn_s.lower() == entry_dn
-                        ):
-                        remove_keys.add(cache_key_args)
+                continue
+            try:
+                cached_results = self._cache[cache_key_args]
+            except KeyError:
+                # cached items expired in between
+                pass
+            for cached_res in cached_results:
+                if (
+                        isinstance(cached_res, SearchResultEntry)
+                        and cached_res.dn_s.lower() == entry_dn
+                    ):
+                    remove_keys.add(cache_key_args)
         # finally remove items from cache dict
         for cache_key_args in remove_keys:
             try:
@@ -905,9 +901,8 @@ class LDAPObject:
             cache_ttl: Optional[Union[int, float]] = None,
         ) -> List[LDAPResult]:
         if cache_ttl is None:
-            cache_ttl = self.cache_ttl
+            cache_ttl = self._cache._ttl
         if cache_ttl > 0:
-            current_time = time.time()
             cache_key_args = (
                 base,
                 scope,
@@ -923,18 +918,10 @@ class LDAPObject:
             )
             # first look into cache for non-expired search results
             try:
-                result_cache_time, res = self._cache[cache_key_args]
+                res = self._cache[cache_key_args]
             except KeyError:
                 pass
-            else:
-                if current_time > result_cache_time + cache_ttl:
-                    # cache entry is expired => remove it no matter what happens later
-                    del self._cache[cache_key_args]
-                else:
-                    self._cache_hits += 1
-                    return res
         # no cached result
-        self._cache_misses += 1
         msgid = self.search(
             base,
             scope,
@@ -950,11 +937,9 @@ class LDAPObject:
             res.extend(ldap_res.rdata)
         if cache_ttl > 0:
             # store result in cache if caching is enabled at all
-            self._cache[cache_key_args] = (
-                current_time,
-                res
-            )
-        return res # search_s()
+            self._cache.cache(cache_key_args, res, cache_ttl)
+        return res
+        # search_s()
 
     def noop_search(
             self,
@@ -1214,8 +1199,6 @@ class ReconnectLDAPObject(LDAPObject):
     )
     __transient_attrs__ = {
         '_cache',
-        '_cache_hits',
-        '_cache_misses',
         '_l',
         '_libldap0_lock',
         '_reconnect_lock',
@@ -1281,7 +1264,7 @@ class ReconnectLDAPObject(LDAPObject):
         for key, val in data.items():
             setattr(self, key, val)
         self._whoami_dn = None
-        self.flush_cache()
+        self._cache = Cache(self._cache_ttl)
         self._last_bind = (
             getattr(LDAPObject, self._last_bind[0]),
             self._last_bind[1],
