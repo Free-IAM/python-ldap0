@@ -870,7 +870,7 @@ class LDAPObject:
         entry_dn = entry_dn.lower()
         remove_keys = set()
         # first find the items to be removed from cache
-        for cache_key_args, cached_results in self._cache.items():
+        for cache_key_args in list(self._cache):
             if cache_key_args[0].lower() == entry_dn:
                 remove_keys.add(cache_key_args)
                 continue
@@ -879,12 +879,13 @@ class LDAPObject:
             except KeyError:
                 # cached items expired in between
                 pass
-            for cached_res in cached_results:
-                if (
-                        isinstance(cached_res, SearchResultEntry)
-                        and cached_res.dn_s.lower() == entry_dn
-                    ):
-                    remove_keys.add(cache_key_args)
+            else:
+                for cached_res in cached_results:
+                    if (
+                            isinstance(cached_res, SearchResultEntry)
+                            and cached_res.dn_s.lower() == entry_dn
+                        ):
+                        remove_keys.add(cache_key_args)
         # finally remove items from cache dict
         for cache_key_args in remove_keys:
             try:
