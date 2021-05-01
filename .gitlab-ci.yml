@@ -1,5 +1,5 @@
 .tests:
-  script: pushd /var/tmp && popd && python3 -m pip install coverage && python3 -m pip install . && LDAPNOINIT=1 LDAP0_TRACE_LEVEL=3 coverage3 run setup.py test && coverage3 report
+  script: pushd /var/tmp && popd && python3 -m pip install coverage && python3 -m pip install . && LDAPNOINIT=1 LDAP0_TRACE_LEVEL=3 coverage3 run -m unittest && coverage3 report
   stage: test
   only:
     refs:
