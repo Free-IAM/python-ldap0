@@ -436,7 +436,7 @@ class SlapdTestCase(unittest.TestCase):
                 escape_format(escape_filter_str, '(olcSuffix={0})', self.server.suffix),
             )[0].dn_s
 
-    def enable_overlay(self, slapo_entry: EntryStr, schema_files=None):
+    def enable_overlay(self, slapo_entry: EntryStr, schema_files=None, config_dn=None):
         logging.debug('Enable overlay with %r', slapo_entry)
         olc_overlay = slapo_entry['olcOverlay'][0]
         enabled_overlays = [
@@ -466,7 +466,7 @@ class SlapdTestCase(unittest.TestCase):
             self._ldap_conn.add_s(
                 'olcOverlay={{0}}{0},{1}'.format(
                     olc_overlay,
-                    self.mdb_config_dn,
+                    config_dn or self.mdb_config_dn,
                 ),
                 {
                     at: encode_list(avs)
