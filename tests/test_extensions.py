@@ -376,18 +376,26 @@ class TestAuthzID(ExtensionTestCase):
         )
         root_dse = self._ldap_conn.read_rootdse_s(attrlist=['supportedControl'])
         self.assertIn(AuthorizationIdentityRequestControl.controlType, root_dse.entry_s['supportedControl'])
+        bind_dn = 'cn=user1,'+self.server.suffix
+        bind_pw = 'user1_pw'.encode('ascii')
+        with self.ldap_object_class(self.server.ldap_uri) as l:
+            bind_res = l.simple_bind_s(bind_dn, bind_pw)
+            whoami_dn = l._whoami_dn
+        self.assertEqual(whoami_dn, None)
         with self.ldap_object_class(self.server.ldap_uri) as l:
             bind_res = l.simple_bind_s(
-                'cn=user1,'+self.server.suffix,
-                'user1_pw',
+                bind_dn,
+                bind_pw,
                 req_ctrls=[AuthorizationIdentityRequestControl()],
             )
+            whoami_dn = l._whoami_dn
         self.assertEqual(len(bind_res.ctrls), 1)
         self.assertIsInstance(bind_res.ctrls[0], AuthorizationIdentityResponseControl)
         self.assertEqual(
             bind_res.ctrls[0].authzId.decode('utf-8'),
-            'dn:cn=user1,o=öäü,dc=example,dc=org'
+            'dn:'+bind_dn
         )
+        self.assertEqual(whoami_dn, bind_dn)
 
 
 if __name__ == '__main__':

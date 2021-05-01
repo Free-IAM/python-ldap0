@@ -16,6 +16,7 @@ from .err import \
     PasswordPolicyChangeAfterReset, \
     PasswordPolicyExpirationWarning, \
     PasswordPolicyExpiredError
+from ldap0.controls.simple import AuthorizationIdentityResponseControl
 from .err import NoUniqueEntry
 from .base import encode_list
 from .dn import DNObj
@@ -344,6 +345,17 @@ class LDAPObject:
             encode_request_ctrls(req_ctrls),
         )
 
+    def _handle_authzid_ctrl(self, bind_ctrls):
+        authz_id_ctrls = [
+            ctrl
+            for ctrl in bind_ctrls
+            if ctrl.controlType == AuthorizationIdentityResponseControl.controlType
+        ]
+        if authz_id_ctrls and len(authz_id_ctrls) == 1:
+            authz_id = authz_id_ctrls[0].authzId.decode('utf-8')
+            if authz_id.startswith('dn:'):
+                self._whoami_dn = authz_id[3:]
+
     def simple_bind_s(
             self,
             who='',
@@ -354,6 +366,7 @@ class LDAPObject:
         res = self.result(msgid, _libldap0.MSG_ALL, self.timeout)
         assert res.rtype == _libldap0.RES_BIND, ValueError('Wrong result type %d' % (res.rtype,))
         if res.ctrls:
+            self._handle_authzid_ctrl(res.ctrls)
             # Extract the password policy response control and raise
             # appropriate exceptions if needed
             ppolicy_ctrls = [
