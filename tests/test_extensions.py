@@ -21,6 +21,10 @@ from ldap0.controls.deref import DereferenceControl
 from ldap0.controls.openldap import SearchNoOpControl
 from ldap0.controls.sss import SSSRequestControl, SSSResponseControl
 from ldap0.controls.vlv import VLVRequestControl, VLVResponseControl
+from ldap0.controls.simple import (
+    AuthorizationIdentityRequestControl,
+    AuthorizationIdentityResponseControl,
+)
 
 from ldap0.extop.dds import RefreshRequest, RefreshResponse
 
@@ -355,6 +359,34 @@ class TestSssVlv(ExtensionTestCase):
                     {'cn': [b'Foo1']}
                 ),
             ]
+        )
+
+
+class TestAuthzID(ExtensionTestCase):
+
+    def test001_authz_id(self):
+        root_dse = self._ldap_conn.read_rootdse_s(attrlist=['supportedControl'])
+        self.assertNotIn(AuthorizationIdentityRequestControl.controlType, root_dse.entry_s['supportedControl'])
+        self.enable_overlay(
+            {
+                'olcOverlay': ['authzid'],
+                'objectClass': ['olcOverlayConfig'],
+            },
+            config_dn='olcDatabase={-1}frontend,cn=config',
+        )
+        root_dse = self._ldap_conn.read_rootdse_s(attrlist=['supportedControl'])
+        self.assertIn(AuthorizationIdentityRequestControl.controlType, root_dse.entry_s['supportedControl'])
+        with self.ldap_object_class(self.server.ldap_uri) as l:
+            bind_res = l.simple_bind_s(
+                'cn=user1,'+self.server.suffix,
+                'user1_pw',
+                req_ctrls=[AuthorizationIdentityRequestControl()],
+            )
+        self.assertEqual(len(bind_res.ctrls), 1)
+        self.assertIsInstance(bind_res.ctrls[0], AuthorizationIdentityResponseControl)
+        self.assertEqual(
+            bind_res.ctrls[0].authzId.decode('utf-8'),
+            'dn:cn=user1,o=öäü,dc=example,dc=org'
         )
 
 
