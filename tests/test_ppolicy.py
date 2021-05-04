@@ -224,7 +224,9 @@ class TestPPolicy(SlapoPPolicyTestCase):
         sleep_time = pwd_changed_time + self.pwd_max_age + 1.0 - time.time()
         logging.debug('Wait for %s seconds', sleep_time)
         time.sleep(sleep_time)
-        for pwd_graceauthn_limit in range(self.pwd_graceauthn_limit, 0, -1):
+        # change in slapo-ppolicy 2.5.x (see ITS#7596)
+        ol25_offset = int(self.server.slapd_version.startswith('2.5.'))
+        for pwd_graceauthn_limit in range(self.pwd_graceauthn_limit-ol25_offset, -ol25_offset, -1):
             with self.ldap_object_class(self.server.ldap_uri, trace_level=self.trace_level) as l:
                 with self.assertRaises(PasswordPolicyExpiredError) as ctx:
                     l.simple_bind_s(
