@@ -135,6 +135,13 @@ class SlapdObject:
         self.ldap_uri = "ldap://%s:%d/" % (LOCALHOST, self._port)
         ldapi_path = os.path.join(self.testrundir, 'ldapi')
         self.ldapi_uri = "ldapi://%s" % quote_plus(ldapi_path)
+        self._slapd_version = None
+
+    @property
+    def slapd_version(self):
+        if self._slapd_version is None:
+            self._slapd_version = '.'.join(self.get_slapd_version())
+        return self._slapd_version
 
     def setup_rundir(self):
         """
