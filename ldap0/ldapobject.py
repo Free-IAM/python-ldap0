@@ -333,8 +333,9 @@ class LDAPObject:
         return res
 
     def simple_bind(
-            self, who='',
-            cred=b'',
+            self,
+            who: str = '',
+            cred: bytes = b'',
             req_ctrls: Optional[RequestControls] = None,
         ) -> int:
         self.flush_cache()
@@ -358,8 +359,8 @@ class LDAPObject:
 
     def simple_bind_s(
             self,
-            who='',
-            cred=b'',
+            who: str = '',
+            cred: bytes = b'',
             req_ctrls: Optional[RequestControls] = None,
         ) -> LDAPResult:
         msgid = self.simple_bind(who, cred, req_ctrls)
