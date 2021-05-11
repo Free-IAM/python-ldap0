@@ -31,7 +31,8 @@ set_option(_libldap0.OPT_RESTART, False)
 set_option(_libldap0.OPT_DEREF, False)
 set_option(_libldap0.OPT_REFERRALS, False)
 set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_HARD)
-
+# name of crypto library libldap is linked with
+LIBLDAP_TLS_PACKAGE = _libldap0.get_option(_libldap0.OPT_X_TLS_PACKAGE).decode('ascii')
 
 OPT_NAMES = {
     val: key
