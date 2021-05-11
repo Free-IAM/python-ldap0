@@ -11,7 +11,65 @@ from .functions import attr_set
 
 __all__ = [
     'SyncReplDesc',
+    'ldapsearch_cmd',
 ]
+
+LDAPSEARCH_TMPL = (
+    'ldapsearch '
+    '-LL '
+    '-H "{uri}" '
+    '{tls} '
+    '-b "{dn}" '
+    '-s {scope} '
+    '{authc} '
+    '{authz} '
+    '"{filterstr}" '
+    '{attrs}'
+)
+
+
+def ldapsearch_cmd(ldap_url: LDAPUrl) -> str:
+    """
+    Returns string with OpenLDAP compatible ldapsearch command based on LDAPUrl instance.
+    """
+    if ldap_url.attrs is None:
+        attrs_str = ''
+    else:
+        attrs_str = ' '.join(ldap_url.attrs)
+    scope_str = {
+        0: 'base',
+        1: 'one',
+        2: 'sub',
+        3: 'children',
+    }[ldap_url.scope]
+    if ldap_url.sasl_mech:
+        authc_str = '-Y "{saslmech}"'.format(saslmech=ldap_url.sasl_mech)
+    elif ldap_url.who:
+        authc_str = '-x -D "{who}" -W'.format(who=ldap_url.who or '')
+    else:
+        authc_str = '-x -D "" -w ""'
+    if ldap_url.start_tls:
+        tls_str = '-ZZ'
+    else:
+        tls_str = ''
+    if ldap_url.sasl_authzid:
+        authz_str = '-X "{authz}"'.format(authz=ldap_url.sasl_authzid)
+    else:
+        authz_str = ''
+    if ldap_url.extensions:
+        # FIX ME! Set extended controls
+        pass
+    return LDAPSEARCH_TMPL.format(
+        uri=ldap_url.connect_uri(),
+        dn=ldap_url.dn,
+        scope=scope_str,
+        attrs=attrs_str,
+        filterstr=ldap_url.filterstr or '(objectClass=*)',
+        authc=authc_str,
+        authz=authz_str,
+        tls=tls_str,
+    ).strip()
+    # end of ldapsearch_cmd()
 
 
 class SyncReplDesc:

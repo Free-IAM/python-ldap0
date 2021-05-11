@@ -7,7 +7,8 @@ Automatic tests for module ldap0.syncrepl
 import unittest
 
 from ldap0 import SCOPE_SUBTREE, SCOPE_ONELEVEL
-from ldap0.openldap import SyncReplDesc
+from ldap0.ldapurl import LDAPUrl
+from ldap0.openldap import SyncReplDesc, ldapsearch_cmd
 
 
 class TestSyncReplDesc(unittest.TestCase):
@@ -132,6 +133,57 @@ class TestSyncReplDesc(unittest.TestCase):
                 pass
             else:
                 self.fail('%r should have raised ValueError' % (invalid_val))
+
+
+class TestLdapSearchCmd(unittest.TestCase):
+    """
+    test ldap0.openldap.ldapsearch_cmd()
+    """
+    maxDiff = None
+
+    def test001_ldapsearch_cmd(self):
+        self.assertEqual(
+            ldapsearch_cmd(
+                LDAPUrl(
+                    'ldap://127.0.0.1:1234/'
+                    'dc=example,dc=com'
+                    '?attr1,attr2,attr3'
+                    '?sub'
+                    '?%28objectClass%3D%2A%29'
+                    '?'
+                    'bindname=cn%3Dfred%2Cc%3Dau,'
+                    'X-BINDPW=%3F%3F%3F,'
+                    'trace=8,'
+                    'x-saslmech=DIGEST-MD5,'
+                    'x-saslrealm=example.com,'
+                    'x-saslauthzid=u:anna,'
+                    'x-starttls=2,'
+                )
+            ),
+            ' '.join((
+                'ldapsearch',
+                '-LL',
+                '-H "ldap://127.0.0.1:1234"',
+                '-ZZ','-b "dc=example,dc=com"',
+                '-s sub',
+                '-Y "DIGEST-MD5"',
+                '-X "u:anna"',
+                '"(objectClass=*)"',
+                'attr1 attr2 attr3',
+            ))
+        )
+        self.assertEqual(
+            ldapsearch_cmd(
+                LDAPUrl(
+                    'ldaps://ldap.example.com/'
+                    'dc=example,dc=com'
+                    '?'
+                    '?one'
+                    '?(uid=foo)'
+                )
+            ),
+            'ldapsearch -LL -H "ldaps://ldap.example.com"  -b "dc=example,dc=com" -s one -x -D "" -w ""  "(uid=foo)"'
+        )
 
 
 if __name__ == '__main__':
