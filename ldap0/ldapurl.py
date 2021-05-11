@@ -248,6 +248,9 @@ class LDAPUrl:
         'trace_level': 'trace',
         'pwd_filename': 'x-pwdfilename',
         'sasl_mech': 'x-saslmech',
+        'sasl_authzid': 'x-saslauthzid',
+        'sasl_realm': 'x-saslrealm',
+        'start_tls': 'x-starttls',
     }
     urlscheme: Optional[str]
     hostport: Optional[str]

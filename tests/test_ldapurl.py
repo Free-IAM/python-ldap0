@@ -11,15 +11,6 @@ import ldap0.ldapurl
 from ldap0.ldapurl import LDAPUrl
 
 
-class MyLDAPUrl(LDAPUrl):
-    attr2extype = {
-        'who':'bindname',
-        'cred':'X-BINDPW',
-        'start_tls':'startTLS',
-        'trace_level':'trace',
-    }
-
-
 class TestIsLDAPUrl(unittest.TestCase):
 
     is_ldapurl_tests = {
@@ -186,14 +177,20 @@ class TestParseLDAPUrl(unittest.TestCase):
 class TestLDAPUrl(unittest.TestCase):
 
     def test_combo(self):
-        u = MyLDAPUrl(
-            "ldap://127.0.0.1:1234/dc=example,dc=com"
-            + "?attr1,attr2,attr3"
-            + "?sub"
-            + "?" + url_quote("(objectClass=*)")
-            + "?bindname=" + url_quote("cn=d,c=au")
-            + ",X-BINDPW=" + url_quote("???")
-            + ",trace=8"
+        u = LDAPUrl(
+            'ldap://127.0.0.1:1234/'
+            'dc=example,dc=com'
+            '?attr1,attr2,attr3'
+            '?sub'
+            '?%28objectClass%3D%2A%29'
+            '?'
+            'bindname=cn%3Dfred%2Cc%3Dau,'
+            'X-BINDPW=%3F%3F%3F,'
+            'trace=8,'
+            'x-saslmech=DIGEST-MD5,'
+            'x-saslrealm=example.com,'
+            'x-saslauthzid=u:anna,'
+            'x-starttls=2,'
         )
         self.assertEqual(u.urlscheme, "ldap")
         self.assertEqual(u.hostport, "127.0.0.1:1234")
@@ -201,10 +198,14 @@ class TestLDAPUrl(unittest.TestCase):
         self.assertEqual(u.attrs, ["attr1","attr2","attr3"])
         self.assertEqual(u.scope, ldap0.SCOPE_SUBTREE)
         self.assertEqual(u.filterstr, "(objectClass=*)")
-        self.assertEqual(len(u.extensions), 3)
-        self.assertEqual(u.who, "cn=d,c=au")
+        self.assertEqual(len(u.extensions), 7)
+        self.assertEqual(u.who, "cn=fred,c=au")
         self.assertEqual(u.cred, "???")
         self.assertEqual(u.trace_level, "8")
+        self.assertEqual(u.sasl_mech, 'DIGEST-MD5')
+        self.assertEqual(u.sasl_realm, 'example.com')
+        self.assertEqual(u.sasl_authzid, 'u:anna')
+        self.assertEqual(u.start_tls, '2')
         with self.assertRaises(AttributeError):
             u.foo
 
