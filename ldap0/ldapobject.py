@@ -231,6 +231,7 @@ class LDAPObject:
             client_cert_filename=None,
             client_key_filename=None,
             req_cert=_libldap0.OPT_X_TLS_DEMAND,
+            crl_check=_libldap0.OPT_X_TLS_CRL_NONE,
         ):
         """
         set TLS options for connection even with checking whether cert/key
@@ -254,6 +255,8 @@ class LDAPObject:
                     raise
         # Force server cert validation
         self._l.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, req_cert)
+        # CRL check
+        self._l.set_option(_libldap0.OPT_X_TLS_CRLCHECK, crl_check)
         # this has to be the last option set to let libldap reinitialize TLS context
         self._l.set_option(_libldap0.OPT_X_TLS_NEWCTX, 0)
         # end of set_tls_options()
