@@ -205,6 +205,8 @@ class TestLDAPUrl(unittest.TestCase):
         self.assertEqual(u.who, "cn=d,c=au")
         self.assertEqual(u.cred, "???")
         self.assertEqual(u.trace_level, "8")
+        with self.assertRaises(AttributeError):
+            u.foo
 
     def test_parse_default_hostport(self):
         u = LDAPUrl("ldap://")
