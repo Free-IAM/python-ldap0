@@ -16,6 +16,7 @@ from .err import \
     PasswordPolicyChangeAfterReset, \
     PasswordPolicyExpirationWarning, \
     PasswordPolicyExpiredError
+from . import LIBLDAP_TLS_PACKAGE
 from ldap0.controls.simple import AuthorizationIdentityResponseControl
 from .err import NoUniqueEntry
 from .base import encode_list
@@ -256,7 +257,7 @@ class LDAPObject:
         # Force server cert validation
         self._l.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, req_cert)
         # CRL check
-        if _libldap0.OPT_X_TLS_PACKAGE == b'OpenSSL':
+        if LIBLDAP_TLS_PACKAGE == 'OpenSSL':
             self._l.set_option(_libldap0.OPT_X_TLS_CRLCHECK, crl_check)
         # this has to be the last option set to let libldap reinitialize TLS context
         self._l.set_option(_libldap0.OPT_X_TLS_NEWCTX, 0)
