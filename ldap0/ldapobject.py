@@ -946,6 +946,8 @@ class LDAPObject:
                 res = self._cache[cache_key_args]
             except KeyError:
                 pass
+            else:
+                return res
         # no cached result
         msgid = self.search(
             base,
