@@ -2,3 +2,4 @@ include LICENSE
 include README.md
 include stdeb.cfg
 include _libldap0/*.c _libldap0/*.h
+include tests/*.py tests/ldif/*.ldif tests/tls/*
