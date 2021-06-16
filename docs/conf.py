@@ -13,10 +13,10 @@
 
 import sys
 
-from pkginfo import __version__, __author__, __license__
+from ldap0.__about__ import __version__, __author__, __license__, __copyright__
 
 # If your extensions are in another directory, add it here.
-#sys.path.append('some/directory')
+#sys.path.append('')
 
 # General configuration
 # ---------------------
@@ -36,13 +36,13 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'ldap0'
-copyright = u'2017, ' + __author__
+copyright = __copyright__
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '.'.join(__version__.split('.')[:2])
+version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__
 
@@ -81,7 +81,7 @@ html_style = 'pyramid.css'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['/usr/lib/python2.7/site-packages/sphinx/themes/pyramid/static']
+html_static_path = []
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -115,7 +115,7 @@ htmlhelp_basename = 'ldap0-doc'
 # ------------------------
 
 # The paper size ('letter' or 'a4').
-#latex_paper_size = 'letter'
+latex_paper_size = 'a4'
 
 # The font size ('10pt', '11pt' or '12pt').
 #latex_font_size = '10pt'
