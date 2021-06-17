@@ -244,7 +244,7 @@ class Test00_LDAPObject(SlapdTestCase):
                 'PLAIN',
                 'CRAM-MD5',
                 'DIGEST-MD5',
-#                b'SCRAM-SHA-1',
+#                'SCRAM-SHA-1',
             ):
             with self.ldap_object_class(self.server.ldapi_uri) as l:
                 with self.assertRaises(ldap0.INVALID_CREDENTIALS):
