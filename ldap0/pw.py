@@ -62,7 +62,7 @@ def unicode_pwd(
     """
     if password is None:
         password = random_string(alphabet=alphabet, length=length)
-    return u'"{}"'.format(password.decode('utf-8')).encode('utf-16-le')
+    return '"{}"'.format(password.decode('utf-8')).encode('utf-16-le')
 
 
 def ntlm_password_hash(password: bytes) -> bytes:
