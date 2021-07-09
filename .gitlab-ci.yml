@@ -5,7 +5,7 @@
     refs:
       - branches
 
-.LTB-RPM-REPO: &gen_yum_repo_file |
+.SOFL-RPM-REPO: &gen_yum_repo_file |
   echo '
   [sofl]
   name=Symas OpenLDAP for Linux RPM repository
