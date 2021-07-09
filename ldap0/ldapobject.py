@@ -119,9 +119,13 @@ class LDAPObject:
         self._cache_ttl = cache_ttl
         self._cache = Cache(ttl=cache_ttl)
         self.flush_cache()
+        # Do not restart connections
         self.set_option(_libldap0.OPT_RESTART, False)
-        self.set_option(_libldap0.OPT_DEREF, False)
+        # Switch off automatic alias dereferencing
+        self.set_option(_libldap0.OPT_DEREF, _libldap0.DEREF_NEVER)
+        # Switch off automatic referral chasing
         self.set_option(_libldap0.OPT_REFERRALS, False)
+        # always require full TLS server validation
         self.set_option(_libldap0.OPT_X_TLS_REQUIRE_CERT, _libldap0.OPT_X_TLS_HARD)
 
     @property
