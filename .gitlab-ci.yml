@@ -52,9 +52,8 @@ test:centos-7:
     - export SCHEMA=/etc/openldap/schema
     - export BIN=/usr/bin
 
-test:centos-8:
+.tests_rhel8_compat:
   extends: .tests
-  image: centos:8
   before_script:
     - dnf update -y
     - dnf install -y epel-release
@@ -67,20 +66,13 @@ test:centos-8:
     - export SCHEMA=/etc/openldap/schema
     - export BIN=/usr/bin
 
+test:centos-8:
+  extends: .tests_rhel8_compat
+  image: centos:8
+
 test:almalinux-8:
-  extends: .tests
+  extends: .tests_rhel8_compat
   image: almalinux:8
-  before_script:
-    - dnf update -y
-    - dnf install -y epel-release
-    - *gen_yum_repo_file
-    - yum update -y
-    - dnf install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram symas-openldap-clients symas-openldap-servers openldap-devel gcc cyrus-sasl-devel platform-python-devel platform-python-setuptools platform-python-pip
-    - ln -s /usr/libexec/platform-python /usr/bin/python3
-    - 'echo "mech_list: PLAIN DIGEST-MD5 CRAM-MD5 SCRAM-SHA-1 EXTERNAL" > /etc/sasl2/slapd.conf'
-    - export SLAPD=/usr/sbin/slapd
-    - export SCHEMA=/etc/openldap/schema
-    - export BIN=/usr/bin
 
 .tests_debian:
   extends: .tests
