@@ -18,8 +18,7 @@
   before_script:
     - dnf update -y
     - dnf install -y epel-release
-    - |
-      echo '
+    - echo '
       [sofl]
       name=Symas OpenLDAP for Linux RPM repository
       baseurl=https://repo.symas.com/repo/rpm/SOFL/rhel$releasever
