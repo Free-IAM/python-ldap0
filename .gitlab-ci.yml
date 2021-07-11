@@ -1,3 +1,6 @@
+stages:
+  - test
+
 .tests:
   script:
     - pushd /var/tmp && popd
