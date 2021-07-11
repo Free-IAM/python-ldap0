@@ -13,12 +13,22 @@
     refs:
       - branches
 
+.SOFL-RPM-REPO: &gen_yum_repo_file |
+  echo '
+  [sofl]
+  name=Symas OpenLDAP for Linux RPM repository
+  baseurl=https://repo.symas.com/repo/rpm/SOFL/rhel$releasever
+  enabled=1
+  gpgcheck=1
+  gpgkey=https://repo.symas.com/repo/gpg/RPM-GPG-KEY-symas-com-signing-key
+  ' > /etc/yum.repos.d/sofl.repo
+
 .tests_rhel8_compat:
   extends: .tests
   before_script:
     - dnf update -y
     - dnf install -y epel-release
-    - echo -e '[sofl]\nname=SOFL repo\nbaseurl=https://repo.symas.com/repo/rpm/SOFL/rhel$releasever\nenabled=1\ngpgcheck=1\ngpgkey=https://repo.symas.com/repo/gpg/RPM-GPG-KEY-symas-com-signing-key\n' > /etc/yum.repos.d/sofl.repo
+    - *gen_yum_repo_file
     - yum update -y
     - dnf install -y cyrus-sasl-md5 cyrus-sasl-plain cyrus-sasl-scram symas-openldap-clients symas-openldap-servers openldap-devel gcc cyrus-sasl-devel platform-python-devel platform-python-setuptools platform-python-pip
     - ln -s /usr/libexec/platform-python /usr/bin/python3
