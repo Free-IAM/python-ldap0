@@ -1,4 +1,4 @@
-tests:
+.tests:
   script:
     - pushd /var/tmp && popd
     - python3 -m pip install coverage
@@ -25,7 +25,7 @@ tests:
 
 
 test:opensuse-tumbleweed:
-  extends: tests
+  extends: .tests
   image: opensuse/tumbleweed
   before_script:
     - zypper --gpg-auto-import-keys addrepo -n home_stroeder_openldap25 -p 90 -f http://download.opensuse.org/repositories/home:/stroeder:/openldap25/openSUSE_Tumbleweed/home:stroeder:openldap25.repo
@@ -33,14 +33,14 @@ test:opensuse-tumbleweed:
     - zypper --gpg-auto-import-keys --non-interactive install --no-recommends --allow-vendor-change --auto-agree-with-licenses cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python3 python3-pyasn1-modules python3-setuptools python3-setuptools-git python3-setuptools_scm gcc python3-devel openldap2-devel cyrus-sasl-devel python3-pip openldap2-back-sock openldap2-contrib openldap2-client
 
 test:opensuse-leap:
-  extends: tests
+  extends: .tests
   image: opensuse/leap
   before_script:
     - zypper --non-interactive update --no-recommends
     - zypper --non-interactive install --no-recommends --auto-agree-with-licenses cyrus-sasl-digestmd5 cyrus-sasl-scram cyrus-sasl-crammd5 cyrus-sasl-plain openldap2 python3 python3-pyasn1-modules python3-setuptools python3-setuptools-git python3-setuptools_scm gcc python3-devel openldap2-devel cyrus-sasl-devel python3-pip openldap2-back-sock openldap2-contrib openldap2-client
 
 test:centos-7:
-  extends: tests
+  extends: .tests
   image: centos:7
   before_script:
     - yum update -y
@@ -53,7 +53,7 @@ test:centos-7:
     - export BIN=/usr/bin
 
 test:centos-8:
-  extends: tests
+  extends: .tests
   image: centos:8
   before_script:
     - dnf update -y
@@ -68,7 +68,7 @@ test:centos-8:
     - export BIN=/usr/bin
 
 test:almalinux-8:
-  extends: tests
+  extends: .tests
   image: almalinux:8
   before_script:
     - dnf update -y
@@ -83,7 +83,7 @@ test:almalinux-8:
     - export BIN=/usr/bin
 
 test:debian-stable:
-  extends: tests
+  extends: .tests
   image: debian:stable-slim
   before_script:
     - apt-get update
@@ -96,7 +96,7 @@ test:debian-stable:
     - export BIN=/usr/bin
 
 test:debian-testing:
-  extends: tests
+  extends: .tests
   image: debian:testing-slim
   before_script:
     - apt-get update
