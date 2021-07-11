@@ -91,3 +91,7 @@ test:debian-stable:
 test:debian-testing:
   extends: .tests_debian
   image: debian:testing-slim
+
+test:debian-unstable:
+  extends: .tests_debian
+  image: debian:unstable-slim
