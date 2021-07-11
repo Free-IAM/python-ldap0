@@ -3,7 +3,6 @@ stages:
 
 .tests:
   script:
-    - pushd /var/tmp && popd
     - python3 -m pip install coverage
     - python3 -m pip install .
     - export LDAPNOINIT=1
