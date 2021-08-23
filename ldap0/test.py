@@ -446,15 +446,19 @@ class SlapdTestCase(unittest.TestCase):
     def enable_overlay(self, slapo_entry: EntryStr, schema_files=None, config_dn=None):
         logging.debug('Enable overlay with %r', slapo_entry)
         olc_overlay = slapo_entry['olcOverlay'][0]
-        enabled_overlays = [
-            val.split('}', 1)[1]
-            for val in self._ldap_conn.read_s(
-                'cn=module{0},cn=config',
-                attrlist=['olcModuleLoad'],
-            ).entry_s['olcModuleLoad']
-        ]
-        if olc_overlay in enabled_overlays:
-            return
+        try:
+            enabled_overlays = [
+                val.split('}', 1)[1]
+                for val in self._ldap_conn.read_s(
+                    'cn=module{0},cn=config',
+                    attrlist=['olcModuleLoad'],
+                ).entry_s['olcModuleLoad']
+            ]
+            if olc_overlay in enabled_overlays:
+                return
+        except _libldap0.NO_SUCH_OBJECT:
+            enabled_overlays = []
+
         schema_entries = []
         for schema_filename in schema_files or []:
             with open(os.path.join(self.server.SCHEMADIR, schema_filename), 'rb') as schema_file:
@@ -466,10 +470,19 @@ class SlapdTestCase(unittest.TestCase):
                     dn.decode('utf-8'),
                     {at.decode('ascii'): avs for at, avs in entry.items()}
                 )
-            self._ldap_conn.modify_s(
-                'cn=module{0},cn=config',
-                [(_libldap0.MOD_ADD, b'olcModuleLoad', [olc_overlay.encode('utf-8')])]
-            )
+            if enabled_overlays:
+                self._ldap_conn.modify_s(
+                    'cn=module{0},cn=config',
+                    [(_libldap0.MOD_ADD, b'olcModuleLoad', [olc_overlay.encode('utf-8')])]
+                )
+            else:
+                self._ldap_conn.add_s(
+                    'cn=module{0},cn=config',
+                    {
+                        'objectclass': ['olcModuleList'.encode('utf-8')],
+                        'olcModuleload': [olc_overlay.encode('utf-8')],
+                    }
+                )
             self._ldap_conn.add_s(
                 'olcOverlay={{0}}{0},{1}'.format(
                     olc_overlay,
