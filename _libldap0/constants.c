@@ -164,6 +164,7 @@ LDAPinit_constants( PyObject* d )
 #ifdef LDAP_OPT_DEFBASE
     add_int(d, OPT_DEFBASE);
 #endif
+
 #ifdef HAVE_TLS
     add_int(d, OPT_X_TLS);
 #ifdef LDAP_OPT_X_TLS_NEWCTX
@@ -182,9 +183,6 @@ LDAPinit_constants( PyObject* d )
     add_int(d, OPT_X_TLS_DEMAND);
     add_int(d, OPT_X_TLS_ALLOW);
     add_int(d, OPT_X_TLS_TRY);
-#ifdef LDAP_OPT_X_TLS_PEERCERT
-    add_int(d, OPT_X_TLS_PEERCERT);
-#endif
 #ifdef LDAP_OPT_X_TLS_VERSION
     add_int(d, OPT_X_TLS_VERSION);
 #endif
@@ -231,7 +229,8 @@ LDAPinit_constants( PyObject* d )
 #ifdef LDAP_OPT_X_TLS_PROTOCOL_TLS1_3
     add_int(d, OPT_X_TLS_PROTOCOL_TLS1_3);
 #endif
-#endif
+#endif /* HAVE_TLS */
+
     add_int(d, OPT_X_SASL_MECH);
     add_int(d, OPT_X_SASL_REALM);
     add_int(d, OPT_X_SASL_AUTHCID);

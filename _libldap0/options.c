@@ -225,7 +225,7 @@ LDAP_get_option(LDAPObject *self, int option)
 
 #ifdef HAVE_SASL
         case LDAP_OPT_X_SASL_SSF:
-#endif 
+#endif
         case LDAP_OPT_REFERRALS:
         case LDAP_OPT_RESTART:
         case LDAP_OPT_DEREF:
@@ -240,30 +240,30 @@ LDAP_get_option(LDAPObject *self, int option)
         case LDAP_OPT_X_TLS_REQUIRE_CERT:
 #ifdef LDAP_OPT_X_TLS_CRLCHECK
         case LDAP_OPT_X_TLS_CRLCHECK:
-#endif 
+#endif
 #ifdef LDAP_OPT_X_TLS_PROTOCOL_MIN
         case LDAP_OPT_X_TLS_PROTOCOL_MIN:
-#endif 
-#endif 
+#endif
+#endif /* HAVE_TLS */
 #ifdef HAVE_SASL
         case LDAP_OPT_X_SASL_SSF_MIN:
         case LDAP_OPT_X_SASL_SSF_MAX:
-#endif 
 #ifdef LDAP_OPT_X_SASL_NOCANON
         case LDAP_OPT_X_SASL_NOCANON:
-#endif 
+#endif
+#endif /* HAVE_SASL */
 #ifdef LDAP_OPT_CONNECT_ASYNC
         case LDAP_OPT_CONNECT_ASYNC:
-#endif 
+#endif
 #ifdef LDAP_OPT_X_KEEPALIVE_IDLE
         case LDAP_OPT_X_KEEPALIVE_IDLE:
-#endif 
+#endif
 #ifdef LDAP_OPT_X_KEEPALIVE_PROBES
         case LDAP_OPT_X_KEEPALIVE_PROBES:
-#endif 
+#endif
 #ifdef LDAP_OPT_X_KEEPALIVE_INTERVAL
         case LDAP_OPT_X_KEEPALIVE_INTERVAL:
-#endif 
+#endif
           /* Integer-valued options */
           if (self) LDAP_BEGIN_ALLOW_THREADS(self);
           res = ldap_get_option(ld, option, &intval);
@@ -276,7 +276,7 @@ LDAP_get_option(LDAPObject *self, int option)
         case LDAP_OPT_URI:
 #ifdef LDAP_OPT_DEFBASE
         case LDAP_OPT_DEFBASE:
-#endif 
+#endif
         case LDAP_OPT_ERROR_STRING:
         case LDAP_OPT_MATCHED_DN:
 #ifdef HAVE_TLS
@@ -289,17 +289,17 @@ LDAP_get_option(LDAPObject *self, int option)
         case LDAP_OPT_X_TLS_DHFILE:
 #ifdef LDAP_OPT_X_TLS_CRLFILE
         case LDAP_OPT_X_TLS_CRLFILE:
-#endif 
+#endif
 #ifdef LDAP_OPT_X_TLS_VERSION
         case LDAP_OPT_X_TLS_VERSION:
-#endif 
+#endif
 #ifdef LDAP_OPT_X_TLS_CIPHER
         case LDAP_OPT_X_TLS_CIPHER:
-#endif 
+#endif
 #ifdef LDAP_OPT_X_TLS_PACKAGE
         case LDAP_OPT_X_TLS_PACKAGE:
-#endif 
-#endif 
+#endif
+#endif /* HAVE_TLS */
 #ifdef HAVE_SASL
         case LDAP_OPT_X_SASL_SECPROPS:
         case LDAP_OPT_X_SASL_MECH:
@@ -308,8 +308,8 @@ LDAP_get_option(LDAPObject *self, int option)
         case LDAP_OPT_X_SASL_AUTHZID:
 #ifdef LDAP_OPT_X_SASL_USERNAME
         case LDAP_OPT_X_SASL_USERNAME:
-#endif 
-#endif 
+#endif
+#endif /* HAVE_SASL */
             /* String-valued options */
             if (self) LDAP_BEGIN_ALLOW_THREADS(self);
             res = ldap_get_option(ld, option, &strval);
