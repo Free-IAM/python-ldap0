@@ -229,6 +229,9 @@ LDAPinit_constants( PyObject* d )
 #ifdef LDAP_OPT_X_TLS_PROTOCOL_TLS1_3
     add_int(d, OPT_X_TLS_PROTOCOL_TLS1_3);
 #endif
+#ifdef LDAP_OPT_X_TLS_PEERCERT
+    add_int(d, OPT_X_TLS_PEERCERT);
+#endif
 #endif /* HAVE_TLS */
 
     add_int(d, OPT_X_SASL_MECH);

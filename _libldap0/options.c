@@ -319,6 +319,22 @@ LDAP_get_option(LDAPObject *self, int option)
             ldap_memfree(strval);
             return v;
 
+#ifdef HAVE_TLS
+#ifdef LDAP_OPT_X_TLS_PEERCERT
+        case LDAP_OPT_X_TLS_PEERCERT:
+            /* FIX ME! berval options */
+            struct berval *berbytes = 0;
+            if (self) LDAP_BEGIN_ALLOW_THREADS(self);
+            res = ldap_get_option(ld, option, &berbytes);
+            if (self) LDAP_END_ALLOW_THREADS(self);
+            if (res != LDAP_OPT_SUCCESS)
+                return option_error(res, "ldap_get_option");
+            v = LDAPberval_to_object(berbytes);
+            ber_bvfree(berbytes);
+            return v;
+#endif
+#endif /* HAVE_TLS */
+
         case LDAP_OPT_TIMEOUT:
         case LDAP_OPT_NETWORK_TIMEOUT:
             /* Double-valued timeval options */
