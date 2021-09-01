@@ -36,8 +36,6 @@ class OpenLDAP2BuildConfig:
             _ldap_cfg[name] = [ val for val in value.split(' ') if val ]
         for name, val in _ldap_cfg.items():
             setattr(self, name, val)
-        if 'ldap_r' in self.libs or 'oldap_r' in self.libs:
-            self.defines.append('HAVE_LIBLDAP_R')
         if 'sasl' in self.libs or 'sasl2' in self.libs or 'libsasl' in self.libs:
             self.defines.append('HAVE_SASL')
         if 'ssl' in self.libs and 'crypto' in self.libs:

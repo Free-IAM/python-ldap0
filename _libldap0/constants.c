@@ -281,15 +281,6 @@ LDAPinit_constants( PyObject* d )
 
     add_int(d, OPT_SUCCESS);
 
-    /* add_int(d, LIBLDAP_R); */
-#ifdef HAVE_LIBLDAP_R
-    obj = PyLong_FromLong(1);
-#else
-    obj = PyLong_FromLong(0);
-#endif
-    PyDict_SetItemString( d, "LIBLDAP_R", obj );
-    Py_DECREF(obj);
-
     /* add_int(d, SASL); */
 #ifdef HAVE_SASL
     obj = PyLong_FromLong(1);
