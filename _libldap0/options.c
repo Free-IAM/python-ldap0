@@ -321,7 +321,7 @@ LDAP_get_option(LDAPObject *self, int option)
 
 #ifdef HAVE_TLS
 #ifdef LDAP_OPT_X_TLS_PEERCERT
-        case LDAP_OPT_X_TLS_PEERCERT:
+        case LDAP_OPT_X_TLS_PEERCERT: ;
             /* FIX ME! berval options */
             struct berval *berbytes = 0;
             if (self) LDAP_BEGIN_ALLOW_THREADS(self);
