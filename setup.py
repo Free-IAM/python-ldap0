@@ -19,6 +19,15 @@ class OpenLDAP2BuildConfig:
     """
     class describing the features and requirements of OpenLDAP 2.x
     """
+    __slots__ = (
+        'defines',
+        'extra_compile_args',
+        'extra_link_args',
+        'extra_objects',
+        'include_dirs',
+        'library_dirs',
+        'libs',
+    )
 
     def __init__(self, meta_defines):
         self.library_dirs = []
@@ -28,19 +37,21 @@ class OpenLDAP2BuildConfig:
         self.extra_objects = []
         self.libs = ['ldap', 'lber']
         self.defines = []
-        #-- Read the [_libldap0] section of setup.cfg
+        # Read the [_libldap0] section of setup.cfg
         cfg = ConfigParser()
         cfg.read(os.path.join(BASEDIR, 'setup.cfg'))
         _ldap_cfg = dict(cfg.items('_libldap0'))
-        for name, value in _ldap_cfg.items():
-            _ldap_cfg[name] = [ val for val in value.split(' ') if val ]
-        for name, val in _ldap_cfg.items():
-            setattr(self, name, val)
-        self.define_macros = [
+        for name in self.__slots__:
+            env_name = 'LDAP0_' + name.upper()
+            if env_name in os.environ:
+                setattr(self, name, [ val for val in os.environ[env_name].split(' ') if val ])
+            elif name in _ldap_cfg:
+                setattr(self, name, [ val for val in _ldap_cfg[name].split(' ') if val ])
+        self.defines = [
             (defm, None)
             for defm in set(self.defines)
         ]
-        self.define_macros.extend(meta_defines)
+        self.defines.extend(meta_defines)
         self.include_dirs.insert(0, '_libldap0')
         if sys.platform.startswith("win"):
             self.library_dirs = []
@@ -101,7 +112,7 @@ setup(
             extra_link_args=LDAP_CLASS.extra_link_args,
             extra_objects=LDAP_CLASS.extra_objects,
             runtime_library_dirs=LDAP_CLASS.library_dirs,
-            define_macros=LDAP_CLASS.define_macros,
+            define_macros=LDAP_CLASS.defines,
         ),
     ],
     packages=find_packages(exclude=['tests']),
