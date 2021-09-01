@@ -1027,8 +1027,12 @@ class Test00_LDAPObject(SlapdTestCase):
                 self.assertTrue(l.get_option(ldap0.OPT_X_TLS_VERSION).startswith(b'TLSv1'))
             if hasattr(ldap0, 'OPT_X_TLS_CIPHER'):
                 self.assertTrue(l.get_option(ldap0.OPT_X_TLS_CIPHER).startswith(b'TLS_'))
+# FIX ME!
+#            if hasattr(ldap0, 'OPT_X_SASL_SSF'):
+#                self.assertTrue(l.get_option(ldap0.OPT_X_SASL_SSF) > 0)
+# FIX ME!
 #            if hasattr(ldap0, 'OPT_X_TLS_PEERCERT'):
-#                self.assertEqual(l.get_option(ldap0.OPT_X_TLS_PEERCERT), '')
+#                self.assertEqual(l.get_option(ldap0.OPT_X_TLS_PEERCERT), b'')
         with self.ldap_object_class(self.server.ldap_uri) as l:
             l.set_tls_options(
                 cacert_filename='tests/tls/ca.crt',
