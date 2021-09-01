@@ -49,9 +49,6 @@ LDAP_set_option(LDAPObject *self, int option, PyObject *value)
     switch(option) {
         case LDAP_OPT_API_INFO:
         case LDAP_OPT_API_FEATURE_INFO:
-#ifdef HAVE_SASL
-        case LDAP_OPT_X_SASL_SSF:
-#endif
             /* Read-only options */
             PyErr_SetString(PyExc_ValueError, "read-only option");
             return 0;
@@ -223,9 +220,6 @@ LDAP_get_option(LDAPObject *self, int option)
 
           return v;
 
-#ifdef HAVE_SASL
-        case LDAP_OPT_X_SASL_SSF:
-#endif
         case LDAP_OPT_REFERRALS:
         case LDAP_OPT_RESTART:
         case LDAP_OPT_DEREF:
@@ -246,6 +240,7 @@ LDAP_get_option(LDAPObject *self, int option)
 #endif
 #endif /* HAVE_TLS */
 #ifdef HAVE_SASL
+        case LDAP_OPT_X_SASL_SSF:
         case LDAP_OPT_X_SASL_SSF_MIN:
         case LDAP_OPT_X_SASL_SSF_MAX:
 #ifdef LDAP_OPT_X_SASL_NOCANON
