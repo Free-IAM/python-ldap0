@@ -42,7 +42,7 @@ class OpenLDAP2BuildConfig:
         cfg.read(os.path.join(BASEDIR, 'setup.cfg'))
         _ldap_cfg = dict(cfg.items('_libldap0'))
         for name in self.__slots__:
-            env_name = 'LDAP0_' + name.upper()
+            env_name = 'LIBLDAP0_' + name.upper()
             if env_name in os.environ:
                 setattr(self, name, [ val for val in os.environ[env_name].split(' ') if val ])
             elif name in _ldap_cfg:
