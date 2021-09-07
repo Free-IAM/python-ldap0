@@ -375,7 +375,7 @@ class SyncInfoRefreshDelete(SyncInfoMessage):
         component = self.syncinfo.getComponent()
         self.cookie = None
         cookie = component['cookie']
-        if cookie is not univ.noValue:
+        if cookie.isValue:
             self.cookie = bytes(cookie)
         self.refreshDone = bool(component['refreshDone'])
 
@@ -396,7 +396,7 @@ class SyncInfoRefreshPresent(SyncInfoMessage):
         component = self.syncinfo.getComponent()
         self.cookie = None
         cookie = component['cookie']
-        if cookie is not univ.noValue:
+        if cookie.isValue:
             self.cookie = bytes(cookie)
         self.refreshDone = bool(component['refreshDone'])
 
@@ -418,7 +418,7 @@ class SyncInfoIDSet(SyncInfoMessage):
         component = self.syncinfo.getComponent()
         self.cookie = None
         cookie = component['cookie']
-        if cookie is not univ.noValue:
+        if cookie.isValue:
             self.cookie = bytes(cookie)
         self.refreshDeletes = bool(component['refreshDeletes'])
 
