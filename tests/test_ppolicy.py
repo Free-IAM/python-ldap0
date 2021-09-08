@@ -268,8 +268,8 @@ class TestPwdPolicy(SlapoPPolicyTestCase):
 
     def setUp(self):
         super(TestPwdPolicy, self).setUp()
-        # FIX ME! Running these tests on OpenLDAP 2.5 needs clarification.
-        if self.server.slapd_version.startswith('2.5.'):
+        # FIX ME! Running these tests on OpenLDAP 2.5+ needs clarification.
+        if not self.server.slapd_version.startswith('2.4.'):
             self.skipTest(
                 '{} known to fail with slapd {}'.format(
                     self.__class__.__name__,
