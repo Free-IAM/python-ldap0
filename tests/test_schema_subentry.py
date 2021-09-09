@@ -284,6 +284,10 @@ class TestSchemaElementOIDSet(SubschemaTest):
         )
         with self.assertRaises(KeyError):
             SchemaElementOIDSet(self.sub_schema, AttributeType, ['@foo'])
+        se_set = SchemaElementOIDSet(self.sub_schema, AttributeType, ['cn'])
+        self.assertNotIn('mail', se_set)
+        se_set.add('mail')
+        self.assertIn('mail', se_set)
 
     def test002_ObjectClass(self):
         self.assertNotIn('person', SchemaElementOIDSet(self.sub_schema, ObjectClass, []))
@@ -297,6 +301,10 @@ class TestSchemaElementOIDSet(SubschemaTest):
         )
         with self.assertRaises(ValueError):
             SchemaElementOIDSet(self.sub_schema, ObjectClass, ['@foo'])
+        se_set = SchemaElementOIDSet(self.sub_schema, ObjectClass, ['person'])
+        self.assertNotIn('organizationalPerson', se_set)
+        se_set.add('organizationalPerson')
+        self.assertIn('organizationalPerson', se_set)
 
     def test003_names_property(self):
         self.assertEqual(SchemaElementOIDSet(self.sub_schema, ObjectClass, ['person', '2.5.6.6']).names, ['person'])
