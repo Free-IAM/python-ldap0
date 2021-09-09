@@ -54,9 +54,9 @@ def urlfetch(uri, trace_level=0, check_uniqueness=True, rootdse=True):
         ldap_conn.unbind_s()
         del ldap_conn
     else:
-        ldif_file = urlopen(uri)
-        ldif_parser = LDIFParser(ldif_file, max_entries=1)
-        ldif_res = ldif_parser.list_entry_records()
+        with urlopen(uri) as ldif_file:
+            ldif_parser = LDIFParser(ldif_file, max_entries=1)
+            ldif_res = ldif_parser.list_entry_records()
         subschemasubentry_dn, s_temp = ldif_res[0]
         s_temp = {
             at.decode('ascii'): [av.decode('utf-8') for av in avs]
