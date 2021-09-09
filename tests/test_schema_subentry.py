@@ -250,6 +250,12 @@ class TestSubschema(SubschemaTest):
             with self.assertRaises(NameNotUnique):
                 SubSchema(non_unique_name_tests, check_uniqueness=2)
 
+    def test011_get_subord_structural_oc_names(self):
+        self.assertEqual(
+            list(self.sub_schema.get_subord_structural_oc_names('42')[0]),
+            [],
+        )
+
 
 class TestSchemaElementOIDSet(SubschemaTest):
     """
