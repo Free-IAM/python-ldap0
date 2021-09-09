@@ -158,7 +158,15 @@ class LDAPResult:
     msgid: int
     ctrls: List[ResponseControl]
 
-    def __init__(self, rtype: int, rdata, msgid: int, ctrls, encoding: str = 'utf-8', call_args=None):
+    def __init__(
+            self,
+            rtype: int,
+            rdata,
+            msgid: int,
+            ctrls,
+            encoding: str = 'utf-8',
+            call_args = None,
+        ):
         self.rtype = rtype
         self.rdata = []
         self.msgid = msgid

@@ -632,7 +632,8 @@ class SubSchema:
                         dit_struct_rule_obj.form,
                     )
                     if name_form_obj:
-                        subord_structural_oc_oids[self.get_oid(ObjectClass, name_form_obj.oc)] = None
+                        name_form_oid = self.get_oid(ObjectClass, name_form_obj.oc)
+                        subord_structural_oc_oids[name_form_oid] = None
         result = []
         for oc_oid in subord_structural_oc_oids.keys():
             oc_obj = self.get_obj(ObjectClass, oc_oid)

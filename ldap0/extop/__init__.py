@@ -148,7 +148,11 @@ class ExtOpResponseRegistry:
         """
         self._handler_cls[handler.responseName] = handler
 
-    def get(self, oid: str, default: Optional[Union[ExtendedResponse, IntermediateResponse]]=None) -> Optional[Union[ExtendedResponse, IntermediateResponse]]:
+    def get(
+            self,
+            oid: str,
+            default: Optional[Union[ExtendedResponse, IntermediateResponse]] = None,
+        ) -> Optional[Union[ExtendedResponse, IntermediateResponse]]:
         """
         return handler class for extended/intermediate response by OID (responseName)
         """
