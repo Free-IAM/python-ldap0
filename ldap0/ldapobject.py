@@ -1159,12 +1159,12 @@ class LDAPObject:
                 cache_ttl=cache_ttl,
             ))
         except _libldap0.SIZELIMIT_EXCEEDED:
-            raise NoUniqueEntry('Size limit exceeded for %r ()' % (filterstr))
+            raise NoUniqueEntry('Size limit exceeded for %r' % (filterstr,))
         # strip search continuations
         ldap_res = [res for res in ldap_res if isinstance(res, SearchResultEntry)]
         # now check again for length
         if not ldap_res:
-            raise NoUniqueEntry('No search result for %r' % (filterstr))
+            raise NoUniqueEntry('No search result for %r' % (filterstr,))
         if len(ldap_res) > 1:
             raise NoUniqueEntry(
                 'Non-unique search results (%d) for %r' % (len(ldap_res), filterstr)
