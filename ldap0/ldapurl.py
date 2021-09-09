@@ -341,7 +341,7 @@ class LDAPUrl:
             try:
                 self.scope = SEARCH_SCOPE[scope]
             except KeyError:
-                raise ValueError('Invalid search scope %s' % (repr(scope)))
+                raise ValueError('Invalid search scope %r' % (scope,))
         if paramlist_len >= 4:
             filterstr = paramlist[3].strip()
             if not filterstr:
