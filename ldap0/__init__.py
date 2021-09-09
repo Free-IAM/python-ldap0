@@ -11,9 +11,6 @@ from .__about__ import __version__, __author__, __license__
 # Tracing is only supported in debugging mode
 _trace_level = 0
 
-from .functions import get_option, set_option
-from .functions import strf_secs, strp_secs
-
 import _libldap0
 if _libldap0.__version__.decode('ascii') != __version__:
     raise ImportError(
