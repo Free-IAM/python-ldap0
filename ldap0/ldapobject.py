@@ -17,7 +17,7 @@ from .err import \
     PasswordPolicyExpirationWarning, \
     PasswordPolicyExpiredError
 from . import LIBLDAP_TLS_PACKAGE
-from ldap0.controls.simple import AuthorizationIdentityResponseControl
+from .controls.simple import AuthorizationIdentityResponseControl
 from .err import NoUniqueEntry
 from .base import encode_list
 from .dn import DNObj
