@@ -39,7 +39,7 @@ class TestFunction(unittest.TestCase):
 
     def test_escape_str(self):
         self.assertEqual(
-            ldap0.functions.ldap0.functions.escape_str(
+            ldap0.functions.escape_str(
                 ldap0.filter.escape_str,
                 '(&(objectClass=aeUser)(uid=%s))',
                 'foo'
