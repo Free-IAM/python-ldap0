@@ -433,7 +433,7 @@ class SyncInfoIDSet(SyncInfoMessage):
             self.__class__.__name__,
             self.cookie,
             self.refreshDeletes,
-            self.uuids,
+            self.syncUUIDs,
         )
 
 
