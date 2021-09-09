@@ -6,9 +6,14 @@ ldap0.controls.deref - classes for
 
 from pyasn1.type import namedtype, univ, tag
 from pyasn1.codec.ber import encoder, decoder
-from pyasn1_modules.rfc2251 import \
-    LDAPDN, AttributeDescription, AttributeDescriptionList, AttributeValue
 from pyasn1.error import PyAsn1Error
+
+from pyasn1_modules.rfc2251 import (
+    LDAPDN,
+    AttributeDescription,
+    AttributeDescriptionList,
+    AttributeValue,
+)
 
 from . import LDAPControl, KNOWN_RESPONSE_CONTROLS
 from ..res import SearchResultEntry
@@ -23,14 +28,17 @@ __all__ = [
 # For compability with ASN.1 declaration in I-D
 AttributeList = AttributeDescriptionList
 
+
 class DerefSpec(univ.Sequence):
     componentType = namedtype.NamedTypes(
         namedtype.NamedType('derefAttr', AttributeDescription()),
         namedtype.NamedType('attributes', AttributeList()),
     )
 
+
 class DerefSpecs(univ.SequenceOf):
     componentType = DerefSpec()
+
 
 # Response types
 #---------------------------------------------------------------------------
@@ -117,5 +125,6 @@ class DereferenceControl(LDAPControl):
                 self.derefRes[deref_attr.decode(self.encoding)].append(deref_res_entry)
             except KeyError:
                 self.derefRes[deref_attr.decode(self.encoding)] = [deref_res_entry]
+
 
 KNOWN_RESPONSE_CONTROLS.reg(DereferenceControl)
