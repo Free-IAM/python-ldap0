@@ -195,7 +195,7 @@ class LDAPUrlExtensions(UserDict):
 
     def __eq__(self, other) -> bool:
         assert isinstance(other, self.__class__), TypeError(
-            "other has to be instance of %s" % (self.__class__)
+            "other has to be instance of %s" % (self.__class__,)
         )
         return self.data == other.data
 
@@ -415,14 +415,20 @@ class LDAPUrl:
         hrefTarget
             string added as link target attribute
         """
-        assert isinstance(urlPrefix, str), TypeError("urlPrefix must be str, was %r" % urlPrefix)
+        assert isinstance(urlPrefix, str), TypeError(
+            "urlPrefix must be str, was %r" % (urlPrefix,)
+        )
         if hrefText is None:
             hrefText = self.unparse()
-        assert isinstance(hrefText, str), TypeError("hrefText must be str, was %r" % hrefText)
+        assert isinstance(hrefText, str), TypeError(
+            "hrefText must be str, was %r" % (hrefText,)
+        )
         if hrefTarget is None:
             target = ''
         else:
-            assert isinstance(hrefTarget, str), TypeError("hrefTarget must be str, was %r" % hrefTarget)
+            assert isinstance(hrefTarget, str), TypeError(
+                "hrefTarget must be str, was %r" % (hrefTarget,)
+            )
             target = ' target="%s"' % hrefTarget
         return '<a%s href="%s%s">%s</a>' % (
             target,
