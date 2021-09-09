@@ -296,6 +296,18 @@ class TestDNObj(unittest.TestCase):
         self.assertFalse(
             DNObj.from_str('cn=Michael, dc=example, dc=com')==DNObj.from_str('CN=Mike, DC=example, DC=com')
         )
+        self.assertEqual(
+            DNObj.from_str('cn=Foo + mail= foo@example.com + sn = Bar,dc=example,dc=com'),
+            DNObj.from_str('mail=foo@example.com+sn=Bar+cn=Foo,dc=example,dc=com'),
+        )
+        self.assertNotEqual(
+            DNObj.from_str('cn=Foo2 + mail= foo@example.com + sn = Bar,dc=example,dc=com'),
+            DNObj.from_str('mail=foo@example.com+sn=Bar+cn=Foo,dc=example,dc=com'),
+        )
+        self.assertNotEqual(
+            DNObj.from_str('cn=Foo + mail= foo@example.com + sn = Bar,dc=example,dc=com'),
+            DNObj.from_str('mail2=foo@example.com+sn=Bar+cn=Foo,dc=example,dc=com'),
+        )
 
     def test010_at_sanitizer(self):
         self.assertNotEqual(

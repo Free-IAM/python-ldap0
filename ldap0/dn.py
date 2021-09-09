@@ -119,12 +119,18 @@ class DNObj(tuple):
         while res and i < len(self):
             res = len(self[i]) == len(other[i])
             j = 0
+            other_dict = {
+                at.lower(): av
+                for at, av in other[i]
+            }
             while res and j < len(self[i]):
-                res = (
-                    self[i][j][0].lower() == other[i][j][0].lower()
-                    and
-                    self[i][j][1] == other[i][j][1]
-                )
+                at_lower = self[i][j][0].lower()
+                try:
+                    other_val = other_dict[at_lower]
+                except KeyError:
+                    res = False
+                else:
+                    res = self[i][j][1] == other_dict[at_lower]
                 j += 1
             i += 1
         return res
